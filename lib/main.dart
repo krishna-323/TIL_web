@@ -135,8 +135,7 @@ class _InitialScreenState extends State<InitialScreen> {
       isLoading
           ? const Center(child: CircularProgressIndicator())
           : authToken == ""
-          ? const LoginPage():
-      MyHomePage(),
+          ? const LoginPage(): MyHomePage(),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
 
     );

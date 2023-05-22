@@ -811,14 +811,17 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           //Post new User dialog box.
-                                          MaterialButton(
-                                            color: Colors.blue,
-                                            onPressed: () {
-                                              addCompanyDetails(context);
-                                            },
-                                            child: const Text(
-                                              "+ Create Company",
-                                              style: TextStyle(color: Colors.white),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 20.0),
+                                            child: MaterialButton(
+                                              color: Colors.blue,
+                                              onPressed: () {
+                                                addCompanyDetails(context);
+                                              },
+                                              child: const Text(
+                                                "+ Create Company",
+                                                style: TextStyle(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                         ],

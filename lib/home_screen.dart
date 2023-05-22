@@ -7,7 +7,7 @@ import 'cart_bloc/cart_items_bloc.dart';
 import 'classes/arguments_classes/arguments_classes.dart';
 import 'classes/motows_routes.dart';
 import 'dashboard/kpi_card.dart';
-import 'home_screen/charts_views.dart';
+import 'dashboard/charts_views.dart';
 import 'utils/customDrawer.dart';
 
 

@@ -1311,15 +1311,18 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                           fontWeight: FontWeight.bold
                                       ),
                                     ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          createNewUser(context,companyNamesList);
-                                        });
-                                      }, color: Colors.blue,
-                                      child: const Text(
-                                          "+ Create User",
-                                          style: TextStyle(color: Colors.white)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20.0),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            createNewUser(context,companyNamesList);
+                                          });
+                                        }, color: Colors.blue,
+                                        child: const Text(
+                                            "+ Create User",
+                                            style: TextStyle(color: Colors.white)),
+                                      ),
                                     )
                                   ],
                                 ),
