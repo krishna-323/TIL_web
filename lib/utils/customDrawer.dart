@@ -167,7 +167,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               selectedTileColor: Colors.blue,
                               selectedColor: Colors.white,
                               //  leading: const Icon(Icons.home),
-                              title: Text(drawerWidth == 60 ? "" : 'Estimate',style: const TextStyle(fontSize: 15),),
+                              title: Text(drawerWidth == 60 ? "" : 'Purchase Order',style: const TextStyle(fontSize: 15),),
                               selected: _selectedDestination == 1.2,
                               onTap: () { setState(() {
                                 _selectedDestination=1.2;
@@ -300,21 +300,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
                               }
                           ),
-                          ListTile(
-                              title: Center(child: Align(alignment: Alignment.topLeft,
-                                  child: Text(drawerWidth == 60 ? "" : 'Prices'))),
-                              selected: _selectedDestination == 2.4,
-                              hoverColor: mHoverColor,
-                              selectedTileColor: Colors.blue,
-                              selectedColor: Colors.white,
-                              onTap: () {
-                                setState(() {
-                                  _selectedDestination=2.4;
-                                });
-                                Navigator.pushReplacementNamed(context, MotowsRoutes.pricesRoute,arguments: PricesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.4));
-                                // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
-                              }
-                          ),
+                          // ListTile(
+                          //     title: Center(child: Align(alignment: Alignment.topLeft,
+                          //         child: Text(drawerWidth == 60 ? "" : 'Prices'))),
+                          //     selected: _selectedDestination == 2.4,
+                          //     hoverColor: mHoverColor,
+                          //     selectedTileColor: Colors.blue,
+                          //     selectedColor: Colors.white,
+                          //     onTap: () {
+                          //       setState(() {
+                          //         _selectedDestination=2.4;
+                          //       });
+                          //       Navigator.pushReplacementNamed(context, MotowsRoutes.pricesRoute,arguments: PricesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.4));
+                          //       // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
+                          //     }
+                          // ),
                         ],
                       ),
                     ),

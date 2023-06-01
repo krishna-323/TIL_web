@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
 
 
     return  MaterialApp(
-        title: 'Motows Web',
+        title: 'Vendor Management',
         initialRoute: "dashboard",
         onGenerateRoute: (settings){
           Widget newScreen;
