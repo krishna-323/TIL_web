@@ -1,4 +1,6 @@
 
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -290,7 +292,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  Future fetchVendorsData() async {
+   fetchVendorsData() async {
     dynamic response;
     String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
     try {
@@ -312,8 +314,8 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  Future<List> fetchData() async {
-    await Future.delayed(const Duration(milliseconds: 0));
+  fetchData() async {
+
     List list = [];
     // create a list of 3 objects from a fake json response
     for(int i=0;i<vendorList.length;i++){
@@ -1416,7 +1418,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  Future fetchModelName(String modelName)async{
+   fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1436,7 +1438,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  Future fetchBrandName(String brandName)async{
+   fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1454,7 +1456,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  Future fetchVariantName(String variantName)async{
+   fetchVariantName(String variantName)async{
   dynamic response;
   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
   try{
@@ -1473,7 +1475,7 @@ class _EstimateState extends State<Estimate> {
   }
 }
 
-  Future getAllVehicleVariant() async {
+   getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1496,7 +1498,7 @@ class _EstimateState extends State<Estimate> {
       });
     }
   }
-  Future postEstimate(estimate)async{
+   postEstimate(estimate)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {

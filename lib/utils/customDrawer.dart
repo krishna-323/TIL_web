@@ -124,60 +124,63 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                     child: Container(
                       color: salesHovered?mHoverColor:Colors.transparent,
-                      child: ExpansionTile(
-                        onExpansionChanged: (value) {
-                          setState(() {
-                            if(value){
-                              salesExpanded=true;
-                              salesHovered=false;
-                            }
-                            else{
-                              salesExpanded=false;
-                            }
-                          });
-                        },
-                        initiallyExpanded: _selectedDestination == 1.1 || _selectedDestination ==1.2,
-                        trailing: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: drawerWidth ==60 ? Colors.transparent: Colors.black87,
-                        ),
-                        title: Text(drawerWidth ==60 ? '' : "Service",style: const TextStyle(fontSize: 16),),
-                        leading: const Icon(Icons.person),
-                        children:<Widget> [
-                          //New Customer.
-                          ListTile(hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            title: Center(child: Align(alignment: Alignment.topLeft,
-                                child: Text(drawerWidth == 60 ? "" : 'New Customer',))),
-
-                            selected: _selectedDestination == 1.1,
-                            onTap: (){
-                              setState(() {
-                                _selectedDestination=1.1;
-
-                              });
-                              Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: widget.drawerWidth));
-
-                            },
+                      child: Theme(
+                        data: Theme.of(context).copyWith(dividerColor: const Color(0xffe7e4e4)),
+                        child: ExpansionTile(
+                          onExpansionChanged: (value) {
+                            setState(() {
+                              if(value){
+                                salesExpanded=true;
+                                salesHovered=false;
+                              }
+                              else{
+                                salesExpanded=false;
+                              }
+                            });
+                          },
+                          initiallyExpanded: _selectedDestination == 1.1 || _selectedDestination ==1.2,
+                          trailing: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: drawerWidth ==60 ? Colors.transparent: Colors.black87,
                           ),
-                          //Estimate.
-                          ListTile(
-                              hoverColor: mHoverColor,
+                          title: Text(drawerWidth ==60 ? '' : "Service",style: const TextStyle(fontSize: 16),),
+                          leading: const Icon(Icons.person),
+                          children:<Widget> [
+                            //New Customer.
+                            ListTile(hoverColor: mHoverColor,
                               selectedTileColor: Colors.blue,
                               selectedColor: Colors.white,
-                              //  leading: const Icon(Icons.home),
-                              title: Text(drawerWidth == 60 ? "" : 'Purchase Order',style: const TextStyle(fontSize: 15),),
-                              selected: _selectedDestination == 1.2,
-                              onTap: () { setState(() {
-                                _selectedDestination=1.2;
-                              });
-                              Navigator.pushReplacementNamed(context, MotowsRoutes.estimateRoutes,arguments: DisplayEstimateItemsArgs(selectedDestination: 1.2,drawerWidth: widget.drawerWidth));
+                              title: Center(child: Align(alignment: Alignment.topLeft,
+                                  child: Text(drawerWidth == 60 ? "" : 'New Customer',))),
 
-                                //     Navigator.pushReplacementNamed(context, MotowsRoutes.docketRoute,arguments: DocketArgs(drawerWidth: widget.drawerWidth, selectedDestination: 0.2));
-                              }
-                          ),
-                        ],
+                              selected: _selectedDestination == 1.1,
+                              onTap: (){
+                                setState(() {
+                                  _selectedDestination=1.1;
+
+                                });
+                                Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: widget.drawerWidth));
+
+                              },
+                            ),
+                            //Estimate.
+                            ListTile(
+                                hoverColor: mHoverColor,
+                                selectedTileColor: Colors.blue,
+                                selectedColor: Colors.white,
+                                //  leading: const Icon(Icons.home),
+                                title: Text(drawerWidth == 60 ? "" : 'Purchase Order',style: const TextStyle(fontSize: 15),),
+                                selected: _selectedDestination == 1.2,
+                                onTap: () { setState(() {
+                                  _selectedDestination=1.2;
+                                });
+                                Navigator.pushReplacementNamed(context, MotowsRoutes.estimateRoutes,arguments: DisplayEstimateItemsArgs(selectedDestination: 1.2,drawerWidth: widget.drawerWidth));
+
+                                  //     Navigator.pushReplacementNamed(context, MotowsRoutes.docketRoute,arguments: DocketArgs(drawerWidth: widget.drawerWidth, selectedDestination: 0.2));
+                                }
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

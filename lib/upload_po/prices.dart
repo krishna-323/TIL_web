@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../classes/arguments_classes/arguments_classes.dart';
 import '../utils/api/getApi.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -10,7 +9,7 @@ import '../utils/custom_loader.dart';
 import 'display_excel_data.dart';
 
 class Prices extends StatefulWidget {
-  final PricesArguments args;
+  final  args;
   const Prices({Key? key, required this.args}) : super(key: key);
 
   @override
@@ -22,7 +21,7 @@ class _PricesState extends State<Prices> {
   List poList=[];
   bool isLoading = true;
 
-  Future fetchPoData() async{
+   fetchPoData() async{
     dynamic response;
     String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
     try {
@@ -60,7 +59,7 @@ class _PricesState extends State<Prices> {
 
   String selectedDate ='';
   DateTime selectedDateTime = DateTime.now();
-  Future<void> _selectDate(BuildContext context) async {
+   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDateTime,
@@ -77,7 +76,7 @@ class _PricesState extends State<Prices> {
     }
   }
 
-  Future getPoByCate(poDate) async{
+   getPoByCate(poDate) async{
     dynamic response;
     String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_by_date/$poDate";
     try {

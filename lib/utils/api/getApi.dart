@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../cart_bloc/cart_items_bloc.dart';
 import '../../main.dart';
 
-Future getData({context, url}) async {
+ getData({context, url}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String authToken = prefs.getString("authToken") ?? "";
   final response = await http.get(

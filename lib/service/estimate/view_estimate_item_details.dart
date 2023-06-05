@@ -139,7 +139,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   String shipToStreet='';
   String shipToState='';
   int shipZipcode=0;
-  Future getInitialData() async {
+   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
   }
@@ -456,7 +456,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   }
 
 
-  Future fetchVendorsData() async {
+   fetchVendorsData() async {
     dynamic response;
     String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
     try {
@@ -477,8 +477,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       });
     }
   }
-  Future<List> fetchData() async {
-    await Future.delayed(const Duration(milliseconds: 0));
+  fetchData() async {
+
     List list = [];
     // create a list of 3 objects from a fake json response
     for(int i=0;i<vendorList.length;i++){
@@ -1554,7 +1554,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
 
-  Future fetchModelName(String modelName)async{
+   fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1574,7 +1574,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  Future fetchBrandName(String brandName)async{
+   fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1592,7 +1592,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  Future fetchVariantName(String variantName)async{
+   fetchVariantName(String variantName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
@@ -1611,7 +1611,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  Future getAllVehicleVariant() async {
+   getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1634,7 +1634,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       });
     }
   }
-  Future putUpdatedEstimated(updatedEstimated)async{
+   putUpdatedEstimated(updatedEstimated)async{
     try{
       final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/update_estimate_vehicle'),
       headers: {
@@ -1658,7 +1658,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       log(e.toString());
     }
   }
-  Future lineItemsData(lineItems)async{
+   lineItemsData(lineItems)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
      postData(context:context ,url: url,requestBody: lineItems).then((value) => {
        setState((){
@@ -1671,7 +1671,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
        })
      });
   }
-  Future deleteLineItem(estimateItemId)async{
+   deleteLineItem(estimateItemId)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_item_by_id/$estimateItemId';
   try{
   final response=await http.delete(Uri.parse(url),
@@ -1702,7 +1702,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   print(e);
   }
   }
-  Future deleteEstimateItemData(estVehicleId)async{
+   deleteEstimateItemData(estVehicleId)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_vehicle_by_id/$estVehicleId';
     try{
       final response=await http.delete(Uri.parse(url),

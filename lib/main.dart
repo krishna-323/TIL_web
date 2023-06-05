@@ -1,12 +1,12 @@
-// @dart=2.9
 
 import 'package:flutter/material.dart';
 import 'package:new_project/service/estimate/display_estimate_items.dart';
 import 'package:new_project/upload_po/prices.dart';
 import 'package:new_project/upload_po/upload_po.dart';
 import 'package:new_project/user_mangment/display_user_list.dart';
-import 'package:new_project/utils/static_data/motows_colors.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'classes/arguments_classes/arguments_classes.dart';
 import 'classes/motows_routes.dart';
 import 'company_management/list_companies.dart';
@@ -17,30 +17,13 @@ import 'login_screen.dart';
 
 
 
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-// //   await Firebase.initializeApp(
-// //     options: FirebaseOptions(
-// //     apiKey: "AIzaSyCMUDeQQpWJ5XpyaRVB_VxEzBPqtblMpc4",
-// //     appId: "1:825678600993:web:de4c711605da1df53f3c60",
-// //     messagingSenderId: "825678600993",
-// //     projectId: "motowsweb",
-// //   ),);
-// //
-// // // Ideal time to initialize
-// //   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-//   //setPathUrlStrategy();
-//   runApp(const MyApp());
-// }
 
-main(){
-  runApp(MaterialApp(home:MyApp() ,debugShowCheckedModeBanner: false,));
+ main() async {
+  setPathUrlStrategy();
+  runApp(const MyApp());
 }
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -56,19 +39,80 @@ class _MyAppState extends State<MyApp> {
     return  MaterialApp(
         title: 'Vendor Management',
         initialRoute: "dashboard",
-        onGenerateRoute: (settings){
+        onGenerateRoute: (RouteSettings settings){
           Widget newScreen;
           switch (settings.name){
-            case  MotowsRoutes.customerListRoute: newScreen = ViewCustomerList(arg: settings.arguments ?? CustomerArguments(drawerWidth: 190, selectedDestination: 0.1),);
+            case  MotowsRoutes.customerListRoute: {
+              CustomerArguments customerArg;
+              if(settings.arguments!=null){
+                 customerArg = settings.arguments as CustomerArguments ;
+              }
+              else {
+                 customerArg = CustomerArguments(
+                    drawerWidth: 190, selectedDestination: 1.1);
+              }
+              newScreen = ViewCustomerList(arg: customerArg);
+            }
             break;
-            case MotowsRoutes.estimateRoutes:newScreen=DisplayEstimateItems(args:settings.arguments?? DisplayEstimateItemsArgs(drawerWidth: 190,selectedDestination: 0.2));
+            case
+            MotowsRoutes.estimateRoutes:{
+              DisplayEstimateItemsArgs displayEstimateItemsArgs;
+              if(settings.arguments!=null){
+                displayEstimateItemsArgs = settings.arguments as DisplayEstimateItemsArgs ;
+              }
+              else {
+                displayEstimateItemsArgs = DisplayEstimateItemsArgs(
+                    drawerWidth: 190, selectedDestination: 1.1);
+              }
+              newScreen=DisplayEstimateItems(args: displayEstimateItemsArgs,);
+            }
             break;
-            case MotowsRoutes.companyManagement:newScreen= CompanyManagement(args:settings.arguments ?? CompanyManagementArguments(drawerWidth: 190, selectedDestination: 7.1));
-            break;
-            case MotowsRoutes.userManagement:newScreen = UserManagement(args : settings.arguments ?? UserManagementArguments(drawerWidth:190,selectedDestination:7.1));
-            break;
-            case MotowsRoutes.uploadData : newScreen = UploadPO(args: settings.arguments ?? UploadDataArguments(drawerWidth:190, selectedDestination: 5.4));
-            break;
+            case MotowsRoutes.companyManagement:
+              {
+                CompanyManagementArguments companyManagementArguments;
+                if(settings.arguments!=null){
+                  companyManagementArguments = settings.arguments as CompanyManagementArguments ;
+                }
+                else {
+                  companyManagementArguments = CompanyManagementArguments(
+                      drawerWidth: 190, selectedDestination: 1.1);
+                }
+
+                newScreen = CompanyManagement(args: companyManagementArguments);
+              }
+                break;
+            case MotowsRoutes.userManagement:
+              {
+                UserManagementArguments userManagement;
+
+                if(settings.arguments!=null){
+                  userManagement = settings.arguments as UserManagementArguments ;
+                }
+                else {
+                  userManagement = UserManagementArguments(
+                      drawerWidth: 190, selectedDestination: 1.1);
+                }
+
+                newScreen = UserManagement(args : userManagement);
+              }
+              break;
+
+            case MotowsRoutes.uploadData :
+              {
+                UploadDataArguments uploadDataArguments;
+
+                if(settings.arguments!=null){
+                  uploadDataArguments = settings.arguments as UploadDataArguments ;
+                }
+                else {
+                  uploadDataArguments = UploadDataArguments(
+                      drawerWidth: 190, selectedDestination: 1.1);
+                }
+
+                newScreen = UploadPO(args: uploadDataArguments );
+              }
+              break;
+
             case MotowsRoutes.pricesRoute : newScreen = Prices(args: settings.arguments ?? PricesArguments(drawerWidth:190, selectedDestination: 7.1));
             break;
             default: newScreen = MyHomePage();
@@ -77,11 +121,13 @@ class _MyAppState extends State<MyApp> {
               reverseTransitionDuration: Duration.zero,transitionDuration: Duration.zero,settings: settings);
         },
         routes: {
+          'home':(context)=> MyHomePage(),
           "dashboard":(context) => const InitialScreen(),
           MotowsRoutes.homeRoute:(context) => MyHomePage(),
         },
         theme: ThemeData(useMaterial3: true,
-            backgroundColor: primaryColor,
+
+           // colorScheme: ColorScheme(background:primaryColor, brightness: Brightness.dark, primary: Colors.black, onPrimary: Colors.black, secondary: Colors.blue, onSecondary: Colors.black, error: primaryColor, onError: primaryColor, onBackground: Colors.black, surface: Colors.blue, onSurface: primaryColor),
             fontFamily: 'TitilliumWeb'
         ),
         debugShowCheckedModeBanner: false,
@@ -93,7 +139,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class InitialScreen extends StatefulWidget {
-  const InitialScreen({Key key}) : super(key: key);
+  const InitialScreen({Key? key}) : super(key: key);
 
   @override
   State<InitialScreen> createState() => _InitialScreenState();
@@ -102,7 +148,7 @@ class InitialScreen extends StatefulWidget {
 class _InitialScreenState extends State<InitialScreen> {
 
 
-  String  authToken;
+  String?  authToken;
   bool isLoading = true;
 
 
@@ -112,20 +158,18 @@ class _InitialScreenState extends State<InitialScreen> {
     getLoginData().whenComplete(() {
       isLoading=false;
     });
-    // fireStore.collection('registeredUser').get().then((snapshot) {
-    //   for (DocumentSnapshot ds in snapshot.docs){
-    //     ds.reference.delete();
-    //   }});
   }
 
 
-  Future getLoginData() async {
+   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       authToken = prefs.getString("authToken")??"";
       isLoading=false;
     });
   }
+
+
 
 
   @override

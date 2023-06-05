@@ -343,7 +343,6 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
           Expanded(
             child:
             Container(
-              height: MediaQuery.of(context).size.height,
               color: Colors.grey[50],
               child: CustomLoader(
                 inAsyncCall: loading,

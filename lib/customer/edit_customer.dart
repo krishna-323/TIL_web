@@ -76,7 +76,7 @@ var differentTabs=false;
 
 
  String? authToken;
-  Future getInitialData() async {
+   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
   }
@@ -2053,7 +2053,7 @@ var differentTabs=false;
 
   var vehicleId = "";
 
-  Future editCustomerPage(Map<dynamic, dynamic> customerPage) async {
+   editCustomerPage(Map<dynamic, dynamic> customerPage) async {
     try {
       final response = await http.put(
           Uri.parse(
@@ -2088,7 +2088,7 @@ var differentTabs=false;
     }
   }
 
-  Future editServiceVehicle(Map<dynamic,dynamic> serviceVehicle)async{
+   editServiceVehicle(Map<dynamic,dynamic> serviceVehicle)async{
     try{
       final response = await http.put(Uri.parse("https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/customer_vehicle/update_customer_vehicle"),
         headers: {
@@ -2114,7 +2114,7 @@ var differentTabs=false;
       log(e.toString());
         }
   }
-  Future getServiceCustomer() async{
+   getServiceCustomer() async{
     dynamic response;
     String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/customer_vehicle/get_all_customer_vehicle/$selectedId";
     try{
@@ -2144,7 +2144,7 @@ var differentTabs=false;
   }
 
 
-  Future deleteCustomerData() async {
+   deleteCustomerData() async {
    try{
      final deleteResponse=await http.delete(Uri.parse('https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/delete_newcustomer/$selectedId'),
        headers: {
@@ -2176,14 +2176,14 @@ var differentTabs=false;
   }
 
   //This two are async function (state,dist).
-  Future getStateNames()async{
+   getStateNames()async{
     List list=[];
     for(int i=0;i<states.length;i++){
       list.add(SearchState.fromJson(states[i]));
     }
     return list;
   }
-  Future getDistName()async{
+   getDistName()async{
     List storeDistNames=[];
 
     for(int i=0;i<storeDist.length;i++){

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomLoader extends StatefulWidget {
@@ -14,7 +14,9 @@ class CustomLoader extends StatefulWidget {
 class _CustomLoaderState extends State<CustomLoader> {
   @override
   Widget build(BuildContext context) {
-    return ModalProgressHUD(
+
+    return BlurryModalProgressHUD(
+
       color: Colors.white,
       dismissible: true,
       progressIndicator: SpinKitThreeBounce(size: 58.0,
