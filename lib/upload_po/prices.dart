@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 
-import '../utils/api/getApi.dart';
+import '../classes/arguments_classes/arguments_classes.dart';
+import '../utils/api/get_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
 import '../utils/custom_loader.dart';
 import 'display_excel_data.dart';
 
 class Prices extends StatefulWidget {
-  final  args;
+  final  PricesArguments args;
   const Prices({Key? key, required this.args}) : super(key: key);
 
   @override
@@ -70,7 +71,6 @@ class _PricesState extends State<Prices> {
         selectedDateTime = picked;
 
         selectedDate = "${picked.day.toString()}-${picked.month.toString()}-${picked.year.toString()}";
-        print(selectedDate);
         getPoByCate(selectedDate);
       });
     }
@@ -137,8 +137,8 @@ class _PricesState extends State<Prices> {
                                 ),),
                                 );
                               },
-                              child:Text('Display Page'),
                                 color: Colors.blue,
+                              child:const Text('Display Page'),
                               ),
                               const SizedBox(width: 50,),
                               SizedBox(
@@ -161,12 +161,12 @@ class _PricesState extends State<Prices> {
                     ),
                     const SizedBox(height: 8,),
                     Container(color: Colors.grey[200],
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10,top: 10,right: 4,left: 8),
+                      child: const Padding(
+                        padding: EdgeInsets.only(bottom: 10,top: 10,right: 4,left: 8),
                         child: Column(
                           children: [
                             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children:  const [
+                              children:  [
                                 Expanded(child: Text("Make",overflow: TextOverflow.ellipsis,)),
                                 Divider(color: Colors.black,
                                   height: 2,

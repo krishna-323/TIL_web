@@ -999,14 +999,16 @@
 // }
 
 
-import 'package:excel/excel.dart';
+import 'dart:developer';
+
+import 'package:excel/excel.dart' as xl;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../classes/arguments_classes/arguments_classes.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -1064,7 +1066,7 @@ class _UploadPOState extends State<UploadPO> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color:Color(0xFFE0E0E0) )
+                          border: Border.all(color:const Color(0xFFE0E0E0) )
                       ),
                       child: Column(
                         children: [
@@ -1112,7 +1114,7 @@ class _UploadPOState extends State<UploadPO> {
                                           MaterialButton(minWidth: 20,
                                             onPressed: () {
                                               // exportToExcel();
-                                              print(selectedFields);
+
                                               for(int i=0;i<selectedFields.length;i++) {
                                                 deletePoData(selectedFields[i]).then((value) {
 
@@ -1172,7 +1174,7 @@ class _UploadPOState extends State<UploadPO> {
                                           ),
                                         ),
                                       ),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0,),
                                             child: SizedBox(height: 25,
@@ -1180,7 +1182,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child: Text('Make')
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1188,7 +1190,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child: Text('Model',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1196,7 +1198,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child:Text('Varient',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1204,7 +1206,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child:Text('Date',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1212,7 +1214,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child:Text('On-Road Price',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1220,7 +1222,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child:Text('Color',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
-                                      Expanded(
+                                      const Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
@@ -1249,13 +1251,13 @@ class _UploadPOState extends State<UploadPO> {
                                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
-                                            child: Container(width: 30,height: 30,
+                                            child: SizedBox(width: 30,height: 30,
                                               child: Transform.scale(
                                                 scale: 0.8,
                                                 child: Checkbox(
                                                   value: fieldValues[i],
                                                   onChanged: ( value) {
-                                                    print(value);
+
                                                     setState(() {
                                                       fieldValues[i] = value;
                                                       if(value==true){
@@ -1346,7 +1348,7 @@ class _UploadPOState extends State<UploadPO> {
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
 
-                                      Text("${startVal+5>poList.length?poList.length:startVal+1}-${startVal+5>poList.length?poList.length:startVal+5} of ${poList.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+5>poList.length?poList.length:startVal+1}-${startVal+5>poList.length?poList.length:startVal+5} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -1366,7 +1368,7 @@ class _UploadPOState extends State<UploadPO> {
                                               }
                                             }
                                             else{
-                                              print('else');
+                                              log('else');
                                             }
 
                                           },
@@ -1382,7 +1384,7 @@ class _UploadPOState extends State<UploadPO> {
                                           ),
                                           onTap: (){
                                             if(startVal+1+5>poList.length){
-                                              print("Block");
+                                              log("Block");
                                             }
                                             else
                                             if(poList.length>startVal+5){
@@ -1394,7 +1396,7 @@ class _UploadPOState extends State<UploadPO> {
                                                     displayList.add(poList[i]);
                                                   }
                                                   catch(e){
-                                                    print(e);
+                                                    log(e.toString());
                                                   }
 
                                                 });
@@ -1426,20 +1428,20 @@ class _UploadPOState extends State<UploadPO> {
 
 
   void exportToExcel() async {
-    var excel = Excel.createExcel();
-    Sheet sheetObject = excel['Sheet1'];
+    var excel = xl.Excel.createExcel();
+    xl.Sheet sheetObject = excel['Sheet1'];
 
 
 
-    CellStyle cellStyle = CellStyle(backgroundColorHex: "#000000", fontFamily : getFontFamily(FontFamily.Calibri),fontColorHex:'#FFFFFF' ,horizontalAlign: HorizontalAlign.Center);
-    CellStyle cellStyle1 = CellStyle(textWrapping:TextWrapping.WrapText, );
+    xl.CellStyle cellStyle = xl.CellStyle(backgroundColorHex: "#000000", fontFamily : xl.getFontFamily(xl.FontFamily.Calibri),fontColorHex:'#FFFFFF' ,horizontalAlign: xl.HorizontalAlign.Center);
+    xl.CellStyle cellStyle1 = xl.CellStyle(textWrapping:xl.TextWrapping.WrapText, );
 
     // cellStyle.underline = Underline.Single; // or Underline.Double
-    var cellA1 =  sheetObject.cell(CellIndex.indexByString("A1"));
+    var cellA1 =  sheetObject.cell(xl.CellIndex.indexByString("A1"));
     // var cell1 =  sheetObject.;
-    var cellB1 =  sheetObject.cell(CellIndex.indexByString("B1"));
-    var cellC1 =  sheetObject.cell(CellIndex.indexByString("C1"));
-    var cellD1 =  sheetObject.cell(CellIndex.indexByString("D1"));
+    var cellB1 =  sheetObject.cell(xl.CellIndex.indexByString("B1"));
+    var cellC1 =  sheetObject.cell(xl.CellIndex.indexByString("C1"));
+    //var cellD1 =  sheetObject.cell(xl.CellIndex.indexByString("D1"));
 
     cellA1.cellStyle=cellStyle;
     cellA1.value="Make";
@@ -1456,10 +1458,10 @@ class _UploadPOState extends State<UploadPO> {
 
 
     for(int i=0;i<poList.length;i++) {
-      sheetObject.cell(CellIndex.indexByString("A${i+2}")).value=poList[i]['make'].toString();
-      sheetObject.cell(CellIndex.indexByString("A${i+2}")).cellStyle=cellStyle1;
-      sheetObject.cell(CellIndex.indexByString("B${i+2}")).value=poList[i]['model'].toString();
-      sheetObject.cell(CellIndex.indexByString("C${i+2}")).value=poList[i]['varient'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("A${i+2}")).value=poList[i]['make'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("A${i+2}")).cellStyle=cellStyle1;
+      sheetObject.cell(xl.CellIndex.indexByString("B${i+2}")).value=poList[i]['model'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("C${i+2}")).value=poList[i]['varient'].toString();
       // sheetObject.cell(CellIndex.indexByString("D${i+2}")).value=poList[i]['billing_address'].toString();
     }
 
@@ -1469,52 +1471,9 @@ class _UploadPOState extends State<UploadPO> {
     sheetObject.setColWidth(1, 20);
     sheetObject.setColWidth(2, 40.49);
 
-    ///
-    /// Inserting and removing column and rows
-    //
-    // // insert column at index = 8
-    // sheetObject.insertColumn(8);
-    //
-    // // remove column at index = 18
-    // sheetObject.removeColumn(18);
-    //
-    // // insert row at index = 82
-    // sheetObject.removeRow(82);
-    //
-    // // remove row at index = 80
-    // sheetObject.removeRow(80);
-    var fileBytes = excel.save(fileName: "My_Excel_File_Name.xlsx");
 
 
-// // Create a new Workbook
-//     final Workbook workbook = Workbook();
-//     final Worksheet worksheet = workbook.worksheets[0];
-// // Add data to cells
-// //
-//     worksheet.getRangeByName('A1').setText('Address');
-//     worksheet.getRangeByName('B1').setText('Name');
-//     worksheet.getRangeByName('C1').setText('Age');
-//     //
-//     // for(int i=0;i<jsonData.length;i++) {
-//     //   worksheet.getRangeByName('A${i+2}').setValue(10);
-//     //   worksheet.getRangeByName('B${i+2}').setValue(20);
-//     //   worksheet.getRangeByName('C${i+2}').setValue(30);
-//     //
-//     // }
-//
-// // Save the workbook to a file
-//     // Save and dispose workbook.
-//     final bytes = workbook.saveAsStream();
-//    // await saveAndLaunchFile(bytes, 'JanuaryData');
-//     dynamic decodeData =(base64.encode(bytes));
-//     print("+++++++++++++++++++000000000000000000000");
-//     print(bytes);
-//     var excel = Excel.decodeBytes(bytes);
-//     var fileBytes = excel.save(fileName: "My_Excel_File_Name.xlsx");
-//     // AnchorElement(
-//     //     href: 'data:application/octet-stream;charset=utf-16le;base64,$decodeData')
-//     //   ..setAttribute('download', '1.xlsx')
-//     //   ..click();
+
   }
 
 
@@ -1530,17 +1489,17 @@ class _UploadPOState extends State<UploadPO> {
     if (pickedFile != null) {
 
       var bytes = pickedFile.files.single.bytes;
-      print("picked file bytes");
+      log("picked file bytes");
       // print(bytes);
       //  parseExcelFile(bytes);
 
       if(bytes!=null){
 
-        var excel = Excel.decodeBytes(bytes);
+        var excel = xl.Excel.decodeBytes(bytes);
         newData=[];
         for (var table in excel.tables.keys) {
 
-          print(table); //sheet Name
+          log(table); //sheet Name
           //  print(excel.tables[table]!.maxCols);
           // print(excel.tables[table]!.maxRows);
           for(int i=1;i<excel.tables[table]!.rows.length;i++){
@@ -1671,7 +1630,7 @@ class _UploadPOState extends State<UploadPO> {
         selectedDateTime = picked;
 
         selectedDate = "${picked.day.toString()}-${picked.month.toString()}-${picked.year.toString()}";
-        print(selectedDate);
+        log(selectedDate);
         getPoByCate(selectedDate);
       });
     }
@@ -1694,11 +1653,11 @@ class _UploadPOState extends State<UploadPO> {
           visibleDelete=false;
         });
       }
-      print('--------response--');
-      print(selectedField);
+      log('--------response--');
+      log(selectedField);
       fetchPoData();
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
 }

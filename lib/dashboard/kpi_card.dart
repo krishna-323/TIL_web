@@ -53,7 +53,7 @@ class _KpiCardState extends State<KpiCard> {
                                 child: Row(
                                   children: [
                                     const Flexible(child: Icon(Icons.arrow_upward_sharp,color: Colors.green,size: 16)),
-                                    Flexible(child: Text(widget.subTitle2,overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.green,fontSize: 12,))),
+                                    Flexible(child: Text(widget.subTitle2,overflow:TextOverflow.ellipsis,maxLines: 1 ,style: const TextStyle(color: Colors.green,fontSize: 12,))),
                                   ],
                                 ),
                               ),
@@ -79,11 +79,11 @@ class _KpiCardState extends State<KpiCard> {
                 style: BorderStyle.solid,
               ),
             ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
-                    child: const Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: const TextStyle(fontWeight: FontWeight.bold,)),
+                    child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
                   ),
                 ],
               ),

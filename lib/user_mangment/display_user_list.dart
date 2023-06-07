@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -90,7 +91,7 @@ class _UserManagementState extends State<UserManagement> {
             if(value['error']=="email already exist"){
               setState(() {
                 errorMessage="Email Already Exist";
-                print(errorMessage);
+                log(errorMessage);
               });
 
             }
@@ -98,7 +99,7 @@ class _UserManagementState extends State<UserManagement> {
 
               setState(() {
                 errorMessage="User Already Exist";
-                print(errorMessage);
+                log(errorMessage.toString());
               });
 
             }
@@ -265,13 +266,14 @@ class _UserManagementState extends State<UserManagement> {
 
     );
     if (response.statusCode == 200) {
-      print('--------response--');
-      print(response.body);
+
       getUserData();
-      Navigator.of(context).pop();
+      if(mounted) {
+        Navigator.of(context).pop();
+      }
 
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
   Map updateUserDetailsStore={};
@@ -297,18 +299,20 @@ class _UserManagementState extends State<UserManagement> {
         if(updateUserDetailsStore['error']=="user already exist"){
           setState(() {
             errorMessage='User Already Exist';
-            print(errorMessage);
+            log(errorMessage);
           });
 
         }
         else if(updateUserDetailsStore['error']=='email already exist'){
           setState(() {
             errorMessage='Email Already Exist';
-            print(errorMessage);
+            log(errorMessage);
           });
 
         }
-        Navigator.of(context).pop();
+        if(mounted) {
+          Navigator.of(context).pop();
+        }
 
         setState((){
           showDialog(
@@ -409,13 +413,15 @@ class _UserManagementState extends State<UserManagement> {
         getUserData();
         // print('------------------------satuscode-----------');
         // print(response.statusCode);
-        Navigator.of(context).pop();
+        if(mounted) {
+          Navigator.of(context).pop();
+        }
 
       }
 
 
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
 
@@ -501,9 +507,7 @@ class _UserManagementState extends State<UserManagement> {
                   builder: (context) {
                     //Declaration Is Here.
                     final editUserName = TextEditingController();
-                    bool editCompanyError = false;
                     bool editUserNameError = false;
-                    bool editUserRoleError = false;
                     bool editUserEmailError = false;
                     final editEmail = TextEditingController();
                     editUserName.text = userData['username'];
@@ -624,9 +628,9 @@ class _UserManagementState extends State<UserManagement> {
                                                         color: Colors.black)),
                                                 child: DropdownButtonHideUnderline(
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(left:10),
+                                                    padding: const EdgeInsets.only(left:10),
                                                     child: DropdownButton<String>(
-                                                      hint: Text("Select CompanyName"),
+                                                      hint: const Text("Select CompanyName"),
                                                       value: selectedCompanyName,
                                                       onChanged: (String ? company){
                                                         setState((){
@@ -668,9 +672,9 @@ class _UserManagementState extends State<UserManagement> {
                                                         color: Colors.black)),
                                                 child: DropdownButtonHideUnderline(
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(left:10),
+                                                    padding: const EdgeInsets.only(left:10),
                                                     child: DropdownButton<String>(
-                                                      hint: Text("Select User Role"),
+                                                      hint: const Text("Select User Role"),
                                                       //Initial Value.
                                                       value:   roleInitial,
                                                       onChanged: (String ? role){
@@ -763,8 +767,6 @@ class _UserManagementState extends State<UserManagement> {
                                                     'company_name': selectedCompanyName,
                                                     //editCompanyName.text,
                                                   };
-                                                  print('-----change-----');
-                                                  print(editUserManagement);
                                                   updateUserDetails(editUserManagement);
                                                 }
 
@@ -1308,9 +1310,6 @@ class _UserManagementState extends State<UserManagement> {
                                             Future changePasswordFunc(
                                                 String storeEmail,
                                                 String storePassword) async {
-                                              print('------check-------------');
-                                              print('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword');
-
                                               String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
                                               final response = await http.get(Uri.parse(url),
                                                   headers: {
@@ -1320,9 +1319,11 @@ class _UserManagementState extends State<UserManagement> {
                                               if (response.statusCode == 200) {
                                                 // print('-----------status-code------------');
                                                 // print(response.statusCode);
-                                                Navigator.of(context).pop();
+                                                if(mounted) {
+                                                  Navigator.of(context).pop();
+                                                }
                                               } else {
-                                                print(response.statusCode.toString());
+                                                log(response.statusCode.toString());
                                               }
                                             }
 
@@ -1408,7 +1409,7 @@ class _UserManagementState extends State<UserManagement> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFFE0E0E0),)
+                          border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
                       child: Column(
@@ -1581,7 +1582,7 @@ class _UserManagementState extends State<UserManagement> {
                                 if(i==displayUserData.length)
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text("${startVal+15>userdata.length?userdata.length:startVal+1}-${startVal+15>userdata.length?userdata.length:startVal+15} of ${userdata.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+15>userdata.length?userdata.length:startVal+1}-${startVal+15>userdata.length?userdata.length:startVal+15} of ${userdata.length}",style: const TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -1601,12 +1602,12 @@ class _UserManagementState extends State<UserManagement> {
                                                   });
                                                 }
                                                 catch(e){
-                                                  print(e);
+                                                  log(e.toString());
                                                 }
                                               }
                                             }
                                             else{
-                                              print('else');
+                                              log('else');
                                             }
                                           },
                                         ),
@@ -1630,7 +1631,7 @@ class _UserManagementState extends State<UserManagement> {
                                                   });
                                                 }
                                                 catch(e){
-                                                  print(e);
+                                                  log(e.toString());
                                                 }
 
                                               }
@@ -1674,8 +1675,7 @@ class _UserManagementState extends State<UserManagement> {
           bool newUserEmailError = false;
           bool newPasswordError = false;
           bool newConformPasswordError = false;
-          bool salutationError = false;
-          bool companyError = false;
+
           final newUser = GlobalKey<FormState>();
           String? role;
           List <String> roleTypes  = ['Admin', 'User'];
@@ -1814,9 +1814,9 @@ class _UserManagementState extends State<UserManagement> {
                                               color: Colors.black)),
                                       child: DropdownButtonHideUnderline(
                                         child: Padding(
-                                          padding: EdgeInsets.only(left:10),
+                                          padding: const EdgeInsets.only(left:10),
                                           child: DropdownButton<String>(
-                                            hint: Text("Select User Role"),
+                                            hint: const Text("Select User Role"),
                                             //Initial Value.
                                             value:   role,
                                             onChanged: (String ? roleNames){
@@ -1856,9 +1856,9 @@ class _UserManagementState extends State<UserManagement> {
                                               color: Colors.black)),
                                       child: DropdownButtonHideUnderline(
                                         child: Padding(
-                                          padding: EdgeInsets.only(left:10),
+                                          padding: const EdgeInsets.only(left:10),
                                           child: DropdownButton<String>(
-                                            hint: Text("Select User Role"),
+                                            hint: const Text("Select User Role"),
                                             //Initial Value.
                                             value:   selectedCompanyName,
                                             onChanged: (String ? company){

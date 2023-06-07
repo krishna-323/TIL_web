@@ -1,6 +1,8 @@
 
 
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,7 @@ import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
 import '../../../widgets/motows_buttons/outlined_icon_mbutton.dart';
 import '../../../widgets/motows_buttons/outlined_mbutton.dart';
-import '../../utils/api/getApi.dart';
+import '../../utils/api/get_api.dart';
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -215,8 +217,6 @@ class _EstimateState extends State<Estimate> {
                                     );
 
                                   }
-                                  print("+++++++++++++++++++++++Posting Data+++++++++++++++++");
-                                  print(postDetails);
                                   postEstimate(postDetails);
                                 });
                               },
@@ -275,10 +275,10 @@ class _EstimateState extends State<Estimate> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
+          const Padding(
+            padding: EdgeInsets.all(18.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 SizedBox(
                   height: 42,
                   child: Icon(Icons.car_rental,color: Color(0xffCCBA13),size: 90),
@@ -608,7 +608,7 @@ class _EstimateState extends State<Estimate> {
                                                 });
                                               }
                                               else{
-                                                print('Date not selected');
+                                                log('Date not selected');
                                               }
                                             },
                                             decoration: textFieldSalesInvoiceDate(hintText: 'Invoice Date'),
@@ -669,8 +669,8 @@ class _EstimateState extends State<Estimate> {
             padding: const EdgeInsets.only(left: 18,right: 18),
             child: Container(color: const Color(0xffF3F3F3),
               height: 34,
-              child: Row(
-                children:  const [
+              child: const Row(
+                children:  [
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -721,11 +721,9 @@ class _EstimateState extends State<Estimate> {
                 }
               }
               catch (e){
-                print(e);
+                log(e.toString());
               }
               if(index==0){
-                print('-------------this is in fif conditions');
-                print(index);
                 subAmountTotal.text='0';
                 subTaxTotal.text='0';
                 subDiscountTotal.text='0';
@@ -733,9 +731,6 @@ class _EstimateState extends State<Estimate> {
                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
                 subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
               }else {
-                print(index);
-                print('----when this conditions exiqute------');
-
                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
                 subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
@@ -834,7 +829,7 @@ class _EstimateState extends State<Estimate> {
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return CustomPopupMenuButton(elevation: 4,
                                       decoration:  InputDecoration(
-                                        hintStyle: TextStyle(fontSize: 12),
+                                        hintStyle: const TextStyle(fontSize: 12),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
                                           contentPadding: const EdgeInsets.only(bottom: 12,right: 8,top: 2),
                                           border: InputBorder.none,
@@ -870,7 +865,7 @@ class _EstimateState extends State<Estimate> {
                                         setState(() {
                                           tax[index].text=value;
                                         });
-                                        print(tax[index].text);
+
                                       },
                                       onCanceled: () {
 
@@ -937,7 +932,7 @@ class _EstimateState extends State<Estimate> {
           const SizedBox(height: 40,),
           Padding(
             padding: const EdgeInsets.only(left: 18.0),
-            child: Container(
+            child: SizedBox(
               height: 38,
               child: Row(
                 children:  [
@@ -1138,10 +1133,10 @@ class _EstimateState extends State<Estimate> {
                          Container(
                            height: 40,
                            color: Colors.grey[200],
-                           child: Padding(
-                             padding: const EdgeInsets.only(left: 18.0),
+                           child: const Padding(
+                             padding: EdgeInsets.only(left: 18.0),
                              child: Row(
-                               children: const [
+                               children: [
                                  Expanded(child: Text("Brand")),
                                  Expanded(child: Text("Model")),
                                  Expanded(child: Text("Variant")),
@@ -1361,7 +1356,7 @@ class _EstimateState extends State<Estimate> {
   }
   textFieldBrandNameField({required String hintText, bool? error}) {
     return  InputDecoration(
-      suffixIcon:  brandNameController.text.isEmpty?Icon(Icons.search,size: 18):InkWell(onTap:(){
+      suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
           brandNameController.clear();
         });
@@ -1382,11 +1377,11 @@ class _EstimateState extends State<Estimate> {
   }
   textFieldModelNameField({required String hintText, bool? error}) {
     return  InputDecoration(
-      suffixIcon:  modelNameController.text.isEmpty?Icon(Icons.search,size: 18):InkWell(onTap:(){
+      suffixIcon:  modelNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         modelNameController.clear();
         displayList=vehicleList;
       },
-          child: Icon(Icons.close,size: 18,)
+          child: const Icon(Icons.close,size: 18,)
       ),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
@@ -1395,13 +1390,13 @@ class _EstimateState extends State<Estimate> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
   textFieldVariantNameField({required String hintText, bool? error}) {
     return  InputDecoration(
-      suffixIcon:  variantController.text.isEmpty?Icon(Icons.search,size: 18):InkWell(onTap:(){
+      suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         variantController.clear();
       },
           child: const Icon(Icons.close,size: 18,)
@@ -1413,7 +1408,7 @@ class _EstimateState extends State<Estimate> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1503,8 +1498,7 @@ class _EstimateState extends State<Estimate> {
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {
         if(value!=null){
-          print('-------------value------------------');
-          print(value);
+
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
           Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
           //Navigator.of(context).pop();

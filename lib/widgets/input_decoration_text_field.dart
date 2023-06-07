@@ -12,7 +12,7 @@ decorationInput(String hintString, bool val,) {
       disabledBorder:  const OutlineInputBorder(
           borderSide:  BorderSide(color:  Colors.white)),
       enabledBorder:OutlineInputBorder(
-          borderSide:  BorderSide(color: val ?Colors.blue :  Color(0xFFEEEEEE))),
+          borderSide:  BorderSide(color: val ?Colors.blue :  const Color(0xFFEEEEEE))),
       focusedBorder:  OutlineInputBorder(
           borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
       border:   OutlineInputBorder(
@@ -32,7 +32,7 @@ decorationInput2(String hintString, bool val,) {
       disabledBorder:  const OutlineInputBorder(
           borderSide:  BorderSide(color:  Colors.white)),
       enabledBorder:OutlineInputBorder(
-          borderSide:  BorderSide(color: val ?Colors.blue :  Color(0xFFEEEEEE))),
+          borderSide:  BorderSide(color: val ?Colors.blue :  const Color(0xFFEEEEEE))),
       focusedBorder:  OutlineInputBorder(
           borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
       border:   OutlineInputBorder(
@@ -69,9 +69,9 @@ decorationInput4(String hintString, bool val, bool isDisabled,) {
       contentPadding:  const EdgeInsets.fromLTRB(12, 00, 0, 0),
       hintText: hintString,
       suffixIconColor: const Color(0xfff26442),
-      disabledBorder:   OutlineInputBorder(
+      disabledBorder:   const OutlineInputBorder(
           borderSide:  BorderSide(color: Colors.grey)),
-      enabledBorder:OutlineInputBorder(
+      enabledBorder:const OutlineInputBorder(
           borderSide:  BorderSide(color:Colors.blue )),
       focusedBorder:  OutlineInputBorder(
           borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),

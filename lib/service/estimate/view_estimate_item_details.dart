@@ -10,7 +10,7 @@ import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
 import '../../../widgets/motows_buttons/outlined_icon_mbutton.dart';
 import '../../../widgets/motows_buttons/outlined_mbutton.dart';
-import '../../utils/api/getApi.dart';
+import '../../utils/api/get_api.dart';
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -438,10 +438,10 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
+          const Padding(
+            padding: EdgeInsets.all(18.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 SizedBox(
                   height: 42,
                   child: Icon(Icons.car_rental,color: Color(0xffCCBA13),size: 90),
@@ -767,7 +767,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                                 });
                                               }
                                               else{
-                                                print('Date not selected');
+                                                log('Date not selected');
                                               }
                                             },
                                             decoration: textFieldSalesInvoiceDate(hintText: 'Invoice Date'),
@@ -828,8 +828,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
             padding: const EdgeInsets.only(left: 18,right: 18),
             child: Container(color: const Color(0xffF3F3F3),
               height: 34,
-              child: Row(
-                children:  const [
+              child: const Row(
+                children:  [
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -874,7 +874,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                  }
                }
                catch (e){
-                 print(e);
+                 log(e.toString());
                }
                if(index==0){
                  subAmountTotal.text='0';
@@ -1265,10 +1265,10 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             Container(
                               height: 40,
                               color: Colors.grey[200],
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 18.0),
                                 child: Row(
-                                  children: const [
+                                  children: [
                                     Expanded(child: Text("Brand")),
                                     Expanded(child: Text("Model")),
                                     Expanded(child: Text("Variant")),
@@ -1549,7 +1549,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1646,9 +1646,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       if(response.statusCode==200){
         if(lineItems.isNotEmpty){
           lineItemsData(lineItems);
-        };
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
-        Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        }
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
+          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        }
+
       }
       else{
         log(response.statusCode.toString());
@@ -1663,10 +1666,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
      postData(context:context ,url: url,requestBody: lineItems).then((value) => {
        setState((){
          if(value!=null){
-
-           print('-------inside post api()-----');
-           print(lineItems);
-
+           log(value.toString());
          }
        })
      });
@@ -1698,8 +1698,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   }
   }
   catch(e){
-  print(e.toString());
-  print(e);
+  log(e.toString());
   }
   }
    deleteEstimateItemData(estVehicleId)async{
@@ -1712,12 +1711,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       }
       );
       if(response.statusCode ==200){
-        ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
-        Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        }
       }
     }
     catch(e){
-     print(e.toString());
+     log(e.toString());
     }
   }
   textFieldSalesInvoice({required String hintText, bool? error}) {

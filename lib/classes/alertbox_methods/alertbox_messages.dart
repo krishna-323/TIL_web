@@ -4,8 +4,8 @@ void showLoginErrorDialog(context) {
   showDialog(
     context: context, builder: (BuildContext context) {
     return  AlertDialog(
-      title:  Column(
-        children: const <Widget>[
+      title:  const Column(
+        children: <Widget>[
           Text("Invalid User Name or Password"),
           Icon(
             Icons.error,
@@ -30,8 +30,8 @@ void showLoginServerErrorDialog(context) {
   showDialog(
     context: context, builder: (BuildContext context) {
     return  AlertDialog(
-      title:  Column(
-        children: const <Widget>[
+      title:  const Column(
+        children: <Widget>[
           Text("Server Error"),
           Icon(
             Icons.error,
@@ -55,8 +55,8 @@ void showLoginUserErrorDialog(context) {
   showDialog(
     context: context, builder: (BuildContext context) {
     return  AlertDialog(
-      title:  Column(
-        children: const <Widget>[
+      title:  const Column(
+        children: <Widget>[
           Text("Invalid UserName"),
           Icon(
             Icons.error,
@@ -80,8 +80,8 @@ void showPasswordServerErrorDialog(context) {
   showDialog(
     context: context, builder: (BuildContext context) {
     return  AlertDialog(
-      title:  Column(
-        children: const <Widget>[
+      title:  const Column(
+        children: <Widget>[
           Text("Invalid Password"),
           Icon(
             Icons.error,

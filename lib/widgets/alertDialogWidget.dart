@@ -49,7 +49,7 @@ import 'package:flutter/physics.dart';
       transitionBuilder: (context, anim1, anim2, child) {
         return SlideTransition(
           position: anim1.drive(Tween(
-              begin: Offset(0, fromTop ? -1 : 1), end: Offset(0, 0))
+              begin: Offset(0, fromTop ? -1 : 1), end: const Offset(0, 0))
               .chain(CurveTween(curve: Sprung()))),
           child: child,
         );
@@ -67,7 +67,7 @@ class Sprung extends Curve {
     double stiffness = 180,
     double mass = 1.0,
     double velocity = 0.0,
-  }) : this._sim = SpringSimulation(
+  }) : _sim = SpringSimulation(
     SpringDescription(
       damping: damping,
       mass: mass,

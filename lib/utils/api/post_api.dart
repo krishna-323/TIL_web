@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 
  postData({context, url,requestBody}) async {
-  print(requestBody);
+  // print(requestBody);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String authToken = prefs.getString("authToken") ?? "";
   final response = await http.post(

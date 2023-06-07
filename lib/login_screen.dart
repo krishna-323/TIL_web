@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:new_project/widgets/input_decoration_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'cart_bloc/cart_items_bloc.dart';
 import 'classes/alertbox_methods/alertbox_messages.dart';
 import 'classes/motows_routes.dart';
 
@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -117,7 +117,6 @@ class _LoginPageState extends State<LoginPage> {
                                   decoration: decorationInputPassword("Password", passWordColor,passWordHindBool,passwordHideAndViewFunc),
                                   onSubmitted: (v)  async {
                                     int val = await checkLoginCredentials(userName,password);
-                                    print(val);
                                     if(val == 200)
                                     {
                                       if(mounted) {
@@ -157,8 +156,6 @@ class _LoginPageState extends State<LoginPage> {
 
                                     onPressed: () async {
                                       int val = await checkLoginCredentials(userName,password);
-                                      print(val);
-
                                       if(val == 200)
                                       {
                                         if(mounted) {
@@ -213,12 +210,10 @@ class _LoginPageState extends State<LoginPage> {
     );
     if (response.statusCode == 200) {
       Map responseData = jsonDecode(response.body);
-      print(response.body);
       if(responseData.containsKey("token")){
         if(responseData['role'].toString()=="Admin"){
-          bloc.setLoginStatus(true);
         }
-        bloc.setAuthToken(responseData['token'].toString());
+
         prefs.setString("authToken", responseData['token'].toString());
         prefs.setString("role", responseData['role'].toString());
         prefs.setString("companyName", responseData['company_name'].toString());
@@ -226,7 +221,6 @@ class _LoginPageState extends State<LoginPage> {
         return 200;
       }
       else if (responseData.containsKey("error")){
-        print("_________ Error----------------");
         if(responseData['status']==403){
           return 403;
         }
@@ -246,8 +240,8 @@ class _LoginPageState extends State<LoginPage> {
     }
     else {
       //Loader.hide();
-      print("+++++++++++++++++++++++++++++ Status Code ++++++++++++++++++++++++++");
-      print(response.statusCode);
+      log("+++++++++++++++++++++++++++++ Status Code ++++++++++++++++++++++++++");
+      log(response.statusCode.toString());
       setState(() {
         showError == false;
       });

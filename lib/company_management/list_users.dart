@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -55,8 +56,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           if (value != null) {
             response = value;
             userList = response;
-            print('-----inside api----');
-            print(userList);
             if(userList.isEmpty){
               companyUsers=true;
             }
@@ -70,8 +69,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                 for(int i=0;i<userList.length;i++){
                   displayUserList.add(userList[i]);
                 }
-                print('-----displayList is lessthan 5----');
-                print(displayUserList);
               }
             }
           }
@@ -101,7 +98,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               if(value['error']=="email already exist"){
                 setState(() {
                   errorMessage="Email Already Exist";
-                  print(errorMessage);
+                  log(errorMessage.toString());
                 });
 
               }
@@ -109,7 +106,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
                 setState(() {
                   errorMessage="User Already Exist";
-                  print(errorMessage);
+                  log(errorMessage.toString());
                 });
 
               }
@@ -148,7 +145,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                       ),
                                       Center(
                                           child: Text(errorMessage,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: Colors.indigo,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15),
@@ -280,19 +277,20 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         if(updateUserDetailsStore['error']=="user already exist"){
           setState(() {
             errorMessage='User Already Exist';
-            print(errorMessage);
+            log(errorMessage);
           });
 
         }
         else if(updateUserDetailsStore['error']=='email already exist'){
           setState(() {
             errorMessage='Email Already Exist';
-            print(errorMessage);
+            log(errorMessage);
           });
 
         }
-        Navigator.of(context).pop();
-
+        if(mounted) {
+          Navigator.of(context).pop();
+        }
         setState((){
           showDialog(
             context: context,
@@ -396,7 +394,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
 
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
 
@@ -407,7 +405,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             children: [
 
               Icon(Icons.edit,size: 18,color: Colors.grey[800],),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               Text(
                 'Edit',
                 style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
@@ -435,7 +433,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             child: Row(
               children: [
                 Icon(Icons.change_circle_sharp,color: Colors.grey[800],size: 18,),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 Text(
                   'Change Password',
                   style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
@@ -466,10 +464,11 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       // print('--------response--');
       // print(response.body);
       fetchSameCompanyCustomers();
-      Navigator.of(context).pop();
-
+      if(mounted) {
+        Navigator.of(context).pop();
+      }
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
   //popup menu button.
@@ -506,9 +505,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                   builder: (context) {
                     //Declaration Is Here.
                     final editUserName = TextEditingController();
-                    bool editCompanyError = false;
                     bool editUserNameError = false;
-                    bool editUserRoleError = false;
                     bool editUserEmailError = false;
                     final editEmail = TextEditingController();
                     editUserName.text = userData['username'];
@@ -626,9 +623,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     color: Colors.black)),
                                                 child: DropdownButtonHideUnderline(
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(left:10),
+                                                    padding: const EdgeInsets.only(left:10),
                                                     child: DropdownButton<String>(
-                                                      hint: Text("Select CompanyName"),
+                                                      hint: const Text("Select CompanyName"),
                                                       value: selectedCompanyName,
                                                       onChanged: (String ? company){
                                                         setState((){
@@ -670,9 +667,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                         color: Colors.black)),
                                                 child: DropdownButtonHideUnderline(
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(left:10),
+                                                    padding: const EdgeInsets.only(left:10),
                                                     child: DropdownButton<String>(
-                                                      hint: Text("Select User Role"),
+                                                      hint: const Text("Select User Role"),
                                                       //Initial Value.
                                                       value:   roleInitial ,
                                                       onChanged:(String ? company){
@@ -1203,9 +1200,11 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                               if (response.statusCode == 200) {
                                                 // print('-----------status-code------------');
                                                 // print(response.statusCode);
-                                                Navigator.of(context).pop();
+                                                if(mounted) {
+                                                  Navigator.of(context).pop();
+                                                }
                                               } else {
-                                                print(response.statusCode.toString());
+                                                log(response.statusCode.toString());
                                               }
                                             }
 
@@ -1286,7 +1285,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFFE0E0E0),)
+                          border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
                       child: Column(
@@ -1462,7 +1461,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                               if(i==displayUserList.length)
                                 Row(mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text("${startVal+15>userList.length?userList.length:startVal+1}-${startVal+15>userList.length?userList.length:startVal+15} of ${userList.length}",style: TextStyle(color: Colors.grey)),
+                                    Text("${startVal+15>userList.length?userList.length:startVal+1}-${startVal+15>userList.length?userList.length:startVal+15} of ${userList.length}",style: const TextStyle(color: Colors.grey)),
                                     const SizedBox(width: 10,),
                                     Material(color: Colors.transparent,
                                       child: InkWell(
@@ -1482,12 +1481,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                 });
                                               }
                                               catch(e){
-                                                print(e);
+                                                log(e.toString());
                                               }
                                             }
                                           }
                                           else{
-                                            print('else');
+                                            log('else');
                                           }
                                         },
                                       ),
@@ -1511,7 +1510,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                 });
                                               }
                                               catch(e){
-                                                print(e);
+                                                log(e.toString());
                                               }
 
                                             }
@@ -1551,11 +1550,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           bool newUserEmailError = false;
           bool newPasswordError = false;
           bool newConformPasswordError = false;
-          bool salutationError = false;
-          bool companyError = false;
           final newUser = GlobalKey<FormState>();
           var role = '';
-          final List<String> roleTypes = ['Admin', 'User'];
 
 
           // final companyName = TextEditingController();
@@ -1574,7 +1570,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           }
 
           var selectedCompanyName = '';
-          final List<String> countryNames = [...companyNamesList];
 
           Map userData = {};
           String capitalizeFirstWord(String value) {

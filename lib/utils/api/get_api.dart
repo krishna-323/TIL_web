@@ -1,12 +1,9 @@
-
-
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../cart_bloc/cart_items_bloc.dart';
 import '../../main.dart';
 
  getData({context, url}) async {
@@ -55,7 +52,6 @@ logOutApi({dynamic response, context, exception}) async {
     prefs.setString('authToken', "");
     prefs.setString('company_name', "");
     prefs.setString('role', "");
-    bloc.setLoginStatus(false);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const MyApp()));
   }

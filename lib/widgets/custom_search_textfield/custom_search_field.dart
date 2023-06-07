@@ -53,7 +53,7 @@ class CustomTextFieldSearch extends StatefulWidget {
 
 
   @override
-  _CustomTextFieldSearchState createState() => _CustomTextFieldSearchState();
+  State <CustomTextFieldSearch> createState() => _CustomTextFieldSearchState();
 }
 
 class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
@@ -158,6 +158,7 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
     resetState(tempList);
   }
 
+  @override
   void initState() {
     super.initState();
 
@@ -179,7 +180,7 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         _overlayEntry = _createOverlayEntry();
-        Overlay.of(context)!.insert(_overlayEntry);
+        Overlay.of(context).insert(_overlayEntry);
       } else {
         _overlayEntry.remove();
         // check to see if itemsFound is false, if it is clear the input
@@ -247,10 +248,10 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
         return Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if(i==0 && widget.showAdd!=false)
-              InkWell(hoverColor: mHoverColor,onTap: (){},child:  SizedBox(height: 40,child: Padding(
-                padding: const EdgeInsets.only(left: 16.0,top: 8,bottom: 2),
+              InkWell(hoverColor: mHoverColor,onTap: (){},child:  const SizedBox(height: 40,child: Padding(
+                padding: EdgeInsets.only(left: 16.0,top: 8,bottom: 2),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text("+ Add"),
                   ],
                 ),
@@ -291,7 +292,7 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
 
   /// A default loading indicator to display when executing a Future
   Widget _loadingIndicator() {
-    return Container(
+    return SizedBox(
       width: 50,
       height: 50,
       child: Center(
@@ -359,18 +360,20 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
             link: _layerLink,
             showWhenUnlinked: false,
             offset: Offset(0.0, overlaySize.height + 5.0),
-            child: Material(
-              elevation: 4.0,
-              child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: screenWidth,
-                    maxWidth: screenWidth,
-                    minHeight: 0,
-                    maxHeight: calculateHeight().toDouble(),
-                  ),
-                  child: loading
-                      ? _loadingIndicator()
-                      : _listViewContainer(context)),
+            child: TextFieldTapRegion(
+              child: Material(
+                elevation: 4.0,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: screenWidth,
+                      maxWidth: screenWidth,
+                      minHeight: 0,
+                      maxHeight: calculateHeight().toDouble(),
+                    ),
+                    child: loading
+                        ? _loadingIndicator()
+                        : _listViewContainer(context)),
+              ),
             ),
           ),
         ));
@@ -382,8 +385,6 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
       link: _layerLink,
       child: TextFormField(
         onTap: (){
-          print("++++++++++++++");
-          print(widget.showAdd);
           if(widget.showAdd==false){
 
           }

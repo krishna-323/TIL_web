@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:new_project/service/estimate/view_estimate_item_details.dart';
 import '../../../classes/arguments_classes/arguments_classes.dart';
-import '../../utils/api/getApi.dart';
+import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
@@ -86,7 +88,7 @@ import 'estimate.dart';
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFFE0E0E0),)
+                          border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
                       child: Column(
@@ -132,10 +134,10 @@ import 'estimate.dart';
                                       onPressed: (){},
                                       hoverColor: Colors.transparent,
                                       hoverElevation: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 18.0),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 18.0),
                                         child: Row(
-                                          children: const [
+                                          children: [
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
@@ -258,7 +260,7 @@ import 'estimate.dart';
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
 
-                                      Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: const TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -278,7 +280,7 @@ import 'estimate.dart';
                                               }
                                             }
                                             else{
-                                              print('else');
+                                              log('else');
                                             }
 
                                           },
@@ -306,7 +308,7 @@ import 'estimate.dart';
                                                     displayListItems.add(estimateItems[i]);
                                                   }
                                                   catch(e){
-                                                    print(e);
+                                                    log(e.toString());
                                                   }
 
                                                 });

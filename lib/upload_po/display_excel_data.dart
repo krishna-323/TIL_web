@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:csv/csv.dart';
@@ -13,7 +14,7 @@ class ExcelTableScreen extends StatefulWidget {
   final double selectedDestination;
   const ExcelTableScreen({Key? key, required this. drawerWidth, required this. selectedDestination}) : super(key: key);
   @override
-  _ExcelTableScreenState createState() => _ExcelTableScreenState();
+  State<ExcelTableScreen> createState() => _ExcelTableScreenState();
 }
 class _ExcelTableScreenState extends State<ExcelTableScreen> {
   final verticalScroll=ScrollController();
@@ -50,7 +51,7 @@ class _ExcelTableScreenState extends State<ExcelTableScreen> {
         final bytes = result.files.first.bytes!.toList();
         xlsx=false;
         csv=true;
-        print('----Selected File Is csv File----');
+
         setState(() {
           // we are assigning excel list data to( "csvData" is a empty list).
           // utf8.decode() is function it will convert bytes to characters as a string.
@@ -60,7 +61,7 @@ class _ExcelTableScreenState extends State<ExcelTableScreen> {
       else if(typeOfFile.endsWith(".xlsx")){
         csv=false;
         xlsx=true;
-        print('--------Selected File Is xlsx------');
+
         var bytes= result.files.single.bytes;
         if(bytes !=null){
           var excel =Excel.decodeBytes(bytes);
@@ -80,18 +81,18 @@ class _ExcelTableScreenState extends State<ExcelTableScreen> {
         }
       }
       else{
-        print('Unsupported file');
+        log('Unsupported file');
       }
     }
     catch(e){
-      print(e.toString());
+      log(e.toString());
     }
   }
   @override
   Widget  build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: PreferredSize(preferredSize: Size.fromHeight(60),
+      appBar: const PreferredSize(preferredSize: Size.fromHeight(60),
       child: CustomAppBar(),
 
       ),
@@ -104,7 +105,7 @@ class _ExcelTableScreenState extends State<ExcelTableScreen> {
               children: [
                 ElevatedButton(
                   onPressed: _loadCSVorXlSX,
-                  child: Text('Load Excel File'),
+                  child: const Text('Load Excel File'),
                 ),
                 if(csvData.isNotEmpty && csv==true )
                   // Expanded(

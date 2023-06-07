@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -117,7 +118,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
 
 
     } else {
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
   }
   //Delete api()
@@ -133,13 +134,15 @@ class _CompanyManagementState extends State<CompanyManagement> {
     );
     if(response.statusCode==200){
        getCompanyList();
-       Navigator.of(context).pop();
+       if(mounted) {
+         Navigator.of(context).pop();
+       }
 
 
 
     }
     else{
-      print(response.statusCode.toString());
+      log(response.statusCode.toString());
     }
 }
 
@@ -166,7 +169,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
             child: Row(
               children: [
                 Icon(Icons.delete_sharp,color: Colors.grey[800],size: 18,),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 Text(
                   'Delete',
                   style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
@@ -602,8 +605,6 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                                 'zip_code':editZipcode.text.toString(),
                                                 // 'userid':'',
                                               };
-                                              print('--------edit------');
-                                              print(companyDetails);
                                               editCompany(companyDetails);
                                             }
                                           });
@@ -783,7 +784,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Color(0xFFE0E0E0),)
+                          border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
                       child: Column(
@@ -955,7 +956,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                             if(i==displayListCompanies.length)
                               Row(mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text("${startVal+15>listCompanies.length?listCompanies.length:startVal+1}-${startVal+15>listCompanies.length?listCompanies.length:startVal+15} of ${listCompanies.length}",style: TextStyle(color: Colors.grey)),
+                                  Text("${startVal+15>listCompanies.length?listCompanies.length:startVal+1}-${startVal+15>listCompanies.length?listCompanies.length:startVal+15} of ${listCompanies.length}",style: const TextStyle(color: Colors.grey)),
                                   const SizedBox(width: 10,),
                                   Material(color: Colors.transparent,
                                     child: InkWell(
@@ -975,12 +976,12 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                               });
                                             }
                                             catch(e){
-                                              print(e);
+                                              log(e.toString());
                                             }
                                           }
                                         }
                                         else{
-                                          print('else');
+                                          log('else');
                                         }
                                       },
                                     ),
@@ -1004,7 +1005,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                               });
                                             }
                                             catch(e){
-                                              print(e);
+                                              log(e.toString());
                                             }
 
                                           }
@@ -1426,7 +1427,6 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                         'zip_code':zipCode.text,
                                         'userid': '',
                                       };
-                                      print(addCompany);
                                       postCompanyDetails(addCompany);
                                     }
                                   }),

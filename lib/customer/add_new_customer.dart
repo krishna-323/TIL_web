@@ -32,11 +32,7 @@ class AddNewCustomer extends StatefulWidget {
 
 class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProviderStateMixin {
 
-  @override
-  void dispose() {
-    super.dispose();
-  //  _tabController.dispose();
-  }
+
 
   @override
   void initState() {
@@ -124,7 +120,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -133,7 +129,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
       hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
-      constraints: BoxConstraints(maxHeight: 35),
+      constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),
       counterText: '',
@@ -1218,7 +1214,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                 child: SingleChildScrollView(
                   child: Column(
                     children:  [
-                      Row(children: const [
+                      const Row(children: [
                         SizedBox(height: 10,),
                       ]),
                        Padding(
@@ -1322,7 +1318,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
 
 
                          Padding(
-                          padding:  EdgeInsets.only(left: 8,bottom: 14,right: 16,top: 10),
+                          padding:  const EdgeInsets.only(left: 8,bottom: 14,right: 16,top: 10),
                           child: SizedBox(height: 32,
                             child:  OutlinedMButton(
                               text: "Vehicle Details",
@@ -1457,11 +1453,11 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
           Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///header
-               SizedBox(
+               const SizedBox(
                 height: 42,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20,),
-                  child: Row(children: const[Text("Customer Details"),],
+                  padding: EdgeInsets.only(left: 20,),
+                  child: Row(children: [Text("Customer Details"),],
                   ),
                 ),
               ),
@@ -1601,10 +1597,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                         ),
 
                         if(_invalidType)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10),
                             child: Column(
-                              children: const [
+                              children: [
                                 SizedBox(height: 6,),
                                 Text("Please Select Type",style: TextStyle(color:mErrorColor,fontSize: 12)),
                                 SizedBox(height: 6,),
@@ -1636,9 +1632,9 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
           Column(
             children: [
               ///Address Header
-              SizedBox(
+              const SizedBox(
                 height: 42,
-                child: Row(children: const [Padding(padding: EdgeInsets.only(left: 20), child: Text("Address Details"),
+                child: Row(children: [Padding(padding: EdgeInsets.only(left: 20), child: Text("Address Details"),
                     ),
                   ],
                 ),
@@ -1758,10 +1754,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
             Center(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 42,
                     child: Row(
-                      children: const [
+                      children: [
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text("Vehicle Details"),
@@ -1883,10 +1879,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
             Center(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 42,
                     child: Row(
-                      children: const [
+                      children: [
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text("Car Exchange Details"),

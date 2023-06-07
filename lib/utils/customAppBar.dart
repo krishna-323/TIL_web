@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../cart_bloc/cart_items_bloc.dart';
+
 import '../main.dart';
 import 'custom_popup_dropdown/custom_popup_dropdown.dart';
 
@@ -9,7 +9,7 @@ class CustomAppBar extends StatefulWidget {
   const CustomAppBar({Key? key}) : super(key: key);
 
   @override
-  _CustomAppBarState createState() => _CustomAppBarState();
+  State<CustomAppBar> createState() => _CustomAppBarState();
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
@@ -40,13 +40,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Theme _popMenu() {
     return Theme(
       data: Theme.of(context).copyWith(),
-      child: PopupMenuButton<String>(elevation: 4,shape: RoundedRectangleBorder(
+      child: PopupMenuButton<String>(elevation: 4,shape: const RoundedRectangleBorder(
         side: BorderSide(color:Color(0xFFE0E0E0)),
         borderRadius: BorderRadius.all(
           Radius.circular(5),
         ),
       ),
-        offset: Offset(-10, 56),
+        offset: const Offset(-10, 56),
         itemBuilder: (context) => _getPopupMenu(context),
         onSelected: (String value) async {
           if(value=="1"){
@@ -57,8 +57,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
             setState(() {
               //   prefs.remove('authToken');
               prefs!.setString('authToken', "");
-              bloc.setAuthToken("");
-              bloc.setLoginStatus(false);
               prefs!.setString('companyName', "");
               prefs!.setString('role', "");
             });
@@ -114,7 +112,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       suffixIcon: const Icon(Icons.add,color: mSaveButton,size: 14),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  BoxConstraints(maxHeight:35),
+      constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
@@ -146,7 +144,7 @@ String customerType='Select Customer Type';
         padding: const EdgeInsets.all(8.0),
         child: Image.asset('assets/logo/motows.png'),
       ),
-      title: Container(width: 385,height: 35,
+      title: SizedBox(width: 385,height: 35,
         child: CustomPopupMenuButton<String>( childWidth: 385,position: CustomPopupMenuPosition.under,
           decoration: customPopupDecoration(hintText: 'Create New Service'),
           hintText: "",
@@ -204,8 +202,8 @@ String customerType='Select Customer Type';
               padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: Row(
                 children: [
-                  Row(
-                    children:  const [
+                  const Row(
+                    children:  [
                       // MaterialButton(
                       //   color: Colors.blue,
                       //   onPressed: (){
@@ -341,7 +339,7 @@ class CustomAppBar2 extends StatefulWidget {
   const CustomAppBar2({Key? key}) : super(key: key);
 
   @override
-  _CustomAppBar2State createState() => _CustomAppBar2State();
+  State<CustomAppBar2> createState() => _CustomAppBar2State();
 }
 
 class _CustomAppBar2State extends State<CustomAppBar2> {
@@ -372,13 +370,13 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
   Theme _popMenu() {
     return Theme(
       data: Theme.of(context).copyWith(),
-      child: PopupMenuButton<String>(elevation: 4,shape: RoundedRectangleBorder(
+      child: PopupMenuButton<String>(elevation: 4,shape: const RoundedRectangleBorder(
         side: BorderSide(color:Color(0xFFE0E0E0)),
         borderRadius: BorderRadius.all(
           Radius.circular(5),
         ),
       ),
-        offset: Offset(-10, 56),
+        offset: const Offset(-10, 56),
         itemBuilder: (context) => _getPopupMenu(context),
         onSelected: (String value) async {
           if(value=="1"){
@@ -389,8 +387,6 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
             setState(() {
               //   prefs.remove('authToken');
               prefs!.setString('authToken', "");
-              bloc.setAuthToken("");
-              bloc.setLoginStatus(false);
               prefs!.setString('companyName', "");
               prefs!.setString('role', "");
             });
@@ -418,7 +414,7 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
       suffixIcon: const Icon(Icons.add,color: mSaveButton,size: 14),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  BoxConstraints(maxHeight:35),
+      constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
@@ -478,7 +474,7 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
         padding: const EdgeInsets.all(8.0),
         child: Image.asset('assets/logo/motows.png'),
       ),
-      title:Container(width: 385,height: 35,
+      title:SizedBox(width: 385,height: 35,
         child: CustomPopupMenuButton<String>( childWidth: 385,position: CustomPopupMenuPosition.under,
           decoration: customPopupDecoration(hintText: 'Create New Service'),
           hintText: "",
@@ -527,22 +523,7 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
               padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: Row(
                 children: [
-                  Row(
-                    children:  const [
-                      // MaterialButton(
-                      //   color: Colors.blue,
-                      //   onPressed: (){
-                      //
-                      //   },
-                      //   child:const Text('Add Docket',
-                      //     style: TextStyle(
-                      //       color: Colors.white,
-                      //       decoration: TextDecoration.underline,
-                      //       decorationStyle: TextDecorationStyle.dotted,
-                      //     ),),
-                      // ),
-                    ],
-                  ),
+
                   const SizedBox(width: 20,),
 
                   TooltipTheme(

@@ -1,5 +1,4 @@
 import 'package:rxdart/subjects.dart';
-
 import '../model/customer_details_model.dart';
 import '../network_provider/customer_details_network.dart';
 class CustomerDetailsBloc{
@@ -9,8 +8,8 @@ class CustomerDetailsBloc{
 
   Stream<CustomerModel> get getCustomerDetails => _customerDetailsController.stream;
 
-  fetchCustomerNetwork(newcustomer_id)async{
-    CustomerModel result = await customerDetailsProvider.fetchCustomerData(newcustomer_id);
+  fetchCustomerNetwork(customerId)async{
+    CustomerModel result = await customerDetailsProvider.fetchCustomerData(customerId);
     _customerDetailsController.sink.add(result);
   }
   dispose(){

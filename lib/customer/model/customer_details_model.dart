@@ -1,21 +1,21 @@
 
 class CustomerModel{
-  List<_CustomerModel> _customerList = [];
+  List<CustomerDataModel> _customerList = [];
   CustomerModel.fromProvider(Map parsedJson){
-    List<_CustomerModel> customerTemp = [];
+    List<CustomerDataModel> customerTemp = [];
 
-    _CustomerModel CustomerResult = _CustomerModel(parsedJson);
-    customerTemp.add(CustomerResult);
+    CustomerDataModel customerResult = CustomerDataModel(parsedJson);
+    customerTemp.add(customerResult);
     _customerList = customerTemp;
   }
-  List<_CustomerModel> get customerDocketData => _customerList;
+  List<CustomerDataModel> get customerDocketData => _customerList;
 }
 
-class _CustomerModel{
-  Map _CustomerData = {};
-  _CustomerModel(response){
+class CustomerDataModel{
+  Map _customerData = {};
+  CustomerDataModel(response){
 
-    _CustomerData ={
+    _customerData ={
       "customer_id":response["customer_id"]??'',
       "customer_name": response["customer_name"]??"",
     "mobile": response["mobile"]??"",
@@ -69,5 +69,5 @@ class _CustomerModel{
    // print(_CustomerData);
   }
 
-  Map get customerData => _CustomerData;
+  Map get customerData => _customerData;
 }

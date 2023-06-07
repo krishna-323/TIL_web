@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/custom_loader.dart';
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/motows_buttons/outlined_mbutton.dart';
@@ -168,8 +170,8 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
                                     MainAxisAlignment.spaceBetween,
                                     children: [
 
-                                      Column(
-                                        children: const [
+                                      const Column(
+                                        children: [
                                           SizedBox(height: 10,),
                                           Text("Customer",style: TextStyle(fontSize: 20)),
                                         ],
@@ -560,7 +562,7 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
           Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(customerName,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
-               Text(customerType,style: TextStyle(fontSize: 14)),
+               Text(customerType,style: const TextStyle(fontSize: 14)),
             ],
           ),
 
@@ -709,7 +711,7 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
                   ],
                 ),
               ),
-              Expanded(child: const SizedBox()),
+              const Expanded(child: SizedBox()),
               Expanded(flex: 4,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -737,474 +739,6 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
             ],
           ),
         ),
-
-        // Align(
-        //
-        //   alignment: Alignment.bottomLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20,right:20),
-        //     child:
-        //     Column(
-        //       children: [
-        //         //----name-----
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Customer Name',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //             Text(snapshot.data!.customerDocketData[0].customerData["first_name"]),
-        //             SizedBox(width:15),
-        //
-        //           ],
-        //         ),
-        //         const SizedBox(height: 20,),
-        //         //----company name-----
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Company Name',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['company_name'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 10,),
-        //         //-----customer email------
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Customer Email',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //             Text(snapshot.data!.customerDocketData[0].customerData['customer_email'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 10,),
-        //         //-----customer phone------
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Customer Phone',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['customer_phone'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 10,),
-        //         //--------website-------
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Website',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['website'])
-        //           ],
-        //         ),
-        //         const SizedBox(
-        //           height: 35,
-        //         ),
-        //
-        //         //-----Other Details------
-        //         const Align(
-        //           alignment: Alignment.topLeft,
-        //           child: Text(
-        //             'Other Details',
-        //             style: TextStyle(fontSize: 16),
-        //           ),
-        //         ),
-        //         const SizedBox(
-        //           height: 20,
-        //         ),
-        //         //-----currency-----
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Currency',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['currency'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 15,),
-        //         //----opening balance----
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Opening Balance',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['opening_balance'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 15,),
-        //         //----payment terms-----
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Payment Terms',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['payment_terms'])
-        //           ],
-        //         ),
-        //         const SizedBox(height: 15,),
-        //         //source of supply-------
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Place Of Supply',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //
-        //             Text(snapshot.data!.customerDocketData[0].customerData['place_of_supply'])
-        //           ],
-        //         ),
-        //         //Tax prefarance.
-        //         const SizedBox(height: 15,),
-        //         //source of supply-------
-        //         Row(
-        //           children:  [
-        //             const SizedBox(
-        //               width: 150,
-        //               child: Text(
-        //                 'Tax Preference',
-        //                 style:
-        //                 TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //               ),
-        //             ),
-        //             Text(snapshot.data!.customerDocketData[0].customerData["tax_preferences"]== 'yes' ? 'Taxable' :'NonTaxable' ),
-        //           ],
-        //         ),
-        //         const SizedBox(
-        //           height: 35,
-        //         ),
-        //
-        //         //  --------Address-----
-        //         const Align(
-        //           alignment: Alignment.topLeft,
-        //           child: Text(
-        //             'Address',
-        //             style: TextStyle(fontSize: 16),
-        //           ),
-        //         ),
-        //         const SizedBox(
-        //           height: 20,
-        //         ),
-        //         Row(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //           children: [
-        //             //-----billing Address-------
-        //             Container(
-        //               child: Column(
-        //                 crossAxisAlignment: CrossAxisAlignment.start,
-        //                 children:  [
-        //                   const Align(
-        //                     alignment: Alignment.topLeft,
-        //                     child: Text(
-        //                       'Billing Address',
-        //                       style: TextStyle(fontSize: 16),
-        //                     ),
-        //                   ),
-        //                   const SizedBox(
-        //                     height: 20,
-        //                   ),
-        //                   //------billing attention----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Attention',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_attention'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  ------billing country-----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Country',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_country'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  --------billing address street1------
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Address',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_address_street1'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -------billing city-------
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'City',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_city'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -----billing state----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'State',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_state'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  ---billing zipcode---
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Zip Code',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_zipcode'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -----billing phone-----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Phone',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['billing_phone'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                 ],
-        //               ),
-        //             ),
-        //             //------shipping address -----
-        //             Container(
-        //               child: Column(
-        //                 crossAxisAlignment: CrossAxisAlignment.start,
-        //                 children:  [
-        //                   const Align(
-        //                     alignment: Alignment.topLeft,
-        //                     child: Text(
-        //                       'Shipping Address',
-        //                       style: TextStyle(fontSize: 16),
-        //                     ),
-        //                   ),
-        //                   const SizedBox(
-        //                     height: 20,
-        //                   ),
-        //                   //------shipping attention----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Attention',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_attention'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  ------shipping country-----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Country',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_country'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  --------shipping address street1------
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Address',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_address_street1'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -------shipping city-------
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'City',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_city'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -----shipping state----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'State',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_state'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  ---shipping zipcode---
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Zip Code',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_zipcode'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                   //  -----shipping phone-----
-        //                   Row(
-        //                     children:  [
-        //                       const SizedBox(
-        //                         width: 150,
-        //                         child: Text(
-        //                           'Phone',
-        //                           style:
-        //                           TextStyle(color: Color.fromRGBO(119, 119, 119, 1)),
-        //                         ),
-        //                       ),
-        //
-        //                       Text(snapshot.data!.customerDocketData[0].customerData['shipping_phone'])
-        //                     ],
-        //                   ),
-        //                   const SizedBox(height: 15,),
-        //                 ],
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         Container(height: 25,)
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
@@ -1220,7 +754,6 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
 
       if(deleteResponse.statusCode ==200){
         setState(() {
-          print('------------------Delete Item Details (Api)--------------');
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content:  Text('Data Deleted'),)
           );
@@ -1233,14 +766,14 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
       else{
         //If Data is Not Present It Will Through This Exception.
         setState(() {
-          print('-----------------status----------');
-          print(deleteResponse.statusCode.toString());
+          log('-----------------status----------');
+          log(deleteResponse.statusCode.toString());
         });
       }
     }
     catch(e){
-      print(e.toString());
-      print(e);
+      log(e.toString());
+      log(e.toString());
     }
   }
 }

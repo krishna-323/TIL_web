@@ -1,22 +1,23 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/customer/view_customer_details.dart';
 import '../../classes/arguments_classes/arguments_classes.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
-import '../utils/api/getApi.dart';
+import '../utils/api/get_api.dart';
 import '../utils/custom_loader.dart';
 import '../utils/static_data/motows_colors.dart';
 import 'add_new_customer.dart';
-// import 'package:http/http.dart' as http;
+
 class ViewCustomerList extends StatefulWidget {
-  // final double drawerWidth;
-  // final double selectedDestination;
+
   final CustomerArguments arg;
   const ViewCustomerList({Key? key,  required this.arg  }) : super(key: key);
 
   @override
-  _ViewCustomerListState createState() => _ViewCustomerListState();
+  State<ViewCustomerList> createState() => _ViewCustomerListState();
 }
 
 class _ViewCustomerListState extends State<ViewCustomerList> {
@@ -77,7 +78,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
 
 
   Future fetchCustomerName(String customerName)async{
-    print(customerName);
+
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/get_search_by_customer_name/$customerName';
     try{
@@ -108,7 +109,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
       });
     }
     catch(e){
-      print(e.toString());
+      log(e.toString());
     }
   }
   Future fetchPhoneName(String phoneNumber)async{
@@ -133,7 +134,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                      });
                    }
                   catch(e){
-                     print(e.toString());
+                     log(e.toString());
                   }
 
                  }
@@ -151,7 +152,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
     }
     catch(e){
       logOutApi(context: context,response:response ,exception:e.toString());
-     print(e.toString());
+     log(e.toString());
     }
   }
   Future fetchCityNames(String cityName)async{
@@ -179,7 +180,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
       });
     }
     catch(e){
-      print(e.toString());
+      log(e.toString());
     }
   }
   customPopupDecoration({required String hintText, bool? error, bool? isFocused}) {
@@ -187,7 +188,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
       hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
-      constraints: BoxConstraints(maxHeight: 35),
+      constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),
       counterText: '',
@@ -211,7 +212,6 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
       ):
       InkWell(onTap: (){
         setState(() {
-          print('--------close ICon--------------');
           startVal=0;
           displayList=[];
           fetchListCustomerData();
@@ -249,7 +249,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
           child: const Icon(Icons.close,size: 14,)),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  BoxConstraints(maxHeight:35),
+      constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
@@ -272,7 +272,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
           child: const Icon(Icons.close,size: 14,)),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  BoxConstraints(maxHeight:35),
+      constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
@@ -352,7 +352,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xFFE0E0E0),)
+                        border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
                       child: Column(
@@ -366,11 +366,11 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                               child: Column(
                                 children: [
                                   const SizedBox(height: 18,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 18.0),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 18.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children:  const [
+                                      children:  [
                                         Text("Customer List ", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
                                       ],
@@ -447,7 +447,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                             fetchPhoneName(phoneController.text);
                                                           }
                                                           catch(e){
-                                                            print(e);
+                                                            log(e.toString());
                                                           }
                                                       }
                                                     },
@@ -487,7 +487,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 20,),
+                                                  const SizedBox(width: 20,),
                                                   // SizedBox(width: 10,),
                                                   // MaterialButton(
                                                   //   minWidth: 20,
@@ -524,10 +524,10 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                         onPressed: (){},
                                         hoverColor: Colors.transparent,
                                         hoverElevation: 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 18.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.only(left: 18.0),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Expanded(
                                                   child: Padding(
                                                     padding: EdgeInsets.only(top: 4.0),
@@ -671,7 +671,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
 
-                                      Text("${startVal+15>customersList.length?customersList.length:startVal+1}-${startVal+15>customersList.length?customersList.length:startVal+15} of ${customersList.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+15>customersList.length?customersList.length:startVal+1}-${startVal+15>customersList.length?customersList.length:startVal+15} of ${customersList.length}",style: const TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -691,12 +691,12 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                   });
                                                 }
                                               catch(e){
-                                                  print(e);
+                                                  log(e.toString());
                                               }
                                               }
                                             }
                                             else{
-                                              print('else');
+                                              log('else');
                                             }
 
                                           },
@@ -721,7 +721,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                  });
                                                }
                                                catch(e){
-                                                 print(e);
+                                                 log(e.toString());
                                                }
 
                                               }

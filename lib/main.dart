@@ -11,7 +11,7 @@ import 'classes/arguments_classes/arguments_classes.dart';
 import 'classes/motows_routes.dart';
 import 'company_management/list_companies.dart';
 import 'customer/list_customer.dart';
-import 'home_screen.dart';
+import 'dashboard/home_screen.dart';
 import 'login_screen.dart';
 
 
@@ -113,17 +113,28 @@ class _MyAppState extends State<MyApp> {
               }
               break;
 
-            case MotowsRoutes.pricesRoute : newScreen = Prices(args: settings.arguments ?? PricesArguments(drawerWidth:190, selectedDestination: 7.1));
-            break;
-            default: newScreen = MyHomePage();
+            case MotowsRoutes.pricesRoute :
+              {
+                PricesArguments pricesArguments;
+
+              if(settings.arguments!=null){
+                pricesArguments = settings.arguments as PricesArguments ;
+              }
+              else{
+                pricesArguments = PricesArguments(drawerWidth: 190,selectedDestination: 1.2);
+              }
+
+                newScreen = Prices(args:pricesArguments);
+              }break;
+            default: newScreen = const MyHomePage();
           }
           return PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => newScreen,
               reverseTransitionDuration: Duration.zero,transitionDuration: Duration.zero,settings: settings);
         },
         routes: {
-          'home':(context)=> MyHomePage(),
+          'home':(context)=> const MyHomePage(),
           "dashboard":(context) => const InitialScreen(),
-          MotowsRoutes.homeRoute:(context) => MyHomePage(),
+          MotowsRoutes.homeRoute:(context) => const MyHomePage(),
         },
         theme: ThemeData(useMaterial3: true,
 
@@ -179,7 +190,7 @@ class _InitialScreenState extends State<InitialScreen> {
       isLoading
           ? const Center(child: CircularProgressIndicator())
           : authToken == ""
-          ? const LoginPage(): MyHomePage(),
+          ? const LoginPage(): const MyHomePage(),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
 
     );
