@@ -15,7 +15,7 @@ class _CustomLoaderState extends State<CustomLoader> {
   @override
   Widget build(BuildContext context) {
 
-    return BlurryModalProgressHUD(
+    return BlurryModalProgressHUD(blurEffectIntensity: 0,
 
       color: Colors.white,
       dismissible: true,
