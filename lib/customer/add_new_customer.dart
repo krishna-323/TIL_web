@@ -28,21 +28,21 @@ class AddNewCustomer extends StatefulWidget {
 
   @override
   AddNewCustomerState createState() => AddNewCustomerState();
-}
+ }
 
 class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
+  //  _tabController.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _tabController=TabController(length: 2, vsync: this);
-    _tabController.addListener(_handleTabSelection);
+   // _tabController=TabController(length: 2, vsync: this);
+    //_tabController.addListener(_handleTabSelection);
     // getInitialData();
   }
 
@@ -53,13 +53,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   String? authToken;
   Map vehicleDetails={};
 
-  // Future getInitialData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   authToken = prefs.getString("authToken");
-  // }
-  late TabController _tabController;
+
+ // late TabController _tabController;
   bool loading =false;
-  int _tabIndex=0;
+
 
   int _selectedIndex = 0;
   bool isCustFormFilled= false;
@@ -131,8 +128,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  customPopupDecoration(
-      {required String hintText, bool? error, bool? isFocused}) {
+  customPopupDecoration({required String hintText, bool? error, bool? isFocused}) {
     return InputDecoration(
       hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
@@ -215,8 +211,8 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   bool _invalidExchange = false;
   bool _invalidCarModel = false;
   bool _invalidEvaluationDate = false;
-bool stateError=false;
-bool distError=false;
+  bool stateError=false;
+  bool distError=false;
   final List<Widget> myTabs=[
     const Tab(text:'Customer Details'),
     const Tab(text:"Vehicle"),
@@ -241,13 +237,7 @@ bool distError=false;
     'Individual',
     'Company'
   ];
-  _handleTabSelection(){
-    if(_tabController.indexIsChanging){
-      setState(() {
-        _tabIndex=_tabController.index;
-      });
-    }
-  }
+
 
   //This  declaration for state.
  final stateContainer=TextEditingController();
@@ -1092,6 +1082,8 @@ bool distError=false;
     size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+
+
     return Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(60),
@@ -1114,7 +1106,7 @@ bool distError=false;
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("New Customer"),
+                    title: const Text("Customer"),
                     actions: [
                       Row(
                         children: [
@@ -1184,38 +1176,38 @@ bool distError=false;
                         ],
                       ),
                       const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 100,height: 28,
-                            child: _selectedIndex == 0?
-                            OutlinedMButton(
-                              text: 'Next',
-                              buttonColor:mSaveButton ,
-                              textColor: Colors.white,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                setState(() {
-                                  _selectedIndex=1;
-                                });
-                              },
-
-                            ):
-                            OutlinedMButton(
-                              text: 'Back',
-                              buttonColor:mSaveButton ,
-                              textColor: Colors.white,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                setState(() {
-                                  _selectedIndex=0;
-                                });
-                              },
-
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     SizedBox(
+                      //       width: 100,height: 28,
+                      //       child: _selectedIndex == 0?
+                      //       OutlinedMButton(
+                      //         text: 'Next',
+                      //         buttonColor:mSaveButton ,
+                      //         textColor: Colors.white,
+                      //         borderColor: mSaveButton,
+                      //         onTap: (){
+                      //           setState(() {
+                      //             _selectedIndex=1;
+                      //           });
+                      //         },
+                      //
+                      //       ):
+                      //       OutlinedMButton(
+                      //         text: 'Back',
+                      //         buttonColor:mSaveButton ,
+                      //         textColor: Colors.white,
+                      //         borderColor: mSaveButton,
+                      //         onTap: (){
+                      //           setState(() {
+                      //             _selectedIndex=0;
+                      //           });
+                      //         },
+                      //
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(width: 30),
                     ],
                   ),
@@ -1288,61 +1280,113 @@ bool distError=false;
       key: _formKey,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Card(
-            surfaceTintColor: Colors.white,
-            child: SizedBox(width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:  const EdgeInsets.only(left: 8,bottom: 5,right: 16,top: 10),
-                      child:  Text("Step ${_selectedIndex+1} of 2",style: const TextStyle(fontSize: 18)),
-                    ),
-                    _selectedIndex==0 ?
-                    const Padding(
-                      padding:  EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
-                      child: SizedBox(height: 30,
-                        child:  OutlinedMButton(
-                          text: 'Customer Details',
-                          textColor: mSaveButton,
-                          borderColor: mSaveButton,
+          Column(
+            children: [
+              Card(
+                surfaceTintColor: Colors.white,
+                child: SizedBox(width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding:  const EdgeInsets.only(left: 8,bottom: 5,right: 16,top: 10),
+                          child:  Text("Step ${_selectedIndex+1} of 2",style: const TextStyle(fontSize: 18)),
                         ),
-                      ),
-                    ):
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
-                      child: SizedBox(height: 30,
-                        child: OutlinedIconMButton(
-                          icon:  Icon( Icons.check,size: 14,
-                            color:  Colors.white,
+                        _selectedIndex==0 ?
+                        const Padding(
+                          padding:  EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
+                          child: SizedBox(height: 30,
+                            child:  OutlinedMButton(
+                              text: 'Customer Details',
+                              textColor: mSaveButton,
+                              borderColor: mSaveButton,
+                            ),
                           ),
-                          borderColor:mSaveButton,
-                          buttonColor:mSaveButton ,
-                          textColor: Colors.white,
-                          text: 'Customer Details',
+                        ):
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
+                          child: SizedBox(height: 30,
+                            child: OutlinedIconMButton(
+                              icon:  Icon( Icons.check,size: 14,
+                                color:  Colors.white,
+                              ),
+                              borderColor:mSaveButton,
+                              buttonColor:mSaveButton ,
+                              textColor: Colors.white,
+                              text: 'Customer Details',
 
+                            ),
+                          ),
                         ),
-                      ),
+
+
+                         Padding(
+                          padding:  EdgeInsets.only(left: 8,bottom: 14,right: 16,top: 10),
+                          child: SizedBox(height: 32,
+                            child:  OutlinedMButton(
+                              text: "Vehicle Details",
+                              textColor: _selectedIndex ==1? mSaveButton :Colors.black,
+                              borderColor: _selectedIndex ==1? mSaveButton:Colors.transparent,
+                              buttonColor:_selectedIndex ==1? Colors.transparent: Colors.grey[50],
+                            ),
+                          ),
+                        ),
+
+                      ],
                     ),
-
-
-                     Padding(
-                      padding:  EdgeInsets.only(left: 8,bottom: 14,right: 16,top: 10),
-                      child: SizedBox(height: 32,
-                        child:  OutlinedMButton(
-                          text: "Vehicle Details",
-                          textColor: _selectedIndex ==1? mSaveButton :Colors.black,
-                          borderColor: _selectedIndex ==1? mSaveButton:Colors.transparent,
-                          buttonColor:_selectedIndex ==1? Colors.transparent: Colors.grey[50],
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ),
+              _selectedIndex == 0?
+              Card( surfaceTintColor: Colors.white,
+                child: SizedBox(
+                  width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
+                    child: SizedBox(
+                      height: 30,
+                      child: OutlinedMButton(
+                        text: 'Next',
+                        buttonColor:mSaveButton ,
+                        textColor: Colors.white,
+                        borderColor: mSaveButton,
+                        onTap: (){
+                          setState(() {
+                            _selectedIndex=1;
+                          });
+                        },
+
+                      ),
+                    ),
+                  ),
+                ),
+              ):
+              Card(surfaceTintColor: Colors.white,
+                child: SizedBox(width: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8,bottom: 10,right: 16,top: 10),
+                    child: SizedBox(
+                      height: 30,
+                      child: OutlinedMButton(
+                        text: 'Back',
+                        buttonColor:mSaveButton ,
+                        textColor: Colors.white,
+                        borderColor: mSaveButton,
+                        onTap: (){
+                          setState(() {
+                            _selectedIndex=0;
+                          });
+                        },
+
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+
           const SizedBox(width: 30,),
 
           // This is the main content.
@@ -1424,154 +1468,161 @@ bool distError=false;
               const Divider(height: 1,color: mTextFieldBorder),
               Padding(
                 padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                child:
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ///Left Field
-                    Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text("Customer Name"),
-                              const SizedBox(height: 6,),
-                              TextFormField(
-                                autofocus: true,
-                                controller: nameController,
-                                validator:checkNameError,
-                               decoration: textFieldDecoration(hintText: 'Enter Name',error:_invalidName),
-                                onChanged: (value){
-                                  nameController.value=TextEditingValue(
-                                    text:capitalizeFirstWord(value),
-                                    selection: nameController.selection,
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20,),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Customer Name"),
+                            const SizedBox(height: 6,),
+                            TextFormField(
+                              autofocus: true,
+                              controller: nameController,
+                              validator:checkNameError,
+                             decoration: textFieldDecoration(hintText: 'Enter Name',error:_invalidName),
+                              onChanged: (value){
+                                nameController.value=TextEditingValue(
+                                  text:capitalizeFirstWord(value),
+                                  selection: nameController.selection,
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20,),
 
 
-                              const Text("Email"),
-                              const SizedBox(height: 6,),
-                              TextFormField(
-                                inputFormatters: [LowerCaseTextFormatter()],
-                                textCapitalization: TextCapitalization.characters,
-                                textInputAction: TextInputAction.next,
-                                controller: emailController,
-                                validator: checkEmailError,
-                                decoration: textFieldDecoration(hintText: 'Enter Email',error: _invalidEmail),
-                              ),
-                              const SizedBox(height: 20,),
+                            const Text("Email"),
+                            const SizedBox(height: 6,),
+                            TextFormField(
+                              inputFormatters: [LowerCaseTextFormatter()],
+                              textCapitalization: TextCapitalization.characters,
+                              textInputAction: TextInputAction.next,
+                              controller: emailController,
+                              validator: checkEmailError,
+                              decoration: textFieldDecoration(hintText: 'Enter Email',error: _invalidEmail),
+                            ),
+                            const SizedBox(height: 20,),
 
 
-                              const Text("PAN"),
-                              const SizedBox(height: 6,),
-                              TextFormField(
-                                controller: panController,
-                                validator: checkPanError,
-                                decoration: textFieldDecoration(hintText: 'Enter Pan Number',error: _invalidPan),
-                              )
+                            const Text("PAN"),
+                            const SizedBox(height: 6,),
+                            TextFormField(
+                              controller: panController,
+                              validator: checkPanError,
+                              decoration: textFieldDecoration(hintText: 'Enter Pan Number',error: _invalidPan),
+                            )
 
-                            ],
-                          ),
-                        )),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(width: 30,),
                     ///Right Fields
-                    Expanded(child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Mobile Number"),
-                          const SizedBox(height: 6,),
-                          TextFormField(
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            keyboardType: TextInputType.number,
-                            maxLength: 10,
-                            controller: mobileController,
-                            validator: checkMobileError,
-                            decoration: textFieldDecoration(hintText: 'Enter Mobile Number',error: _invalidMobile),),
-                          const SizedBox(height: 20,),
-                          const Text("Type"),
-                          const SizedBox(height: 6,),
-                          Focus(
-                            onFocusChange: (value) {
-                              setState(() {
-                                _isTypeFocused = value;
-                              });
-                            },
-                            skipTraversal: true,
-                            descendantsAreFocusable: true,
-                            child: LayoutBuilder(
-                                builder: (BuildContext context, BoxConstraints constraints) {
-                                  return CustomPopupMenuButton(elevation: 4,
-                                    validator: (value) {
-                                      if(value==null||value.isEmpty){
-                                        setState(() {
-                                          _invalidType=true;
-                                        });
-                                        return null;
-                                      }
-                                      return null;
-                                    },
-                                    decoration: customPopupDecoration(hintText: 'Select type',error: _invalidType,isFocused: _isTypeFocused),
-                                    hintText: selectedType,
-                                    textController: customerTypeController,
-                                    childWidth: constraints.maxWidth,
-                                    shape:  RoundedRectangleBorder(
-                                      side: BorderSide(color:_invalidType? Colors.redAccent :mTextFieldBorder),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(5),
-                                      ),
-                                    ),
-                                    offset: const Offset(1, 40),
-                                    tooltip: '',
-                                    itemBuilder:  (BuildContext context) {
-                                      return selectType.map((value) {
-                                        return CustomPopupMenuItem(
-                                          value: value,
-                                          text:value,
-                                          child: Container(),
-                                        );
-                                      }).toList();
-                                    },
-
-                                    onSelected: (String value)  {
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Mobile Number"),
+                        const SizedBox(height: 6,),
+                        TextFormField(
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
+                          controller: mobileController,
+                          validator: checkMobileError,
+                          decoration: textFieldDecoration(hintText: 'Enter Mobile Number',error: _invalidMobile),),
+                        const SizedBox(height: 20,),
+                        const Text("Type"),
+                        const SizedBox(height: 6,),
+                        Focus(
+                          onFocusChange: (value) {
+                            setState(() {
+                              _isTypeFocused = value;
+                            });
+                          },
+                          skipTraversal: true,
+                          descendantsAreFocusable: true,
+                          child: LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                return CustomPopupMenuButton(elevation: 4,
+                                  validator: (value) {
+                                    if(value==null||value.isEmpty){
                                       setState(() {
-                                        customerTypeController.text=value;
-                                        selectedType= value;
-                                        _invalidType=false;
+                                        _invalidType=true;
                                       });
+                                      return null;
+                                    }
+                                    return null;
+                                  },
+                                  decoration: customPopupDecoration(hintText: 'Select type',error: _invalidType,isFocused: _isTypeFocused),
+                                  hintText: selectedType,
+                                  textController: customerTypeController,
+                                  childWidth: constraints.maxWidth,
+                                  shape:  RoundedRectangleBorder(
+                                    side: BorderSide(color:_invalidType? Colors.redAccent :mTextFieldBorder),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
+                                  ),
+                                  offset: const Offset(1, 40),
+                                  tooltip: '',
+                                  itemBuilder:  (BuildContext context) {
+                                    return selectType.map((value) {
+                                      return CustomPopupMenuItem(
+                                        value: value,
+                                        text:value,
+                                        child: Container(),
+                                      );
+                                    }).toList();
+                                  },
 
-                                    },
-                                    onCanceled: () {
+                                  onSelected: (String value)  {
+                                    setState(() {
+                                      customerTypeController.text=value;
+                                      selectedType= value;
+                                      _invalidType=false;
+                                    });
 
-                                    },
-                                    child: Container(),
-                                  );
-                                }
+                                  },
+                                  onCanceled: () {
+
+                                  },
+                                  child: Container(),
+                                );
+                              }
+                          ),
+                        ),
+
+                        if(_invalidType)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              children: const [
+                                SizedBox(height: 6,),
+                                Text("Please Select Type",style: TextStyle(color:mErrorColor,fontSize: 12)),
+                                SizedBox(height: 6,),
+                              ],
                             ),
                           ),
+                        const SizedBox(height: 20,),
+                        const Text("GST"),
+                        const SizedBox(height: 6,),
+                        TextFormField(
+                          controller: gstController,
+                          validator: checkGSTError,
+                          decoration: textFieldDecoration(hintText: 'Enter GST',error: _invalidGST),),
 
-                          if(_invalidType)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Column(
-                                children: const [
-                                  SizedBox(height: 6,),
-                                  Text("Please Select Type",style: TextStyle(color:mErrorColor,fontSize: 12)),
-                                  SizedBox(height: 6,),
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 20,),
-                          const Text("GST"),
-                          const SizedBox(height: 6,),
-                          TextFormField(
-                            controller: gstController,
-                            validator: checkGSTError,
-                            decoration: textFieldDecoration(hintText: 'Enter GST',error: _invalidGST),),
-
-                        ],
+                      ],
+                        ),
                       ),
-                    ))
+                    )
                   ],
                 ),
               )
@@ -2183,7 +2234,7 @@ bool distError=false;
     });
     return null;
   }
- String? stateCheck(String ?value){
+  String? stateCheck(String ?value){
     if(value==null || value.isEmpty){
       setState(() {
         stateError=true;
@@ -2221,7 +2272,6 @@ bool distError=false;
     });
     return null;
   }
-
   String? checkModel(String? value){
     if(value == null || value.isEmpty){
       setState(() {
@@ -2234,7 +2284,6 @@ bool distError=false;
     });
     return null;
   }
-
   String? checkVariant(String? value){
     if(value == null || value.isEmpty){
       setState(() {
@@ -2247,7 +2296,6 @@ bool distError=false;
     });
     return null;
   }
-
   String? checkCarModel(String? value){
     if(value == null || value.isEmpty){
       setState(() {
@@ -2260,7 +2308,6 @@ bool distError=false;
     });
     return null;
   }
-
   String? checkEvaluationDate(String? value){
     if(value == null || value.isEmpty){
       setState(() {
@@ -2301,14 +2348,14 @@ bool distError=false;
   // }
 }
 
-class Choice {
+  class Choice {
   const Choice({required this.title, required this.icon});
 
   final String title;
   final IconData icon;
 }
 
-class SearchState {
+  class SearchState {
   final String label;
   dynamic value;
 
@@ -2320,7 +2367,7 @@ class SearchState {
   }
 }
 
-class SearchDist{
+  class SearchDist{
   final String label;
   dynamic value;
   SearchDist({required this.label,required this.value});
@@ -2329,13 +2376,13 @@ class SearchDist{
     value: distName,
     );
   }
-}
+  }
 
 
-class LowerCaseTextFormatter extends TextInputFormatter{
+  class LowerCaseTextFormatter extends TextInputFormatter{
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(text: newValue.text.toLowerCase(),selection: newValue.selection);
   }
 
-}
+ }

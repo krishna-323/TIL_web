@@ -61,8 +61,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               companyUsers=true;
             }
             if(displayUserList.isEmpty){
-              if(userList.length>5){
-                for(int i=startVal;i<startVal+5;i++){
+              if(userList.length>15){
+                for(int i=startVal;i<startVal+15;i++){
                   displayUserList.add(userList[i]);
                 }
               }
@@ -1273,8 +1273,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           children: [
             CustomDrawer(widget.drawerWidth, widget.selectedDestination),
             const VerticalDivider(width: 1, thickness: 1,),
-            Expanded(child:  Container(
-              height: MediaQuery.of(context).size.height,
+            Expanded(
+              child:  Container(
+
               color: Colors.grey[50],
               child: CustomLoader(
                 inAsyncCall: loading,
@@ -1336,10 +1337,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                     onPressed: (){},
                                     hoverColor: Colors.transparent,
                                     hoverElevation: 0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 18.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.only(left: 18.0),
                                       child:Row(
-                                        children: const [
+                                        children: [
                                           Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4.0),
@@ -1365,11 +1366,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                 ),
                                               )),
                                           Expanded(
-                                              child: Center(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 50.0),
-                                                    child: Text("Role"),
-                                                  ))),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(top: 4),
+                                                child: Text("Role"),
+                                              )),
                                           Center(child: Padding(
                                             padding: EdgeInsets.only(right: 8),
                                             child: Icon(size: 18,
@@ -1462,7 +1462,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                               if(i==displayUserList.length)
                                 Row(mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text("${startVal+5>userList.length?userList.length:startVal+1}-${startVal+5>userList.length?userList.length:startVal+5} of ${userList.length}",style: TextStyle(color: Colors.grey)),
+                                    Text("${startVal+15>userList.length?userList.length:startVal+1}-${startVal+15>userList.length?userList.length:startVal+15} of ${userList.length}",style: TextStyle(color: Colors.grey)),
                                     const SizedBox(width: 10,),
                                     Material(color: Colors.transparent,
                                       child: InkWell(
@@ -1472,10 +1472,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                           child: Icon(Icons.arrow_back_ios_sharp,size: 12),
                                         ),
                                         onTap: (){
-                                          if(startVal>4){
+                                          if(startVal>14){
                                             displayUserList=[];
-                                            startVal = startVal-5;
-                                            for(int i=startVal;i<startVal+5;i++){
+                                            startVal = startVal-15;
+                                            for(int i=startVal;i<startVal+15;i++){
                                               try{
                                                 setState(() {
                                                   displayUserList.add(userList[i]);
@@ -1501,10 +1501,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                           child: Icon(Icons.arrow_forward_ios,size: 12),
                                         ),
                                         onTap: (){
-                                          if(userList.length>startVal+5){
+                                          if(userList.length>startVal+15){
                                             displayUserList=[];
-                                            startVal=startVal+5;
-                                            for(int i=startVal;i<startVal+5;i++){
+                                            startVal=startVal+15;
+                                            for(int i=startVal;i<startVal+15;i++){
                                               try{
                                                 setState(() {
                                                   displayUserList.add(userList[i]);
@@ -1521,7 +1521,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                       ),
                                     ),
                                     const SizedBox(width: 20,),
-
                                   ],
                                 )
                             ],
@@ -1538,7 +1537,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           ]),
     );
   }
-
   createNewUser(BuildContext context, List<dynamic> companyNamesList,) {
     showDialog(
         context: context,
@@ -2032,7 +2030,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           );
         });
   }
-
   decorationInputPassword(String hintString, bool val, bool newObscureText, textHideFunc,) {return InputDecoration(
     suffixIcon: IconButton(
       icon: Icon(
@@ -2050,7 +2047,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     border: OutlineInputBorder(
         borderSide: BorderSide(color: val ? Colors.blue : Colors.blue)),
   );}
-
   decorationInputConformPassword(String hintString, bool val, bool conformObscureText, textHideConformPassword,) {
     return InputDecoration(hintText: hintString,
       suffixIcon: IconButton(
@@ -2069,7 +2065,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           borderSide: BorderSide(color: val ? Colors.blue : Colors.blue)),
     );
   }
-
   dropdownDecorationSearch(bool val,) {
     return InputDecoration(hintText: 'Search',labelText: 'Chose',
       border: OutlineInputBorder(

@@ -51,8 +51,8 @@ class _CompanyManagementState extends State<CompanyManagement> {
             response = value;
             listCompanies = response;
            if(displayListCompanies.isEmpty){
-             if(listCompanies.length>5){
-               for(int i=startVal;i<startVal+5;i++){
+             if(listCompanies.length>15){
+               for(int i=startVal;i<startVal+15;i++){
                  displayListCompanies.add(listCompanies[i]);
                }
              }
@@ -773,7 +773,6 @@ class _CompanyManagementState extends State<CompanyManagement> {
         ),
         Expanded(
             child: Container(
-              height: MediaQuery.of(context).size.height,
               color: Colors.grey[50],
               child: CustomLoader(
                 inAsyncCall: loading,
@@ -836,10 +835,10 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                       onPressed: (){},
                                       hoverColor: Colors.transparent,
                                       hoverElevation: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 18.0),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 18.0),
                                         child:Row(
-                                          children: const [
+                                          children: [
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
@@ -865,11 +864,10 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                                   ),
                                                 )),
                                             Expanded(
-                                                child: Center(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: 50.0),
-                                                      child: Text("ZIP CODE"),
-                                                    ))),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: Text("ZIP CODE"),
+                                                )),
                                             Center(child: Padding(
                                               padding: EdgeInsets.only(right: 8),
                                               child: Icon(size: 18,
@@ -957,7 +955,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                             if(i==displayListCompanies.length)
                               Row(mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text("${startVal+5>listCompanies.length?listCompanies.length:startVal+1}-${startVal+5>listCompanies.length?listCompanies.length:startVal+5} of ${listCompanies.length}",style: TextStyle(color: Colors.grey)),
+                                  Text("${startVal+15>listCompanies.length?listCompanies.length:startVal+1}-${startVal+15>listCompanies.length?listCompanies.length:startVal+15} of ${listCompanies.length}",style: TextStyle(color: Colors.grey)),
                                   const SizedBox(width: 10,),
                                   Material(color: Colors.transparent,
                                     child: InkWell(
@@ -996,10 +994,10 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                         child: Icon(Icons.arrow_forward_ios,size: 12),
                                       ),
                                       onTap: (){
-                                        if(listCompanies.length>startVal+5){
+                                        if(listCompanies.length>startVal+15){
                                           displayListCompanies=[];
-                                          startVal=startVal+5;
-                                          for(int i=startVal;i<startVal+5;i++){
+                                          startVal=startVal+15;
+                                          for(int i=startVal;i<startVal+15;i++){
                                             try{
                                               setState(() {
                                                 displayListCompanies.add(listCompanies[i]);
@@ -1417,22 +1415,20 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   onPressed: () {
-                                    setState(() {
-                                      if (companiesKey.currentState!.validate()) {
-                                        addCompany = {
-                                          'company_name':companyName.text,
-                                          'city':cityName.text,
-                                          'state': state.text,
-                                          'country': country.text,
-                                          'address_line1':address1.text,
-                                          'address_line2': address2.text,
-                                          'zip_code':zipCode.text,
-                                          'userid': '',
-                                        };
-                                        print(addCompany);
-                                        postCompanyDetails(addCompany);
-                                      }
-                                    });
+                                    if (companiesKey.currentState!.validate()) {
+                                      addCompany = {
+                                        'company_name':companyName.text,
+                                        'city':cityName.text,
+                                        'state': state.text,
+                                        'country': country.text,
+                                        'address_line1':address1.text,
+                                        'address_line2': address2.text,
+                                        'zip_code':zipCode.text,
+                                        'userid': '',
+                                      };
+                                      print(addCompany);
+                                      postCompanyDetails(addCompany);
+                                    }
                                   }),
                                  const SizedBox(height: 35,)
                             ]),

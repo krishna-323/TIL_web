@@ -37,15 +37,15 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
   String ? authToken;
   bool loading = false;
 
-_handleTabSelection(){
+  _handleTabSelection(){
   if(_tabController.indexIsChanging){
     setState(() {
       _tabIndex=_tabController.index;
     });
   }
 }
-String storeName='';
-@override
+  String storeName='';
+  @override
   void dispose() {
   _tabController.dispose();
     super.dispose();
@@ -57,7 +57,8 @@ String storeName='';
     // print('---------check---------');
     // print(storeName);
     loading=true;
-    _tabController=TabController(length: 2, vsync: this);
+    // TabController length We Can Change According Our Requirements.
+    _tabController=TabController(length: 1, vsync: this);
     _tabController.addListener(_handleTabSelection);
     getInitialData().whenComplete((){
       selectedId = widget.customerList['customer_id'];
@@ -80,7 +81,7 @@ String storeName='';
   }
 
   List customerList=[];
-List forAdding=[];
+  List forAdding=[];
 
 
 
@@ -118,15 +119,16 @@ List forAdding=[];
 
 
   final List<Widget> myTabs=[
-    const Tab(text:'Profile'),
-    const Tab(text:"Transaction"),
+    const Tab(text:'General'),
+    // If We Want More Tabs Here We Can Add.
+    //const Tab(text:"Transaction"),
   ];
-late TabController _tabController;
+  late TabController _tabController;
   int _tabIndex=0;
 
   dynamic size,width,height;
-late   AutoScrollController controller=AutoScrollController();
-int store=0;
+  late   AutoScrollController controller=AutoScrollController();
+  int store=0;
   @override
   Widget build(BuildContext context) {
    size=MediaQuery.of(context).size;
@@ -182,12 +184,20 @@ int store=0;
                                             child: InkWell(
                                               hoverColor: mHoverColor,
                                               onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => AddNewCustomer(drawerWidth: widget.drawerWidth,
-                                                          selectedDestination: widget.selectedDestination,
-                                                          title: 6,))).then((value) => fetchCustomerListData());
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) => AddNewCustomer(drawerWidth: widget.drawerWidth,
+                                                //           selectedDestination: widget.selectedDestination,
+                                                //           title: 6,))).then((value) => fetchCustomerListData());
+                                                Navigator.of(context).push(PageRouteBuilder(
+                                                  pageBuilder: (context,animation1,animation2) => AddNewCustomer(
+                                                    drawerWidth:widget.drawerWidth ,
+                                                    selectedDestination: widget.selectedDestination, title: 1,
+                                                  ),
+                                                  transitionDuration: Duration.zero,
+                                                  reverseTransitionDuration: Duration.zero,
+                                                )).then((value) => fetchCustomerListData());
                                               },
                                               child: const Center(
                                                 child: Text("+ Customer",
@@ -285,7 +295,9 @@ int store=0;
                                             child: Column(
                                               children:   [
                                                 SizedBox(height: 60,
-                                                  child: headerSection(snapshot.data!.customerDocketData[0].customerData["customer_name"]),
+                                                  child: headerSection(snapshot.data!.customerDocketData[0].customerData["customer_name"],
+                                                      snapshot.data!.customerDocketData[0].customerData["type"]
+                                                  ),
                                                 ),
                                                 const Divider(height: 1),
                                                 Align(
@@ -296,7 +308,7 @@ int store=0;
                                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         SizedBox( height: 40,
-                                                          width: 350,
+                                                          width: 150,
                                                           child: TabBar(
                                                             indicator: BoxDecoration(
                                                               color: Colors.blue[100],
@@ -322,14 +334,27 @@ int store=0;
                                                                     borderColor: Colors.indigo,
                                                                     textColor:  Colors.indigo,
                                                                     onTap: (){
-                                                                      Navigator.push(context, MaterialPageRoute(
-                                                                          builder: (context) => EditCustomer(
-                                                                            drawerWidth: widget.drawerWidth,
-                                                                            selectedDestination: widget.selectedDestination,
-                                                                            customerDataGet:snapshot.data!.customerDocketData[0].customerData, title: 1,
-                                                                          )
-                                                                      )).
-                                                                      then((value) {
+                                                                      // Navigator.push(context, MaterialPageRoute(
+                                                                      //     builder: (context) => EditCustomer(
+                                                                      //       drawerWidth: widget.drawerWidth,
+                                                                      //       selectedDestination: widget.selectedDestination,
+                                                                      //       customerDataGet:snapshot.data!.customerDocketData[0].customerData, title: 1,
+                                                                      //     )
+                                                                      // )).
+                                                                      // then((value) {
+                                                                      //   customerDetailsBloc.fetchCustomerNetwork(selectedId);
+                                                                      //   fetchCustomerListData();
+                                                                      // });
+
+                                                                      Navigator.of(context).push(PageRouteBuilder(
+                                                                        pageBuilder: (context,animation1,animation2) => EditCustomer(
+                                                                          drawerWidth: widget.drawerWidth,
+                                                                          selectedDestination: widget.selectedDestination,
+                                                                          customerDataGet:snapshot.data!.customerDocketData[0].customerData, title: 1,
+                                                                        ),
+                                                                        transitionDuration: Duration.zero,
+                                                                        reverseTransitionDuration: Duration.zero,
+                                                                      )).then((value) {
                                                                         customerDetailsBloc.fetchCustomerNetwork(selectedId);
                                                                         fetchCustomerListData();
                                                                       });
@@ -499,9 +524,9 @@ int store=0;
     );
 
   }
-// Widget listViewScrollName(BuildContext context){
-//     return
-// }
+  // Widget listViewScrollName(BuildContext context){
+  //     return
+  // }
 
   decorationSearch(String hintString,) {
     return InputDecoration(
@@ -523,7 +548,7 @@ int store=0;
     );
   }
 
-  Widget headerSection(String customerName) {
+  Widget headerSection(String customerName, customerType) {
     return  Padding(
       padding: const EdgeInsets.only(
           left: 40, right: 10, top: 10, bottom: 4),
@@ -535,63 +560,11 @@ int store=0;
           Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(customerName,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
-              const Text("Customer",style: TextStyle(fontSize: 14)),
+               Text(customerType,style: TextStyle(fontSize: 14)),
             ],
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                      width: 120,
-                      height: 30,
-                      decoration: BoxDecoration(color: Colors.blue,border: Border.all(color:  Colors.white),borderRadius: BorderRadius.circular(4)),
-                      child: InkWell(
-                        hoverColor: mHoverColor,
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => OrderDetails(drawerWidth: widget.drawerWidth,
-                          //           selectedDestination: widget.selectedDestination,
-                          //           title: 6,))).then((value) => fetchCustomerListData());
-                        },
-                        child: const Center(
-                          child: Text("+ Service",
-                              style: TextStyle(
-                                  color: Colors.white)),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Container(
-                      width: 120,
-                      height: 30,
-                      decoration: BoxDecoration(color: Colors.blue,border: Border.all(color:  Colors.white),borderRadius: BorderRadius.circular(4)),
-                      child: InkWell(
-                        hoverColor: mHoverColor,
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => OrderDetails(drawerWidth: widget.drawerWidth,
-                          //           selectedDestination: widget.selectedDestination,
-                          //           title: 6,))).then((value) => fetchCustomerListData());
-                        },
-                        child: const Center(
-                          child: Text("+ Sales",
-                              style: TextStyle(
-                                  color: Colors.white)),
-                        ),
-                      )),
-                )
-              ],
-            ),
-          )
+
         ],
       ),
     );

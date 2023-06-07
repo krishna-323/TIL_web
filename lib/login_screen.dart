@@ -17,9 +17,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   final userName = TextEditingController();
+  bool userBool=false;
   final password = TextEditingController();
   bool showError = false;
-bool passWordHindBool=true;
+  bool passWordHindBool=true;
+  bool passWordColor = false;
   void passwordHideAndViewFunc() {
     setState(() {
       passWordHindBool = !passWordHindBool;
@@ -74,10 +76,23 @@ bool passWordHindBool=true;
                                   setState(() {
                                     passWordHindBool=true;
                                   });
+                                },onChanged: (value) {
+                                  if(userName.text.isNotEmpty){
+                                    setState(() {
+                                      userBool =true;
+                                    });
+
+                                  }
+                                  else{
+                                    setState(() {
+                                      userBool =false;
+                                    });
+
+                                  }
                                 },
                                   controller: userName,
                                   style: const TextStyle(fontSize: 12),
-                                  decoration: decorationInput3("User Name", false),
+                                  decoration: decorationInput3("User Name", userBool),
                                 ),
                               ),
                               SizedBox(height: 30,
@@ -85,9 +100,21 @@ bool passWordHindBool=true;
                                   obscureText: passWordHindBool,
                                   enableSuggestions: false,
                                   autocorrect: false,
-                                  controller: password,
+                                  controller: password,onChanged: (value){
+                                    if(password.text.isNotEmpty){
+                                      setState(() {
+                                        passWordColor=true;
+                                      });
+
+                                    }
+                                    else{
+                                      setState(() {
+                                        passWordColor=false;
+                                      });
+                                    }
+                                },
                                   style: const TextStyle(fontSize: 12),
-                                  decoration: decorationInputPassword("Password", password.text.isNotEmpty,passWordHindBool,passwordHideAndViewFunc),
+                                  decoration: decorationInputPassword("Password", passWordColor,passWordHindBool,passwordHideAndViewFunc),
                                   onSubmitted: (v)  async {
                                     int val = await checkLoginCredentials(userName,password);
                                     print(val);
@@ -245,7 +272,7 @@ bool passWordHindBool=true;
         counterText: "",
         contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
         hintText: hintString,
-        suffixIconColor: const Color(0xfff26442),
+        suffixIconColor:  val ?Colors.blue:Colors.grey,
         disabledBorder:  const OutlineInputBorder(
             borderSide:  BorderSide(color:  Colors.white)),
         enabledBorder:OutlineInputBorder(

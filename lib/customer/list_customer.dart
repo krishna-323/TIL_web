@@ -45,7 +45,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
             customersList = value;
             if(displayList.isEmpty){
               if(customersList.length>5){
-                for(int i=startVal;i<startVal+5;i++){
+                for(int i=startVal;i<startVal+15;i++){
                   displayList.add(customersList[i]);
                 }
               }
@@ -90,9 +90,9 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
               displayList=[];
               //Checking displayList is empty or Not.
               if(displayList.isEmpty){
-                if(customersList.length>5){
+                if(customersList.length>15){
                   //For adding only Five Items at a time.
-                  for(int i=startVal;i<startVal+5;i++){
+                  for(int i=startVal;i<startVal+15;i++){
                     displayList.add(customersList[i]);
                   }
                 }
@@ -125,8 +125,8 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
             // Checking displayList Items.
              if(displayList.isEmpty){
                //checking initial list length.
-               if(customersList.length>5){
-                 for(int i=startVal;i<startVal+5;i++){
+               if(customersList.length>15){
+                 for(int i=startVal;i<startVal+15;i++){
                    try{
                      setState(() {
                        displayList.add(customersList[i]);
@@ -163,8 +163,8 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
             customersList=value;
             displayList=[];
             if(displayList.isEmpty){
-              if(customersList.length>5){
-                for(int i=startVal;i<startVal+5;i++){
+              if(customersList.length>15){
+                for(int i=startVal;i<startVal+15;i++){
                   displayList.add(customersList[i]);
                 }
               }
@@ -235,7 +235,6 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-
   searchCustomerNameDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: customerNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
@@ -321,7 +320,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
     loading = true;
   }
 
- Future getCityName()async{
+  Future getCityName()async{
     List name=[];
     for(int i=0;i<cityNames.length;i++){
       name.add(SearchCityName.fromJson(cityNames[i]));
@@ -672,7 +671,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
 
-                                      Text("${startVal+5>customersList.length?customersList.length:startVal+1}-${startVal+5>customersList.length?customersList.length:startVal+5} of ${customersList.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+15>customersList.length?customersList.length:startVal+1}-${startVal+15>customersList.length?customersList.length:startVal+15} of ${customersList.length}",style: TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -682,10 +681,10 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                             child: Icon(Icons.arrow_back_ios_sharp,size: 12),
                                           ),
                                           onTap: (){
-                                            if(startVal>4){
+                                            if(startVal>14){
                                               displayList=[];
-                                              startVal = startVal-5;
-                                              for(int i=startVal;i<startVal+5;i++){
+                                              startVal = startVal-15;
+                                              for(int i=startVal;i<startVal+15;i++){
                                                 try{
                                                   setState(() {
                                                     displayList.add(customersList[i]);
@@ -712,10 +711,10 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                             child: Icon(Icons.arrow_forward_ios,size: 12),
                                           ),
                                           onTap: (){
-                                            if(customersList.length>startVal+5){
+                                            if(customersList.length>startVal+15){
                                               displayList=[];
-                                              startVal=startVal+5;
-                                              for(int i=startVal;i<startVal+5;i++){
+                                              startVal=startVal+15;
+                                              for(int i=startVal;i<startVal+15;i++){
                                                try{
                                                  setState(() {
                                                    displayList.add(customersList[i]);

@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
+import 'package:csv/csv.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +36,73 @@ class _UploadPOState extends State<UploadPO> {
   bool isLoading = true;
   List displayList=[];
   int startVal=0;
+  final verticalScroll=ScrollController();
+  final horizontalScroll=ScrollController();
+  // Declarations For XLSX.
+  List firstSheetData=[];
+  List nameOfHeaders=[];
+  List<List<dynamic>> _fileContents=[];
+  bool xlsx=false;
+
+  // Declarations For CSV File.
+  bool csv =false;
+  List<List<dynamic>> csvData = [];
+  final csvVerticalScroll=ScrollController();
+  final csvHorizontalScroll=ScrollController();
+  void _loadCSVorXlSX() async {
+    // Wait Key Word ,For Selecting Type Of Files.(File type picking "csv" or "xlsx")
+    final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv',"xlsx"],
+        allowMultiple: true
+    );
+    final typeOfFile =result?.files.single.name;
+    try{
+      if(result==null || result.files.isEmpty){
+        return null;
+      }
+      else if(typeOfFile!.endsWith('.csv')){
+        // excel data it will convert to bytes code.
+        final bytes = result.files.first.bytes!.toList();
+        xlsx=false;
+        csv=true;
+        print('----Selected File Is csv File----');
+        setState(() {
+          // we are assigning excel list data to( "csvData" is a empty list).
+          // utf8.decode() is function it will convert bytes to characters as a string.
+          csvData = const CsvToListConverter().convert(utf8.decode(bytes));
+        });
+      }
+      else if(typeOfFile.endsWith(".xlsx")){
+        csv=false;
+        xlsx=true;
+        print('--------Selected File Is xlsx------');
+        var bytes= result.files.single.bytes;
+        if(bytes !=null){
+          var excel =Excel.decodeBytes(bytes);
+          final headerItems=excel.tables[excel.tables.keys.first];
+          final headerRow=headerItems?.rows.first;
+          for(int firstHeaderName=0;firstHeaderName<headerRow!.length;firstHeaderName++){
+            nameOfHeaders.add(headerRow[firstHeaderName]!.props.first);
+          }
+          //Multiple Sheets Names.
+          firstSheetData= excel.tables.keys.toList();
+          var sheet =excel[firstSheetData[0]];
+          final rows=sheet.rows;
+          setState(() {
+            _fileContents=rows.map((row)=>row.map((cell)=>cell?.value).toList()).toList();
+          });
+        }
+      }
+      else{
+        print('Unsupported file');
+      }
+    }
+    catch(e){
+      print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,6 +112,7 @@ class _UploadPOState extends State<UploadPO> {
 
   @override
   Widget build(BuildContext context) {
+    final width=MediaQuery.of(context).size.width;
     return Scaffold(
       appBar:  const PreferredSize(  preferredSize: Size.fromHeight(60),
           child: CustomAppBar()),
@@ -53,378 +124,525 @@ class _UploadPOState extends State<UploadPO> {
             thickness: 1,
           ),
           Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              color:Colors.grey[50],
-              child: CustomLoader(
-                inAsyncCall: isLoading,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 40.0,right: 40,top:30),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color:const Color(0xFFE0E0E0) )
-                      ),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 18,),
-                          Padding(
-                            padding:  const EdgeInsets.only(top: 8,left: 40,right: 40),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children:  [
-                                SizedBox(  width: 190,height: 30, child: TextFormField(
-                                  controller: selectedDateText,
-                                  onTap: (){
-                                    _selectDate(context);
-                                  },
-                                  readOnly: true,
-                                  style: TextStyle(fontSize: 14),
-                                  keyboardType: TextInputType.text,
-                                  decoration: customSearchDecoration(hintText: 'Search by date'),
-                                ),
-                                ),
-                                Row(
-                                  children: [
+            child:Container(
+              color: Colors.white,
+              child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding:  const EdgeInsets.only(top: 8,left: 40,right: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:  [
+                        SizedBox(  width: 190,height: 30, child: TextFormField(
+                          controller: selectedDateText,
+                          onTap: (){
+                            _selectDate(context);
+                          },
+                          readOnly: true,
+                          style: TextStyle(fontSize: 14),
+                          keyboardType: TextInputType.text,
+                          decoration: customSearchDecoration(hintText: 'Search by date'),
+                        ),
+                        ),
+                        Row(
+                          children: [
 
-                                    const SizedBox(width: 10,),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        exportToExcel();
-                                      },
-                                      color: Colors.blue,
-                                      child: const Icon(Icons.document_scanner_outlined,color: Colors.white),),
-                                    const SizedBox(width: 10,),
-                                    MaterialButton(onPressed: () async{
+                            const SizedBox(width: 10,),
+                            MaterialButton(
+                              onPressed: () {
+                                exportToExcel();
+                              },
+                              color: Colors.blue,
+                              child: const Icon(Icons.document_scanner_outlined,color: Colors.white),),
+                            const SizedBox(width: 10,),
+                            MaterialButton(onPressed: () async{
 
-
-                                      importExcelData().whenComplete(() {
-                                        saveExcelData(newData).whenComplete(() {
-                                        });
-                                      });
-                                    },
-                                      color: Colors.blue,
-                                      child: const Text("+ Upload",style: TextStyle(color: Colors.white)),),
-                                    if(visibleDelete)
-                                      Row(
-                                        children: [
-                                          const SizedBox(width: 10,),
-                                          MaterialButton(minWidth: 20,
-                                            onPressed: () {
-                                              // exportToExcel();
-
-                                              if(selectedFields.isNotEmpty){
-                                                for(int i=0;i<selectedFields.length;i++){
-                                                  deletePoData(selectedFields[i]).then((value) {
-                                                  });
-                                                }
-                                              }
-                                            },
-                                            color: Colors.red,
-                                            child: const Icon(Icons.delete_forever_sharp,color: Colors.white,size: 18),),
-
-                                        ],
-                                      ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 18,),
-                          Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
-                          Container(color: Colors.grey[200],
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.only(start: 26.0, end: 10.0,bottom: 4,top: 4),
-                              child: Row(
-                                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              _loadCSVorXlSX();
+                              // importExcelData().whenComplete(() {
+                              //   saveExcelData(newData).whenComplete(() {
+                              //   });
+                              // });
+                            },
+                              color: Colors.blue,
+                              child: const Text("+ Upload",style: TextStyle(color: Colors.white)),),
+                            if(visibleDelete)
+                              Row(
                                 children: [
+                                  const SizedBox(width: 10,),
+                                  MaterialButton(minWidth: 20,
+                                    onPressed: () {
+                                      // exportToExcel();
 
-                                  Expanded(
-                                    child: SizedBox(width: 30,height: 30,
-                                      child: Transform.scale(
-                                        scale: 0.8,
-                                        child: Checkbox(
-                                          value: visibleDelete==false?false:checkAll,
-                                          onChanged: ( value)  {
-                                            setState(() {
-                                              selectedFields=[];
-                                              checkAll = value!;
-                                              for(int i=0;i<poList.length;i++){
-                                                if(value==true){
-                                                  selectedFields.add(poList[i]['excel_id']);
-                                                }
-                                                else{
-                                                  selectedFields=[];
-                                                }
-                                                if(selectedFields.isEmpty) {
-                                                  visibleDelete =false;
-                                                } else{
-                                                  visibleDelete = true;
-                                                }
-                                              }
-                                            });
-                                          },
-
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Text("Make",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Text("Model",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Text("Varient",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child:Text("Date",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child:Text("On-Road Price",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child:Text("Color",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
-                                  const Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: SizedBox(height: 25,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child:Text("Year of Manufacture",overflow: TextOverflow.ellipsis,)
-                                        ),
-                                      )),
+                                      if(selectedFields.isNotEmpty){
+                                        for(int i=0;i<selectedFields.length;i++){
+                                          deletePoData(selectedFields[i]).then((value) {
+                                          });
+                                        }
+                                      }
+                                    },
+                                    color: Colors.red,
+                                    child: const Icon(Icons.delete_forever_sharp,color: Colors.white,size: 18),),
 
                                 ],
                               ),
-                            ),
-                          ),
-                          Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
-                          for(int i=0;i<=displayList.length;i++)
-                            Column(
-                              children: [
-
-                                if(i!=displayList.length)
-                                  MaterialButton(
-                                    onPressed: () {  },
-                                    hoverColor: Colors.blue[50],
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left:18.0,top:4,bottom: 3),
-                                      child: Row(
-                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-
-                                          Expanded(
-                                            child: SizedBox(width: 30,height: 30,
-                                              child: Transform.scale(
-                                                scale: 0.8,
-                                                child: Checkbox(
-                                                  value: selectedFields.contains(displayList[i]['excel_id']),
-                                                  onChanged: ( value) {
-                                                    // print('-------------');
-                                                    // print(fieldValues[i]);
-                                                    // print('-------value------');
-                                                    // print(i);
-                                                    // print(value);
-                                                    setState(() {
-                                                      if(value==true){
-                                                        selectedFields.add(displayList[i]['excel_id']);
-                                                      }
-                                                      else
-                                                      {
-                                                        checkAll=false;
-                                                        selectedFields.remove(displayList[i]['excel_id']);
-                                                      }
-                                                      if(selectedFields.isEmpty) {
-                                                        visibleDelete =false;
-                                                      }
-                                                      else{
-                                                        visibleDelete = true;
-                                                      }
-                                                    });
-                                                  },
-
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                if(i!=displayList.length)
-                                  Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                if(i==displayList.length)
-                                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Builder(
-                                        builder: (context) {
-                                          return Text("${startVal+5>poList.length?poList.length:startVal+1}-${startVal+5>poList.length?poList.length:startVal+5} of ${poList.length}",style: const TextStyle(color: Colors.grey));
-                                        }
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal>4){
-                                              displayList=[];
-                                              startVal = startVal-5;
-                                              for(int i=startVal;i<startVal+5;i++){
-                                                setState(() {
-                                                  displayList.add(poList[i]);
-                                                });
-                                              }
-                                            }
-                                            else{
-                                              print('else');
-                                            }
-
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_forward_ios,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal+1+5>poList.length){
-                                              log("$startVal is > 5");
-                                            }
-                                            else
-                                            if(poList.length>startVal+5){
-                                              displayList=[];
-                                              startVal=startVal+5;
-                                              for(int i=startVal;i<startVal+5;i++){
-                                                setState(() {
-                                                  try{
-                                                    displayList.add(poList[i]);
-                                                  }
-                                                  catch(e){
-                                                    log("$i out of bound");
-                                                  }
-
-                                                });
-                                              }
-                                            }
-
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20,),
-
-                                    ],
-                                  )
-                              ],
-                            ),
-
-                        ],
-                      ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                ),
+                  // ElevatedButton(
+                  //   onPressed: _loadCSVorXlSX,
+                  //   child: Text('Load Excel File'),
+                  // ),
+                  if(csvData.isNotEmpty && csv==true )
+                    Expanded(
+                      child: AdaptiveScrollbar(position: ScrollbarPosition.right,
+                        controller: csvVerticalScroll,
+                        sliderDefaultColor: Colors.grey,
+                        sliderActiveColor: Colors.grey,
+                        width: 12,
+                        child: AdaptiveScrollbar(width: 12,
+                          controller: csvHorizontalScroll,
+                          position: ScrollbarPosition.bottom,
+                          sliderActiveColor: Colors.grey,
+                          sliderDefaultColor: Colors.grey,
+                          child: SingleChildScrollView(
+                            controller: csvHorizontalScroll,
+                            scrollDirection: Axis.horizontal,
+                            child: SingleChildScrollView(scrollDirection: Axis.vertical,
+                              controller: csvVerticalScroll,
+                              child: DataTable(
+                                columns: csvData.isNotEmpty ? csvData.first.map((title) => DataColumn(label: Text(title,style: const TextStyle(fontSize: 15,
+                                    fontWeight: FontWeight.bold),),)).toList() : [],
+                                rows: csvData.length > 1 ? csvData.skip(1).map((row) => DataRow(cells: row.map((cell) {
+                                  print('-------cell data-------');
+                                  print(cell);
+                                  return DataCell(
+                                    Container(
+                                        child: Text('$cell')));
+                                }).toList())).toList() : [],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if(xlsx==true)
+                    if(width>1100)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: buildTable(),
+                        ),
+                      ),
+                  if(xlsx==true)
+                    if(width<1100)
+                      Expanded(
+                        child: SizedBox(
+                          width: 2340,
+                          child: AdaptiveScrollbar(
+                            controller: verticalScroll,
+                            child: AdaptiveScrollbar(
+                              width: 12,
+                              sliderDefaultColor: Colors.grey,
+                              sliderActiveColor: Colors.grey,
+                              position: ScrollbarPosition.bottom,
+                              controller: horizontalScroll,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                controller: horizontalScroll,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  controller: verticalScroll,
+                                  child: Row( children: [
+                                    SizedBox(
+                                      width: 1500,
+                                      child: buildTable(),
+                                    ),
+                                  ], ), ),
+                              ),
+                            ),
+                          ), ),
+                      ),
+                ],
               ),
             ),
+
+            // Container(
+            //   height: MediaQuery.of(context).size.height,
+            //   color:Colors.grey[50],
+            //   child: CustomLoader(
+            //     inAsyncCall: isLoading,
+            //     child: SingleChildScrollView(
+            //       child: Padding(
+            //         padding: const EdgeInsets.only(left: 40.0,right: 40,top:30),
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               borderRadius: BorderRadius.circular(10),
+            //               border: Border.all(color:const Color(0xFFE0E0E0) )
+            //           ),
+            //           child: Column(
+            //             children: [
+            //
+            //
+            //               const SizedBox(height: 18,),
+            //               Padding(
+            //                 padding:  const EdgeInsets.only(top: 8,left: 40,right: 40),
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                   children:  [
+            //                     SizedBox(  width: 190,height: 30, child: TextFormField(
+            //                       controller: selectedDateText,
+            //                       onTap: (){
+            //                         _selectDate(context);
+            //                       },
+            //                       readOnly: true,
+            //                       style: TextStyle(fontSize: 14),
+            //                       keyboardType: TextInputType.text,
+            //                       decoration: customSearchDecoration(hintText: 'Search by date'),
+            //                     ),
+            //                     ),
+            //                     Row(
+            //                       children: [
+            //
+            //                         const SizedBox(width: 10,),
+            //                         MaterialButton(
+            //                           onPressed: () {
+            //                             exportToExcel();
+            //                           },
+            //                           color: Colors.blue,
+            //                           child: const Icon(Icons.document_scanner_outlined,color: Colors.white),),
+            //                         const SizedBox(width: 10,),
+            //                         MaterialButton(onPressed: () async{
+            //
+            //                           _loadCSVorXlSX();
+            //                           // importExcelData().whenComplete(() {
+            //                           //   saveExcelData(newData).whenComplete(() {
+            //                           //   });
+            //                           // });
+            //                         },
+            //                           color: Colors.blue,
+            //                           child: const Text("+ Upload",style: TextStyle(color: Colors.white)),),
+            //                         if(visibleDelete)
+            //                           Row(
+            //                             children: [
+            //                               const SizedBox(width: 10,),
+            //                               MaterialButton(minWidth: 20,
+            //                                 onPressed: () {
+            //                                   // exportToExcel();
+            //
+            //                                   if(selectedFields.isNotEmpty){
+            //                                     for(int i=0;i<selectedFields.length;i++){
+            //                                       deletePoData(selectedFields[i]).then((value) {
+            //                                       });
+            //                                     }
+            //                                   }
+            //                                 },
+            //                                 color: Colors.red,
+            //                                 child: const Icon(Icons.delete_forever_sharp,color: Colors.white,size: 18),),
+            //
+            //                             ],
+            //                           ),
+            //                       ],
+            //                     )
+            //                   ],
+            //                 ),
+            //               ),
+            //               const SizedBox(height: 18,),
+            //              Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+            //               Container(color: Colors.grey[200],
+            //                 child: Padding(
+            //                   padding: const EdgeInsetsDirectional.only(start: 26.0, end: 10.0,bottom: 4,top: 4),
+            //                   child: Row(
+            //                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                     children: [
+            //
+            //                       Expanded(
+            //                         child: SizedBox(width: 30,height: 30,
+            //                           child: Transform.scale(
+            //                             scale: 0.8,
+            //                             child: Checkbox(
+            //                               value: visibleDelete==false?false:checkAll,
+            //                               onChanged: ( value)  {
+            //                                 setState(() {
+            //                                   selectedFields=[];
+            //                                   checkAll = value!;
+            //                                   for(int i=0;i<poList.length;i++){
+            //                                     if(value==true){
+            //                                       selectedFields.add(poList[i]['excel_id']);
+            //                                     }
+            //                                     else{
+            //                                       selectedFields=[];
+            //                                     }
+            //                                     if(selectedFields.isEmpty) {
+            //                                       visibleDelete =false;
+            //                                     } else{
+            //                                       visibleDelete = true;
+            //                                     }
+            //                                   }
+            //                                 });
+            //                               },
+            //
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                       //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child: Text("Make",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child: Text("Model",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child: Text("Varient",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child:Text("Date",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child:Text("On-Road Price",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child:Text("Color",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //                       const Expanded(
+            //                           child: Padding(
+            //                             padding: EdgeInsets.only(top: 4.0),
+            //                             child: SizedBox(height: 25,
+            //                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                 child:Text("Year of Manufacture",overflow: TextOverflow.ellipsis,)
+            //                             ),
+            //                           )),
+            //
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ),
+            //               Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+            //               for(int i=0;i<=displayList.length;i++)
+            //                 Column(
+            //                   children: [
+            //
+            //                     if(i!=displayList.length)
+            //                       MaterialButton(
+            //                         onPressed: () {  },
+            //                         hoverColor: Colors.blue[50],
+            //                         child: Padding(
+            //                           padding: const EdgeInsets.only(left:18.0,top:4,bottom: 3),
+            //                           child: Row(
+            //                             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                             children: [
+            //
+            //                               Expanded(
+            //                                 child: SizedBox(width: 30,height: 30,
+            //                                   child: Transform.scale(
+            //                                     scale: 0.8,
+            //                                     child: Checkbox(
+            //                                       value: selectedFields.contains(displayList[i]['excel_id']),
+            //                                       onChanged: ( value) {
+            //                                         // print('-------------');
+            //                                         // print(fieldValues[i]);
+            //                                         // print('-------value------');
+            //                                         // print(i);
+            //                                         // print(value);
+            //                                         setState(() {
+            //                                           if(value==true){
+            //                                             selectedFields.add(displayList[i]['excel_id']);
+            //                                           }
+            //                                           else
+            //                                           {
+            //                                             checkAll=false;
+            //                                             selectedFields.remove(displayList[i]['excel_id']);
+            //                                           }
+            //                                           if(selectedFields.isEmpty) {
+            //                                             visibleDelete =false;
+            //                                           }
+            //                                           else{
+            //                                             visibleDelete = true;
+            //                                           }
+            //                                         });
+            //                                       },
+            //
+            //                                     ),
+            //                                   ),
+            //                                 ),
+            //                               ),
+            //                               //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //                               Expanded(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(top: 4.0),
+            //                                     child: SizedBox(height: 25,
+            //                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+            //                                         child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
+            //                                     ),
+            //                                   )),
+            //
+            //                             ],
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     if(i!=displayList.length)
+            //                       Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
+            //                     if(i==displayList.length)
+            //                       Row(mainAxisAlignment: MainAxisAlignment.end,
+            //                         children: [
+            //                           Builder(
+            //                             builder: (context) {
+            //                               return Text("${startVal+15>poList.length?poList.length:startVal+1}-${startVal+15>poList.length?poList.length:startVal+15} of ${poList.length}",style: const TextStyle(color: Colors.grey));
+            //                             }
+            //                           ),
+            //                           const SizedBox(width: 10,),
+            //                           Material(color: Colors.transparent,
+            //                             child: InkWell(
+            //                               hoverColor: mHoverColor,
+            //                               child: const Padding(
+            //                                 padding: EdgeInsets.all(18.0),
+            //                                 child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+            //                               ),
+            //                               onTap: (){
+            //                                 if(startVal>14){
+            //                                   displayList=[];
+            //                                   startVal = startVal-15;
+            //                                   for(int i=startVal;i<startVal+15;i++){
+            //                                     setState(() {
+            //                                       displayList.add(poList[i]);
+            //                                     });
+            //                                   }
+            //                                 }
+            //                                 else{
+            //                                   print('else');
+            //                                 }
+            //
+            //                               },
+            //                             ),
+            //                           ),
+            //                           const SizedBox(width: 10,),
+            //                           Material(color: Colors.transparent,
+            //                             child: InkWell(
+            //                               hoverColor: mHoverColor,
+            //                               child: const Padding(
+            //                                 padding: EdgeInsets.all(18.0),
+            //                                 child: Icon(Icons.arrow_forward_ios,size: 12),
+            //                               ),
+            //                               onTap: (){
+            //                                 if(startVal+1+5>poList.length){
+            //                                   log("$startVal is > 5");
+            //                                 }
+            //                                 else
+            //                                 if(poList.length>startVal+15){
+            //                                   displayList=[];
+            //                                   startVal=startVal+15;
+            //                                   for(int i=startVal;i<startVal+15;i++){
+            //                                     setState(() {
+            //                                       try{
+            //                                         displayList.add(poList[i]);
+            //                                       }
+            //                                       catch(e){
+            //                                         log("$i out of bound");
+            //                                       }
+            //
+            //                                     });
+            //                                   }
+            //                                 }
+            //
+            //                               },
+            //                             ),
+            //                           ),
+            //                           const SizedBox(width: 20,),
+            //
+            //                         ],
+            //                       )
+            //                   ],
+            //                 ),
+            //
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+
           ),
         ],
       ) ,
@@ -609,8 +827,8 @@ class _UploadPOState extends State<UploadPO> {
             response = value;
             poList = value;
             if(displayList.isEmpty){
-              if(poList.length>5){
-                for(int i=startVal;i<startVal+5;i++){
+              if(poList.length>15){
+                for(int i=startVal;i<startVal+15;i++){
                   displayList.add(poList[i]);
                 }
               }
@@ -649,8 +867,8 @@ class _UploadPOState extends State<UploadPO> {
             print(poList);
             try{
             if(displayList.isEmpty){
-              if(poList.length>5){
-                for(int i=startVal;i<startVal+5;i++){
+              if(poList.length>15){
+                for(int i=startVal;i<startVal+15;i++){
                   displayList.add(poList[i]);
                 }
               }
@@ -744,6 +962,38 @@ class _UploadPOState extends State<UploadPO> {
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 8),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  Widget buildTable(){
+    return Column(
+      // accessing rows in first sheet table data, taking list of tables data.
+      children: _fileContents.map((row) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+            // accessing cell data.
+            children: row.map((cell) {
+              bool headerTextBool=false;
+              if(cell!=null && nameOfHeaders.isNotEmpty){
+                for(int i=0;i<nameOfHeaders.length;i++){
+                  // Comparing both Header names.
+                  if(cell==nameOfHeaders[i]){
+                    headerTextBool=true;
+                  }
+                }
+              }
+              return Expanded(child:   headerTextBool==true? Text(
+                cell==null?"":cell.toString(),
+                style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+              ):
+              Text(
+                cell==null?"":cell.toString(),
+                style: const TextStyle(fontSize: 15),
+              ));
+            }).toList(),
+          ),
+        );
+      }).toList(),
     );
   }
 }

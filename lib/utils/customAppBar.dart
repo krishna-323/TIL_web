@@ -111,7 +111,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   customPopupDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp,color: mSaveButton,size: 14),
+      suffixIcon: const Icon(Icons.add,color: mSaveButton,size: 14),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  BoxConstraints(maxHeight:35),
@@ -415,7 +415,7 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
 
   customPopupDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp,color: mSaveButton,size: 14),
+      suffixIcon: const Icon(Icons.add,color: mSaveButton,size: 14),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  BoxConstraints(maxHeight:35),

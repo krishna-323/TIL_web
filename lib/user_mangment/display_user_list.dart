@@ -228,8 +228,8 @@ class _UserManagementState extends State<UserManagement> {
             response = value;
             userdata = response;
             if(displayUserData.isEmpty){
-              if(userdata.length>5){
-                for(int i=0;i<startVal+5;i++){
+              if(userdata.length>15){
+                for(int i=0;i<startVal+15;i++){
                   displayUserData.add(userdata[i]);
                 }
               }
@@ -1397,7 +1397,6 @@ class _UserManagementState extends State<UserManagement> {
           ),
           Expanded(
             child: Container(
-              height: MediaQuery.of(context).size.height,
               color: Colors.grey[50],
               child: CustomLoader(
                 inAsyncCall: loading,
@@ -1461,10 +1460,10 @@ class _UserManagementState extends State<UserManagement> {
                                       onPressed: (){},
                                       hoverColor: Colors.transparent,
                                       hoverElevation: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 18.0),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 18.0),
                                         child:Row(
-                                          children: const [
+                                          children: [
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
@@ -1490,11 +1489,10 @@ class _UserManagementState extends State<UserManagement> {
                                                   ),
                                                 )),
                                             Expanded(
-                                                child: Center(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: 50.0),
-                                                      child: Text("USER ROLE"),
-                                                    ))),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: Text("USER ROLE"),
+                                                )),
                                             Center(child: Padding(
                                               padding: EdgeInsets.only(right: 8),
                                               child: Icon(size: 18,
@@ -1583,7 +1581,7 @@ class _UserManagementState extends State<UserManagement> {
                                 if(i==displayUserData.length)
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text("${startVal+5>userdata.length?userdata.length:startVal+1}-${startVal+5>userdata.length?userdata.length:startVal+5} of ${userdata.length}",style: TextStyle(color: Colors.grey)),
+                                      Text("${startVal+15>userdata.length?userdata.length:startVal+1}-${startVal+15>userdata.length?userdata.length:startVal+15} of ${userdata.length}",style: TextStyle(color: Colors.grey)),
                                       const SizedBox(width: 10,),
                                       Material(color: Colors.transparent,
                                         child: InkWell(
@@ -1593,10 +1591,10 @@ class _UserManagementState extends State<UserManagement> {
                                             child: Icon(Icons.arrow_back_ios_sharp,size: 12),
                                           ),
                                           onTap: (){
-                                            if(startVal>4){
+                                            if(startVal>14){
                                               displayUserData=[];
-                                              startVal = startVal-5;
-                                              for(int i=startVal;i<startVal+5;i++){
+                                              startVal = startVal-15;
+                                              for(int i=startVal;i<startVal+15;i++){
                                                 try{
                                                   setState(() {
                                                     displayUserData.add(userdata[i]);
@@ -1622,10 +1620,10 @@ class _UserManagementState extends State<UserManagement> {
                                             child: Icon(Icons.arrow_forward_ios,size: 12),
                                           ),
                                           onTap: (){
-                                            if(userdata.length>startVal+5){
+                                            if(userdata.length>startVal+15){
                                               displayUserData=[];
-                                              startVal=startVal+5;
-                                              for(int i=startVal;i<startVal+5;i++){
+                                              startVal=startVal+15;
+                                              for(int i=startVal;i<startVal+15;i++){
                                                 try{
                                                   setState(() {
                                                     displayUserData.add(userdata[i]);
