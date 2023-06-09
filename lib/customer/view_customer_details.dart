@@ -309,15 +309,15 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
                                                     child:
                                                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
-                                                        SizedBox( height: 40,
-                                                          width: 150,
+                                                        Container( height: 40,
+                                                          width: 150,color: Colors.lightBlue[100],
                                                           child: TabBar(
                                                             indicator: BoxDecoration(
-                                                              color: Colors.blue[100],
+                                                              color: Colors.lightBlue[100],
                                                             ),
                                                             indicatorColor: Colors.black,
                                                             labelColor: Colors.black,
-                                                            unselectedLabelColor: Colors.lightBlue,
+                                                            unselectedLabelColor: Colors.white,
                                                             controller: _tabController,
                                                             tabs:myTabs,
 

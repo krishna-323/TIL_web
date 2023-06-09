@@ -45,7 +45,7 @@ decorationInput3(String hintString, bool val,) {
     hintString,
     style: TextStyle(color: val ?Colors.blue :Colors.grey[800]),
   ),
-      counterText: '',
+      counterText: '',labelStyle: TextStyle(fontSize: 12),
       contentPadding:  const EdgeInsets.fromLTRB(12, 00, 0, 0),
       hintText: hintString,
       suffixIconColor: const Color(0xfff26442),

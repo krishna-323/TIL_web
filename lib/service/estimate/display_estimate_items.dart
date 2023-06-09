@@ -76,11 +76,11 @@ import 'estimate.dart';
               thickness: 1,),
           Expanded(
             child:
-            Container(
-              //height: MediaQuery.of(context).size.height,
-              color: Colors.grey[50],
-              child: CustomLoader(
-                inAsyncCall: loading,
+            CustomLoader(
+              inAsyncCall: loading,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 40,right: 40,top: 30),

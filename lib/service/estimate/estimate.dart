@@ -822,14 +822,15 @@ class _EstimateState extends State<Estimate> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
-                            child: Container(
-                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
-                              height: 32,
+                            child:
+                            Container(
+                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                               height: 32,
                               child: LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return CustomPopupMenuButton(elevation: 4,
                                       decoration:  InputDecoration(
-                                        hintStyle: const TextStyle(fontSize: 12),
+                                        hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
                                           contentPadding: const EdgeInsets.only(bottom: 12,right: 8,top: 2),
                                           border: InputBorder.none,
@@ -839,10 +840,10 @@ class _EstimateState extends State<Estimate> {
                                               borderSide: BorderSide(color: Colors.transparent))
                                       ),
                                       hintText: '',
-                                      textController: tax[index],
+                                     // textController: tax[index],
                                       childWidth: constraints.maxWidth,
                                       textAlign: TextAlign.right,
-                                      shape:  const RoundedRectangleBorder(
+                                      shape:   const RoundedRectangleBorder(
                                         side: BorderSide(color:mTextFieldBorder),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(5),
@@ -852,7 +853,7 @@ class _EstimateState extends State<Estimate> {
                                       tooltip: '',
                                       itemBuilder:  (BuildContext context) {
                                         return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(
+                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
                                             textAlign: MainAxisAlignment.end,
                                             value: value,
                                             text:value,
@@ -863,6 +864,8 @@ class _EstimateState extends State<Estimate> {
 
                                       onSelected: (String value)  {
                                         setState(() {
+                                          print('-------selected value------');
+                                          print(value);
                                           tax[index].text=value;
                                         });
 

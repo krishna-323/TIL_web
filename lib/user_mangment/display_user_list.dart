@@ -1397,10 +1397,11 @@ class _UserManagementState extends State<UserManagement> {
             thickness: 1,
           ),
           Expanded(
-            child: Container(
-              color: Colors.grey[50],
-              child: CustomLoader(
-                inAsyncCall: loading,
+            child: CustomLoader(
+              inAsyncCall: loading,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
                     padding:

@@ -1621,8 +1621,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
             response = value;
             vehicleList = value;
             displayList=vehicleList;
-            // print('------------check proper--------------');
-            // print(displayList);
           }
           loading = false;
         });

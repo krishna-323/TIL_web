@@ -42,17 +42,17 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                       flex: 3,
                       child: Container(
-                        decoration: const BoxDecoration(
+                        decoration:  const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               topLeft: Radius.circular(10)),
-                          color: Colors.blue,
+                          color: Color(0xff00004d),
                         ),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(18.0),
-                              child: Image.asset("assets/logo/IkyamWhite.png"),
+                              child: Image.asset("assets/logo/Inverse Ikyam White Logo PNG.png"),
                             ),
                           ],
                         ),
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               Container(
                                 decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.blue,
+                                  color: Color(0xff00004d),
                                 ),
                                 child: TextButton(
 
@@ -265,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         counterText: "",
         contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-        hintText: hintString,
+        hintText: hintString,labelStyle: const TextStyle(fontSize: 12,),
         suffixIconColor:  val ?Colors.blue:Colors.grey,
         disabledBorder:  const OutlineInputBorder(
             borderSide:  BorderSide(color:  Colors.white)),

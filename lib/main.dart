@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
               }
               else {
                 displayEstimateItemsArgs = DisplayEstimateItemsArgs(
-                    drawerWidth: 190, selectedDestination: 1.1);
+                    drawerWidth: 190, selectedDestination: 1.2);
               }
               newScreen=DisplayEstimateItems(args: displayEstimateItemsArgs,);
             }
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 else {
                   companyManagementArguments = CompanyManagementArguments(
-                      drawerWidth: 190, selectedDestination: 1.1);
+                      drawerWidth: 190, selectedDestination: 2.1);
                 }
 
                 newScreen = CompanyManagement(args: companyManagementArguments);
@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 else {
                   userManagement = UserManagementArguments(
-                      drawerWidth: 190, selectedDestination: 1.1);
+                      drawerWidth: 190, selectedDestination: 2.2);
                 }
 
                 newScreen = UserManagement(args : userManagement);
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 else {
                   uploadDataArguments = UploadDataArguments(
-                      drawerWidth: 190, selectedDestination: 1.1);
+                      drawerWidth: 190, selectedDestination: 2.3);
                 }
 
                 newScreen = UploadPO(args: uploadDataArguments );
@@ -121,7 +121,7 @@ class _MyAppState extends State<MyApp> {
                 pricesArguments = settings.arguments as PricesArguments ;
               }
               else{
-                pricesArguments = PricesArguments(drawerWidth: 190,selectedDestination: 1.2);
+                pricesArguments = PricesArguments(drawerWidth: 190,selectedDestination: 2.4);
               }
 
                 newScreen = Prices(args:pricesArguments);

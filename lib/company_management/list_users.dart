@@ -1273,11 +1273,11 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             CustomDrawer(widget.drawerWidth, widget.selectedDestination),
             const VerticalDivider(width: 1, thickness: 1,),
             Expanded(
-              child:  Container(
-
-              color: Colors.grey[50],
-              child: CustomLoader(
+              child:  CustomLoader(
                 inAsyncCall: loading,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 50,right: 50,top: 20),
@@ -1529,8 +1529,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                     ),
                   ),
                 ),
-              ),
             ),
+              ),
             )
 
           ]),
