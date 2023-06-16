@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:new_project/widgets/input_decoration_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
   String userId='';
+  FocusNode _focusNode = FocusNode();
+   Color ? _suffixIconColor;
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.blueGrey,
@@ -114,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                 },
                                   style: const TextStyle(fontSize: 12),
-                                  decoration: decorationInputPassword("Password", passWordColor,passWordHindBool,passwordHideAndViewFunc),
+                                  decoration: decorationInputPassword("Password", passWordColor,passWordHindBool,passwordHideAndViewFunc,),
                                   onSubmitted: (v)  async {
                                     int val = await checkLoginCredentials(userName,password);
                                     if(val == 200)
@@ -251,32 +254,28 @@ class _LoginPageState extends State<LoginPage> {
 
 
   }
-  decorationInputPassword(String hintString, bool val, bool passWordHind,  passwordHideAndView,) {
+  decorationInputPassword(String hintString, bool val, bool passWordHind,  passwordHideAndView, ) {
     return InputDecoration(
         label: Text(
        hintString,
-      style: TextStyle(color: val ?Colors.blue :Colors.grey[800]),
     ),
         suffixIcon: IconButton(
           icon: Icon(
             passWordHind ? Icons.visibility : Icons.visibility_off,size: 20,
           ),
           onPressed: passwordHideAndView,
-        ),
+        ),suffixIconColor: val?Color(0xff00004d):Colors.grey,
+       // suffixIconColor:val?  const Color(0xff00004d):Colors.grey,
         counterText: "",
         contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
         hintText: hintString,labelStyle: const TextStyle(fontSize: 12,),
-        suffixIconColor:  val ?Colors.blue:Colors.grey,
-        disabledBorder:  const OutlineInputBorder(
-            borderSide:  BorderSide(color:  Colors.white)),
-        enabledBorder:OutlineInputBorder(
-            borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
-        focusedBorder:  OutlineInputBorder(
-            borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
-        border:   OutlineInputBorder(
-            borderSide:  BorderSide(color: val ?Colors.blue :  Colors.blue))
 
-    );
+        disabledBorder:  const OutlineInputBorder(borderSide:  BorderSide(color:  Colors.white)),
+        enabledBorder:const OutlineInputBorder(borderSide:  BorderSide(color: mTextFieldBorder)),
+        focusedBorder:  const OutlineInputBorder(borderSide:  BorderSide(color: Color(0xff00004d))),
+        border:   const OutlineInputBorder(borderSide:  BorderSide(color: Color(0xff00004d)))
+
+     );
   }
 }
 
