@@ -77,245 +77,281 @@ class _CustomDrawerState extends State<CustomDrawer> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               const SizedBox(height: 10,),
-              //Home.
-              ListTile(
-                  hoverColor:mHoverColor,
-                  selectedTileColor: Colors.blue,
-                  selectedColor: Colors.white,
-                  leading: const Icon(Icons.apps_rounded),
-                  title: Text(drawerWidth == 60 ? "" : 'Home'),
-                  selected: _selectedDestination == 0,
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, "/home");
-                  }),
+                //Home.
+                drawerWidth==60?InkWell(
+                  hoverColor: mHoverColor,
+                  onTap: (){
+                    setState(() {
+                      drawerWidth = 190;
+                    });
+                  },
+                  child:Icon(Icons.apps_rounded,color: _selectedDestination==0? Colors.blue: Colors.black54,)
+                ):
+                Column(
+                children: [
+                  ListTile(
+                      hoverColor:mHoverColor,
+                      selectedTileColor: Colors.blue,
+                      selectedColor: Colors.white,
+                     // leading: Container(child:  Icon(Icons.apps_rounded)),
+                      title:Container(
+                        height: 40,
+                        child: Row(
+                          children: [
+                            Expanded(child: Icon(Icons.apps_rounded)),
+                            const SizedBox(width: 5),
+                               Expanded(
+                                child: Text(drawerWidth==60?"":'Home'),
+                              ),
+                            const Spacer(),
+                          ],
+                        ),
+                      ),
 
-              //Services
-              drawerWidth==60?InkWell(
+                      selected: _selectedDestination == 0,
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, "/home");
+                      }),
+                ],
+              ),
+
+                //Services
+                drawerWidth==60?InkWell(
                 hoverColor: mHoverColor,
                 onTap: (){
                   setState(() {
                     drawerWidth = 190;
                   });
                 },
-                child: ListTile(
-                  leading: Icon(Icons.person,
+                child: Container(height: 40,
+                  child: Icon(Icons.person,
                     color: _selectedDestination == 1.1
                         || _selectedDestination ==1.2
                         ? Colors.blue: Colors.black54,),
                 ),
               ):
-              MouseRegion(
-                onHover: (event) {
+                Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MouseRegion(
+              onHover: (event) {
+                setState(() {
+                  if (!salesExpanded) {
+                    salesHovered = true;
+                  }
+                });
+              },
+              onExit: (event) {
+                setState(() {
+                  salesHovered = false;
+                });
+              },
+              child: GestureDetector(
+                onTap: () {
                   setState(() {
-                    if(salesExpanded==false){
-                      salesHovered=true;
-                    }
-                  });
-                },
-                onExit: (event) {
-                  setState(() {
-                    salesHovered=false;
+                    salesExpanded = !salesExpanded;
                   });
                 },
                 child: Container(
-                  color: salesHovered?mHoverColor:Colors.transparent,
-                  child: Theme(
-                    data: Theme.of(context).copyWith(dividerColor: const Color(0xffe7e4e4)),
-                    child: ExpansionTile(
-                      onExpansionChanged: (value) {
-                        setState(() {
-                          if(value){
-                            salesExpanded=true;
-                            salesHovered=false;
-                          }
-                          else{
-                            salesExpanded=false;
-                          }
-                        });
-                      },
-                      initiallyExpanded: _selectedDestination == 1.1 || _selectedDestination ==1.2,
-                      trailing: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: drawerWidth ==60 ? Colors.transparent: Colors.black87,
+                  height: 40,
+                  color: salesHovered ? mHoverColor : Colors.transparent,
+                  child: Row(
+                    children: [
+                       const Expanded(child: Icon(Icons.person,)),
+                      const SizedBox(width: 5,),
+                      Expanded(
+                        child: Text(
+                          drawerWidth == 60 ? '' : 'Service',
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ),
-                      title: Text(drawerWidth ==60 ? '' : "Service",style: const TextStyle(fontSize: 16),),
-                      leading: const Icon(Icons.person),
-                      children:<Widget> [
-                        //New Customer.
-                        ListTile(hoverColor: mHoverColor,
-                          selectedTileColor: Colors.blue,
-                          selectedColor: Colors.white,
-                          title: Center(child: Align(alignment: Alignment.topLeft,
-                              child: Text(drawerWidth == 60 ? "" : 'New Customer',))),
-
-                          selected: _selectedDestination == 1.1,
-                          onTap: (){
-                            setState(() {
-                              _selectedDestination=1.1;
-
-                            });
-                            Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: widget.drawerWidth));
-
-                          },
+                      Expanded(
+                        child: Icon(
+                          salesExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: drawerWidth == 60 ? Colors.transparent : Colors.black87,
                         ),
-                        //Estimate.
-                        ListTile(
-                            hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            //  leading: const Icon(Icons.home),
-                            title: Text(drawerWidth == 60 ? "" : 'Purchase Order',style: const TextStyle(fontSize: 15),),
-                            selected: _selectedDestination == 1.2,
-                            onTap: () { setState(() {
-                              _selectedDestination=1.2;
-                            });
-                            Navigator.pushReplacementNamed(context, MotowsRoutes.estimateRoutes,arguments: DisplayEstimateItemsArgs(selectedDestination: 1.2,drawerWidth: widget.drawerWidth));
-
-                              //     Navigator.pushReplacementNamed(context, MotowsRoutes.docketRoute,arguments: DocketArgs(drawerWidth: widget.drawerWidth, selectedDestination: 0.2));
-                            }
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
+            Visibility(
+              visible: salesExpanded,
+              child: Column(
+                children: [
+                  ListTile(
+                    hoverColor: mHoverColor,
+                    selectedTileColor: Colors.blue,
+                    selectedColor: Colors.white,
+                    title: Center(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(drawerWidth == 60 ? '' : 'New Customer'),
+                      ),
+                    ),
+                    selected: _selectedDestination == 1.1,
+                    onTap: () {
+                      setState(() {
+                        _selectedDestination = 1.1;
+                      });
+                      Navigator.pushReplacementNamed(
+                        context,
+                        MotowsRoutes.customerListRoute,
+                        arguments: CustomerArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    hoverColor: mHoverColor,
+                    selectedTileColor: Colors.blue,
+                    selectedColor: Colors.white,
+                    title: Text(drawerWidth == 60 ? '' : 'Purchase Order', style: const TextStyle(fontSize: 15)),
+                    selected: _selectedDestination == 1.2,
+                    onTap: () {
+                      setState(() {
+                        _selectedDestination = 1.2;
+                      });
+                      Navigator.pushReplacementNamed(
+                        context,
+                        MotowsRoutes.estimateRoutes,
+                        arguments: DisplayEstimateItemsArgs(selectedDestination: 1.2, drawerWidth: widget.drawerWidth),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
 
-
+                   //Settings
                 drawerWidth==60?InkWell(  hoverColor: mHoverColor,
                   onTap: (){
                     setState(() {
                       drawerWidth = 190;
                     });
                   },
-                  child: ListTile(leading: Icon(Icons.settings,color:_selectedDestination ==2.1
-                      ||_selectedDestination==2.2
-                      ||_selectedDestination==2.3
-                      ||_selectedDestination==2.4
-                      ? Colors.blue: Colors.black54,),
+                  child: Container(height: 40,
+                    child: Icon(Icons.settings,color:_selectedDestination ==2.1
+                        ||_selectedDestination==2.2
+                        ||_selectedDestination==2.3
+                        ||_selectedDestination==2.4
+                        ? Colors.blue: Colors.black54,),
                   ),
                 ):
-                MouseRegion(
-                  onHover: (event) {
-                    setState(() {
-                      if(settingsExpanded==false){
-                        settingsHover=true;
-                      }
-
-                    });
-                  },
-                  onExit: (event) {
-                    setState(() {
-                      settingsHover=false;
-                    });
-                  },
-                  child: Container(
-                    color: settingsHover?mHoverColor:Colors.transparent,
-                    child: ExpansionTile(
-                      onExpansionChanged: (value) {
-
+                Column(
+                  children: [
+                    MouseRegion(
+                      onHover: (event) {
                         setState(() {
-                          if(value){
-                            settingsExpanded=true;
-                            settingsHover=false;
-                          }
-                          else{
-                            setState(() {
-                              settingsExpanded=false;
-                            });
+                          if (!settingsExpanded) {
+                            settingsHover = true;
                           }
                         });
-
                       },
-                      initiallyExpanded:  _selectedDestination == 2.1||
-                          _selectedDestination==2.2 ||
-                          _selectedDestination==2.3||
-                          _selectedDestination==2.4,
-
-
-                      trailing: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: drawerWidth == 60 ?Colors.transparent : Colors.black87,
-                      ),
-
-                      title: Text(drawerWidth == 60 ? "" :"Settings"),
-                      leading: const Icon(Icons.settings),
-                      children: <Widget>[
-                        ListTile(
-                            hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            title: Align
-                              (alignment: Alignment.topLeft,
-                                child: Text(drawerWidth == 60 ? "" : 'Company Management')),
-                            selected: _selectedDestination == 2.1,
-                            onTap: () { setState(() {
-                              _selectedDestination=2.1;
-                            });
-
-                            // Navigator.of(context).pushReplacement(
-                            //   PageRouteBuilder(
-                            //     pageBuilder: (context, animation1, animation2) =>CompanyManagement(selectedDestination: _selectedDestination,drawerWidth: widget.drawerWidth,),
-                            //     transitionDuration: Duration.zero,
-                            //     reverseTransitionDuration: Duration.zero,
-                            //   ),
-                            // );
-                            Navigator.pushReplacementNamed(context, MotowsRoutes.companyManagement,arguments: CompanyManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.1));
-                            }
+                      onExit: (event) {
+                        setState(() {
+                          settingsHover = false;
+                        });
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            settingsExpanded = !settingsExpanded;
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          color: settingsHover ? mHoverColor : Colors.transparent,
+                          child: Row(
+                            children: [
+                              const Expanded(child: Icon(Icons.settings,)),
+                              const SizedBox(width: 5,),
+                              Expanded(
+                                child: Text(
+                                  drawerWidth == 60 ? '' : 'Settings',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Expanded(
+                                child: Icon(
+                                  settingsExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                  color: drawerWidth == 60 ? Colors.transparent : Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        ListTile(
-                            title: Center(child: Align(alignment: Alignment.topLeft,
-                                child: Text(drawerWidth == 60 ? "" : 'User Management'))),
-                            selected: _selectedDestination == 2.2,
-                            hoverColor:mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            onTap: () {
-                              setState(() {
-                                _selectedDestination=2.2;
+                      ),
+                    ),
+                    Visibility(
+                      visible: settingsExpanded,
+                      child: Column(
+                        children: [
+                          ListTile(
+                              hoverColor: mHoverColor,
+                              selectedTileColor: Colors.blue,
+                              selectedColor: Colors.white,
+                              title: Align
+                                (alignment: Alignment.topLeft,
+                                  child: Text(drawerWidth == 60 ? "" : 'Company Management')),
+                              selected: _selectedDestination == 2.1,
+                              onTap: () { setState(() {
+                                _selectedDestination=2.1;
                               });
+
                               // Navigator.of(context).pushReplacement(
                               //   PageRouteBuilder(
-                              //     pageBuilder: (context, animation1, animation2) => UserManagement( drawerWidth: drawerWidth, selectedDestination: _selectedDestination,),
+                              //     pageBuilder: (context, animation1, animation2) =>CompanyManagement(selectedDestination: _selectedDestination,drawerWidth: widget.drawerWidth,),
                               //     transitionDuration: Duration.zero,
                               //     reverseTransitionDuration: Duration.zero,
                               //   ),
                               // );
-                              Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.2));
-                            }
-                        ),
-                        ListTile(
-                            title: Center(child: Align(alignment: Alignment.topLeft,
-                                child: Text(drawerWidth == 60 ? "" : 'Upload'))),
-                            selected: _selectedDestination == 2.3,
-                            hoverColor:mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            onTap: () {
-                              setState(() {
-                                _selectedDestination=2.3;
-                              });
-                              Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.3));
-                              // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
-                            }
-                        ),
-                        // ListTile(
-                        //     title: Center(child: Align(alignment: Alignment.topLeft,
-                        //         child: Text(drawerWidth == 60 ? "" : 'Prices'))),
-                        //     selected: _selectedDestination == 2.4,
-                        //     hoverColor: mHoverColor,
-                        //     selectedTileColor: Colors.blue,
-                        //     selectedColor: Colors.white,
-                        //     onTap: () {
-                        //       setState(() {
-                        //         _selectedDestination=2.4;
-                        //       });
-                        //       Navigator.pushReplacementNamed(context, MotowsRoutes.pricesRoute,arguments: PricesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.4));
-                        //       // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
-                        //     }
-                        // ),
-                      ],
+                              Navigator.pushReplacementNamed(context, MotowsRoutes.companyManagement,arguments: CompanyManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.1));
+                              }
+                          ),
+                          ListTile(
+                              title: Center(child: Align(alignment: Alignment.topLeft,
+                                  child: Text(drawerWidth == 60 ? "" : 'User Management'))),
+                              selected: _selectedDestination == 2.2,
+                              hoverColor:mHoverColor,
+                              selectedTileColor: Colors.blue,
+                              selectedColor: Colors.white,
+                              onTap: () {
+                                setState(() {
+                                  _selectedDestination=2.2;
+                                });
+                                // Navigator.of(context).pushReplacement(
+                                //   PageRouteBuilder(
+                                //     pageBuilder: (context, animation1, animation2) => UserManagement( drawerWidth: drawerWidth, selectedDestination: _selectedDestination,),
+                                //     transitionDuration: Duration.zero,
+                                //     reverseTransitionDuration: Duration.zero,
+                                //   ),
+                                // );
+                                Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.2));
+                              }
+                          ),
+                          ListTile(
+                              title: Center(child: Align(alignment: Alignment.topLeft,
+                                  child: Text(drawerWidth == 60 ? "" : 'Upload'))),
+                              selected: _selectedDestination == 2.3,
+                              hoverColor:mHoverColor,
+                              selectedTileColor: Colors.blue,
+                              selectedColor: Colors.white,
+                              onTap: () {
+                                setState(() {
+                                  _selectedDestination=2.3;
+                                });
+                                Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.3));
+                                // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
+                              }
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+
+                  ],
                 ),
 
             ],
@@ -346,5 +382,131 @@ class _CustomDrawerState extends State<CustomDrawer> {
     setState(() {
       _selectedDestination = index;
     });
+  }
+}
+
+
+
+
+// MouseRegion(
+//   onHover: (event) {
+//     setState(() {
+//       if (!salesExpanded) {
+//         salesHovered = true;
+//       }
+//     });
+//   },
+//   onExit: (event) {
+//     setState(() {
+//       salesHovered = false;
+//     });
+//   },
+//   child: Container(
+//     color: salesHovered ? mHoverColor : Colors.transparent,
+//     child: Theme(
+//       data: Theme.of(context).copyWith(dividerColor: const Color(0xffe7e4e4)),
+//       child: CustomAccordion(
+//         title: drawerWidth == 60 ? '' : "Service",
+//         child: Column(
+//           children: [
+//             ListTile(
+//               hoverColor: mHoverColor,
+//               selectedTileColor: Colors.blue,
+//               selectedColor: Colors.white,
+//               title: Center(
+//                 child: Align(
+//                   alignment: Alignment.topLeft,
+//                   child: Text(drawerWidth == 60 ? '' : 'New Customer'),
+//                 ),
+//               ),
+//               selected: _selectedDestination == 1.1,
+//               onTap: () {
+//                 setState(() {
+//                   _selectedDestination = 1.1;
+//                 });
+//                 Navigator.pushReplacementNamed(
+//                   context,
+//                   MotowsRoutes.customerListRoute,
+//                   arguments: CustomerArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+//                 );
+//               },
+//             ),
+//             ListTile(
+//               hoverColor: mHoverColor,
+//               selectedTileColor: Colors.blue,
+//               selectedColor: Colors.white,
+//               title: Text(drawerWidth == 60 ? '' : 'Purchase Order', style: const TextStyle(fontSize: 15)),
+//               selected: _selectedDestination == 1.2,
+//               onTap: () {
+//                 setState(() {
+//                   _selectedDestination = 1.2;
+//                 });
+//                 Navigator.pushReplacementNamed(
+//                   context,
+//                   MotowsRoutes.estimateRoutes,
+//                   arguments: DisplayEstimateItemsArgs(selectedDestination: 1.2, drawerWidth: widget.drawerWidth),
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   ),
+// ),
+class CustomAccordion extends StatefulWidget {
+  final String title;
+  final Widget child;
+
+  const CustomAccordion({required this.title, required this.child});
+
+  @override
+  _CustomAccordionState createState() => _CustomAccordionState();
+}
+
+class _CustomAccordionState extends State<CustomAccordion> {
+  bool expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              expanded = !expanded;
+            });
+          },
+          child: Container(
+            color: expanded ? Colors.grey.shade300 : Colors.transparent,
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Icon(
+                    expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          height: expanded ? null : 0,
+          child: SingleChildScrollView(
+            child: widget.child,
+          ),
+        ),
+      ],
+    );
   }
 }
