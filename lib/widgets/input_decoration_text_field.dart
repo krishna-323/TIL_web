@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/static_data/motows_colors.dart';
+
 decorationInput(String hintString, bool val,) {
   return  InputDecoration(label: Text(
         hintString,
@@ -41,22 +43,19 @@ decorationInput2(String hintString, bool val,) {
 }
 
 decorationInput3(String hintString, bool val,) {
-  return  InputDecoration(label: Text(
+  return  InputDecoration(
+
+      label: Text(
     hintString,
-    style: TextStyle(color: val ?Colors.blue :Colors.grey[800]),
   ),
-      counterText: '',labelStyle: TextStyle(fontSize: 12),
+      counterText: '',labelStyle: const TextStyle(fontSize: 12),
       contentPadding:  const EdgeInsets.fromLTRB(12, 00, 0, 0),
       hintText: hintString,
       suffixIconColor: const Color(0xfff26442),
-      disabledBorder:  const OutlineInputBorder(
-          borderSide:  BorderSide(color:  Colors.white)),
-      enabledBorder:OutlineInputBorder(
-          borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
-      focusedBorder:  OutlineInputBorder(
-          borderSide:  BorderSide(color: val ?Colors.blue :  Colors.grey)),
-      border:   OutlineInputBorder(
-          borderSide:  BorderSide(color: val ?Colors.blue :  Colors.blue))
+      disabledBorder:  const OutlineInputBorder(borderSide:  BorderSide(color:  Colors.white)),
+      enabledBorder:const OutlineInputBorder(borderSide:  BorderSide(color: mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide:  BorderSide(color:Color(0xff00004d))),
+      border:   const OutlineInputBorder(borderSide:  BorderSide(color:Color(0xff00004d)))
   );
 }
 
