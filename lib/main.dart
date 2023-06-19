@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return  MaterialApp(
         title: 'Vendor Management',
-        initialRoute: "dashboard",
+        initialRoute: "home",
         onGenerateRoute: (RouteSettings settings){
           Widget newScreen;
           switch (settings.name){
@@ -120,15 +120,13 @@ class _MyAppState extends State<MyApp> {
               }
                 newScreen = Prices(args:pricesArguments);
               }break;
-            default: newScreen = const MyHomePage();
+            default: newScreen = const InitialScreen();
           }
           return PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => newScreen,
               reverseTransitionDuration: Duration.zero,transitionDuration: Duration.zero,settings: settings);
         },
         routes: {
-          'home':(context)=> const MyHomePage(),
-          "dashboard":(context) => const InitialScreen(),
-          MotowsRoutes.homeRoute:(context) => const MyHomePage(),
+          'home':(context)=> const InitialScreen(),
         },
         theme: ThemeData(useMaterial3: true,
 
@@ -182,7 +180,7 @@ class _InitialScreenState extends State<InitialScreen> {
     return Scaffold(
       body:
       isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: SizedBox(width: 100,height: 100,child: CircularProgressIndicator()))
           : authToken == ""
           ? const LoginPage(): const MyHomePage(),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
