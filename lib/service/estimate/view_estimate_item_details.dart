@@ -981,9 +981,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return CustomPopupMenuButton(elevation: 4,
                                       decoration:  InputDecoration(
-                                          hintStyle: const TextStyle(fontSize: 12),
+                                          hintStyle: const TextStyle(fontSize: 14,color: Colors.black),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
                                           border: InputBorder.none,
                                           focusedBorder: const OutlineInputBorder(
                                               borderSide: BorderSide(color: Colors.blue)),
@@ -991,7 +991,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                               borderSide: BorderSide(color: Colors.transparent))
                                       ),
                                       hintText: '',
-                                      textController: tax[index],
+                                      //textController: tax[index],
                                       childWidth: constraints.maxWidth,
                                       textAlign: TextAlign.right,
                                       shape:  const RoundedRectangleBorder(
@@ -1012,7 +1012,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           );
                                         }).toList();
                                       },
-
                                       onSelected: (String value)  {
                                         setState(() {
                                           tax[index].text=value;

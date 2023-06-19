@@ -34,8 +34,6 @@ class _MyAppState extends State<MyApp> {
   PageController page = PageController();
   @override
   Widget build(BuildContext context) {
-
-
     return  MaterialApp(
         title: 'Vendor Management',
         initialRoute: "dashboard",
@@ -77,7 +75,6 @@ class _MyAppState extends State<MyApp> {
                   companyManagementArguments = CompanyManagementArguments(
                       drawerWidth: 190, selectedDestination: 2.1);
                 }
-
                 newScreen = CompanyManagement(args: companyManagementArguments);
               }
                 break;
@@ -92,7 +89,6 @@ class _MyAppState extends State<MyApp> {
                   userManagement = UserManagementArguments(
                       drawerWidth: 190, selectedDestination: 2.2);
                 }
-
                 newScreen = UserManagement(args : userManagement);
               }
               break;
@@ -108,7 +104,6 @@ class _MyAppState extends State<MyApp> {
                   uploadDataArguments = UploadDataArguments(
                       drawerWidth: 190, selectedDestination: 2.3);
                 }
-
                 newScreen = UploadPO(args: uploadDataArguments );
               }
               break;
@@ -123,7 +118,6 @@ class _MyAppState extends State<MyApp> {
               else{
                 pricesArguments = PricesArguments(drawerWidth: 190,selectedDestination: 2.4);
               }
-
                 newScreen = Prices(args:pricesArguments);
               }break;
             default: newScreen = const MyHomePage();

@@ -28,9 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       passWordHindBool = !passWordHindBool;
     });
   }
-  String userId='';
-  FocusNode _focusNode = FocusNode();
-   Color ? _suffixIconColor;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.blueGrey,

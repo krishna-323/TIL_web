@@ -161,7 +161,7 @@ import 'estimate.dart';
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("estimated Vehicle Id")
+                                                      child: Text("Estimated Vehicle Id")
                                                   ),
                                                 )),
                                             Expanded(
@@ -172,13 +172,6 @@ import 'estimate.dart';
                                                       child: Text("Total Amount")
                                                   ),
                                                 )),
-                                            Center(child: Padding(
-                                              padding: EdgeInsets.only(right: 8),
-                                              child: Icon(size: 18,
-                                                Icons.more_vert,
-                                                color: Colors.transparent,
-                                              ),
-                                            ),)
                                           ],
                                         ),
                                       ),

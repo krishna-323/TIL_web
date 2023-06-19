@@ -1462,7 +1462,7 @@ class _UserManagementState extends State<UserManagement> {
                                       onPressed: (){},
                                       hoverColor: Colors.transparent,
                                       hoverElevation: 0,
-                                      child: const Padding(
+                                      child:  Padding(
                                         padding: EdgeInsets.only(left: 18.0),
                                         child:Row(
                                           children: [
@@ -1495,13 +1495,10 @@ class _UserManagementState extends State<UserManagement> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: Text("USER ROLE"),
                                                 )),
-                                            Center(child: Padding(
-                                              padding: EdgeInsets.only(right: 8),
-                                              child: Icon(size: 18,
-                                                Icons.more_vert,
-                                                color: Colors.transparent,
-                                              ),
-                                            ),)
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 38),
+                                              child: Container(),
+                                            )
                                           ],
                                         ),
                                       ),
@@ -1528,7 +1525,7 @@ class _UserManagementState extends State<UserManagement> {
                                       // ));
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 18.0,bottom: 3),
+                                      padding: const EdgeInsets.only(left: 18.0,bottom: 3,top:4),
                                       child: Row(
                                         children: [
                                           Expanded(

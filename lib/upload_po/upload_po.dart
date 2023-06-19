@@ -95,8 +95,6 @@ class _UploadPOState extends State<UploadPO> {
                                     const SizedBox(width: 10,),
                                     MaterialButton(
                                       onPressed: () {
-                                        print('-------');
-                                        print("check here");
                                         exportToExcel();
                                       },
                                       color: Colors.blue,
@@ -140,7 +138,7 @@ class _UploadPOState extends State<UploadPO> {
                           const SizedBox(height: 8,),
                           Container(color: Colors.grey[200],
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 10,top: 10,right: 4,left: 8),
+                              padding: const EdgeInsets.only(bottom: 10,top: 10,right: 5,left: 8),
                               child: Column(
                                 children: [
                                   Row(
@@ -148,7 +146,7 @@ class _UploadPOState extends State<UploadPO> {
                                     children:  [
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left:25.0),
+                                          padding: const EdgeInsets.only(left:25.0,right: 10),
                                           child: SizedBox(width: 30,height: 30,
                                             child: Transform.scale(
                                               scale: 0.8,
@@ -249,10 +247,14 @@ class _UploadPOState extends State<UploadPO> {
                               children: [
                                 if(i!=displayList.length)
                                   MaterialButton(
-                                    onPressed: () {  },
+                                    onPressed: () {
+                                      //selectedFields.contains(displayList[i]['excel_id']);
+
+
+                                    },
                                     hoverColor: Colors.blue[50],
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left:18.0,top:4,bottom: 3),
+                                      padding: const EdgeInsets.only(right: 4,left: 8,top:4,bottom: 3),
                                       child: Row(
                                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -263,16 +265,16 @@ class _UploadPOState extends State<UploadPO> {
                                                 child: Checkbox(
                                                   value: selectedFields.contains(displayList[i]['excel_id']),
                                                   onChanged: ( value) {
-
                                                     setState(() {
-                                                     // fieldValues[i] = value;
+                                                     //fieldValues[i] = value;
+
                                                       if(value==true){
-                                                        selectedFields.add(poList[i]['excel_id']);
+                                                        selectedFields.add(displayList[i]['excel_id']);
                                                       }
                                                       else
                                                       {
                                                         checkAll=false;
-                                                        selectedFields.remove(poList[i]['excel_id']);
+                                                        selectedFields.remove(displayList[i]['excel_id']);
                                                       }
                                                       if(selectedFields.isEmpty) {
                                                         visibleDelete =false;
@@ -418,7 +420,6 @@ class _UploadPOState extends State<UploadPO> {
                                   )
                               ],
                             ),
-
                         ],
                       ),
                     ),
@@ -754,7 +755,7 @@ class _UploadPOState extends State<UploadPO> {
         try{
           displayList.removeWhere((element) => element["excel_id"]==selectedField);
           poList.removeWhere((element) => element["excel_id"]==selectedField);
-          displayList=[];
+          poList=[];
           fetchPoData();
           visibleDelete=false;
         }

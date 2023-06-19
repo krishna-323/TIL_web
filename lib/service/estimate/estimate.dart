@@ -832,7 +832,7 @@ class _EstimateState extends State<Estimate> {
                                       decoration:  InputDecoration(
                                         hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
                                           border: InputBorder.none,
                                           focusedBorder: const OutlineInputBorder(
                                               borderSide: BorderSide(color: Colors.blue)),
@@ -864,8 +864,6 @@ class _EstimateState extends State<Estimate> {
 
                                       onSelected: (String value)  {
                                         setState(() {
-                                          print('-------selected value------');
-                                          print(value);
                                           tax[index].text=value;
                                         });
 
