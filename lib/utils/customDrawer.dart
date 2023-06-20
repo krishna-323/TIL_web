@@ -89,45 +89,46 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     drawerWidth = 190;
                   });
                 },
-                child: SizedBox(height: 45,
+                child: SizedBox(height: 40,
                   child: Icon(Icons.apps_rounded,
                     color: _selectedDestination == 0 ? Colors.blue: Colors.black54,),
                 ),
               ):
-                Column(
-                children: [
-                  MouseRegion(
-                    onHover: (event){
+                MouseRegion(
+                  onHover: (event){
+                    setState((){
                       homeHovered=true;
-                    },
-                    onExit: (event){
+                    });
+                  },
+                  onExit: (event){
+                    setState(() {
                       homeHovered=false;
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, "/home");
-                      },
-                      child: Container(
-                        height: 45,
-                        color: homeHovered ? mHoverColor : Colors.transparent,
-                        child: Row(
-                          children: [
-                            const Expanded(child: Icon(Icons.apps_rounded,)),
-                            const SizedBox(width: 5,),
-                            Expanded(
-                              child: Text(
-                                drawerWidth == 60 ? '' : 'Home',
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            Expanded(child: Container()),
-                          ],
+                    });
+
+                  },
+                  child: Container(
+                    color: homeHovered?mHoverColor:Colors.transparent,
+                    child: ListTileTheme(
+                      contentPadding: EdgeInsets.only(left: 0),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.pushReplacementNamed(context, "/home");
+                        },
+                        leading: const SizedBox(width: 40,child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: Icon(Icons.apps_rounded),
+                        ),),
+                        title:    Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            drawerWidth == 60 ? '' : 'Home',
+
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
                 //Services
                 drawerWidth==60?InkWell(
                 hoverColor: mHoverColor,
@@ -239,7 +240,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     ),
                   ),
                 ),
-
+                //Settings.
                 drawerWidth==60?InkWell(  hoverColor: mHoverColor,
                   onTap: (){
                     setState(() {
@@ -254,8 +255,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         ? Colors.blue: Colors.black54,),
                   ),
                 ):
-
-              MouseRegion(
+                MouseRegion(
                 onHover: (event) {
                   setState(() {
                     if (settingsExpanded == false) {

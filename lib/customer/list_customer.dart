@@ -543,7 +543,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                     child: SizedBox(
                                                         height: 25,
                                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text('Name')
+                                                        child: Text('Address')
                                                     ),
                                                   )
                                               ),
@@ -571,7 +571,6 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                         child: Text("Phone No")
                                                     ),
                                                   )),
-
                                               Center(child: Padding(
                                                 padding: EdgeInsets.only(right: 8),
                                                 child: Icon(size: 18,
@@ -586,6 +585,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                     ),
                                   ),
                                   Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+
                                 ],
                               )
                           ),
@@ -624,7 +624,8 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                               child: SizedBox(
                                                   height: 25,
                                                   //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayList[i]['street_address']?? '')
+                                                  child: Tooltip(message:displayList[i]['street_address']?? '',
+                                                    child: Text(displayList[i]['street_address']?? '',)),
                                               ),
                                             )
                                         ),
@@ -652,11 +653,10 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                   child: Text(displayList[i]['mobile']??"")
                                               ),
                                             )),
-
                                         const Center(child: Padding(
                                           padding: EdgeInsets.only(right: 8),
-                                          child: Icon(size: 18,
-                                            Icons.more_vert,
+                                          child: Icon(size: 15,
+                                            Icons.arrow_circle_right,
                                             color: Colors.black,
                                           ),
                                         ),)
@@ -727,24 +727,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
 
                                               }
                                             }
-                                            // if(startVal+1+5>customersList.length){
-                                            //   // print("Block");
-                                            // }
-                                            // else if(customersList.length>startVal+5){
-                                            //   displayList=[];
-                                            //   startVal=startVal+5;
-                                            //   for(int i=startVal;i<startVal+5;i++){
-                                            //     setState(() {
-                                            //       try{
-                                            //         displayList.add(customersList[i]);
-                                            //       }
-                                            //       catch(e){
-                                            //         print(e);
-                                            //       }
-                                            //
-                                            //     });
-                                            //   }
-                                            // }
+
 
                                           },
                                         ),

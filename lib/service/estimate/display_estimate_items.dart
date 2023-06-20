@@ -179,6 +179,7 @@ import 'estimate.dart';
                                   ),
                                 ),
                                 Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                                const SizedBox(height: 4,)
                               ],
                             ),
                           ),
