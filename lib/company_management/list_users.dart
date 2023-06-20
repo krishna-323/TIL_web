@@ -401,17 +401,24 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   _getPopupMenu(BuildContext context,) {
     return [
       PopupMenuItem(value: 1,
-          child:  Row(
-            children: [
+          child:  MouseRegion(
+            onHover: (event){
+              setState(() {
 
-              Icon(Icons.edit,size: 18,color: Colors.grey[800],),
-              const SizedBox(width: 10,),
-              Text(
-                'Edit',
-                style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
-              ),
+              });
+            },
+            child: Row(
+              children: [
 
-            ],
+                Icon(Icons.edit,size: 18,color: Colors.grey[800],),
+                const SizedBox(width: 10,),
+                Text(
+                  'Edit',
+                  style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
+                ),
+
+              ],
+            ),
           )),
       PopupMenuItem(value: 2,
           child:  Center(
@@ -1338,9 +1345,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                     hoverElevation: 0,
                                     child:  Padding(
                                       padding: EdgeInsets.only(left: 18.0),
-                                      child:Row(
+                                      child: Row(
                                         children: [
-                                          Expanded(
+                                           Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
@@ -1383,7 +1390,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(height: 4,),
                         if(companyUsers)
                           Column(
                             children: [
@@ -1397,60 +1404,54 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                           Column(
                             children: [
                               if(i!=displayUserList.length)
-                              MaterialButton(
-                                hoverColor: Colors.blue[50],
-                                onPressed: (){
-
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 18.0,bottom: 3),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4.0),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child: Text(displayUserList[i]['username']??"")
-                                            ),
-                                          )),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4),
-                                            child: SizedBox(
-                                                height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child: Text(displayUserList[i]['email']?? '')
-                                            ),
-                                          )
-                                      ),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child: Text(displayUserList[i]['company_name']??"")
-                                            ),
-                                          )),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child: Text(displayUserList[i]['role']??"")
-                                            ),
-                                          )),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Center(
+                              Padding(
+                                padding: const EdgeInsets.only(left: 18.0,bottom: 3),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 4.0,left: 5),
+                                          child: SizedBox(height: 25,
+                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                              child: Text(displayUserList[i]['username']??"")
+                                          ),
+                                        )),
+                                    Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 4,left: 5),
                                           child: SizedBox(
-                                              height: 28,
-                                              child: Center(
-                                                  child: _popMenu(displayUserList[i],))),
-                                        ),
+                                              height: 25,
+                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                              child: Text(displayUserList[i]['email']?? '')
+                                          ),
+                                        )
+                                    ),
+                                    Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 4),
+                                          child: SizedBox(height: 25,
+                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                              child: Text(displayUserList[i]['company_name']??"")
+                                          ),
+                                        )),
+                                    Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 4),
+                                          child: SizedBox(height: 25,
+                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                              child: Text(displayUserList[i]['role']??"")
+                                          ),
+                                        )),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Center(
+                                        child: SizedBox(
+                                            height: 28,
+                                            child: Center(
+                                                child: _popMenu(displayUserList[i],))),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               if(i!=displayUserList.length)

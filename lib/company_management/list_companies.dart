@@ -884,6 +884,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                   ),
                                 ),
                                 Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                                Container(height: 4,)
                               ],
                             ),
                           ),

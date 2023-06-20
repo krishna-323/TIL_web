@@ -94,6 +94,7 @@ class _UploadPOState extends State<UploadPO> {
 
                                     const SizedBox(width: 10,),
                                     MaterialButton(
+
                                       onPressed: () {
                                         exportToExcel();
                                       },
@@ -145,35 +146,32 @@ class _UploadPOState extends State<UploadPO> {
                                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:  [
                                       Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:25.0,right: 10),
-                                          child: SizedBox(width: 30,height: 30,
-                                            child: Transform.scale(
-                                              scale: 0.8,
-                                              child: Checkbox(
-                                                value: visibleDelete==false?false:checkAll,
-                                                onChanged: ( value) {
-                                                  setState(() {
-                                                    selectedFields=[];
-                                                    checkAll = value!;
-                                                    for(int i=0;i<poList.length;i++){
-                                                     // fieldValues[i]=value;
-                                                      if(value==true){
-                                                        selectedFields.add(poList[i]['excel_id']);
-                                                      }
-                                                      else{
-                                                        selectedFields=[];
-                                                      }
-                                                      if(selectedFields.isEmpty) {
-                                                        visibleDelete =false;
-                                                      } else{
-                                                        visibleDelete = true;
-                                                      }
+                                        child: SizedBox(width: 30,height: 30,
+                                          child: Transform.scale(
+                                            scale: 0.8,
+                                            child: Checkbox(
+                                              value: visibleDelete==false?false:checkAll,
+                                              onChanged: ( value) {
+                                                setState(() {
+                                                  selectedFields=[];
+                                                  checkAll = value!;
+                                                  for(int i=0;i<poList.length;i++){
+                                                   // fieldValues[i]=value;
+                                                    if(value==true){
+                                                      selectedFields.add(poList[i]['excel_id']);
                                                     }
-                                                  });
-                                                },
+                                                    else{
+                                                      selectedFields=[];
+                                                    }
+                                                    if(selectedFields.isEmpty) {
+                                                      visibleDelete =false;
+                                                    } else{
+                                                      visibleDelete = true;
+                                                    }
+                                                  }
+                                                });
+                                              },
 
-                                              ),
                                             ),
                                           ),
                                         ),
@@ -241,113 +239,105 @@ class _UploadPOState extends State<UploadPO> {
                               ),
                             ),
                           ),
-
+                           const SizedBox(height: 4,),
                           for(int i=0;i<=displayList.length;i++)
                             Column(
                               children: [
                                 if(i!=displayList.length)
-                                  MaterialButton(
-                                    onPressed: () {
-                                      //selectedFields.contains(displayList[i]['excel_id']);
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4,left: 8,top:4,bottom: 3),
+                                    child: Row(
+                                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: SizedBox(width: 30,height: 30,
+                                            child: Transform.scale(
+                                              scale: 0.8,
+                                              child: Checkbox(
+                                                value: selectedFields.contains(displayList[i]['excel_id']),
+                                                onChanged: ( value) {
+                                                  setState(() {
+                                                   //fieldValues[i] = value;
 
+                                                    if(value==true){
+                                                      selectedFields.add(displayList[i]['excel_id']);
+                                                    }
+                                                    else
+                                                    {
+                                                      checkAll=false;
+                                                      selectedFields.remove(displayList[i]['excel_id']);
+                                                    }
+                                                    if(selectedFields.isEmpty) {
+                                                      visibleDelete =false;
+                                                    } else{
+                                                      visibleDelete = true;
+                                                    }
+                                                  });
+                                                },
 
-                                    },
-                                    hoverColor: Colors.blue[50],
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 4,left: 8,top:4,bottom: 3),
-                                      child: Row(
-                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: SizedBox(width: 30,height: 30,
-                                              child: Transform.scale(
-                                                scale: 0.8,
-                                                child: Checkbox(
-                                                  value: selectedFields.contains(displayList[i]['excel_id']),
-                                                  onChanged: ( value) {
-                                                    setState(() {
-                                                     //fieldValues[i] = value;
-
-                                                      if(value==true){
-                                                        selectedFields.add(displayList[i]['excel_id']);
-                                                      }
-                                                      else
-                                                      {
-                                                        checkAll=false;
-                                                        selectedFields.remove(displayList[i]['excel_id']);
-                                                      }
-                                                      if(selectedFields.isEmpty) {
-                                                        visibleDelete =false;
-                                                      } else{
-                                                        visibleDelete = true;
-                                                      }
-                                                    });
-                                                  },
-
-                                                ),
                                               ),
                                             ),
                                           ),
-                                          //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
-                                                ),
-                                              )),
+                                        ),
+                                        //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
+                                              ),
+                                            )),
 
-                                        ],
-                                      ),
+                                      ],
                                     ),
                                   ),
                                 if(i!=displayList.length)
