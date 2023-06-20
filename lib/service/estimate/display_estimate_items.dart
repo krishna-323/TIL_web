@@ -112,10 +112,10 @@ import 'estimate.dart';
                                       Padding(
                                         padding: const EdgeInsets.only(right: 50.0),
                                         child: MaterialButton(onPressed: (){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Estimate(
-                                                drawerWidth:widget.args.drawerWidth ,
-                                                selectedDestination: widget.args.selectedDestination,))
-                                          ).then((value) => fetchEstimate());
+                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                          Estimate(selectedDestination: widget.args.selectedDestination,
+                                            drawerWidth: widget.args.drawerWidth,)
+                                          )).then((value) => fetchEstimate());
                                         },
                                           color: Colors.blue,
                                         child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),

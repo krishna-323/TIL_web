@@ -1506,6 +1506,7 @@ class _UserManagementState extends State<UserManagement> {
                                   ),
                                 ),
                                 Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                                const SizedBox(height: 4,)
                               ],
                             ),
                           ),
@@ -1513,66 +1514,54 @@ class _UserManagementState extends State<UserManagement> {
                             Column(
                               children: [
                                 if(i!=displayUserData.length)
-                                  MaterialButton(
-                                    hoverColor: Colors.blue[50],
-                                    onPressed: (){
-                                      // print('-------------inontap------------------');
-                                      // print(displayList[i]['customer_id']);
-                                      // Navigator.of(context).push(PageRouteBuilder(
-                                      //   pageBuilder: (context,animation1,animation2) => CompanyDetails( companyName:listCompanies[i]['company_name'], selectedDestination: widget.args.selectedDestination, drawerWidth: widget.args.drawerWidth,),
-                                      //   transitionDuration: Duration.zero,
-                                      //   reverseTransitionDuration: Duration.zero,
-                                      // ));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 18.0,bottom: 3,top:4),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayUserData[i]['username']??"")
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayUserData[i]['company_name']?? '')
-                                                ),
-                                              )
-                                          ),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayUserData[i]['email']??"")
-                                                ),
-                                              )),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayUserData[i]['role']??"")
-                                                ),
-                                              )),
-                                          Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Center(
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 18.0,bottom: 3,top:4),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left:10,top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayUserData[i]['username']??"")
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left:10,top: 4),
                                               child: SizedBox(
-                                                  height: 28,
-                                                  child: Center(
-                                                      child: _popMenu(displayUserData[i],))),
-                                            ),
+                                                  height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayUserData[i]['company_name']?? '')
+                                              ),
+                                            )
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left:10,top: 4),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayUserData[i]['email']??"")
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left:10,top: 4),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text(displayUserData[i]['role']??"")
+                                              ),
+                                            )),
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Center(
+                                            child: SizedBox(
+                                                height: 28,
+                                                child: Center(
+                                                    child: _popMenu(displayUserData[i],))),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 if(i!=displayUserData.length)
