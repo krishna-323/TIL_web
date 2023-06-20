@@ -471,14 +471,15 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                     child: MaterialButton(
                                                       shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(4.0) ),
                                                       onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(builder: (context)=>AddNewCustomer(
-                                                              drawerWidth:widget.arg.drawerWidth ,
-                                                              selectedDestination: widget.arg.selectedDestination, title: 1,
-                                                            )
-                                                            )
-                                                        ).then((value) => fetchListCustomerData());
+
+                                                        Navigator.of(context).push(PageRouteBuilder(
+                                                            pageBuilder: (context,animation1,animation2)=>AddNewCustomer(
+                                                            title: 1,
+                                                              drawerWidth: widget.arg.drawerWidth,
+                                                              selectedDestination: widget.arg.selectedDestination,),
+                                                        transitionDuration: Duration.zero,
+                                                          reverseTransitionDuration: Duration.zero
+                                                        )).then((value) => fetchListCustomerData());
                                                       },color: Colors.blue,
                                                       child:  const Padding(
                                                         padding: EdgeInsets.only(left:10.0,right: 10.0),
@@ -596,6 +597,8 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                 MaterialButton(
                                   hoverColor: Colors.blue[50],
                                   onPressed: (){
+                                    print('-----------check here');
+                                    print(displayList[i]['street_address'].length);
                                     // print('-------------inontap------------------');
                                     // print(displayList[i]['customer_id']);
                                     Navigator.of(context).push(PageRouteBuilder(
@@ -624,8 +627,28 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                               child: SizedBox(
                                                   height: 25,
                                                   //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Tooltip(message:displayList[i]['street_address']?? '',
-                                                    child: Text(displayList[i]['street_address']?? '',)),
+                                                  child:
+                                                  // Tooltip(
+                                                  //   richMessage: WidgetSpan(
+                                                  //       alignment: PlaceholderAlignment.baseline,
+                                                  //       baseline: TextBaseline.alphabetic,
+                                                  //       child: Container(
+                                                  //         //padding: EdgeInsets.all(10),
+                                                  //         constraints:
+                                                  //         const BoxConstraints(maxWidth: 250,maxHeight: 50),
+                                                  //         child: Text(displayList[i]['street_address']??""),
+                                                  //       )),
+                                                  //   decoration: BoxDecoration(
+                                                  //     color: Color(0XFFDFE0FF),
+                                                  //     borderRadius: const BorderRadius.all(
+                                                  //         Radius.circular(4)),
+                                                  //   ),
+                                                  //   preferBelow: true,
+                                                  //   verticalOffset: 10,
+                                                  //   child: Text(displayList[i]['street_address']??"")
+                                                  // ),
+                                                  Tooltip(message:displayList[i]['street_address']?? '',waitDuration: Duration(seconds: 1),
+                                                    child: Text(displayList[i]['street_address']?? '',softWrap: true,)),
                                               ),
                                             )
                                         ),
@@ -655,9 +678,9 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                             )),
                                         const Center(child: Padding(
                                           padding: EdgeInsets.only(right: 8),
-                                          child: Icon(size: 15,
+                                          child: Icon(size: 18,
                                             Icons.arrow_circle_right,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                           ),
                                         ),)
                                       ],
