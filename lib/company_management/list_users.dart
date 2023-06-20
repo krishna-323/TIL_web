@@ -1344,10 +1344,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                     hoverColor: Colors.transparent,
                                     hoverElevation: 0,
                                     child:  Padding(
-                                      padding: EdgeInsets.only(left: 18.0),
+                                      padding: const EdgeInsets.only(left: 18.0),
                                       child: Row(
                                         children: [
-                                           Expanded(
+                                          const  Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
@@ -1355,7 +1355,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     child: Text("User Name")
                                                 ),
                                               )),
-                                          Expanded(
+                                          const   Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
@@ -1363,7 +1363,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     child: Text("Email")
                                                 ),
                                               )),
-                                          Expanded(
+                                          const Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
@@ -1371,13 +1371,13 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     child: Text("Company Name")
                                                 ),
                                               )),
-                                          Expanded(
+                                          const Expanded(
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 4),
                                                 child: Text("Role"),
                                               )),
                                           Padding(
-                                            padding: EdgeInsets.only(right: 38),
+                                            padding: const EdgeInsets.only(right: 38),
                                             child: Container(),
                                           )
                                         ],
@@ -1397,6 +1397,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                               const   SizedBox(height: 100,),
                               Text('$companyName has no Users',style: const TextStyle(color: Colors.indigo,
                                   fontSize: 20,fontWeight: FontWeight.bold),),
+                              const   SizedBox(height: 100,),
                             ],
                           ),
                         if(displayUserList.isNotEmpty)

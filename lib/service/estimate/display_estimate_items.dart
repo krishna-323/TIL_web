@@ -241,7 +241,7 @@ import 'estimate.dart';
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['total'].toString())
+                                                    child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
                                                 ),
                                               )),
                                         ],
