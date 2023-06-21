@@ -102,6 +102,8 @@ var differentTabs=false;
   var vehicleController =  TextEditingController();
   var exchangeController =  TextEditingController();
   var financeController =  TextEditingController();
+  var financeAmountController =  TextEditingController();
+  var financeCompanyController =  TextEditingController();
   var makeController =  TextEditingController();
   var carModelController =  TextEditingController();
   var variantController =  TextEditingController();
@@ -241,15 +243,15 @@ var differentTabs=false;
                                   if(_selectedIndex == 1){
                                     if(vehicleDetailsForm.currentState!.validate()){
                                       Map vehicleDetails = {
-                                        "car_finance": "",
+                                        "car_finance": financeController.text,
                                         "car_model": carModelController.text,
                                         "color": vehicleController.text,
                                         "cust_vehi_id": vehicleId,
                                         "customer_id": widget.customerDataGet["customer_id"],
                                         "evaluation_date": dateController.text,
                                         "exchange": exchangeController.text,
-                                        "finance_amount": "",
-                                        "finance_company": "",
+                                        "finance_amount": financeAmountController.text,
+                                        "finance_company": financeCompanyController.text,
                                         "make": makeController.text,
                                         "model": modelController.text,
                                         "variant": variantController.text
@@ -938,117 +940,119 @@ var differentTabs=false;
               ),
             ),
             const SizedBox(height: 30,),
-            // const Divider(height: 1,color: mTextFieldBorder),
-            // ///Finance Scheme
-            // Center(
-            //   child: Column(
-            //     children: [
-            //       SizedBox(
-            //         height: 42,
-            //         child: Row(
-            //           children: const [
-            //             Padding(
-            //               padding: EdgeInsets.only(left: 20),
-            //               child: Text("Finance Scheme"),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //       const Divider(height: 1,color: mTextFieldBorder),
-            //       Padding(
-            //         padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
-            //         child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Expanded(
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.all(8.0),
-            //                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                     children: [
-            //                       const Text("Car Finance"),
-            //                       const SizedBox(height: 6),
-            //                       LayoutBuilder(
-            //                           builder: (BuildContext context, BoxConstraints constraints) {
-            //                             return CustomPopupMenuButton<String>(elevation: 4,
-            //                               textController: financeController,
-            //                               decoration: customPopupDecoration(hintText: 'Select Finance'),
-            //                               hintText: selectFinance,
-            //                               childWidth: constraints.maxWidth,
-            //                               shape: const RoundedRectangleBorder(
-            //                                 side: BorderSide(color:mTextFieldBorder),
-            //                                 borderRadius: BorderRadius.all(
-            //                                   Radius.circular(5),
-            //                                 ),
-            //                               ),
-            //                               offset: const Offset(1, 40),
-            //                               tooltip: '',
-            //                               itemBuilder:  (BuildContext context) {
-            //                                 return yesNo.map((String choice) {
-            //                                   return CustomPopupMenuItem<String>(
-            //                                       value: choice,
-            //                                       text: choice,
-            //                                       child: Container()
-            //                                   );
-            //                                 }).toList();
-            //                               },
-            //
-            //                               onSelected: (String value)  {
-            //                                 setState(() {
-            //                                   selectFinance= value;
-            //                                   financeController.text=value;
-            //                                 });
-            //                               },
-            //                               onCanceled: () {
-            //
-            //                               },
-            //                               child: Container(),
-            //                             );
-            //                           }
-            //                       ),
-            //
-            //                     ],
-            //                   ),
-            //                 )),
-            //             const SizedBox(width: 30,),
-            //             Expanded(child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   const Text("Finance Company"),
-            //                   const SizedBox(height: 6,),
-            //                   TextFormField(
-            //                     enabled: selectFinance=='Yes',
-            //                     decoration: textFieldDecoration(hintText: 'Enter Finance Company'),
-            //                   ),
-            //                   const SizedBox(height: 20,),
-            //
-            //                 ],
-            //               ),
-            //             )),
-            //             const SizedBox(width: 30,),
-            //             Expanded(child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   const Text("Finance Amount"),
-            //                   const SizedBox(height: 6),
-            //                   TextFormField(
-            //                     enabled: selectExchange=='Yes',
-            //                     decoration: textFieldDecoration(hintText: 'Enter Finance Amount'),
-            //                   ),
-            //                   const SizedBox(height: 20,),
-            //
-            //                 ],
-            //               ),
-            //             ))
-            //           ],
-            //         ),
-            //       )
-            //
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 30,),
-            // const Divider(height: 1,color: mTextFieldBorder),
+            const Divider(height: 1,color: mTextFieldBorder),
+            ///Finance Scheme
+            Center(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 42,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text("Finance Scheme"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1,color: mTextFieldBorder),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
+                    child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Car Finance"),
+                                  const SizedBox(height: 6),
+                                  LayoutBuilder(
+                                      builder: (BuildContext context, BoxConstraints constraints) {
+                                        return CustomPopupMenuButton<String>(elevation: 4,
+                                          textController: financeController,
+                                          decoration: customPopupDecoration(hintText: 'Select Finance'),
+                                          hintText: selectFinance,
+                                          childWidth: constraints.maxWidth,
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:mTextFieldBorder),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
+                                          ),
+                                          offset: const Offset(1, 40),
+                                          tooltip: '',
+                                          itemBuilder:  (BuildContext context) {
+                                            return yesNo.map((String choice) {
+                                              return CustomPopupMenuItem<String>(
+                                                  value: choice,
+                                                  text: choice,
+                                                  child: Container()
+                                              );
+                                            }).toList();
+                                          },
+
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              selectFinance= value;
+                                              financeController.text=value;
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
+                                        );
+                                      }
+                                  ),
+
+                                ],
+                              ),
+                            )),
+                        const SizedBox(width: 30,),
+                        Expanded(child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Finance Company"),
+                              const SizedBox(height: 6,),
+                              TextFormField(
+                                enabled: financeController.text=='Yes',
+                                decoration: textFieldDecoration(hintText: 'Enter Finance Company'),
+                                controller: financeCompanyController,
+                              ),
+                              const SizedBox(height: 20,),
+
+                            ],
+                          ),
+                        )),
+                        const SizedBox(width: 30,),
+                        Expanded(child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Finance Amount"),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                enabled: financeController.text=='Yes',
+                                decoration: textFieldDecoration(hintText: 'Enter Finance Amount'),
+                                controller: financeAmountController,
+                              ),
+                              const SizedBox(height: 20,),
+
+                            ],
+                          ),
+                        ))
+                      ],
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+            const SizedBox(height: 30,),
+            const Divider(height: 1,color: mTextFieldBorder),
             //Customer TextFields
           ],
         ),
@@ -1292,6 +1296,7 @@ var differentTabs=false;
         setState(() {
           if(value!=null){
             response = value;
+            print(response[0]);
             if(response.length > 0){
               makeController.text = response[0]["make"];
               modelController.text = response[0]["model"];
@@ -1301,6 +1306,9 @@ var differentTabs=false;
               carModelController.text = response[0]["car_model"];
               dateController.text = response[0]["evaluation_date"];
               vehicleId = response[0]["cust_vehi_id"];
+              financeController.text =response[0]["car_finance"]??"";
+               financeCompanyController.text = response[0]["finance_company"]??"";
+               financeAmountController.text = response[0]["finance_amount"]??"";
             }
           }
         });

@@ -684,7 +684,20 @@ class CustomPopupMenuButtonState<T> extends State<CustomPopupMenuButton<T>> {
             isHovered=false;
           });
         },
-        child: Container(  color: isHovered? mHoverColor: Colors.transparent,  child: InkWell(    onTap:widget.enabled ? showButtonMenu : null,    child: TextFormField(      textAlign: widget.textAlign ?? TextAlign.left,      validator: widget.validator,      controller: widget.textController,      decoration:widget.decoration,      enabled: false,    ),  ),),
+        child: Container(
+          color: isHovered ? mHoverColor : Colors.transparent,
+          child: InkWell(
+            onTap: widget.enabled ? showButtonMenu : null,
+            child: TextFormField(
+              style: TextStyle(color: Colors.black),
+              textAlign: widget.textAlign ?? TextAlign.left,
+              validator: widget.validator,
+              controller: widget.textController,
+              decoration: widget.decoration,
+              enabled: false,
+            ),
+          ),
+        ),
       );
     }
 
