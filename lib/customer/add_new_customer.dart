@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_project/utils/static_data/lists.dart';
 import '../../classes/motows_routes.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -50,7 +51,6 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   Map vehicleDetails={};
 
 
- // late TabController _tabController;
   bool loading =false;
 
 
@@ -160,9 +160,11 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   }
 
   var customerId = "";
+  var vehicleID = "";
   // var customerError = "";
 
   String selectedType='Select Type';
+  String selectedStatusType='Select Type';
   String selectedCity='Select City';
   String selectLocation='Select Location';
   String vehicleColor='Select Color';
@@ -177,6 +179,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   var addressController = TextEditingController();
   var pinCodeController = TextEditingController();
   var customerTypeController =  TextEditingController();
+  var statusTypeController =  TextEditingController(text: "Create New Customer");
   var customerCityController =  TextEditingController();
   var customerLocationController =  TextEditingController();
   var vehicleController =  TextEditingController();
@@ -196,10 +199,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   bool _invalidMobile = false;
   bool _invalidGST = false;
   bool _invalidType = false;
+  bool _invalidStatusType = false;
   bool _invalidPin = false;
   bool _invalidAddress = false;
   bool _isTypeFocused = false;
-
   bool _invalidMake = false;
   bool _invalidModel = false;
   bool _invalidVariant = false;
@@ -209,6 +212,10 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   bool _invalidEvaluationDate = false;
   bool stateError=false;
   bool distError=false;
+
+  bool _invalidFinanceCompany = false;
+  bool _invalidFinanceAmount = false;
+
   final List<Widget> myTabs=[
     const Tab(text:'Customer Details'),
     const Tab(text:"Vehicle"),
@@ -234,842 +241,16 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
     'Company'
   ];
 
+  List <String> selectStatusType =[
+    'Create New Docket',
+    'Create New Customer'
+  ];
+
 
   //This  declaration for state.
  final stateContainer=TextEditingController();
   final distController=TextEditingController();
-  Map distName={
-    "Andhra Pradesh":[
-      "Anantapur",
-      "Chittoor",
-      "East Godavari",
-      "Guntur",
-      "Krishna",
-      "Kurnool",
-      "Nellore",
-      "Prakasam",
-      "Srikakulam",
-      "Visakhapatnam",
-      "Vizianagaram",
-      "West Godavari",
-      "YSR Kadapa"
-    ],
-    "Arunachal Pradesh":[
-      "Tawang",
-      "West Kameng",
-      "East Kameng",
-      "Papum Pare",
-      "Kurung Kumey",
-      "Kra Daadi",
-      "Lower Subansiri",
-      "Upper Subansiri",
-      "West Siang",
-      "East Siang",
-      "Siang",
-      "Upper Siang",
-      "Lower Siang",
-      "Lower Dibang Valley",
-      "Dibang Valley",
-      "Anjaw",
-      "Lohit",
-      "Namsai",
-      "Changlang",
-      "Tirap",
-      "Longding"
-    ],
-    "Assam":[
-      "Baksa",
-      "Barpeta",
-      "Biswanath",
-      "Bongaigaon",
-      "Cachar",
-      "Charaideo",
-      "Chirang",
-      "Darrang",
-      "Dhemaji",
-      "Dhubri",
-      "Dibrugarh",
-      "Goalpara",
-      "Golaghat",
-      "Hailakandi",
-      "Hojai",
-      "Jorhat",
-      "Kamrup Metropolitan",
-      "Kamrup",
-      "Karbi Anglong",
-      "Karimganj",
-      "Kokrajhar",
-      "Lakhimpur",
-      "Majuli",
-      "Morigaon",
-      "Nagaon",
-      "Nalbari",
-      "Dima Hasao",
-      "Sivasagar",
-      "Sonitpur",
-      "South Salmara-Mankachar",
-      "Tinsukia",
-      "Udalguri",
-      "West Karbi Anglong"
-    ],
-    "Bihar":[
-      "Araria",
-      "Arwal",
-      "Aurangabad",
-      "Banka",
-      "Begusarai",
-      "Bhagalpur",
-      "Bhojpur",
-      "Buxar",
-      "Darbhanga",
-      "East Champaran (Motihari)",
-      "Gaya",
-      "Gopalganj",
-      "Jamui",
-      "Jehanabad",
-      "Kaimur (Bhabua)",
-      "Katihar",
-      "Khagaria",
-      "Kishanganj",
-      "Lakhisarai",
-      "Madhepura",
-      "Madhubani",
-      "Munger (Monghyr)",
-      "Muzaffarpur",
-      "Nalanda",
-      "Nawada",
-      "Patna",
-      "Purnia (Purnea)",
-      "Rohtas",
-      "Saharsa",
-      "Samastipur",
-      "Saran",
-      "Sheikhpura",
-      "Sheohar",
-      "Sitamarhi",
-      "Siwan",
-      "Supaul",
-      "Vaishali",
-      "West Champaran"
-    ],
-    "Dadra and Nagar Haveli (UT)":[
-      "Dadra & Nagar Haveli"
-    ],
-    "Daman and Diu (UT)":[
-      "Daman",
-      "Diu"
-    ],
-    "Chandigarh (UT)":[
-      "Chandigarh"
-    ],
-    "Chhattisgarh":[
-      "Balod",
-      "Baloda Bazar",
-      "Balrampur",
-      "Bastar",
-      "Bemetara",
-      "Bijapur",
-      "Bilaspur",
-      "Dantewada (South Bastar)",
-      "Dhamtari",
-      "Durg",
-      "Gariyaband",
-      "Janjgir-Champa",
-      "Jashpur",
-      "Kabirdham (Kawardha)",
-      "Kanker (North Bastar)",
-      "Kondagaon",
-      "Korba",
-      "Korea (Koriya)",
-      "Mahasamund",
-      "Mungeli",
-      "Narayanpur",
-      "Raigarh",
-      "Raipur",
-      "Rajnandgaon",
-      "Sukma",
-      "Surajpur  ",
-      "Surguja"
-    ],
-    "Delhi (NCT)":[
-      "Central Delhi",
-      "East Delhi",
-      "New Delhi",
-      "North Delhi",
-      "North East  Delhi",
-      "North West  Delhi",
-      "Shahdara",
-      "South Delhi",
-      "South East Delhi",
-      "South West  Delhi",
-      "West Delhi"
-    ],
-    "Goa":[
-      "North Goa",
-      "South Goa"
-    ],
-    "Gujarat":[
-      "Ahmedabad",
-      "Amreli",
-      "Anand",
-      "Aravalli",
-      "Banaskantha (Palanpur)",
-      "Bharuch",
-      "Bhavnagar",
-      "Botad",
-      "Chhota Udepur",
-      "Dahod",
-      "Dangs (Ahwa)",
-      "Devbhoomi Dwarka",
-      "Gandhinagar",
-      "Gir Somnath",
-      "Jamnagar",
-      "Junagadh",
-      "Kachchh",
-      "Kheda (Nadiad)",
-      "Mahisagar",
-      "Mehsana",
-      "Morbi",
-      "Narmada (Rajpipla)",
-      "Navsari",
-      "Panchmahal (Godhra)",
-      "Patan",
-      "Porbandar",
-      "Rajkot",
-      "Sabarkantha (Himmatnagar)",
-      "Surat",
-      "Surendranagar",
-      "Tapi (Vyara)",
-      "Vadodara",
-      "Valsad"
-    ],
-    "Haryana":[
-      "Ambala",
-      "Bhiwani",
-      "Charkhi Dadri",
-      "Faridabad",
-      "Fatehabad",
-      "Gurgaon",
-      "Hisar",
-      "Jhajjar",
-      "Jind",
-      "Kaithal",
-      "Karnal",
-      "Kurukshetra",
-      "Mahendragarh",
-      "Mewat",
-      "Palwal",
-      "Panchkula",
-      "Panipat",
-      "Rewari",
-      "Rohtak",
-      "Sirsa",
-      "Sonipat",
-      "Yamunanagar"
-    ],
-    "Himachal Pradesh":[
-      "Bilaspur",
-      "Chamba",
-      "Hamirpur",
-      "Kangra",
-      "Kinnaur",
-      "Kullu",
-      "Lahaul &amp; Spiti",
-      "Mandi",
-      "Shimla",
-      "Sirmaur (Sirmour)",
-      "Solan",
-      "Una"
-    ],
-    "Jammu and Kashmir":[
-      "Anantnag",
-      "Bandipore",
-      "Baramulla",
-      "Budgam",
-      "Doda",
-      "Ganderbal",
-      "Jammu",
-      "Kargil",
-      "Kathua",
-      "Kishtwar",
-      "Kulgam",
-      "Kupwara",
-      "Leh",
-      "Poonch",
-      "Pulwama",
-      "Rajouri",
-      "Ramban",
-      "Reasi",
-      "Samba",
-      "Shopian",
-      "Srinagar",
-      "Udhampur"
-    ],
-    "Jharkhand":[
-      "Bokaro",
-      "Chatra",
-      "Deoghar",
-      "Dhanbad",
-      "Dumka",
-      "East Singhbhum",
-      "Garhwa",
-      "Giridih",
-      "Godda",
-      "Gumla",
-      "Hazaribag",
-      "Jamtara",
-      "Khunti",
-      "Koderma",
-      "Latehar",
-      "Lohardaga",
-      "Pakur",
-      "Palamu",
-      "Ramgarh",
-      "Ranchi",
-      "Sahibganj",
-      "Seraikela-Kharsawan",
-      "Simdega",
-      "West Singhbhum"
-    ],
-    "Karnataka":[
-      "Bagalkot",
-      "Ballari (Bellary)",
-      "Belagavi (Belgaum)",
-      "Bengaluru (Bangalore) Rural",
-      "Bengaluru (Bangalore) Urban",
-      "Bidar",
-      "Chamarajanagar",
-      "Chikballapur",
-      "Chikkamagaluru (Chikmagalur)",
-      "Chitradurga",
-      "Dakshina Kannada",
-      "Davangere",
-      "Dharwad",
-      "Gadag",
-      "Hassan",
-      "Haveri",
-      "Kalaburagi (Gulbarga)",
-      "Kodagu",
-      "Kolar",
-      "Koppal",
-      "Mandya",
-      "Mysuru (Mysore)",
-      "Raichur",
-      "Ramanagara",
-      "Shivamogga (Shimoga)",
-      "Tumakuru (Tumkur)",
-      "Udupi",
-      "Uttara Kannada (Karwar)",
-      "Vijayapura (Bijapur)",
-      "Yadgir"
-    ],
-    "Kerala":[
-      "Alappuzha",
-      "Ernakulam",
-      "Idukki",
-      "Kannur",
-      "Kasaragod",
-      "Kollam",
-      "Kottayam",
-      "Kozhikode",
-      "Malappuram",
-      "Palakkad",
-      "Pathanamthitta",
-      "Thiruvananthapuram",
-      "Thrissur",
-      "Wayanad"
-    ],
-    "Lakshadweep (UT)":[
-      "Agatti",
-      "Amini",
-      "Androth",
-      "Bithra",
-      "Chethlath",
-      "Kavaratti",
-      "Kadmath",
-      "Kalpeni",
-      "Kilthan",
-      "Minicoy"
-    ],
-    "Madhya Pradesh":[
-      "Agar Malwa",
-      "Alirajpur",
-      "Anuppur",
-      "Ashoknagar",
-      "Balaghat",
-      "Barwani",
-      "Betul",
-      "Bhind",
-      "Bhopal",
-      "Burhanpur",
-      "Chhatarpur",
-      "Chhindwara",
-      "Damoh",
-      "Datia",
-      "Dewas",
-      "Dhar",
-      "Dindori",
-      "Guna",
-      "Gwalior",
-      "Harda",
-      "Hoshangabad",
-      "Indore",
-      "Jabalpur",
-      "Jhabua",
-      "Katni",
-      "Khandwa",
-      "Khargone",
-      "Mandla",
-      "Mandsaur",
-      "Morena",
-      "Narsinghpur",
-      "Neemuch",
-      "Panna",
-      "Raisen",
-      "Rajgarh",
-      "Ratlam",
-      "Rewa",
-      "Sagar",
-      "Satna",
-      "Sehore",
-      "Seoni",
-      "Shahdol",
-      "Shajapur",
-      "Sheopur",
-      "Shivpuri",
-      "Sidhi",
-      "Singrauli",
-      "Tikamgarh",
-      "Ujjain",
-      "Umaria",
-      "Vidisha"
-    ],
-    "Maharashtra":[
-      "Ahmednagar",
-      "Akola",
-      "Amravati",
-      "Aurangabad",
-      "Beed",
-      "Bhandara",
-      "Buldhana",
-      "Chandrapur",
-      "Dhule",
-      "Gadchiroli",
-      "Gondia",
-      "Hingoli",
-      "Jalgaon",
-      "Jalna",
-      "Kolhapur",
-      "Latur",
-      "Mumbai City",
-      "Mumbai Suburban",
-      "Nagpur",
-      "Nanded",
-      "Nandurbar",
-      "Nashik",
-      "Osmanabad",
-      "Palghar",
-      "Parbhani",
-      "Pune",
-      "Raigad",
-      "Ratnagiri",
-      "Sangli",
-      "Satara",
-      "Sindhudurg",
-      "Solapur",
-      "Thane",
-      "Wardha",
-      "Washim",
-      "Yavatmal"
-    ],
-    "Manipur":[
-      "Bishnupur",
-      "Chandel",
-      "Churachandpur",
-      "Imphal East",
-      "Imphal West",
-      "Jiribam",
-      "Kakching",
-      "Kamjong",
-      "Kangpokpi",
-      "Noney",
-      "Pherzawl",
-      "Senapati",
-      "Tamenglong",
-      "Tengnoupal",
-      "Thoubal",
-      "Ukhrul"
-    ],
-    "Meghalaya":[
-      "East Garo Hills",
-      "East Jaintia Hills",
-      "East Khasi Hills",
-      "North Garo Hills",
-      "Ri Bhoi",
-      "South Garo Hills",
-      "South West Garo Hills ",
-      "South West Khasi Hills",
-      "West Garo Hills",
-      "West Jaintia Hills",
-      "West Khasi Hills"
-    ],
-    "Mizoram":[
-      "Aizawl",
-      "Champhai",
-      "Kolasib",
-      "Lawngtlai",
-      "Lunglei",
-      "Mamit",
-      "Saiha",
-      "Serchhip"
-    ],
-    "Nagaland":[
-      "Dimapur",
-      "Kiphire",
-      "Kohima",
-      "Longleng",
-      "Mokokchung",
-      "Mon",
-      "Peren",
-      "Phek",
-      "Tuensang",
-      "Wokha",
-      "Zunheboto"
-    ],
-    "Odisha":[
-      "Angul",
-      "Balangir",
-      "Balasore",
-      "Bargarh",
-      "Bhadrak",
-      "Boudh",
-      "Cuttack",
-      "Deogarh",
-      "Dhenkanal",
-      "Gajapati",
-      "Ganjam",
-      "Jagatsinghapur",
-      "Jajpur",
-      "Jharsuguda",
-      "Kalahandi",
-      "Kandhamal",
-      "Kendrapara",
-      "Kendujhar (Keonjhar)",
-      "Khordha",
-      "Koraput",
-      "Malkangiri",
-      "Mayurbhanj",
-      "Nabarangpur",
-      "Nayagarh",
-      "Nuapada",
-      "Puri",
-      "Rayagada",
-      "Sambalpur",
-      "Sonepur",
-      "Sundargarh"
-    ],
-    "Puducherry (UT)":[
-      "Karaikal",
-      "Mahe",
-      "Pondicherry",
-      "Yanam"
-    ],
-    "Punjab":[
-      "Amritsar",
-      "Barnala",
-      "Bathinda",
-      "Faridkot",
-      "Fatehgarh Sahib",
-      "Fazilka",
-      "Ferozepur",
-      "Gurdaspur",
-      "Hoshiarpur",
-      "Jalandhar",
-      "Kapurthala",
-      "Ludhiana",
-      "Mansa",
-      "Moga",
-      "Muktsar",
-      "Nawanshahr (Shahid Bhagat Singh Nagar)",
-      "Pathankot",
-      "Patiala",
-      "Rupnagar",
-      "Sahibzada Ajit Singh Nagar (Mohali)",
-      "Sangrur",
-      "Tarn Taran"
-    ],
-    "Telangana":[
-      "Adilabad",
-      "Bhadradri Kothagudem",
-      "Hyderabad",
-      "Jagtial",
-      "Jangaon",
-      "Jayashankar Bhoopalpally",
-      "Jogulamba Gadwal",
-      "Kamareddy",
-      "Karimnagar",
-      "Khammam",
-      "Komaram Bheem Asifabad",
-      "Mahabubabad",
-      "Mahabubnagar",
-      "Mancherial",
-      "Medak",
-      "Medchal",
-      "Nagarkurnool",
-      "Nalgonda",
-      "Nirmal",
-      "Nizamabad",
-      "Peddapalli",
-      "Rajanna Sircilla",
-      "Rangareddy",
-      "Sangareddy",
-      "Siddipet",
-      "Suryapet",
-      "Vikarabad",
-      "Wanaparthy",
-      "Warangal (Rural)",
-      "Warangal (Urban)",
-      "Yadadri Bhuvanagiri"
-    ],
-    "Tamil Nadu":[
-      "Ariyalur",
-      "Chennai",
-      "Coimbatore",
-      "Cuddalore",
-      "Dharmapuri",
-      "Dindigul",
-      "Erode",
-      "Kanchipuram",
-      "Kanyakumari",
-      "Karur",
-      "Krishnagiri",
-      "Madurai",
-      "Nagapattinam",
-      "Namakkal",
-      "Nilgiris",
-      "Perambalur",
-      "Pudukkottai",
-      "Ramanathapuram",
-      "Salem",
-      "Sivaganga",
-      "Thanjavur",
-      "Theni",
-      "Thoothukudi (Tuticorin)",
-      "Tiruchirappalli",
-      "Tirunelveli",
-      "Tiruppur",
-      "Tiruvallur",
-      "Tiruvannamalai",
-      "Tiruvarur",
-      "Vellore",
-      "Viluppuram",
-      "Virudhunagar"
-    ],
-    "Tripura":[
-      "Dhalai",
-      "Gomati",
-      "Khowai",
-      "North Tripura",
-      "Sepahijala",
-      "South Tripura",
-      "Unakoti",
-      "West Tripura"
-    ],
-    "Rajasthan":[
-      "Ajmer",
-      "Alwar",
-      "Banswara",
-      "Baran",
-      "Barmer",
-      "Bharatpur",
-      "Bhilwara",
-      "Bikaner",
-      "Bundi",
-      "Chittorgarh",
-      "Churu",
-      "Dausa",
-      "Dholpur",
-      "Dungarpur",
-      "Hanumangarh",
-      "Jaipur",
-      "Jaisalmer",
-      "Jalore",
-      "Jhalawar",
-      "Jhunjhunu",
-      "Jodhpur",
-      "Karauli",
-      "Kota",
-      "Nagaur",
-      "Pali",
-      "Pratapgarh",
-      "Rajsamand",
-      "Sawai Madhopur",
-      "Sikar",
-      "Sirohi",
-      "Sri Ganganagar",
-      "Tonk",
-      "Udaipur"
-    ],
-    "Sikkim":[
-      "East Sikkim",
-      "North Sikkim",
-      "South Sikkim",
-      "West Sikkim"
-    ],
-    "Uttarakhand":[
-      "Almora",
-      "Bageshwar",
-      "Chamoli",
-      "Champawat",
-      "Dehradun",
-      "Haridwar",
-      "Nainital",
-      "Pauri Garhwal",
-      "Pithoragarh",
-      "Rudraprayag",
-      "Tehri Garhwal",
-      "Udham Singh Nagar",
-      "Uttarkashi"
-    ],
-    "Uttar Pradesh":[
-      "Agra",
-      "Aligarh",
-      "Allahabad",
-      "Ambedkar Nagar",
-      "Amethi (Chatrapati Sahuji Mahraj Nagar)",
-      "Amroha (J.P. Nagar)",
-      "Auraiya",
-      "Azamgarh",
-      "Baghpat",
-      "Bahraich",
-      "Ballia",
-      "Balrampur",
-      "Banda",
-      "Barabanki",
-      "Bareilly",
-      "Basti",
-      "Bhadohi",
-      "Bijnor",
-      "Budaun",
-      "Bulandshahr",
-      "Chandauli",
-      "Chitrakoot",
-      "Deoria",
-      "Etah",
-      "Etawah",
-      "Faizabad",
-      "Farrukhabad",
-      "Fatehpur",
-      "Firozabad",
-      "Gautam Buddha Nagar",
-      "Ghaziabad",
-      "Ghazipur",
-      "Gonda",
-      "Gorakhpur",
-      "Hamirpur",
-      "Hapur (Panchsheel Nagar)",
-      "Hardoi",
-      "Hathras",
-      "Jalaun",
-      "Jaunpur",
-      "Jhansi",
-      "Kannauj",
-      "Kanpur Dehat",
-      "Kanpur Nagar",
-      "Kanshiram Nagar (Kasganj)",
-      "Kaushambi",
-      "Kushinagar (Padrauna)",
-      "Lakhimpur - Kheri",
-      "Lalitpur",
-      "Lucknow",
-      "Maharajganj",
-      "Mahoba",
-      "Mainpuri",
-      "Mathura",
-      "Mau",
-      "Meerut",
-      "Mirzapur",
-      "Moradabad",
-      "Muzaffarnagar",
-      "Pilibhit",
-      "Pratapgarh",
-      "RaeBareli",
-      "Rampur",
-      "Saharanpur",
-      "Sambhal (Bhim Nagar)",
-      "Sant Kabir Nagar",
-      "Shahjahanpur",
-      "Shamali (Prabuddh Nagar)",
-      "Shravasti",
-      "Siddharth Nagar",
-      "Sitapur",
-      "Sonbhadra",
-      "Sultanpur",
-      "Unnao",
-      "Varanasi"
-    ],
-    "West Bengal":[
-      "Alipurduar",
-      "Bankura",
-      "Birbhum",
-      "Burdwan (Bardhaman)",
-      "Cooch Behar",
-      "Dakshin Dinajpur (South Dinajpur)",
-      "Darjeeling",
-      "Hooghly",
-      "Howrah",
-      "Jalpaiguri",
-      "Kalimpong",
-      "Kolkata",
-      "Malda",
-      "Murshidabad",
-      "Nadia",
-      "North 24 Parganas",
-      "Paschim Medinipur (West Medinipur)",
-      "Purba Medinipur (East Medinipur)",
-      "Purulia",
-      "South 24 Parganas",
-      "Uttar Dinajpur (North Dinajpur)"
-    ],
-  };
 
-  List states = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    'Dadra and Nagar Haveli (UT)',
-    "Daman and Diu (UT)",
-    "Chandigarh (UT)",
-    "Chhattisgarh",
-    "Delhi (NCT)",
-    'Goa',
-    "Gujarat",
-    'Haryana',
-    'Himachal Pradesh',
-    'Jammu and Kashmir',
-    'Jharkhand',
-    "Karnataka",
-    "Kerala",
-    'Lakshadweep (UT)',
-    'Madhya Pradesh',
-    'Maharashtra',
-    'Manipur',
-    'Meghalaya',
-    'Mizoram',
-    'Nagaland',
-    'Odisha',
-    'Puducherry (UT)',
-    'Punjab',
-    "Telangana",
-    'Tamil Nadu',
-    'Tripura',
-    'Rajasthan',
-    'Sikkim',
-    'Uttarakhand',
-    'Uttar Pradesh',
-    'West Bengal',
-  ];
   List storeDist=[];
  final vehicleDetailsForm=GlobalKey<FormState>();
 
@@ -1141,14 +322,14 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                    if(_selectedIndex==1){
                                      if(vehicleDetailsForm.currentState!.validate()){
                                        vehicleDetails = {
-                                        "car_finance": "",
+                                        "car_finance": financeController.text,
                                         "car_model": carModelController.text,
                                         "color": vehicleColor,
                                         "customer_id": customerId.toString(),
                                         "evaluation_date": evaluationDateController.text,
                                         "exchange": selectExchange == "Select" ? "No" : selectExchange,
-                                        "finance_amount": "",
-                                        "finance_company": "",
+                                        "finance_amount": financeAmountController.text,
+                                        "finance_company": financeCompanyController.text,
                                         "make": makeController.text,
                                         "model": modelController.text,
                                         "variant": variantController.text,
@@ -1265,11 +446,45 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
           // print('-----------addNew Vehicle New Post api----------------');
           // print(value);
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved'),));
-          Navigator.of(context).pushNamed(MotowsRoutes.customerListRoute);
+          if(statusTypeController.text == "Create New Docket"){
+            vehicleID = value["id"];
+            Map docketData = {
+              "cust_vehi_id": vehicleID,
+              "customer_id": customerId,
+              "status": "Docket"
+            };
+            addDocket(docketData);
+          }
+          else{
+            Navigator.of(context).pushNamed(MotowsRoutes.customerListRoute);
+          }
+
         }
       });
     });
   }
+
+  Future addDocket(Map<dynamic, dynamic> docketData) async {
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/salesdocket/add_sales_docket';
+    postData(context:context,requestBody:docketData,url: url).then((value){
+      setState(() {
+        if(value!=null){
+          loading = false;
+          if(value.containsKey("error")){
+            ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(value["error"],)));
+          }
+          else if(value.containsKey("status")){
+            if(value["status"] == "success"){
+
+            //  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Customer Data Saved'),));
+            }
+          }
+        }
+      });
+    });
+  }
+
+
 
   Widget buildCard() {
     return Form(
@@ -1502,6 +717,69 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                               controller: emailController,
                               validator: checkEmailError,
                               decoration: textFieldDecoration(hintText: 'Enter Email',error: _invalidEmail),
+                            ),
+                            const SizedBox(height: 20,),
+
+
+                            const Text("Status Type"),
+                            const SizedBox(height: 6,),
+                            Focus(
+                              onFocusChange: (value) {
+                                setState(() {
+                                  _isTypeFocused = value;
+                                });
+                              },
+                              skipTraversal: true,
+                              descendantsAreFocusable: true,
+                              child: LayoutBuilder(
+                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                    return CustomPopupMenuButton(elevation: 4,
+                                      validator: (value) {
+                                        if(value==null||value.isEmpty){
+                                          setState(() {
+                                            _invalidStatusType=true;
+                                          });
+                                          return null;
+                                        }
+                                        return null;
+                                      },
+                                      decoration: customPopupDecoration(hintText: 'Select type',error: _invalidStatusType,isFocused: _isTypeFocused),
+                                      hintText: selectedStatusType,
+                                      textController: statusTypeController,
+                                      childWidth: constraints.maxWidth,
+                                      shape:  RoundedRectangleBorder(
+                                        side: BorderSide(color:_invalidStatusType? Colors.redAccent :mTextFieldBorder),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                      ),
+                                      offset: const Offset(1, 40),
+                                      tooltip: '',
+                                      itemBuilder:  (BuildContext context) {
+                                        return selectStatusType.map((value) {
+                                          return CustomPopupMenuItem(
+                                            value: value,
+                                            text:value,
+                                            child: Container(),
+                                          );
+                                        }).toList();
+                                      },
+
+                                      onSelected: (String value)  {
+                                        setState(() {
+                                          statusTypeController.text=value;
+                                          selectedStatusType= value;
+                                          _invalidStatusType=false;
+                                        });
+
+                                      },
+                                      onCanceled: () {
+
+                                      },
+                                      child: Container(),
+                                    );
+                                  }
+                              ),
                             ),
                             const SizedBox(height: 20,),
 
@@ -1915,7 +1193,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                             return null;
                                           },
                                           textController: exchangeController,
-                                          decoration: customPopupDecoration(hintText: 'Select Exchange',error: _invalidExchange),
+                                          decoration: customPopupDecoration(hintText: 'Select Exchange',error: _invalidExchange,),
                                           hintText:selectExchange ,
                                           childWidth: constraints.maxWidth,
                                           shape: const RoundedRectangleBorder(
@@ -1998,131 +1276,118 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
             ),
             const SizedBox(height: 30,),
             const Divider(height: 1,color: mTextFieldBorder),
-            // ///Finance Scheme
-            // Center(
-            //   child: Column(
-            //     children: [
-            //       SizedBox(
-            //         height: 42,
-            //         child: Row(
-            //           children: const [
-            //             Padding(
-            //               padding: EdgeInsets.only(left: 20),
-            //               child: Text("Finance Scheme"),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //       const Divider(height: 1,color: mTextFieldBorder),
-            //       Padding(
-            //         padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
-            //         child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Expanded(
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.all(8.0),
-            //                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                     children: [
-            //                       const Text("Car Finance"),
-            //                       const SizedBox(height: 6),
-            //                       LayoutBuilder(
-            //                           builder: (BuildContext context, BoxConstraints constraints) {
-            //                             return CustomPopupMenuButton<String>(elevation: 4,
-            //                               validator: (value) {
-            //                                 if(value == null || value.isEmpty){
-            //                                   setState(() {
-            //                                     _invalidCarFinance = true;
-            //                                   });
-            //                                   return null;
-            //                                 }
-            //                                 return null;
-            //                               },
-            //                               textController: financeController,
-            //                               decoration: customPopupDecoration(hintText: 'Select Finance',error: _invalidCarFinance),
-            //                               hintText: selectFinance,
-            //                               childWidth: constraints.maxWidth,
-            //                               shape: const RoundedRectangleBorder(
-            //                                 side: BorderSide(color:mTextFieldBorder),
-            //                                 borderRadius: BorderRadius.all(
-            //                                   Radius.circular(5),
-            //                                 ),
-            //                               ),
-            //                               offset: const Offset(1, 40),
-            //                               tooltip: '',
-            //                               itemBuilder:  (BuildContext context) {
-            //                                 return yesNo.map((String choice) {
-            //                                   return CustomPopupMenuItem<String>(
-            //                                       value: choice,
-            //                                       text: choice,
-            //                                       child: Container()
-            //                                   );
-            //                                 }).toList();
-            //                               },
-            //
-            //                               onSelected: (String value)  {
-            //                                 setState(() {
-            //                                   selectFinance= value;
-            //                                   financeController.text=value;
-            //                                   _invalidCarFinance=false;
-            //                                 });
-            //                               },
-            //                               onCanceled: () {
-            //
-            //                               },
-            //                               child: Container(),
-            //                             );
-            //                           }
-            //                       ),
-            //
-            //                     ],
-            //                   ),
-            //                 )),
-            //             const SizedBox(width: 30,),
-            //             Expanded(child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   const Text("Finance Company"),
-            //                   const SizedBox(height: 6,),
-            //                   TextFormField(
-            //                     enabled: selectFinance=='Yes',
-            //                     controller: financeCompanyController,
-            //                     validator: checkFinanceCompany,
-            //                     decoration: textFieldDecoration(hintText: 'Enter Finance Company',error: _invalidFinanceCompany),
-            //                   ),
-            //                   const SizedBox(height: 20,),
-            //
-            //                 ],
-            //               ),
-            //             )),
-            //             const SizedBox(width: 30,),
-            //             Expanded(child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   const Text("Finance Amount"),
-            //                   const SizedBox(height: 6),
-            //                   TextFormField(
-            //                     enabled: selectExchange=='Yes',
-            //                     controller: financeAmountController,
-            //                     validator: checkFinanceAmount,
-            //                     decoration: textFieldDecoration(hintText: 'Enter Finance Amount',error: _invalidFinanceAmount),
-            //                   ),
-            //                   const SizedBox(height: 20,),
-            //
-            //                 ],
-            //               ),
-            //             ))
-            //           ],
-            //         ),
-            //       )
-            //
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 30,),
-            // const Divider(height: 1,color: mTextFieldBorder),
-            //Customer TextFields
+            ///Finance Scheme
+            Center(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 42,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text("Finance Scheme"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1,color: mTextFieldBorder),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
+                    child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Car Finance"),
+                                  const SizedBox(height: 6),
+                                  LayoutBuilder(
+                                      builder: (BuildContext context, BoxConstraints constraints) {
+                                        return CustomPopupMenuButton<String>(elevation: 4,
+                                          textController: financeController,
+                                          decoration: customPopupDecoration(hintText: 'Select Finance'),
+                                          hintText: selectFinance,
+                                          childWidth: constraints.maxWidth,
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:mTextFieldBorder),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
+                                          ),
+                                          offset: const Offset(1, 40),
+                                          tooltip: '',
+                                          itemBuilder:  (BuildContext context) {
+                                            return yesNo.map((String choice) {
+                                              return CustomPopupMenuItem<String>(
+                                                  value: choice,
+                                                  text: choice,
+                                                  child: Container()
+                                              );
+                                            }).toList();
+                                          },
+
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              selectFinance= value;
+                                              financeController.text=value;
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
+                                        );
+                                      }
+                                  ),
+
+                                ],
+                              ),
+                            )),
+                        const SizedBox(width: 30,),
+                        Expanded(child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Finance Company"),
+                              const SizedBox(height: 6,),
+                              TextFormField(
+                                enabled: financeController.text=='Yes',
+                                decoration: textFieldDecoration(hintText: 'Enter Finance Company'),
+                                controller: financeCompanyController,
+                              ),
+                              const SizedBox(height: 20,),
+
+                            ],
+                          ),
+                        )),
+                        const SizedBox(width: 30,),
+                        Expanded(child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Finance Amount"),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                enabled: financeController.text=='Yes',
+                                decoration: textFieldDecoration(hintText: 'Enter Finance Amount'),
+                                controller: financeAmountController,
+                              ),
+                              const SizedBox(height: 20,),
+
+                            ],
+                          ),
+                        ))
+                      ],
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+            const SizedBox(height: 30,),
+            const Divider(height: 1,color: mTextFieldBorder),
           ],
         ),
       ),
@@ -2317,31 +1582,31 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
     return null;
   }
 
-  // String? checkFinanceCompany(String? value){
-  //   if(value == null || value.isEmpty){
-  //     setState(() {
-  //       _invalidFinanceCompany = true;
-  //     });
-  //     return "Enter Finance Company";
-  //   }
-  //   setState(() {
-  //     _invalidFinanceCompany = false;
-  //   });
-  //   return null;
-  // }
-  //
-  // String? checkFinanceAmount(String? value){
-  //   if(value == null || value.isEmpty){
-  //     setState(() {
-  //       _invalidFinanceAmount = true;
-  //     });
-  //     return "Enter Finance Amount";
-  //   }
-  //   setState(() {
-  //     _invalidFinanceAmount = false;
-  //   });
-  //   return null;
-  // }
+  String? checkFinanceCompany(String? value){
+    if(value == null || value.isEmpty){
+      setState(() {
+        _invalidFinanceCompany = true;
+      });
+      return "Enter Finance Company";
+    }
+    setState(() {
+      _invalidFinanceCompany = false;
+    });
+    return null;
+  }
+
+  String? checkFinanceAmount(String? value){
+    if(value == null || value.isEmpty){
+      setState(() {
+        _invalidFinanceAmount = true;
+      });
+      return "Enter Finance Amount";
+    }
+    setState(() {
+      _invalidFinanceAmount = false;
+    });
+    return null;
+  }
 }
 
   class Choice {
