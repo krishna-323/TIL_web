@@ -8,6 +8,7 @@ import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
 import '../utils/custom_loader.dart';
+import '../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/input_decoration_text_field.dart';
 import 'package:http/http.dart' as http;
@@ -518,9 +519,42 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                     editUserName.text = userData['username'];
                     editEmail.text = userData['email'];
                     String  roleInitial = userData['role'];
-                    var roleTypes = ['Admin', 'User'];
+                    List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
+
+                      const CustomPopupMenuItem(height: 40,
+                        value: 'Admin',
+                        child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                      ),
+                      const CustomPopupMenuItem(height: 40,
+                        value: 'User',
+                        child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                      ),
+
+                    ];
                     var selectedCompanyName = userData['company_name'];
                      List<String> countryNames = [...companyNamesList];
+                    // Creating CustomPopupMenuEntry Empty List.
+                    List<CustomPopupMenuEntry<String>> companyNames = [];
+                    //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+                    companyNames = countryNames.map((value) {
+                      return CustomPopupMenuItem(
+                        height: 40,
+                        value: value,
+                        child: Center(
+                          child: SizedBox(
+                            width: 350,
+                            child: Text(
+                              value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList();
                     final editDetails = GlobalKey<FormState>();
                     String capitalizeFirstWord(String value){
                       if(value.isNotEmpty){
@@ -621,33 +655,39 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                               const SizedBox(
                                                   width: 130,
                                                   child: Text('Company Name',)),
-                                              Container(
-                                                height: 30,
-                                                width: 292,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                                  border: Border.all(width: 0.5,
-                                                    style: BorderStyle.solid,
-                                                    color: Colors.black)),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left:10),
-                                                    child: DropdownButton<String>(
-                                                      hint: const Text("Select CompanyName"),
-                                                      value: selectedCompanyName,
-                                                      onChanged: (String ? company){
-                                                        setState((){
-                                                          selectedCompanyName=company!;
-                                                        });
-
-                                                      },
-                                                      items: countryNames.map((String names){
-                                                        return DropdownMenuItem<String>(
-                                                            value:names,
-                                                            child: Text(names)
-                                                        );
-                                                      }).toList(),
-
+                                              Expanded(
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 282,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 282,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupForCompanyName(hintText: companyName),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
                                                     ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return companyNames;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        companyName= value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
                                                   ),
                                                 ),
                                               ),
@@ -665,32 +705,37 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                   child: Text(
                                                     "User Role",
                                                   )),
-                                              Container(
-                                                height: 30,
-                                                width: 292,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                                    border: Border.all(width: 0.5,
-                                                        style: BorderStyle.solid,
-                                                        color: Colors.black)),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left:10),
-                                                    child: DropdownButton<String>(
-                                                      hint: const Text("Select User Role"),
-                                                      //Initial Value.
-                                                      value:   roleInitial ,
-                                                      onChanged:(String ? company){
-                                                            setState((){
-                                                              roleInitial=company!;
-                                                          });},
-                                                      items: roleTypes.map((String names){
-                                                        return DropdownMenuItem<String>(
-                                                            value:names,
-                                                            child: Text(names)
-                                                        );
-                                                      }).toList(),
-
+                                              Expanded(
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 282,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupDecoration(hintText: roleInitial),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
                                                     ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return customerTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        roleInitial = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
                                                   ),
                                                 ),
                                               ),
@@ -769,7 +814,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                       'email': editEmail.text,
                                                       'token':'',
                                                       'token_creation_date':'',
-                                                      'company_name': selectedCompanyName,
+                                                      'company_name': companyName,
                                                       //editCompanyName.text,
                                                     };
                                                     // print('-----change-----');
@@ -2073,5 +2118,32 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-
+  customPopupDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupForCompanyName ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
 }
