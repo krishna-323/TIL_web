@@ -31,12 +31,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
       homeHovered=true;
     }
    // Services
-    if(_selectedDestination == 1.1 || _selectedDestination==1.2 ){
+    if(_selectedDestination == 1.1 ){
       serviceHover=false;
       serviceExpanded=true;
     }
     // Pre sales.
-    if(_selectedDestination==2.1 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
+    if(_selectedDestination==2.1 || _selectedDestination==2.11 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
        _selectedDestination==2.4 || _selectedDestination==2.5){
       preSalesHover=false;
       preSalesExpanded=true;
@@ -221,27 +221,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 );
                               },
                             ),
-                            ListTile(
-                              hoverColor: mHoverColor,
-                              selectedTileColor: Colors.blue,
-                              selectedColor: Colors.white,
-                              title: Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(drawerWidth == 60 ? '' : 'Docket', style: const TextStyle(fontSize: 15)),
-                              ),
-                              selected: _selectedDestination == 1.2,
-                              onTap: () {
-                                setState(() {
-                                  _selectedDestination = 1.2;
 
-                                });
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  MotowsRoutes.docketList,
-                                  arguments: DocketListArgs(selectedDestination: 1.2, drawerWidth: widget.drawerWidth),
-                                );
-                              },
-                            ),
                           ],
                         ),
                       ),
@@ -291,7 +271,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             }
                           });
                         },
-                        initiallyExpanded: _selectedDestination == 2.1 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
+                        initiallyExpanded: _selectedDestination == 2.1 ||_selectedDestination == 2.11 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
                         _selectedDestination==2.4 || _selectedDestination==2.5,
                         trailing: Padding(
                           padding: const EdgeInsets.only(right: 10.0),
@@ -307,6 +287,29 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         ),
                         children: <Widget>[
                           // Your list tiles here.
+
+                          ListTile(
+                            hoverColor: mHoverColor,
+                            selectedTileColor: Colors.blue,
+                            selectedColor: Colors.white,
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Text(drawerWidth == 60 ? '' : 'Docket', style: const TextStyle(fontSize: 15)),
+                            ),
+                            selected: _selectedDestination == 2.11,
+                            onTap: () {
+                              setState(() {
+                                _selectedDestination = 2.11;
+
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                MotowsRoutes.docketList,
+                                arguments: DocketListArgs(selectedDestination: 2.11, drawerWidth: widget.drawerWidth),
+                              );
+                            },
+                          ),
+
                           ListTile(
                             hoverColor: mHoverColor,
                             selectedTileColor: Colors.blue,

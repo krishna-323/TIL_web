@@ -423,6 +423,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                         "make": makeController.text,
                                         "model": modelController.text,
                                         "variant": variantController.text,
+                                         "general_id":generalId,
                                       };
                                       // print('------- vehicle details ---------');
                                       // print(vehicleDetails);
@@ -541,7 +542,8 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
             Map docketData = {
               "cust_vehi_id": vehicleID,
               "customer_id": customerId,
-              "status": "Docket"
+              'general_id':generalId,
+              "status": "Created"
             };
             addDocket(docketData);
           }
@@ -1214,30 +1216,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                             ),
                           ),
                         ),
-                        // Expanded(
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.all(8.0),
-                        //       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        //         children: [
-                        //           const Text("Make"),
-                        //           const SizedBox(height: 6,),
-                        //           TextFormField(
-                        //             validator: checkMake,
-                        //             controller: makeController,
-                        //             decoration: textFieldDecoration(hintText: 'Enter Make',error: _invalidMake),
-                        //           ),
-                        //           const SizedBox(height: 20,),
-                        //           const Text("Variant"),
-                        //           const SizedBox(height: 6,),
-                        //           TextFormField(
-                        //             validator: checkVariant,
-                        //             controller: variantController,
-                        //             decoration: textFieldDecoration(hintText: 'Enter Variant',error: _invalidVariant),
-                        //           ),
-                        //
-                        //         ],
-                        //       ),
-                        //     )),
+
                         const SizedBox(width: 30,),
                         Expanded(child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -1298,11 +1277,8 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                       },
                                       onSelected: (value)  {
                                         setState(() {
-                                          print(value);
                                            vehicleColor= value.toString();
                                            vehicleController.text=value.toString();
-                                          print('---------------onselected------------');
-                                          print(generalId);
                                           _invalidColor=false;
                                         });
                                       },

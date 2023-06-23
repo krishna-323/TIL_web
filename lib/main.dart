@@ -167,7 +167,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 else {
                   docketListArgs = DocketListArgs(
-                      drawerWidth: 190, selectedDestination: 1.2);
+                      drawerWidth: 190, selectedDestination: 2.11);
                 }
                 newScreen = DocketList(args: docketListArgs );
               }
