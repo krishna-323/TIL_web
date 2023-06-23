@@ -394,80 +394,80 @@ class _DocketDetailsState extends State<DocketDetails>with SingleTickerProviderS
                                     flex: 2,
                                     child: Row(
                                       children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(right: 10),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                color: const Color(0xff2f4295),
-                                              ),
-                                              width: 100,
-                                              height: 30,
-                                              child: InkWell(
-                                                onTap: ()async {
-                                                  Map requestBody={
-                                                    "address_line_1": add1.text,
-                                                    "address_line_2": add2.text,
-                                                    "booking_amount": bookingAmount.text,
-                                                    "brand_id": "",
-                                                    "city": city.text,
-                                                    "color":displayDocketDetails["color"],
-                                                    "type":displayDocketDetails["type"],
-                                                    "labour_type":displayDocketDetails["labour_type"],
-                                                    "vehicle_category_code":displayDocketDetails["vehicle_category_code"],
-                                                    "model_code":displayDocketDetails["model_code"],
-                                                    "vehicle_type_code":displayDocketDetails["vehicle_type_code"],
-                                                    "customer_name": name.text,
-                                                    "dob": dob.text,
-                                                    "email_id": emailId.text,
-                                                    "evaluation_date":
-                                                    evaluationDate.text.isEmpty ? "" : evaluationDate.text,
-                                                    "ex_showroom_price": widget.docketData["ex_showroom_price"],
-                                                    "existing_car": isDisabled,
-                                                    "existing_car_model":
-                                                    existingCar.text.isEmpty ? "" : existingCar.text,
-                                                    "extended_warranty": widget.docketData['extented_warrenty'],
-                                                    "fast_tag": widget.docketData['fast_tag'],
-                                                    "finance_amount":
-                                                    financeAmount.text.isEmpty ? "" : financeAmount.text,
-                                                    "finance_company":
-                                                    financeCompany.text.isEmpty ? "" : financeCompany.text,
-                                                    "finance_scheme": financeScheme,
-                                                    "insurance": widget.docketData['insurance'],
-                                                    "mobile": mobile.text,
-                                                    "model_id": widget.docketData['model_id'],
-                                                    "varient_name": widget.docketData['varient_name'],
-                                                    "on_road_price": widget.docketData['on_road_price'],
-                                                    "pan_number": panNo.text,
-                                                    "payment_mode": widget.docketData['payment_mode'],
-                                                    "pincode": pin.text,
-                                                    "rto": widget.docketData['rto'],
-                                                    "state": state.text,
-                                                    "wo_or_so": wo.text,
-                                                    "year": "2022",
-                                                    "accessories_charges": widget.docketData['accessories_charges'],
-                                                    "transmission": widget.docketData['transmission'],
-                                                    "booking_date": bookingDate.text,
-                                                  };
-                                                  // Navigator.push(context, MaterialPageRoute(
-                                                  //   builder: (context) => BookedOrder(
-                                                  //       drawerWidth: widget.drawerWidth,
-                                                  //       selectedDestination: widget.selectedDestination,
-                                                  //       bookDetails: requestBody,
-                                                  //       fromDocket: true
-                                                  //   ),
-                                                  // ),
-                                                  // );
-                                                },
-                                                child: const Center(
-                                                  child: Text("Summary",style: TextStyle(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        // Expanded(
+                                        //   flex: 2,
+                                        //   child: Padding(
+                                        //     padding: const EdgeInsets.only(right: 10),
+                                        //     child: Container(
+                                        //       decoration: BoxDecoration(
+                                        //         borderRadius: BorderRadius.circular(10),
+                                        //         color: const Color(0xff2f4295),
+                                        //       ),
+                                        //       width: 100,
+                                        //       height: 30,
+                                        //       child: InkWell(
+                                        //         onTap: ()async {
+                                        //           Map requestBody={
+                                        //             "address_line_1": add1.text,
+                                        //             "address_line_2": add2.text,
+                                        //             "booking_amount": bookingAmount.text,
+                                        //             "brand_id": "",
+                                        //             "city": city.text,
+                                        //             "color":displayDocketDetails["color"],
+                                        //             "type":displayDocketDetails["type"],
+                                        //             "labour_type":displayDocketDetails["labour_type"],
+                                        //             "vehicle_category_code":displayDocketDetails["vehicle_category_code"],
+                                        //             "model_code":displayDocketDetails["model_code"],
+                                        //             "vehicle_type_code":displayDocketDetails["vehicle_type_code"],
+                                        //             "customer_name": name.text,
+                                        //             "dob": dob.text,
+                                        //             "email_id": emailId.text,
+                                        //             "evaluation_date":
+                                        //             evaluationDate.text.isEmpty ? "" : evaluationDate.text,
+                                        //             "ex_showroom_price": widget.docketData["ex_showroom_price"],
+                                        //             "existing_car": isDisabled,
+                                        //             "existing_car_model":
+                                        //             existingCar.text.isEmpty ? "" : existingCar.text,
+                                        //             "extended_warranty": widget.docketData['extented_warrenty'],
+                                        //             "fast_tag": widget.docketData['fast_tag'],
+                                        //             "finance_amount":
+                                        //             financeAmount.text.isEmpty ? "" : financeAmount.text,
+                                        //             "finance_company":
+                                        //             financeCompany.text.isEmpty ? "" : financeCompany.text,
+                                        //             "finance_scheme": financeScheme,
+                                        //             "insurance": widget.docketData['insurance'],
+                                        //             "mobile": mobile.text,
+                                        //             "model_id": widget.docketData['model_id'],
+                                        //             "varient_name": widget.docketData['varient_name'],
+                                        //             "on_road_price": widget.docketData['on_road_price'],
+                                        //             "pan_number": panNo.text,
+                                        //             "payment_mode": widget.docketData['payment_mode'],
+                                        //             "pincode": pin.text,
+                                        //             "rto": widget.docketData['rto'],
+                                        //             "state": state.text,
+                                        //             "wo_or_so": wo.text,
+                                        //             "year": "2022",
+                                        //             "accessories_charges": widget.docketData['accessories_charges'],
+                                        //             "transmission": widget.docketData['transmission'],
+                                        //             "booking_date": bookingDate.text,
+                                        //           };
+                                        //           // Navigator.push(context, MaterialPageRoute(
+                                        //           //   builder: (context) => BookedOrder(
+                                        //           //       drawerWidth: widget.drawerWidth,
+                                        //           //       selectedDestination: widget.selectedDestination,
+                                        //           //       bookDetails: requestBody,
+                                        //           //       fromDocket: true
+                                        //           //   ),
+                                        //           // ),
+                                        //           // );
+                                        //         },
+                                        //         child: const Center(
+                                        //           child: Text("Summary",style: TextStyle(color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         const Expanded(
                                           flex: 3,
                                           child: SizedBox(

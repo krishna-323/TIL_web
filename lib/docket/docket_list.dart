@@ -120,18 +120,7 @@ class _DocketListState extends State<DocketList> {
                                     children:   [
                                       const Text("Docket List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 50.0),
-                                        child: MaterialButton(onPressed: (){
-                                          // Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                          //     Estimate(selectedDestination: widget.args.selectedDestination,
-                                          //       drawerWidth: widget.args.drawerWidth,)
-                                          // )).then((value) => fetchEstimate());
-                                        },
-                                          color: Colors.blue,
-                                          child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
-                                        ),
-                                      )
+
                                     ],
                                   ),
                                 ),
