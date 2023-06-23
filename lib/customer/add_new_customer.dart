@@ -6,6 +6,7 @@ import '../../classes/motows_routes.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
 import '../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../utils/static_data/motows_colors.dart';
@@ -38,10 +39,102 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   @override
   void initState() {
     super.initState();
+    loading= true;
    // _tabController=TabController(length: 2, vsync: this);
     //_tabController.addListener(_handleTabSelection);
-    // getInitialData();
+     getMakeData();
   }
+
+  Future getMakeData() async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_once_by_brand_name';
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            print(value);
+            makeList=value;
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      // logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
+  Future getModelList(String makeName) async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_once_by_model_name/$makeName';
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            print(value);
+            modelList=value;
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      // logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
+  Future getVariantList(String make, String model) async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_once_brand_model/$make/$model';
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            variantList=value;
+            print(value);
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      // logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
+  Future getColorList(String make, String model, String variant) async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_brand_model_variant/$make/$model/$variant';
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            //choices=value;
+            generalId =value[0]['general_id'];
+            choices.add(value[0]['varient_color1']);
+            if(value[0]['varient_color2']!=''){
+              choices.add(value[0]['varient_color2']);
+            }
+            print(url);
+            print(value);
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      // logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
 
  dynamic  size;
   dynamic width;
@@ -223,14 +316,8 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
 
   final _formKey = GlobalKey<FormState>();
 
-  List<Choice> choices = const <Choice>[
-    Choice(title: 'Blue', icon: Icons.directions_car),
-    Choice(title: 'Pink', icon: Icons.directions_bike),
-    Choice(title: 'Black', icon: Icons.directions_boat),
-    Choice(title: 'White', icon: Icons.directions_bus),
-    Choice(title: 'Type Train', icon: Icons.directions_railway),
-    Choice(title: 'Type Walk', icon: Icons.directions_walk),
-  ];
+  List choices =[];
+  String generalId= "";
 
   List <String> yesNo =[
     'Yes',
@@ -252,6 +339,9 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   final distController=TextEditingController();
 
   List storeDist=[];
+  List makeList =[];
+  List modelList =[];
+  List variantList =[];
  final vehicleDetailsForm=GlobalKey<FormState>();
 
   @override
@@ -644,6 +734,32 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
     }
     return storeDistNames;
   }
+
+  Future getMakeNames()async{
+    List tempList =[];
+    for(int i=0 ;i< makeList.length;i++){
+      tempList.add(SearchMake.fromJson(makeList[i]));
+    }
+    return tempList;
+  }
+
+  Future getModelNames()async{
+    List tempList =[];
+    for(int i=0 ;i< modelList.length;i++){
+      tempList.add(SearchModel.fromJson(modelList[i]));
+    }
+    return tempList;
+  }
+
+
+  Future getVariantNames()async{
+    List tempList =[];
+    for(int i=0 ;i< variantList.length;i++){
+      tempList.add(SearchVariant.fromJson(variantList[i]));
+    }
+    return tempList;
+  }
+
   String capitalizeFirstWord(String value){
     if(value.isNotEmpty){
       var result =value[0].toUpperCase();
@@ -1048,30 +1164,80 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                     padding: const EdgeInsets.only(left: 60,top: 10,right: 60),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Make"),
-                                  const SizedBox(height: 6,),
-                                  TextFormField(
-                                    validator: checkMake,
-                                    controller: makeController,
-                                    decoration: textFieldDecoration(hintText: 'Enter Make',error: _invalidMake),
-                                  ),
-                                  const SizedBox(height: 20,),
-                                  const Text("Variant"),
-                                  const SizedBox(height: 6,),
-                                  TextFormField(
-                                    validator: checkVariant,
-                                    controller: variantController,
-                                    decoration: textFieldDecoration(hintText: 'Enter Variant',error: _invalidVariant),
-                                  ),
 
-                                ],
-                              ),
-                            )),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Make"),
+                                const SizedBox(height: 6,),
+                                CustomTextFieldSearch(
+                                  validator: checkMake,
+                                  showAdd: false,
+                                  decoration: textFieldStateName(hintText: 'Search Make',error: _invalidMake),
+                                  // initialList: states,
+                                  future: (){
+                                    return getMakeNames();
+                                  },
+                                  controller: makeController,
+                                  getSelectedValue: (SearchMake value){
+                                    getModelList(value.value);
+                                  },
+
+                                ),
+                                const SizedBox(height: 20,),
+
+                                const Text("Variant"),
+                                const SizedBox(height: 6,),
+                                CustomTextFieldSearch(
+                                  validator: checkVariant,
+                                  showAdd: false,
+                                  decoration: textFieldStateName(hintText: 'Search Variant',error: _invalidVariant),
+                                  future: (){
+                                    return getVariantNames();
+                                  },
+                                  controller: variantController,
+                                  getSelectedValue: (SearchVariant value){
+
+
+                                    getColorList(makeController.text,modelController.text,value.label);
+
+
+                                  },
+
+                                ),
+
+
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Expanded(
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(8.0),
+                        //       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           const Text("Make"),
+                        //           const SizedBox(height: 6,),
+                        //           TextFormField(
+                        //             validator: checkMake,
+                        //             controller: makeController,
+                        //             decoration: textFieldDecoration(hintText: 'Enter Make',error: _invalidMake),
+                        //           ),
+                        //           const SizedBox(height: 20,),
+                        //           const Text("Variant"),
+                        //           const SizedBox(height: 6,),
+                        //           TextFormField(
+                        //             validator: checkVariant,
+                        //             controller: variantController,
+                        //             decoration: textFieldDecoration(hintText: 'Enter Variant',error: _invalidVariant),
+                        //           ),
+                        //
+                        //         ],
+                        //       ),
+                        //     )),
                         const SizedBox(width: 30,),
                         Expanded(child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -1079,10 +1245,19 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                             children: [
                               const Text("Model"),
                               const SizedBox(height: 6,),
-                              TextFormField(
+                              CustomTextFieldSearch(
                                 validator: checkModel,
+                                showAdd: false,
+                                decoration: textFieldStateName(hintText: 'Search Model',error: _invalidModel),
+
+                                future: (){
+                                  return getModelNames();
+                                },
                                 controller: modelController,
-                                decoration: textFieldDecoration(hintText: 'Enter Model',error: _invalidModel),
+                                getSelectedValue: (SearchModel value){
+                                  getVariantList(makeController.text,value.value);
+                                },
+
                               ),
 
                               const SizedBox(height: 20,),
@@ -1090,7 +1265,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                               const SizedBox(height: 6,),
                               LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton<Choice>(elevation: 4,
+                                    return CustomPopupMenuButton(elevation: 4,
                                       validator: (value) {
                                         if(value == null || value.isEmpty){
                                           setState(() {
@@ -1113,20 +1288,21 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                       offset: const Offset(1, 40),
                                       tooltip: '',
                                       itemBuilder:  (BuildContext context) {
-                                        return choices.map((Choice choice) {
-                                          return CustomPopupMenuItem<Choice>(
+                                        return choices.map((choice) {
+                                          return CustomPopupMenuItem(
                                             value: choice,
-                                            text: choice.title,
+                                            text: choice,
                                             child: Container(),
                                           );
                                         }).toList();
                                       },
-                                      onSelected: (Choice value)  {
+                                      onSelected: (value)  {
                                         setState(() {
-                                          vehicleColor= value.title;
-                                          vehicleController.text=value.title;
-                                          // print('---------------onselected------------');
-                                          // print(vehicleController.text);
+                                          print(value);
+                                           vehicleColor= value.toString();
+                                           vehicleController.text=value.toString();
+                                          print('---------------onselected------------');
+                                          print(generalId);
                                           _invalidColor=false;
                                         });
                                       },
@@ -1609,24 +1785,25 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   }
 }
 
-  class Choice {
-  const Choice({required this.title, required this.icon});
+//   class Choice {
+//   const Choice({required this.title, required this.icon});
+//
+//   final String title;
+//   final IconData icon;
+// }
 
-  final String title;
-  final IconData icon;
-}
-
-  class SearchState {
+class SearchState {
   final String label;
   dynamic value;
 
   SearchState({required this.label, this.value});
 
-  factory SearchState.fromJson(String  stateName) {
-    return SearchState(label: stateName,
-        value:stateName);
+  factory SearchState.fromJson(String stateName) {
+    return SearchState(label: stateName, value: stateName);
   }
 }
+
+
 
   class SearchDist{
   final String label;
@@ -1639,6 +1816,55 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   }
   }
 
+
+class SearchModel {
+  final String label;
+  dynamic value;
+
+  SearchModel({required this.label, this.value});
+
+  factory SearchModel.fromJson(String stateName) {
+    return SearchModel(label: stateName, value: stateName);
+  }
+}
+
+class SearchMake {
+  final String label;
+  dynamic value;
+
+  SearchMake({required this.label, this.value});
+
+  factory SearchMake.fromJson(String stateName) {
+    return SearchMake(label: stateName, value: stateName);
+  }
+}
+
+class SearchVariant {
+  final String label;
+  dynamic value;
+  final String generalId ;
+  final String color1;
+  final String color2;
+  final String color3;
+  final String color4;
+  final String color5;
+
+  SearchVariant({required this.label, required this.generalId, required this.color1,required this.color2,required this.color3,required this.color4,required this.color5, this.value});
+
+  factory SearchVariant.fromJson(Map variantData) {
+    print(variantData);
+    return SearchVariant(
+      label: variantData['varient_name'],
+      value: variantData['varient_name'],
+      generalId: variantData['general_id'],
+      color1: variantData['varient_color1'],
+      color2: variantData['varient_color2'],
+      color3: variantData['varient_color3'],
+      color4: variantData['varient_color4'],
+      color5: variantData['varient_color5'],
+    );
+  }
+}
 
   class LowerCaseTextFormatter extends TextInputFormatter{
   @override
