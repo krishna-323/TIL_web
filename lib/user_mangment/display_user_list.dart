@@ -10,6 +10,7 @@ import '../utils/api/post_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
 import '../utils/custom_loader.dart';
+import '../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/alertDialogWidget.dart';
 import '../widgets/input_decoration_text_field.dart';
@@ -24,6 +25,9 @@ class UserManagement extends StatefulWidget {
 }
 
 class _UserManagementState extends State<UserManagement> {
+
+  String customerType ="Select User Role";
+  String companyName ="Select Company Name";
   final userEmail = TextEditingController();
 
   @override
@@ -515,9 +519,42 @@ class _UserManagementState extends State<UserManagement> {
                     // Initial Value.
                     String  roleInitial = userData['role'];
                     // Dropdown Values.
-                    var roleTypes = ['Admin', 'User'];
+                    List <CustomPopupMenuEntry<String>> editRoleTypes =<CustomPopupMenuEntry<String>>[
+
+                      const CustomPopupMenuItem(height: 40,
+                        value: 'Admin',
+                        child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                      ),
+                      const CustomPopupMenuItem(height: 40,
+                        value: 'User',
+                        child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                      ),
+
+                    ];
                     var selectedCompanyName =  userData['company_name'];
-                    final List<String> countryNames = [...companyNamesList];
+                    final List<String> editCountryNames = [...companyNamesList];
+                    // Creating CustomPopupMenuEntry Empty List.
+                    List<CustomPopupMenuEntry<String>> editCompanyNames = [];
+                    //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+                    editCompanyNames = editCountryNames.map((value) {
+                      return CustomPopupMenuItem(
+                        height: 40,
+                        value: value,
+                        child: Center(
+                          child: SizedBox(
+                            width: 350,
+                            child: Text(
+                              value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList();
                     final editDetails = GlobalKey<FormState>();
                     String capitalizeFirst(String value) {
                       if(value.isNotEmpty){
@@ -619,32 +656,69 @@ class _UserManagementState extends State<UserManagement> {
                                               const SizedBox(
                                                   width: 130,
                                                   child: Text('Company Name',)),
-                                              Container(
-                                                height: 30,
-                                                width: 292,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                                    border: Border.all(width: 0.5,
-                                                        style: BorderStyle.solid,
-                                                        color: Colors.black)),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left:10),
-                                                    child: DropdownButton<String>(
-                                                      hint: const Text("Select CompanyName"),
-                                                      value: selectedCompanyName,
-                                                      onChanged: (String ? company){
-                                                        setState((){
-                                                          selectedCompanyName=company!;
-                                                        });
-                                                      },
-                                                      items: countryNames.map((String names){
-                                                        return DropdownMenuItem<String>(
-                                                            value:names,
-                                                            child: Text(names)
-                                                        );
-                                                      }).toList(),
-
+                                              // Container(
+                                              //   height: 30,
+                                              //   width: 292,
+                                              //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
+                                              //       border: Border.all(width: 0.5,
+                                              //           style: BorderStyle.solid,
+                                              //           color: Colors.black)),
+                                              //   child: DropdownButtonHideUnderline(
+                                              //     child: Padding(
+                                              //       padding: const EdgeInsets.only(left:10),
+                                              //       child: DropdownButton<String>(
+                                              //         hint: const Text("Select CompanyName"),
+                                              //         value: selectedCompanyName,
+                                              //         onChanged: (String ? company){
+                                              //           setState((){
+                                              //             selectedCompanyName=company!;
+                                              //           });
+                                              //         },
+                                              //         items: countryNames.map((String names){
+                                              //           return DropdownMenuItem<String>(
+                                              //               value:names,
+                                              //               child: Text(names)
+                                              //           );
+                                              //         }).toList(),
+                                              //
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 282,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 282,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupEditCompanyName(hintText: selectedCompanyName),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
                                                     ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return editCompanyNames ;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        selectedCompanyName = value;
+
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
                                                   ),
                                                 ),
                                               ),
@@ -663,33 +737,37 @@ class _UserManagementState extends State<UserManagement> {
                                                   child: Text(
                                                     "User Role",
                                                   )),
-                                              Container(
-                                                height: 30,
-                                                width: 292,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                                    border: Border.all(width: 0.5,
-                                                        style: BorderStyle.solid,
-                                                        color: Colors.black)),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left:10),
-                                                    child: DropdownButton<String>(
-                                                      hint: const Text("Select User Role"),
-                                                      //Initial Value.
-                                                      value:   roleInitial,
-                                                      onChanged: (String ? role){
-                                                        setState((){
-                                                          roleInitial=role!;
-                                                        });
-                                                      },
-                                                      items: roleTypes.map((String names){
-                                                        return DropdownMenuItem<String>(
-                                                            value:names,
-                                                            child: Text(names)
-                                                        );
-                                                      }).toList(),
-
+                                              Expanded(
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 282,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupEditUserRole(hintText: roleInitial),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
                                                     ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return editRoleTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        roleInitial = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
                                                   ),
                                                 ),
                                               ),
@@ -1442,6 +1520,8 @@ class _UserManagementState extends State<UserManagement> {
                                         child: MaterialButton(
                                           color: Colors.blue,
                                           onPressed: () {
+                                            customerType='Select User Role';
+                                            companyName="Select Company Name";
                                             createNewUser(context,companyNamesList);
                                           },
                                           child: const Text(
@@ -1466,7 +1546,7 @@ class _UserManagementState extends State<UserManagement> {
                                         padding: EdgeInsets.only(left: 18.0),
                                         child:Row(
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
@@ -1474,7 +1554,7 @@ class _UserManagementState extends State<UserManagement> {
                                                       child: Text("USER NAME")
                                                   ),
                                                 )),
-                                            Expanded(
+                                            const Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
@@ -1482,7 +1562,7 @@ class _UserManagementState extends State<UserManagement> {
                                                       child: Text("COMPANY NAME")
                                                   ),
                                                 )),
-                                            Expanded(
+                                            const Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
@@ -1490,13 +1570,13 @@ class _UserManagementState extends State<UserManagement> {
                                                       child: Text("USER EMAIL")
                                                   ),
                                                 )),
-                                            Expanded(
+                                            const Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: Text("USER ROLE"),
                                                 )),
                                             Padding(
-                                              padding: EdgeInsets.only(right: 38),
+                                              padding: const EdgeInsets.only(right: 38),
                                               child: Container(),
                                             )
                                           ],
@@ -1664,8 +1744,6 @@ class _UserManagementState extends State<UserManagement> {
           bool newConformPasswordError = false;
 
           final newUser = GlobalKey<FormState>();
-          String? role;
-          List <String> roleTypes  = ['Admin', 'User'];
           // final companyName = TextEditingController();
 
           //regular expression to check if string.
@@ -1680,8 +1758,43 @@ class _UserManagementState extends State<UserManagement> {
               return false;
             }
           }
-          String ? selectedCompanyName;
+          // Types of Role Customer.
+          List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
+
+            const CustomPopupMenuItem(height: 40,
+              value: 'Admin',
+              child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+            ),
+            const CustomPopupMenuItem(height: 40,
+              value: 'User',
+              child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+            ),
+
+          ];
+          // Storing Country Names.
           final List<String> countryNames = [...companyNamesList];
+          // Creating CustomPopupMenuEntry Empty List.
+          List<CustomPopupMenuEntry<String>> companyNames = [];
+          //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+            companyNames = countryNames.map((value) {
+              return CustomPopupMenuItem(
+                height: 40,
+                value: value,
+                child: Center(
+                  child: SizedBox(
+                    width: 350,
+                    child: Text(
+                      value,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ),
+              );
+            }).toList();
           Map userData = {};
           String capitalizeFirstWord(String value) {
             if(value.isNotEmpty){
@@ -1792,33 +1905,37 @@ class _UserManagementState extends State<UserManagement> {
                                         child: Text(
                                           "User Role",
                                         )),
-                                    Container(
-                                      height: 30,
-                                      width: 282,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                          border: Border.all(width: 0.5,
-                                              style: BorderStyle.solid,
-                                              color: Colors.black)),
-                                      child: DropdownButtonHideUnderline(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:10),
-                                          child: DropdownButton<String>(
-                                            hint: const Text("Select User Role"),
-                                            //Initial Value.
-                                            value:   role,
-                                            onChanged: (String ? roleNames){
-                                              setState((){
-                                                role= roleNames!;
-                                              });
-                                            },
-                                            items: roleTypes.map((String names){
-                                              return DropdownMenuItem<String>(
-                                                  value:names,
-                                                  child: Text(names)
-                                              );
-                                            }).toList(),
-
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                           width: 282,
+                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(4),
+                                          ),),
+                                        child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
+                                          decoration: customPopupCreateUserRole(hintText: customerType),
+                                          hintText: "",
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:Color(0xFFE0E0E0)),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
                                           ),
+                                          offset: const Offset(1, 12),
+                                          tooltip: '',
+                                          itemBuilder: (context) {
+                                            return customerTypes;
+                                          },
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              customerType= value;
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
                                         ),
                                       ),
                                     ),
@@ -1834,33 +1951,40 @@ class _UserManagementState extends State<UserManagement> {
                                     const SizedBox(
                                         width: 140,
                                         child: Text('Company Name',)),
-                                    Container(
-                                      height: 30,
-                                      width: 282,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
-                                          border: Border.all(width: 0.5,
-                                              style: BorderStyle.solid,
-                                              color: Colors.black)),
-                                      child: DropdownButtonHideUnderline(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left:10),
-                                          child: DropdownButton<String>(
-                                            hint: const Text("Select User Role"),
-                                            //Initial Value.
-                                            value:   selectedCompanyName,
-                                            onChanged: (String ? company){
-                                              setState((){
-                                                selectedCompanyName=company!;
-                                              });
-                                            },
-                                            items: countryNames.map((String names){
-                                              return DropdownMenuItem<String>(
-                                                  value:names,
-                                                  child: Text(names)
-                                              );
-                                            }).toList(),
-
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        width: 282,
+                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(4),
+                                          ),),
+                                        child: CustomPopupMenuButton<String>(
+                                          childHeight: 200,
+                                          childWidth: 282,position: CustomPopupMenuPosition.under,
+                                          decoration: customPopupCreateCompanyName(hintText: companyName),
+                                          hintText: "",
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:Color(0xFFE0E0E0)),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
                                           ),
+                                          offset: const Offset(1, 12),
+                                          tooltip: '',
+                                          itemBuilder: (context) {
+                                            return companyNames;
+                                          },
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              companyName= value;
+
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
                                         ),
                                       ),
                                     ),
@@ -2039,10 +2163,10 @@ class _UserManagementState extends State<UserManagement> {
                                         if (newUser.currentState!.validate()) {
                                           userData = {
                                             "active": true,
-                                            "company_name": selectedCompanyName,
+                                            "company_name": companyName,
                                             "email": newUserEmail.text,
                                             "password": newPassword.text,
-                                            "role": role,
+                                            "role": customerType,
                                             "username": newUserName.text,
                                           };
                                           // print('---check----');
@@ -2118,7 +2242,64 @@ class _UserManagementState extends State<UserManagement> {
           borderSide: BorderSide(color: val ? Colors.blue : Colors.blue)),
     );
   }
-
+  // Create New User Decoration Function.
+  customPopupCreateUserRole ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupCreateCompanyName ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  // Edit User Decoration Function.
+  customPopupEditUserRole ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupEditCompanyName ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
   decorationInputConformPassword(String hintString, bool val, bool conformObscureText, textHideConformPassword,) {
     return InputDecoration(hintText: hintString,
       suffixIcon: IconButton(

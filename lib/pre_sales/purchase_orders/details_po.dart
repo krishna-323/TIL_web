@@ -1,11 +1,10 @@
-
-
-
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/motows_routes.dart';
 import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
@@ -18,17 +17,17 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
-
-class Estimate extends StatefulWidget {
+class ViewEstimateItem extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
-  const Estimate({Key? key,  required this.selectedDestination, required this.drawerWidth }) : super(key: key);
+  final Map estimateItem;
+  const ViewEstimateItem({Key? key, required this.drawerWidth, required this. selectedDestination, required Duration transitionDuration, required  Duration reverseTransitionDuration, required this.estimateItem}) : super(key: key);
 
   @override
-  State<Estimate> createState() => _EstimateState();
+  State<ViewEstimateItem> createState() => _ViewEstimateItemState();
 }
 
-class _EstimateState extends State<Estimate> {
+class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
   bool loading = false;
   bool showVendorDetails = false;
@@ -36,9 +35,6 @@ class _EstimateState extends State<Estimate> {
   bool isVehicleSelected = false;
 
   late double width ;
-
-
-
   var wareHouseController=TextEditingController();
   var vendorSearchController = TextEditingController();
   final brandNameController=TextEditingController();
@@ -51,16 +47,53 @@ class _EstimateState extends State<Estimate> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  Map estimateItems={};
+  List lineItems=[];
+  Map updateEstimate={};
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    estimateItems=widget.estimateItem;
+    billToName=estimateItems['billAddressName']??'';
+    billToCity=estimateItems['billAddressCity']??"";
+    billToStreet=estimateItems['billAddressStreet']??"";
+    billToState=estimateItems['billAddressState']??"";
+    billToZipcode=estimateItems['billAddressZipcode']??"";
+    shipToName=estimateItems['shipAddressName']??"";
+    shipToCity=estimateItems['shipAddressCity']??"";
+    shipToStreet=estimateItems['shipAddressStreet']??"";
+    shipToState=estimateItems['shipAddressState']??"";
+    shipZipcode=estimateItems['shipAddressZipcode']??"";
+
+    for(int i=0;i<estimateItems['items'].length;i++){
+      units.add(TextEditingController());
+      units[i].text=estimateItems['items'][i]['quantity'].toString();
+
+      discountPercentage.add(TextEditingController());
+      discountPercentage[i].text= estimateItems['items'][i]['discount'].toString();
+
+      tax.add(TextEditingController());
+      tax[i].text=estimateItems['items'][i]['tax'].toString();
+
+      lineAmount.add(TextEditingController());
+      lineAmount[i].text=estimateItems['items'][i]['amount'].toString();
+
+      subDiscountTotal.text = lineAmount[i].text + discountPercentage[i].text;
+    }
+    subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
+    subTaxTotal.text=estimateItems['subTotalTax'].toString();
+    subAmountTotal.text=estimateItems['subTotalAmount'].toString();
     salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
-  }
-   List vendorList = [];
+    salesInvoice.text=estimateItems['serviceInvoice']??"";
+    termsAndConditions.text=estimateItems['termsConditions']??"";
+    getInitialData();
 
+  }
+  List vendorList = [];
   Map vendorData ={
     'Name':'',
     'city': '',
@@ -82,7 +115,6 @@ class _EstimateState extends State<Estimate> {
   List vehicleList = [];
   List displayList=[];
   List selectedVehicles=[];
-
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
   var discountPercentage = <TextEditingController>[];
@@ -90,13 +122,33 @@ class _EstimateState extends State<Estimate> {
   var lineAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
+  bool newAddress=false;
+  bool newShipping=false;
+  bool billing=true;
+  Map selectedItems={};
+  String ?authToken;
 
+  String billToName='';
+  String billToCity='';
+  String billToStreet='';
+  String billToState='';
+  int billToZipcode=0;
+
+  String shipToName='';
+  String shipToCity='';
+  String shipToStreet='';
+  String shipToState='';
+  int shipZipcode=0;
+  getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+  }
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
     return  Scaffold(
       backgroundColor: Colors.white,
-      appBar: const PreferredSize(  preferredSize: Size.fromHeight(60),
+      appBar:  const PreferredSize(  preferredSize: Size.fromHeight(60),
           child: CustomAppBar()),
       body: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -117,8 +169,141 @@ class _EstimateState extends State<Estimate> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Create Purchase Order"),
+                    title: const Text("Edit Estimate"),
                     actions: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 120,height: 28,
+                            child: OutlinedMButton(
+                              text: 'Delete',
+                              textColor: mSaveButton,
+                              borderColor: mSaveButton,
+                              onTap: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      child: StatefulBuilder(
+                                        builder: (context, setState) {
+                                          return SizedBox(
+                                            height: 200,
+                                            width: 300,
+                                            child: Stack(children: [
+                                              Container(
+                                                decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                  child: Column(
+                                                    children: [
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      const Icon(
+                                                        Icons.warning_rounded,
+                                                        color: Colors.red,
+                                                        size: 50,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Column(
+                                                        children:  [
+                                                          const Center(
+                                                              child: Text(
+                                                                'Are You Sure, You Want To Delete ?',
+                                                                style: TextStyle(
+                                                                    color: Colors.indigo,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 15),
+                                                              )),
+                                                          const  SizedBox(height:5),
+                                                          Center(
+                                                              child: Text(estimateItems['estVehicleId']??"",
+                                                                style: const TextStyle(
+                                                                    color: Colors.indigo,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 15),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          MaterialButton(
+                                                            color: Colors.red,
+                                                            onPressed: () {
+                                                              // print(userId);
+                                                              deleteEstimateItemData(estimateItems['estVehicleId']);
+                                                            },
+                                                            child: const Text(
+                                                              'Ok',
+                                                              style: TextStyle(color: Colors.white),
+                                                            ),
+                                                          ),
+                                                          MaterialButton(
+                                                            color: Colors.blue,
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                Navigator.of(context).pop();
+                                                              });
+                                                            },
+                                                            child: const Text(
+                                                              'Cancel',
+                                                              style: TextStyle(color: Colors.white),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(right: 0.0,
+
+                                                child: InkWell(
+                                                  child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(15),
+                                                          border: Border.all(
+                                                            color:
+                                                            const Color.fromRGBO(204, 204, 204, 1),
+                                                          ),
+                                                          color: Colors.blue),
+                                                      child: const Icon(
+                                                        Icons.close_sharp,
+                                                        color: Colors.white,
+                                                      )),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      Navigator.of(context).pop();
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 20),
                       Row(
                         children: [
                           SizedBox(
@@ -151,73 +336,51 @@ class _EstimateState extends State<Estimate> {
                           SizedBox(
                             width: 100,height: 28,
                             child: OutlinedMButton(
-                              text: 'Save',
+                              text: 'Update',
                               buttonColor:mSaveButton ,
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  // if(selectedCity=='Select City'){
-                                  //   setState(() {
-                                  //     _invalidCity=true;
-                                  //   });
-                                  // }
-                                  //
-                                  //
-                                  // ///Main Validation
-                                  // if(_formKey.currentState!.validate()){
-                                  //   if(_invalidType==false && _invalidCity==false) {
-                                  //     print("Call Api");
-                                  //     _selectedIndex=1;
-                                  //   }
-                                  //
-                                  // }
-
-
-                                  if(showVendorDetails==true && showWareHouseDetails==true && selectedVehicles.isNotEmpty){
-                                    postDetails= {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName": vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet": vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "string",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                      "termsConditions": termsAndConditions.text,
-                                      "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "items": [
-
-                                      ]
-                                    };
-
-                                  }
-                                  for (int i = 0; i < selectedVehicles.length; i++) {
-                                    postDetails['items'].add(
-                                      {
-                                        "amount": lineAmount[i].text,
-                                        "discount": discountPercentage[i].text,
-                                        "estVehicleId": "string",
-                                        "itemsService": selectedVehicles[i]['model_name']??"",
-                                        "priceItem": selectedVehicles[i]['onroad_price']??"",
-                                        "quantity": units[i].text,
-                                        "tax": tax[i].text,
-                                      }
+                                  updateEstimate =    {
+                                    "additionalCharges": additionalCharges.text,
+                                    "address": "string",
+                                    "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                    "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                    "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                    "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                    "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                    "serviceDueDate": "",
+                                    "estVehicleId": estimateItems['estVehicleId']??"",
+                                    "serviceInvoice": salesInvoice.text,
+                                    "serviceInvoiceDate": salesInvoiceDate.text,
+                                    "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                    "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                    "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                    "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                    "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                    "subTotalAmount": subAmountTotal.text,
+                                    "subTotalDiscount": subDiscountTotal.text,
+                                    "subTotalTax": subTaxTotal.text,
+                                    "termsConditions": termsAndConditions.text,
+                                    "total": subAmountTotal.text,
+                                    "totalTaxableAmount": 0,
+                                    "items": [],
+                                  };
+                                  putUpdatedEstimated(updateEstimate);
+                                  for(int i=0;i<estimateItems['items'].length;i++){
+                                    lineItems.add(
+                                        {
+                                          "amount": lineAmount[i].text,
+                                          "discount":  discountPercentage[i].text,
+                                          "estVehicleId": estimateItems['estVehicleId'],
+                                          "itemsService": estimateItems['items'][i]['itemsService'],
+                                          "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                          "quantity": units[i].text,
+                                          "tax": tax[i].text,
+                                        }
                                     );
-
                                   }
-                                  postEstimate(postDetails);
                                 });
                               },
 
@@ -292,7 +455,8 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-   fetchVendorsData() async {
+
+  fetchVendorsData() async {
     dynamic response;
     String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
     try {
@@ -313,7 +477,6 @@ class _EstimateState extends State<Estimate> {
       });
     }
   }
-
   fetchData() async {
 
     List list = [];
@@ -334,9 +497,8 @@ class _EstimateState extends State<Estimate> {
 
 
   Widget buildContentCard(){
-    return Card(color: Colors.white,surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
-          side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+    return Card(color: Colors.white,
+      surfaceTintColor: Colors.white,
       child: Column(
         children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,93 +515,92 @@ class _EstimateState extends State<Estimate> {
                             padding: EdgeInsets.only(bottom: 2,top: 2),
                             child: Text("Bill to Address"),
                           ),
-                          if(showVendorDetails==true)
-                          SizedBox(
-                            height: 24,
-                            child:  OutlinedIconMButton(
-                              text: 'Change Details',
-                              textColor: mSaveButton,
-                              borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
-                              onTap: (){
-                                setState(() {
-                                  showVendorDetails=false;
-                                });
-                              },
-                            ),
-                          )
+                          if(estimateItems.isNotEmpty)
+                            SizedBox(
+                              height: 24,
+                              child:  OutlinedIconMButton(
+                                text: 'Change Details',
+                                textColor: mSaveButton,
+                                borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
+                                onTap: (){
+                                  setState(() {
+                                    showVendorDetails=false;
+                                    newAddress=true;
+                                  });
+                                },
+                              ),
+                            )
 
                         ],
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                    if(showVendorDetails==false)
-                    const SizedBox(height: 30,),
-                    if(showVendorDetails==false)
-                    Center(
-                      child: SizedBox(height: 32,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 18.0,right: 18),
-                        child: CustomTextFieldSearch(
-                            decoration:textFieldDecoration(hintText: 'Search Vendor') ,
-                            controller: vendorSearchController,
-                            future: fetchData,
-                            getSelectedValue: (VendorModel value) {
-                              setState(() {
-                                showVendorDetails=true;
-                                vendorData ={
-                                  'Name':value.label,
-                                  'city': value.city,
-                                  'state': value.state,
-                                  'street': value.street,
-                                  'zipcode': value.zipcode,
-                                };
-                              });
-                            },
+                    const SizedBox(height: 10,),
+                    if(newAddress)
+                      Center(
+                        child: SizedBox(height: 32,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 18.0,right: 18),
+                            child: CustomTextFieldSearch(
+                              decoration:textFieldDecoration(hintText: 'Search Vendor') ,
+                              controller: vendorSearchController,
+                              future: fetchData,
+                              getSelectedValue: (VendorModel value) {
+                                setState(() {
+                                  showVendorDetails=true;
+                                  vendorData ={
+                                    'Name':value.label,
+                                    'city': value.city,
+                                    'state': value.state,
+                                    'street': value.street,
+                                    'zipcode': value.zipcode,
+                                  };
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    if(showVendorDetails)
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(vendorData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
-
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${vendorData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${vendorData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${vendorData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${vendorData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -457,7 +618,7 @@ class _EstimateState extends State<Estimate> {
                             padding: EdgeInsets.only(bottom: 2,top: 2),
                             child: Text("Ship to Address"),
                           ),
-                          if(showWareHouseDetails==true)
+                          if(estimateItems.isNotEmpty)
                             SizedBox(
                               height: 24,
                               child:  OutlinedIconMButton(
@@ -467,87 +628,85 @@ class _EstimateState extends State<Estimate> {
                                 onTap: (){
                                   setState(() {
                                     showWareHouseDetails=false;
+                                    newShipping=true;
                                   });
                                 },
                               ),
                             )
-
                         ],
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                    if(showWareHouseDetails==false)
-                      const SizedBox(height: 30,),
-                    if(showWareHouseDetails==false)
+                    const SizedBox(height: 10,),
+                    if(newShipping)
                       Center(
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: CustomTextFieldSearch(
-                                decoration:textFieldDecoration(hintText: 'Search Vendor'),
-                                controller: wareHouseController,
-                                future: fetchData,
-                                getSelectedValue: (VendorModel value) {
-                                  setState(() {
-                                    showWareHouseDetails=true;
-                                    wareHouse ={
-                                      'Name':value.label,
-                                      'city': value.city,
-                                      'state': value.state,
-                                      'street': value.street,
-                                      'zipcode': value.zipcode,
-                                    };
-                                  });
+                              decoration:textFieldDecoration(hintText: 'Search warehouse'),
+                              controller: wareHouseController,
+                              future: fetchData,
+                              getSelectedValue: (VendorModel value) {
+                                setState(() {
+                                  showWareHouseDetails=true;
+                                  wareHouse ={
+                                    'Name':value.label,
+                                    'city': value.city,
+                                    'state': value.state,
+                                    'street': value.street,
+                                    'zipcode': value.zipcode,
+                                  };
+                                });
 
 
-                                  // print(value.value);
-                                  // print(value.city);
-                                  // print(value.street);// this prints the selected option which could be an object
-                                },
+                                // print(value.value);
+                                // print(value.city);
+                                // print(value.street);// this prints the selected option which could be an object
+                              },
                             ),
                           ),
                         ),
                       ),
-                    if(showWareHouseDetails)
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -691,33 +850,27 @@ class _EstimateState extends State<Estimate> {
               ),
             ),
           ),
-          if(selectedVehicles.isNotEmpty)
-          const Padding(
-            padding: EdgeInsets.only(left: 18,right: 18),
-            child: Divider(height: 1,color: mTextFieldBorder,),
-          ),
+
 
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: selectedVehicles.length,
-            itemBuilder: (context, index) {
-              //print('----inside list view builder--------');
-              //print(selectedVehicles);
-              double tempTax =0;
-              double tempLineData=0;
+            itemCount: estimateItems['items'].length,
+            itemBuilder: (BuildContext context, int index) {
+
               double tempDiscount=0;
-
+              double tempLineData=0;
+              double tempTax=0;
               try{
-
-                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
+                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
-                  tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
+                  tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
                   tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
-
                   tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+
                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                  // subDiscountTotal.text=tempDiscount.toString();
                 }
               }
               catch (e){
@@ -733,21 +886,19 @@ class _EstimateState extends State<Estimate> {
               }else {
                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse(lineAmount[index].text)).toStringAsFixed(1);
               }
-
-              return Column(
+              return  Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 18,right: 18),
-                    child: SizedBox(
-                      height: 50,
+                    padding: const EdgeInsets.only(left: 18.0,right: 18),
+                    child: SizedBox(height: 50,
                       child: Row(
-                        children:  [
+                        children: [
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -777,7 +928,7 @@ class _EstimateState extends State<Estimate> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
+                          Expanded(child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -801,20 +952,21 @@ class _EstimateState extends State<Estimate> {
                                   setState(() {
 
                                   });
-                                  discountRupees[index].clear();
+
+                                  //discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
-                                  //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                  //   double tempVal =0;
-                                  //   double tempVal =0;
-                                  //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                  //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                  //   setState(() {
-                                  //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                  //   });
-                                  // }
-                                  // else{
-                                  //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
-                                   }
+                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
+                                    //   double tempVal =0;
+                                    //   double tempVal =0;
+                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
+                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
+                                    //   setState(() {
+                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
+                                    //   });
+                                    // }
+                                    // else{
+                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                  }
                                 },
                               ),
                             ),
@@ -822,15 +974,14 @@ class _EstimateState extends State<Estimate> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
-                            child:
-                            Container(
-                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
-                               height: 32,
+                            child: Container(
+                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              height: 32,
                               child: LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return CustomPopupMenuButton(elevation: 4,
                                       decoration:  InputDecoration(
-                                        hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
+                                          hintStyle: const TextStyle(fontSize: 14,color: Colors.black),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
                                           contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
                                           border: InputBorder.none,
@@ -840,10 +991,10 @@ class _EstimateState extends State<Estimate> {
                                               borderSide: BorderSide(color: Colors.transparent))
                                       ),
                                       hintText: '',
-                                     // textController: tax[index],
+                                      //textController: tax[index],
                                       childWidth: constraints.maxWidth,
                                       textAlign: TextAlign.right,
-                                      shape:   const RoundedRectangleBorder(
+                                      shape:  const RoundedRectangleBorder(
                                         side: BorderSide(color:mTextFieldBorder),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(5),
@@ -853,7 +1004,7 @@ class _EstimateState extends State<Estimate> {
                                       tooltip: '',
                                       itemBuilder:  (BuildContext context) {
                                         return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
+                                          return CustomPopupMenuItem(
                                             textAlign: MainAxisAlignment.end,
                                             value: value,
                                             text:value,
@@ -861,12 +1012,11 @@ class _EstimateState extends State<Estimate> {
                                           );
                                         }).toList();
                                       },
-
                                       onSelected: (String value)  {
                                         setState(() {
                                           tax[index].text=value;
                                         });
-
+                                        //print(tax[index].text);
                                       },
                                       onCanceled: () {
 
@@ -902,12 +1052,7 @@ class _EstimateState extends State<Estimate> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              selectedVehicles.removeAt(index);
-                              units.removeAt(index);
-                              discountRupees.removeAt(index);
-                              discountPercentage.removeAt(index);
-                              tax.removeAt(index);
-                              lineAmount.removeAt(index);
+                              deleteLineItem(estimateItems['items'][index]['estItemId']);
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -922,9 +1067,8 @@ class _EstimateState extends State<Estimate> {
                   )
                 ],
               );
-
-
-          },),
+            },
+          ),
           const Padding(
             padding: EdgeInsets.only(left: 18,right: 18),
             child: Divider(height: 1,color: mTextFieldBorder,),
@@ -946,27 +1090,21 @@ class _EstimateState extends State<Estimate> {
                             borderColor: mSaveButton,
                             textColor: mSaveButton,
                             onTap: () {
-
-
-
                               brandNameController.clear();
                               modelNameController.clear();
                               variantController.clear();
                               displayList=vehicleList;
                               showDialog(
-                                context: context,
-                                builder: (context) => showDialogBox(),
-                              ).then((value) {
+                                  context: context,
+                                  builder: (context) => showDialogBox()).then((value) {
                                 if(value!=null){
                                   setState(() {
                                     isVehicleSelected=true;
-                                    units.add(TextEditingController(text: '1'));
-                                    discountRupees.add(TextEditingController(text: '0'));
-                                    discountPercentage.add(TextEditingController(text: '0'));
-                                    tax.add(TextEditingController(text: '0'));
                                     lineAmount.add(TextEditingController());
-                                    subAmountTotal.text='0';
-                                    selectedVehicles.add(value);
+                                    units.add(TextEditingController(text: '1'));
+                                    discountPercentage.add(TextEditingController(text:'0'));
+                                    tax.add(TextEditingController());
+                                    estimateItems['items'].add(value);
                                   });
                                 }
                               });
@@ -997,21 +1135,21 @@ class _EstimateState extends State<Estimate> {
                   const Expanded(child: Center(child: Text("Sub Total"))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
-                    builder: (context) {
-                      return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
-                    }
+                      builder: (context) {
+                        return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
+                      }
                   ))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
-                    builder: (context) {
-                      return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
-                    }
+                      builder: (context) {
+                        return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
+                      }
                   ))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
-                    builder: (context) {
-                      return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
-                    }
+                      builder: (context) {
+                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                      }
                   ))),
                   const SizedBox(width: 30,height: 30,),
 
@@ -1021,142 +1159,143 @@ class _EstimateState extends State<Estimate> {
           ),
           const Divider(height: 1,color: mTextFieldBorder,),
 
-
-
           ///------Foooter----------
           buildFooter(),
           const Divider(height: 1,color: mTextFieldBorder,),
-
-
-
-
-
-
         ],
       ),
     );
   }
 
   Widget showDialogBox(){
-   return AlertDialog(
-     backgroundColor:
-     Colors.transparent,
-     content:StatefulBuilder(
-         builder: (context, StateSetter setState) {
-         return SizedBox(
-           width: MediaQuery.of(context).size.width/1.5,
-           height: MediaQuery.of(context).size.height/1.1,
-           child: Stack(
-             children: [
-               Container(
-                 decoration: BoxDecoration(
-                     color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                 margin: const EdgeInsets.only(top: 13.0, right: 8.0),
-                 child: Padding(
-                   padding: const EdgeInsets.all(20.0),
-                   child: Card(surfaceTintColor: Colors.white,
-                     child: Column(
-                       children: [
-                         const SizedBox(height: 10,),
-                         ///search Fields
-                         Row(
-                           children: [
-                             const SizedBox(width: 10,),
-                             SizedBox(width: 250,
-                               child: TextFormField(
-                                 controller: brandNameController,
-                                 decoration: textFieldBrandNameField(hintText: 'Search Brand'),
-                                 onChanged: (value) {
-                                   setState(() {
-                                     if(value.isEmpty || value==""){
-                                       displayList=vehicleList;
-                                     }
-                                     else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                       modelNameController.clear();
-                                       variantController.clear();
-                                     }
-                                     else{
-                                       fetchBrandName(brandNameController.text);
-                                     }
-                                   });
-                                 },
-                               ),
-                             ),
-                             const SizedBox(width: 10,),
-                             SizedBox(
-                               width: 250,
-                               child: TextFormField(
-                                 decoration:  textFieldModelNameField(hintText: 'Search Model'),
-                                 controller: modelNameController,
-                                 onChanged: (value) {
-                                   setState(() {
-                                     if(value.isEmpty || value==""){
-                                       displayList=vehicleList;
-                                     }
-                                     else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                       brandNameController.clear();
-                                       variantController.clear();
+    return AlertDialog(
+      backgroundColor:
+      Colors.transparent,
+      content:StatefulBuilder(
+          builder: (context, StateSetter setState,) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width/1.5,
+              height: MediaQuery.of(context).size.height/1.1,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                    margin: const EdgeInsets.only(top: 13.0, right: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Card(surfaceTintColor: Colors.white,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10,),
+                            ///search Fields
+                            Row(
+                              children: [
+                                const SizedBox(width: 10,),
+                                SizedBox(width: 250,
+                                  child: TextFormField(
+                                    controller: brandNameController,
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                          modelNameController.clear();
+                                          variantController.clear();
+                                        }
+                                        else{
+                                          fetchBrandName(brandNameController.text);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 250,
+                                  child: TextFormField(
+                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                    controller: modelNameController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                          brandNameController.clear();
+                                          variantController.clear();
 
-                                     }
-                                     else{
-                                       fetchModelName(modelNameController.text);
-                                     }
+                                        }
+                                        else{
+                                          fetchModelName(modelNameController.text);
+                                        }
 
-                                   });
-                                 },
-                               ),
-                             ),
-                             const SizedBox(width: 10,),
-                             SizedBox(width: 250,
-                               child: TextFormField(
-                                 controller: variantController,
-                                 decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                 onChanged: (value) {
-                                   setState(() {
-                                     if(value.isEmpty || value==""){
-                                       displayList=vehicleList;
-                                     }
-                                     else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                       modelNameController.clear();
-                                       brandNameController.clear();
-                                     }
-                                     else{
-                                       fetchVariantName(variantController.text);
-                                     }
-                                   });
-                                 },
-                               ),
-                             ),
-                           ],
-                         ),
-                         const SizedBox(height: 20,),
-                         ///Table Header
-                         Container(
-                           height: 40,
-                           color: Colors.grey[200],
-                           child: const Padding(
-                             padding: EdgeInsets.only(left: 18.0),
-                             child: Row(
-                               children: [
-                                 Expanded(child: Text("Brand")),
-                                 Expanded(child: Text("Model")),
-                                 Expanded(child: Text("Variant")),
-                                 Expanded(child: Text("On road price")),
-                                 Expanded(child: Text("Color")),
-                               ],
-                             ),
-                           ),
-                         ),
-                         Expanded(
-                           child: SingleChildScrollView(
-                             child: Column(
-                               children: [
-                                 for (int i = 0; i < displayList.length; i++)
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10,),
+                                SizedBox(width: 250,
+                                  child: TextFormField(
+                                    controller: variantController,
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
+                                          modelNameController.clear();
+                                          brandNameController.clear();
+                                        }
+                                        else{
+                                          fetchVariantName(variantController.text);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20,),
+                            ///Table Header
+                            Container(
+                              height: 40,
+                              color: Colors.grey[200],
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 18.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Text("Brand")),
+                                    Expanded(child: Text("Model")),
+                                    Expanded(child: Text("Variant")),
+                                    Expanded(child: Text("On road price")),
+                                    Expanded(child: Text("Color")),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    for (int i = 0; i < displayList.length; i++)
                                       InkWell(
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-                                            Navigator.pop(context,displayList[i]);
+
+                                            selectedItems={
+                                              "itemsService":displayList[i]['model_name']??"",
+                                              "priceItem":displayList[i]['onroad_price'].toString(),
+                                              "quantity":1,
+                                              "discount":0,
+                                              "tax":0,
+                                              "amount":displayList[i]['onroad_price'].toString(),
+                                            };
+                                            Navigator.pop(context,selectedItems,);
                                           });
 
                                         },
@@ -1202,44 +1341,44 @@ class _EstimateState extends State<Estimate> {
                                         ),
                                       ),
 
-                               ],
-                             ),
-                           ),
-                         )
-                       ],
-                     ),
-                   ),
-                 ),
-               ),
-               Positioned(
-                 right: 0.0,
-                 child: InkWell(
-                   child: Container(
-                       width: 30,
-                       height: 30,
-                       decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(15),
-                           border: Border.all(
-                             color: const Color.fromRGBO(204, 204, 204, 1),
-                           ),
-                           color: Colors.blue),
-                       child: const Icon(
-                         Icons.close_sharp,
-                         color: Colors.white,
-                       )),
-                   onTap: () {
-                     setState(() {
-                       Navigator.of(context).pop();
-                     });
-                   },
-                 ),
-               ),
-             ],
-           ),
-         );
-       }
-     ),
-   );
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0.0,
+                    child: InkWell(
+                      child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: const Color.fromRGBO(204, 204, 204, 1),
+                              ),
+                              color: Colors.blue),
+                          child: const Icon(
+                            Icons.close_sharp,
+                            color: Colors.white,
+                          )),
+                      onTap: () {
+                        setState(() {
+                          Navigator.of(context).pop();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+      ),
+    );
   }
 
   Widget buildFooter(){
@@ -1250,7 +1389,6 @@ class _EstimateState extends State<Estimate> {
             padding: const EdgeInsets.all(28.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 80,child: OutlinedMButton(text: '+ Add Notes', borderColor: Colors.transparent, textColor: mSaveButton,onTap: (){})),
                 const SizedBox(height: 10,),
                 const Text("Terms and Conditions"),
                 const SizedBox(height: 10,),
@@ -1283,59 +1421,59 @@ class _EstimateState extends State<Estimate> {
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Total Taxable Amount"),
-                Builder(
-                  builder: (context) {
-                    return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
-                  }
-                ),
-              ],
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
-                Container(
-                    decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
-                    height: 32,width: 100,
-                    child: TextField(
-                      controller: additionalCharges,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(fontSize: 14),
-                      decoration: const InputDecoration(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total Taxable Amount"),
+                  Builder(
+                      builder: (context) {
+                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                      }
+                  ),
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
+                  Container(
+                      decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                      height: 32,width: 100,
+                      child: TextField(
+                        controller: additionalCharges,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(fontSize: 14),
+                        decoration: const InputDecoration(
 
-                          contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
-                          border: InputBorder.none,
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent))
-                      ),
-                      onChanged: (v) {
-                        setState(() {
+                            contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                            border: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent))
+                        ),
+                        onChanged: (v) {
+                          setState(() {
 
-                        });
-                      },
-                    )),
-              ],
-            ),
-            const SizedBox(height: 10,),
-            const Divider(color: mTextFieldBorder),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Total"),
-                Builder(
-                    builder: (context) {
-                      return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
-                    }
-                ),
-              ],
-            ),
-          ],
-        ),
+                          });
+                        },
+                      )),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(color: mTextFieldBorder),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total"),
+                  Builder(
+                      builder: (context) {
+                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                      }
+                  ),
+                ],
+              ),
+            ],
+          ),
         )),
       ],
     );
@@ -1362,8 +1500,8 @@ class _EstimateState extends State<Estimate> {
           brandNameController.clear();
         });
 
-    },
-        child: const Icon(Icons.close,size: 18,)
+      },
+          child: const Icon(Icons.close,size: 18,)
       ),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
@@ -1391,7 +1529,7 @@ class _EstimateState extends State<Estimate> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1414,7 +1552,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-   fetchModelName(String modelName)async{
+  fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1434,7 +1572,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-   fetchBrandName(String brandName)async{
+  fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1452,26 +1590,26 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-   fetchVariantName(String variantName)async{
-  dynamic response;
-  String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
-  try{
-    await getData(context:context ,url: url).then((value) {
-      setState((){
-        if(value!=null){
-          response=value;
-          displayList=response;
+  fetchVariantName(String variantName)async{
+    dynamic response;
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
+    try{
+      await getData(context:context ,url: url).then((value) {
+        setState((){
+          if(value!=null){
+            response=value;
+            displayList=response;
 
-        }
+          }
+        });
       });
-    });
+    }
+    catch(e){
+      logOutApi(context:context ,response: response,exception: e.toString());
+    }
   }
-  catch(e){
-    logOutApi(context:context ,response: response,exception: e.toString());
-  }
-}
 
-   getAllVehicleVariant() async {
+  getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1481,8 +1619,6 @@ class _EstimateState extends State<Estimate> {
             response = value;
             vehicleList = value;
             displayList=vehicleList;
-            // print('------------check proper--------------');
-            // print(displayList);
           }
           loading = false;
         });
@@ -1494,21 +1630,92 @@ class _EstimateState extends State<Estimate> {
       });
     }
   }
-   postEstimate(estimate)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
-    postData(context: context,requestBody:estimate ,url:url ).then((value) {
-      setState(() {
-        if(value!=null){
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
-          //Navigator.of(context).pop();
-          // print('------------------inside api()------------');
-          // print(estimate);
+  putUpdatedEstimated(updatedEstimated)async{
+    try{
+      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/update_estimate_vehicle'),
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer $authToken',
+          },
+          body: jsonEncode(updatedEstimated)
+      );
+      if(response.statusCode==200){
+        if(lineItems.isNotEmpty){
+          lineItemsData(lineItems);
         }
-      });
-    });
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
+          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        }
 
+      }
+      else{
+        log(response.statusCode.toString());
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  lineItemsData(lineItems)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
+    postData(context:context ,url: url,requestBody: lineItems).then((value) => {
+      setState((){
+        if(value!=null){
+          log(value.toString());
+        }
+      })
+    });
+  }
+  deleteLineItem(estimateItemId)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_item_by_id/$estimateItemId';
+    try{
+      final response=await http.delete(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer $authToken'
+          }
+      );
+      if(response.statusCode==200){
+        setState(() {
+          estimateItems['items'].removeWhere((map)=>map['estItemId']==estimateItemId);
+          // print('----------estimatedItemId--------');
+          // print(estimateItemId);
+          // print('------inside delete api---');
+          // print(response.statusCode);
+          // print(response.body);
+          // print(estimateItems['items']);
+          // estimateItems['items']=[];
+          // print(estimateItems['items']);
+          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //   content:  Text('Data Deleted'),)
+          // );
+        });
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  deleteEstimateItemData(estVehicleId)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_vehicle_by_id/$estVehicleId';
+    try{
+      final response=await http.delete(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer $authToken'
+          }
+      );
+      if(response.statusCode ==200){
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+        }
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
   }
   textFieldSalesInvoice({required String hintText, bool? error}) {
     return  InputDecoration(border: InputBorder.none,
@@ -1531,9 +1738,8 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  }
-
- class VendorModel {
+}
+class VendorModel {
   String label;
   String city;
   String state;
@@ -1551,8 +1757,8 @@ class _EstimateState extends State<Estimate> {
 
   factory VendorModel.fromJson(Map<String, dynamic> json) {
     return VendorModel(
-        label: json['label'],
-        value: json['value'],
+      label: json['label'],
+      value: json['value'],
       city: json['city'],
       state: json['state'],
       street: json['street'],

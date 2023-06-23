@@ -1,10 +1,11 @@
-import 'dart:convert';
+
+
+
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/motows_routes.dart';
 import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
@@ -17,17 +18,17 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
-class ViewEstimateItem extends StatefulWidget {
+
+class Estimate extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
-  final Map estimateItem;
-  const ViewEstimateItem({Key? key, required this.drawerWidth, required this. selectedDestination, required Duration transitionDuration, required  Duration reverseTransitionDuration, required this.estimateItem}) : super(key: key);
+  const Estimate({Key? key,  required this.selectedDestination, required this.drawerWidth }) : super(key: key);
 
   @override
-  State<ViewEstimateItem> createState() => _ViewEstimateItemState();
+  State<Estimate> createState() => _EstimateState();
 }
 
-class _ViewEstimateItemState extends State<ViewEstimateItem> {
+class _EstimateState extends State<Estimate> {
 
   bool loading = false;
   bool showVendorDetails = false;
@@ -35,6 +36,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   bool isVehicleSelected = false;
 
   late double width ;
+
+
+
   var wareHouseController=TextEditingController();
   var vendorSearchController = TextEditingController();
   final brandNameController=TextEditingController();
@@ -47,53 +51,16 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
-  Map estimateItems={};
-  List lineItems=[];
-  Map updateEstimate={};
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    estimateItems=widget.estimateItem;
-    billToName=estimateItems['billAddressName']??'';
-    billToCity=estimateItems['billAddressCity']??"";
-    billToStreet=estimateItems['billAddressStreet']??"";
-    billToState=estimateItems['billAddressState']??"";
-    billToZipcode=estimateItems['billAddressZipcode']??"";
-    shipToName=estimateItems['shipAddressName']??"";
-    shipToCity=estimateItems['shipAddressCity']??"";
-    shipToStreet=estimateItems['shipAddressStreet']??"";
-    shipToState=estimateItems['shipAddressState']??"";
-    shipZipcode=estimateItems['shipAddressZipcode']??"";
-
-    for(int i=0;i<estimateItems['items'].length;i++){
-      units.add(TextEditingController());
-      units[i].text=estimateItems['items'][i]['quantity'].toString();
-
-      discountPercentage.add(TextEditingController());
-      discountPercentage[i].text= estimateItems['items'][i]['discount'].toString();
-
-      tax.add(TextEditingController());
-      tax[i].text=estimateItems['items'][i]['tax'].toString();
-
-      lineAmount.add(TextEditingController());
-      lineAmount[i].text=estimateItems['items'][i]['amount'].toString();
-
-      subDiscountTotal.text = lineAmount[i].text + discountPercentage[i].text;
-    }
-    subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
-    subTaxTotal.text=estimateItems['subTotalTax'].toString();
-    subAmountTotal.text=estimateItems['subTotalAmount'].toString();
     salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
-    salesInvoice.text=estimateItems['serviceInvoice']??"";
-    termsAndConditions.text=estimateItems['termsConditions']??"";
-    getInitialData();
-
   }
-   List vendorList = [];
+  List vendorList = [];
+
   Map vendorData ={
     'Name':'',
     'city': '',
@@ -115,6 +82,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   List vehicleList = [];
   List displayList=[];
   List selectedVehicles=[];
+
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
   var discountPercentage = <TextEditingController>[];
@@ -122,33 +90,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   var lineAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
-  bool newAddress=false;
-  bool newShipping=false;
-  bool billing=true;
-  Map selectedItems={};
-  String ?authToken;
 
-  String billToName='';
-  String billToCity='';
-  String billToStreet='';
-  String billToState='';
-  int billToZipcode=0;
-
-  String shipToName='';
-  String shipToCity='';
-  String shipToStreet='';
-  String shipToState='';
-  int shipZipcode=0;
-   getInitialData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    authToken = prefs.getString("authToken");
-  }
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
     return  Scaffold(
       backgroundColor: Colors.white,
-      appBar:  const PreferredSize(  preferredSize: Size.fromHeight(60),
+      appBar: const PreferredSize(  preferredSize: Size.fromHeight(60),
           child: CustomAppBar()),
       body: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -169,141 +117,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Edit Estimate"),
+                    title: const Text("Create Purchase Order"),
                     actions: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Delete',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      child: StatefulBuilder(
-                                        builder: (context, setState) {
-                                          return SizedBox(
-                                            height: 200,
-                                            width: 300,
-                                            child: Stack(children: [
-                                              Container(
-                                                decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                                margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                  child: Column(
-                                                    children: [
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      const Icon(
-                                                        Icons.warning_rounded,
-                                                        color: Colors.red,
-                                                        size: 50,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Column(
-                                                        children:  [
-                                                          const Center(
-                                                              child: Text(
-                                                                'Are You Sure, You Want To Delete ?',
-                                                                style: TextStyle(
-                                                                    color: Colors.indigo,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 15),
-                                                              )),
-                                                        const  SizedBox(height:5),
-                                                          Center(
-                                                              child: Text(estimateItems['estVehicleId']??"",
-                                                                style: const TextStyle(
-                                                                    color: Colors.indigo,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 15),
-                                                              )),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          MaterialButton(
-                                                            color: Colors.red,
-                                                            onPressed: () {
-                                                              // print(userId);
-                                                              deleteEstimateItemData(estimateItems['estVehicleId']);
-                                                            },
-                                                            child: const Text(
-                                                              'Ok',
-                                                              style: TextStyle(color: Colors.white),
-                                                            ),
-                                                          ),
-                                                          MaterialButton(
-                                                            color: Colors.blue,
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                Navigator.of(context).pop();
-                                                              });
-                                                            },
-                                                            child: const Text(
-                                                              'Cancel',
-                                                              style: TextStyle(color: Colors.white),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(right: 0.0,
-
-                                                child: InkWell(
-                                                  child: Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(15),
-                                                          border: Border.all(
-                                                            color:
-                                                            const Color.fromRGBO(204, 204, 204, 1),
-                                                          ),
-                                                          color: Colors.blue),
-                                                      child: const Icon(
-                                                        Icons.close_sharp,
-                                                        color: Colors.white,
-                                                      )),
-                                                  onTap: () {
-                                                    setState(() {
-                                                      Navigator.of(context).pop();
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
                       Row(
                         children: [
                           SizedBox(
@@ -336,51 +151,74 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           SizedBox(
                             width: 100,height: 28,
                             child: OutlinedMButton(
-                              text: 'Update',
+                              text: 'Save',
                               buttonColor:mSaveButton ,
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  updateEstimate =    {
-                                        "additionalCharges": additionalCharges.text,
-                                        "address": "string",
-                                        "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                        "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                        "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                        "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                        "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
-                                        "serviceDueDate": "",
-                                        "estVehicleId": estimateItems['estVehicleId']??"",
-                                        "serviceInvoice": salesInvoice.text,
-                                        "serviceInvoiceDate": salesInvoiceDate.text,
-                                        "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                        "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                        "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                        "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                        "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
-                                        "subTotalAmount": subAmountTotal.text,
-                                        "subTotalDiscount": subDiscountTotal.text,
-                                        "subTotalTax": subTaxTotal.text,
-                                        "termsConditions": termsAndConditions.text,
-                                        "total": subAmountTotal.text,
-                                        "totalTaxableAmount": 0,
-                                        "items": [],
-                                      };
-                                     putUpdatedEstimated(updateEstimate);
-                                  for(int i=0;i<estimateItems['items'].length;i++){
-                                    lineItems.add(
+                                  // if(selectedCity=='Select City'){
+                                  //   setState(() {
+                                  //     _invalidCity=true;
+                                  //   });
+                                  // }
+                                  //
+                                  //
+                                  // ///Main Validation
+                                  // if(_formKey.currentState!.validate()){
+                                  //   if(_invalidType==false && _invalidCity==false) {
+                                  //     print("Call Api");
+                                  //     _selectedIndex=1;
+                                  //   }
+                                  //
+                                  // }
+                                  if(showVendorDetails==false || showWareHouseDetails==false){
+                                    print('-------------go inside-----------');
+                                  }
+                                  if(showVendorDetails==true && showWareHouseDetails==true && selectedVehicles.isNotEmpty){
+                                    postDetails= {
+                                      "additionalCharges": additionalCharges.text,
+                                      "address": "string",
+                                      "billAddressCity": vendorData['city']??"",
+                                      "billAddressName": vendorData['Name']??"",
+                                      "billAddressState": vendorData['state']??"",
+                                      "billAddressStreet": vendorData['street']??"",
+                                      "billAddressZipcode": vendorData['zipcode']??"",
+                                      "serviceDueDate": "string",
+                                      "serviceInvoice": salesInvoice.text,
+                                      "serviceInvoiceDate": salesInvoiceDate.text,
+                                      "shipAddressCity": wareHouse['city']??"",
+                                      "shipAddressName": wareHouse['Name']??"",
+                                      "shipAddressState": wareHouse['state']??"",
+                                      "shipAddressStreet": wareHouse['street']??"",
+                                      "shipAddressZipcode": wareHouse['zipcode']??"",
+                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                      "termsConditions": termsAndConditions.text,
+                                      "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "items": [
+
+                                      ]
+                                    };
+
+                                  }
+                                  for (int i = 0; i < selectedVehicles.length; i++) {
+                                    postDetails['items'].add(
                                         {
                                           "amount": lineAmount[i].text,
-                                          "discount":  discountPercentage[i].text,
-                                          "estVehicleId": estimateItems['estVehicleId'],
-                                          "itemsService": estimateItems['items'][i]['itemsService'],
-                                          "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                          "discount": discountPercentage[i].text,
+                                          "estVehicleId": "string",
+                                          "itemsService": selectedVehicles[i]['model_name']??"",
+                                          "priceItem": selectedVehicles[i]['onroad_price']??"",
                                           "quantity": units[i].text,
                                           "tax": tax[i].text,
                                         }
                                     );
+
                                   }
+                                  postEstimate(postDetails);
                                 });
                               },
 
@@ -455,8 +293,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
 
-
-   fetchVendorsData() async {
+  fetchVendorsData() async {
     dynamic response;
     String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
     try {
@@ -477,6 +314,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       });
     }
   }
+
   fetchData() async {
 
     List list = [];
@@ -497,8 +335,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
 
   Widget buildContentCard(){
-    return Card(color: Colors.white,
-      surfaceTintColor: Colors.white,
+    return Card(color: Colors.white,surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+          side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
       child: Column(
         children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,7 +354,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             padding: EdgeInsets.only(bottom: 2,top: 2),
                             child: Text("Bill to Address"),
                           ),
-                          if(estimateItems.isNotEmpty)
+                          if(showVendorDetails==true)
                             SizedBox(
                               height: 24,
                               child:  OutlinedIconMButton(
@@ -525,7 +364,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 onTap: (){
                                   setState(() {
                                     showVendorDetails=false;
-                                    newAddress=true;
                                   });
                                 },
                               ),
@@ -535,8 +373,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                      const SizedBox(height: 10,),
-                    if(newAddress)
+                    if(showVendorDetails==false)
+                      const SizedBox(height: 30,),
+                    if(showVendorDetails==false)
                       Center(
                         child: SizedBox(height: 32,
                           child: Padding(
@@ -561,17 +400,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           ),
                         ),
                       ),
+                    if(showVendorDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(vendorData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
 
                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(width: 70,child:  Text("Street")),
                                 const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${vendorData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -579,7 +419,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("City")),
                                 const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${vendorData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -587,7 +427,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("State")),
                                 const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${vendorData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -595,7 +435,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("ZipCode :")),
                                 const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${vendorData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
                           ],
@@ -618,7 +458,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             padding: EdgeInsets.only(bottom: 2,top: 2),
                             child: Text("Ship to Address"),
                           ),
-                          if(estimateItems.isNotEmpty)
+                          if(showWareHouseDetails==true)
                             SizedBox(
                               height: 24,
                               child:  OutlinedIconMButton(
@@ -628,23 +468,24 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 onTap: (){
                                   setState(() {
                                     showWareHouseDetails=false;
-                                    newShipping=true;
                                   });
                                 },
                               ),
                             )
+
                         ],
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                      const SizedBox(height: 10,),
-                    if(newShipping)
+                    if(showWareHouseDetails==false)
+                      const SizedBox(height: 30,),
+                    if(showWareHouseDetails==false)
                       Center(
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: CustomTextFieldSearch(
-                              decoration:textFieldDecoration(hintText: 'Search warehouse'),
+                              decoration:textFieldDecoration(hintText: 'Search Warehouse'),
                               controller: wareHouseController,
                               future: fetchData,
                               getSelectedValue: (VendorModel value) {
@@ -668,16 +509,17 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           ),
                         ),
                       ),
+                    if(showWareHouseDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(width: 70,child:  Text("Street")),
                                 const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -685,7 +527,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("City")),
                                 const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -693,7 +535,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("State")),
                                 const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -701,7 +543,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               children: [
                                 const SizedBox(width: 70,child: Text("ZipCode :")),
                                 const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
                           ],
@@ -850,55 +692,63 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
               ),
             ),
           ),
-
+          if(selectedVehicles.isNotEmpty)
+            const Padding(
+              padding: EdgeInsets.only(left: 18,right: 18),
+              child: Divider(height: 1,color: mTextFieldBorder,),
+            ),
 
           ListView.builder(
             shrinkWrap: true,
-               physics: const NeverScrollableScrollPhysics(),
-            itemCount: estimateItems['items'].length,
-            itemBuilder: (BuildContext context, int index) {
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: selectedVehicles.length,
+            itemBuilder: (context, index) {
+              //print('----inside list view builder--------');
+              //print(selectedVehicles);
+              double tempTax =0;
+              double tempLineData=0;
+              double tempDiscount=0;
 
-               double tempDiscount=0;
-               double tempLineData=0;
-               double tempTax=0;
-               try{
-                 lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
-                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
-                 {
-                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
-                   tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
-                   tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+              try{
 
-                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
-                  // subDiscountTotal.text=tempDiscount.toString();
-                 }
-               }
-               catch (e){
-                 log(e.toString());
-               }
-               if(index==0){
-                 subAmountTotal.text='0';
-                 subTaxTotal.text='0';
-                 subDiscountTotal.text='0';
-                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
-                 subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
-               }else {
-                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
-                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                 subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse(lineAmount[index].text)).toStringAsFixed(1);
-               }
-              return  Column(
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
+                if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
+                {
+                  tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
+                  tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
+
+                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+                  lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                }
+              }
+              catch (e){
+                log(e.toString());
+              }
+              if(index==0){
+                subAmountTotal.text='0';
+                subTaxTotal.text='0';
+                subDiscountTotal.text='0';
+                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
+                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+              }else {
+                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
+                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+              }
+
+              return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 18.0,right: 18),
-                    child: SizedBox(height: 50,
+                    padding: const EdgeInsets.only(left: 18,right: 18),
+                    child: SizedBox(
+                      height: 50,
                       child: Row(
-                        children: [
+                        children:  [
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -928,7 +778,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
+                          Expanded(child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -952,8 +802,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   setState(() {
 
                                   });
-
-                                  //discountRupees[index].clear();
+                                  discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
                                     //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
                                     //   double tempVal =0;
@@ -974,14 +823,15 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
-                            child: Container(
+                            child:
+                            Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return CustomPopupMenuButton(elevation: 4,
                                       decoration:  InputDecoration(
-                                          hintStyle: const TextStyle(fontSize: 14,color: Colors.black),
+                                          hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
                                           hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
                                           contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
                                           border: InputBorder.none,
@@ -991,10 +841,10 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                               borderSide: BorderSide(color: Colors.transparent))
                                       ),
                                       hintText: '',
-                                      //textController: tax[index],
+                                      // textController: tax[index],
                                       childWidth: constraints.maxWidth,
                                       textAlign: TextAlign.right,
-                                      shape:  const RoundedRectangleBorder(
+                                      shape:   const RoundedRectangleBorder(
                                         side: BorderSide(color:mTextFieldBorder),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(5),
@@ -1004,7 +854,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                       tooltip: '',
                                       itemBuilder:  (BuildContext context) {
                                         return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(
+                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
                                             textAlign: MainAxisAlignment.end,
                                             value: value,
                                             text:value,
@@ -1012,11 +862,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           );
                                         }).toList();
                                       },
+
                                       onSelected: (String value)  {
                                         setState(() {
                                           tax[index].text=value;
                                         });
-                                        //print(tax[index].text);
+
                                       },
                                       onCanceled: () {
 
@@ -1052,7 +903,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              deleteLineItem(estimateItems['items'][index]['estItemId']);
+                              selectedVehicles.removeAt(index);
+                              units.removeAt(index);
+                              discountRupees.removeAt(index);
+                              discountPercentage.removeAt(index);
+                              tax.removeAt(index);
+                              lineAmount.removeAt(index);
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -1067,8 +923,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                   )
                 ],
               );
-            },
-          ),
+
+
+            },),
           const Padding(
             padding: EdgeInsets.only(left: 18,right: 18),
             child: Divider(height: 1,color: mTextFieldBorder,),
@@ -1090,21 +947,27 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             borderColor: mSaveButton,
                             textColor: mSaveButton,
                             onTap: () {
+
+
+
                               brandNameController.clear();
                               modelNameController.clear();
                               variantController.clear();
                               displayList=vehicleList;
                               showDialog(
                                 context: context,
-                                builder: (context) => showDialogBox()).then((value) {
+                                builder: (context) => showDialogBox(),
+                              ).then((value) {
                                 if(value!=null){
                                   setState(() {
                                     isVehicleSelected=true;
-                                    lineAmount.add(TextEditingController());
                                     units.add(TextEditingController(text: '1'));
-                                    discountPercentage.add(TextEditingController(text:'0'));
-                                    tax.add(TextEditingController());
-                                    estimateItems['items'].add(value);
+                                    discountRupees.add(TextEditingController(text: '0'));
+                                    discountPercentage.add(TextEditingController(text: '0'));
+                                    tax.add(TextEditingController(text: '0'));
+                                    lineAmount.add(TextEditingController());
+                                    subAmountTotal.text='0';
+                                    selectedVehicles.add(value);
                                   });
                                 }
                               });
@@ -1159,9 +1022,17 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           ),
           const Divider(height: 1,color: mTextFieldBorder,),
 
+
+
           ///------Foooter----------
           buildFooter(),
           const Divider(height: 1,color: mTextFieldBorder,),
+
+
+
+
+
+
         ],
       ),
     );
@@ -1172,7 +1043,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       backgroundColor:
       Colors.transparent,
       content:StatefulBuilder(
-          builder: (context, StateSetter setState,) {
+          builder: (context, StateSetter setState) {
             return SizedBox(
               width: MediaQuery.of(context).size.width/1.5,
               height: MediaQuery.of(context).size.height/1.1,
@@ -1286,16 +1157,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-
-                                            selectedItems={
-                                              "itemsService":displayList[i]['model_name']??"",
-                                              "priceItem":displayList[i]['onroad_price'].toString(),
-                                              "quantity":1,
-                                              "discount":0,
-                                              "tax":0,
-                                              "amount":displayList[i]['onroad_price'].toString(),
-                                            };
-                                            Navigator.pop(context,selectedItems,);
+                                            Navigator.pop(context,displayList[i]);
                                           });
 
                                         },
@@ -1389,7 +1251,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
             padding: const EdgeInsets.all(28.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 80,child: OutlinedMButton(text: '+ Add Notes', borderColor: Colors.transparent, textColor: mSaveButton,onTap: (){})),
                 const SizedBox(height: 10,),
                 const Text("Terms and Conditions"),
                 const SizedBox(height: 10,),
@@ -1530,7 +1391,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1553,7 +1414,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
 
-   fetchModelName(String modelName)async{
+  fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1573,7 +1434,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-   fetchBrandName(String brandName)async{
+  fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1591,7 +1452,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-   fetchVariantName(String variantName)async{
+  fetchVariantName(String variantName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
@@ -1610,7 +1471,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-   getAllVehicleVariant() async {
+  getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1620,6 +1481,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
             response = value;
             vehicleList = value;
             displayList=vehicleList;
+            // print('------------check proper--------------');
+            // print(displayList);
           }
           loading = false;
         });
@@ -1631,92 +1494,21 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       });
     }
   }
-   putUpdatedEstimated(updatedEstimated)async{
-    try{
-      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/update_estimate_vehicle'),
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $authToken',
-          },
-          body: jsonEncode(updatedEstimated)
-      );
-      if(response.statusCode==200){
-        if(lineItems.isNotEmpty){
-          lineItemsData(lineItems);
-        }
-        if(mounted){
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
-        }
+  postEstimate(estimate)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
+    postData(context: context,requestBody:estimate ,url:url ).then((value) {
+      setState(() {
+        if(value!=null){
 
-      }
-      else{
-        log(response.statusCode.toString());
-      }
-    }
-    catch(e){
-      log(e.toString());
-    }
-  }
-   lineItemsData(lineItems)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
-     postData(context:context ,url: url,requestBody: lineItems).then((value) => {
-       setState((){
-         if(value!=null){
-           log(value.toString());
-         }
-       })
-     });
-  }
-   deleteLineItem(estimateItemId)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_item_by_id/$estimateItemId';
-  try{
-  final response=await http.delete(Uri.parse(url),
-  headers: {
-    "Content-Type": "application/json",
-    'Authorization': 'Bearer $authToken'
-  }
-  );
-  if(response.statusCode==200){
-    setState(() {
-       estimateItems['items'].removeWhere((map)=>map['estItemId']==estimateItemId);
-       // print('----------estimatedItemId--------');
-       // print(estimateItemId);
-      // print('------inside delete api---');
-      // print(response.statusCode);
-      // print(response.body);
-      // print(estimateItems['items']);
-      // estimateItems['items']=[];
-      // print(estimateItems['items']);
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //   content:  Text('Data Deleted'),)
-      // );
-    });
-  }
-  }
-  catch(e){
-  log(e.toString());
-  }
-  }
-   deleteEstimateItemData(estVehicleId)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_vehicle_by_id/$estVehicleId';
-    try{
-      final response=await http.delete(Uri.parse(url),
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer $authToken'
-      }
-      );
-      if(response.statusCode ==200){
-        if(mounted){
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
           Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          //Navigator.of(context).pop();
+          // print('------------------inside api()------------');
+          // print(estimate);
         }
-      }
-    }
-    catch(e){
-     log(e.toString());
-    }
+      });
+    });
+
   }
   textFieldSalesInvoice({required String hintText, bool? error}) {
     return  InputDecoration(border: InputBorder.none,
@@ -1740,6 +1532,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   }
 
 }
+
 class VendorModel {
   String label;
   String city;

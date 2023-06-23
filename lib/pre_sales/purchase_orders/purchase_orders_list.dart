@@ -1,26 +1,27 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:new_project/service/estimate/view_estimate_item_details.dart';
 import '../../../classes/arguments_classes/arguments_classes.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
-import 'estimate.dart';
+import 'add_new_po.dart';
+import 'details_po.dart';
 
 
-  class DisplayEstimateItems extends StatefulWidget {
+
+class DisplayEstimateItems extends StatefulWidget {
   final DisplayEstimateItemsArgs args;
 
-   const DisplayEstimateItems({Key? key, required this.args}) : super(key: key);
+  const DisplayEstimateItems({Key? key, required this.args}) : super(key: key);
 
   @override
   State<DisplayEstimateItems> createState() => _DisplayEstimateItemsState();
-  }
+}
 
-  class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
+class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   @override
   void  initState(){
     super.initState();
@@ -39,7 +40,7 @@ import 'estimate.dart';
         setState(() {
           if(value!=null){
             response=value;
-           estimateItems=response;
+            estimateItems=response;
             if(displayListItems.isEmpty){
               if(estimateItems.length>15){
                 for(int i=startVal;i<startVal+15;i++){
@@ -58,7 +59,7 @@ import 'estimate.dart';
       });
     }
     catch(e){
-     // logOutApi(context: context,exception:e.toString() ,response: response);
+      // logOutApi(context: context,exception:e.toString() ,response: response);
       setState(() {
         loading=false;
       });
@@ -73,7 +74,7 @@ import 'estimate.dart';
         children: [
           CustomDrawer(widget.args.drawerWidth, widget.args.selectedDestination),
           const VerticalDivider(width: 1,
-              thickness: 1,),
+            thickness: 1,),
           Expanded(
             child:
             CustomLoader(
@@ -94,7 +95,7 @@ import 'estimate.dart';
                       child: Column(
                         children: [
                           Container(
-                           // height:100,
+                            // height:100,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
@@ -113,12 +114,12 @@ import 'estimate.dart';
                                         padding: const EdgeInsets.only(right: 50.0),
                                         child: MaterialButton(onPressed: (){
                                           Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                          Estimate(selectedDestination: widget.args.selectedDestination,
-                                            drawerWidth: widget.args.drawerWidth,)
+                                              Estimate(selectedDestination: widget.args.selectedDestination,
+                                                drawerWidth: widget.args.drawerWidth,)
                                           )).then((value) => fetchEstimate());
                                         },
                                           color: Colors.blue,
-                                        child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
+                                          child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
                                         ),
                                       )
                                     ],
@@ -186,7 +187,7 @@ import 'estimate.dart';
                           for(int i=0;i<=displayListItems.length;i++)
                             Column(
                               children: [
-                                  if(i!=displayListItems.length)
+                                if(i!=displayListItems.length)
                                   MaterialButton(
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
@@ -194,14 +195,14 @@ import 'estimate.dart';
                                       // print('-------------inontap------------------');
                                       // print(estimateItems[i]);
                                       Navigator.of(context).push(PageRouteBuilder(
-                                        pageBuilder: (context,animation1,animation2) => ViewEstimateItem(
-                                          //customerList: displayList[i],
-                                          drawerWidth: widget.args.drawerWidth,
-                                          selectedDestination: widget.args.selectedDestination,
-                                          estimateItem: estimateItems[i],
-                                        transitionDuration: Duration.zero,
-                                        reverseTransitionDuration: Duration.zero,
-                                      )
+                                          pageBuilder: (context,animation1,animation2) => ViewEstimateItem(
+                                            //customerList: displayList[i],
+                                            drawerWidth: widget.args.drawerWidth,
+                                            selectedDestination: widget.args.selectedDestination,
+                                            estimateItem: estimateItems[i],
+                                            transitionDuration: Duration.zero,
+                                            reverseTransitionDuration: Duration.zero,
+                                          )
                                       ));
                                     },
                                     child: Padding(
@@ -248,9 +249,9 @@ import 'estimate.dart';
                                       ),
                                     ),
                                   ),
-                                  if(i!=displayListItems.length)
+                                if(i!=displayListItems.length)
                                   Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                  if(i==displayListItems.length)
+                                if(i==displayListItems.length)
                                   Row(mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
 

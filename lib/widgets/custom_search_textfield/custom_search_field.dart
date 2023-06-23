@@ -63,7 +63,7 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
   List? filteredList = <dynamic>[];
   bool hasFuture = false;
   bool loading = false;
-  final _debouncer = Debouncer(milliseconds: 1000);
+  final _debouncer = Debouncer(milliseconds: 10);
   static const itemHeight = 55;
   bool? itemsFound;
   ScrollController _scrollController = ScrollController();

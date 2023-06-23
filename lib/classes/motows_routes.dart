@@ -20,7 +20,13 @@ abstract class MotowsRoutes{
   static const String listTaxDetailsRoutes = "/tax";
   static const String vehicleMasterListRoutes = "/vehicleMaster";
   static const String listVehicleVinRoutes = "/vehicle";
+
   static const String estimateRoutes = "/purchase_Order";
- // static const String estimatesDisplayItems="/estimateItems";
+  static const String listVehicle= "/vehicleOrderList";
+  static const String listGrnItems = "/grn";
+  static const String listVehicleInvoice ="/vehicleInvoice";
+  static const String listAddItems ="/item";
+  static const String vehicleMaster ="/vehicleMaster";
+  static const String docketList="/docketList";
 }
 

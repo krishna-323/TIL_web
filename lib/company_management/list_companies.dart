@@ -40,6 +40,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
   List listCompanies = [];
   List displayListCompanies=[];
   int startVal=0;
+  bool color=false;
   //get Api().
   Future getCompanyList() async {
     dynamic response;
@@ -148,21 +149,18 @@ class _CompanyManagementState extends State<CompanyManagement> {
 
   _getPopupMenu(BuildContext context,) {
     return  [
-
       PopupMenuItem(value: 1,
-          child:  Center(
-            child: Row(
-              children: [
-                Icon(Icons.edit_sharp,size: 18,color: Colors.grey[800],),
-                const SizedBox(width: 10,),
-                Text(
-                  'Edit',
-                  style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
-                ),
+          child:  Row(
+            children: [
+              Icon(Icons.edit_sharp,size: 18,color: Colors.grey[800],),
+              const SizedBox(width: 10,),
+              Text(
+                'Edit',
+                style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),
+              ),
 
 
-              ],
-            ),
+            ],
           )),
       PopupMenuItem(value: 2,
           child:  Center(
@@ -188,7 +186,9 @@ class _CompanyManagementState extends State<CompanyManagement> {
     // print(companyData);
     return Theme(
         data: Theme.of(context).copyWith(),
-        child: PopupMenuButton(offset:const Offset(0, 30),
+        child: PopupMenuButton(
+          color: Colors.white,
+          offset:const Offset(0, 30),
           tooltip: '',
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -199,12 +199,10 @@ class _CompanyManagementState extends State<CompanyManagement> {
             ),
           ),
           itemBuilder: (BuildContext context) {
-            return _getPopupMenu(context,
-                // companyId, company, city, state, country,
-                // address1, address2, zipcode
-            );
+            return _getPopupMenu(context);
           },
           onSelected: (value) {
+
             if(value==1){
               showDialog(
                 context: context,

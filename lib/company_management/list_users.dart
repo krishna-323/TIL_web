@@ -519,7 +519,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                     editUserName.text = userData['username'];
                     editEmail.text = userData['email'];
                     String  roleInitial = userData['role'];
-                    List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
+                    List <CustomPopupMenuEntry<String>> editTypesOfRole =<CustomPopupMenuEntry<String>>[
 
                       const CustomPopupMenuItem(height: 40,
                         value: 'Admin',
@@ -666,7 +666,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                   child: CustomPopupMenuButton<String>(
                                                     childHeight: 200,
                                                     childWidth: 282,position: CustomPopupMenuPosition.under,
-                                                    decoration: customPopupForCompanyName(hintText: companyName),
+                                                    decoration: customPopupEditCompanyName(hintText: selectedCompanyName),
                                                     hintText: "",
                                                     shape: const RoundedRectangleBorder(
                                                       side: BorderSide(color:Color(0xFFE0E0E0)),
@@ -681,7 +681,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     },
                                                     onSelected: (String value)  {
                                                       setState(() {
-                                                        companyName= value;
+                                                        selectedCompanyName = value;
                                                       });
                                                     },
                                                     onCanceled: () {
@@ -714,7 +714,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                       Radius.circular(4),
                                                     ),),
                                                   child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
-                                                    decoration: customPopupDecoration(hintText: roleInitial),
+                                                    decoration: customPopupEditUserRole(hintText: roleInitial),
                                                     hintText: "",
                                                     shape: const RoundedRectangleBorder(
                                                       side: BorderSide(color:Color(0xFFE0E0E0)),
@@ -725,7 +725,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                     offset: const Offset(1, 12),
                                                     tooltip: '',
                                                     itemBuilder: (context) {
-                                                      return customerTypes;
+                                                      return editTypesOfRole;
                                                     },
                                                     onSelected: (String value)  {
                                                       setState(() {
@@ -814,7 +814,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                       'email': editEmail.text,
                                                       'token':'',
                                                       'token_creation_date':'',
-                                                      'company_name': companyName,
+                                                      'company_name': selectedCompanyName,
                                                       //editCompanyName.text,
                                                     };
                                                     // print('-----change-----');
@@ -1314,7 +1314,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           },
         ));
   }
-
+  String createUserRole="Select User Role";
+  String createCompanyName="Select Company Name";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1368,6 +1369,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                       child: MaterialButton(
                                         onPressed: () {
                                           setState(() {
+                                            createUserRole="Select User Role";
+                                            createCompanyName="Select Company Name";
                                             createNewUser(context,companyNamesList);
                                           });
                                         }, color: Colors.blue,
@@ -1584,6 +1587,41 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
+          List <CustomPopupMenuEntry<String>> typesOfRoleCreate =<CustomPopupMenuEntry<String>>[
+
+            const CustomPopupMenuItem(height: 40,
+              value: 'Admin',
+              child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+            ),
+            const CustomPopupMenuItem(height: 40,
+              value: 'User',
+              child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+            ),
+
+          ];
+          List<String> countryNames = [...companyNamesList];
+          // Creating CustomPopupMenuEntry Empty List.
+          List<CustomPopupMenuEntry<String>> createCompanyNames = [];
+          //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+          createCompanyNames = countryNames.map((value) {
+            return CustomPopupMenuItem(
+              height: 40,
+              value: value,
+              child: Center(
+                child: SizedBox(
+                  width: 350,
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ),
+              ),
+            );
+          }).toList();
           bool firstPasswordInitial = true;
           bool conformPasswordInitial = true;
           final newUserName = TextEditingController();
@@ -1595,11 +1633,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           bool newPasswordError = false;
           bool newConformPasswordError = false;
           final newUser = GlobalKey<FormState>();
-          var role = '';
-
-
-          // final companyName = TextEditingController();
-
           //regular expression to check if string.
           RegExp passValid = RegExp(
               r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
@@ -1612,8 +1645,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               return false;
             }
           }
-
-          var selectedCompanyName = '';
 
           Map userData = {};
           String capitalizeFirstWord(String value) {
@@ -1720,127 +1751,147 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                //User Role
-                                // Row(crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: [
-                                //     const SizedBox(
-                                //         width: 140,
-                                //         child: Text(
-                                //           "User Role",
-                                //         )),
-                                //     Expanded(
-                                //       child: AnimatedContainer(
-                                //         duration: const Duration(seconds: 0),
-                                //         height: salutationError ? 55 : 30,
-                                //         child: Stack(
-                                //           children: [
-                                //             if(role=="")
-                                //               const Padding(
-                                //                 padding: EdgeInsets.only(left: 12.0,top: 5),
-                                //                 child: Text(
-                                //                   "Select Role",style: TextStyle(color: Colors.black54,fontSize: 16),
-                                //                 ),
-                                //               ),
-                                //             DropdownSearch<String>(
-                                //               validator: (value) {
-                                //                 if (value == null || value.isEmpty) {
-                                //                   setState(() {
-                                //                     salutationError = true;
-                                //                   });
-                                //                   return "Enter User Role";
-                                //                 } else {
-                                //                   setState(() {
-                                //                     salutationError = false;
-                                //                   });
-                                //                 }
-                                //                 return null;
-                                //               },
-                                //               popupProps: PopupProps.menu(
-                                //                 constraints: const BoxConstraints(minWidth: 100,
-                                //                     maxHeight: 150),
-                                //                 showSearchBox: false,
-                                //                 searchFieldProps: TextFieldProps(
-                                //                   decoration: dropdownDecorationSearch(
-                                //                       role.isNotEmpty),
-                                //                   cursorColor: Colors.black,
-                                //                 ),
-                                //               ),
-                                //               items: roleTypes,
-                                //               selectedItem: role,
-                                //               //onChanged: itemSelectionChanged,
-                                //               onChanged: (String? userRole){
-                                //                 setState((){
-                                //                   role=userRole!;
-                                //                 });
-                                //               },
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
+                               // User Role
+                                Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                        width: 140,
+                                        child: Text(
+                                          "User Role",
+                                        )),
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        width: 282,
+                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(4),
+                                          ),),
+                                        child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
+                                          decoration: customPopupCreateUserRole(hintText: createUserRole),
+                                          hintText: "",
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:Color(0xFFE0E0E0)),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
+                                          ),
+                                          offset: const Offset(1, 12),
+                                          tooltip: '',
+                                          itemBuilder: (context) {
+                                            return typesOfRoleCreate;
+                                          },
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              createUserRole = value;
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                // Row(
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: [
-                                //     const SizedBox(
-                                //         width: 140,
-                                //         child: Text('Company Name',)),
-                                //     Expanded(
-                                //       child: AnimatedContainer(
-                                //         duration: const Duration(seconds: 0),
-                                //         height: companyError ? 55 : 30,
-                                //         child: Stack(children: [
-                                //           if(selectedCompanyName=="")
-                                //             const Padding(
-                                //               padding: EdgeInsets.only(left: 12.0,top: 5),
-                                //               child: Text(
-                                //                 "Select Company",style: TextStyle(color: Colors.black54,fontSize: 16),
-                                //               ),
-                                //             ),
-                                //           DropdownSearch<String>(
-                                //             validator: (value) {
-                                //               if (value == null || value.isEmpty) {
-                                //                 setState(() {
-                                //                   companyError = true;
-                                //                 });
-                                //                 return "Select Company";
-                                //               } else {
-                                //                 setState(() {
-                                //                   companyError = false;
-                                //                 });
-                                //               }
-                                //               return null;
-                                //             },
-                                //             popupProps: PopupProps.menu(
-                                //               constraints: const BoxConstraints(
-                                //                   maxHeight: 170),
-                                //               showSearchBox: true,
-                                //               searchFieldProps: TextFieldProps(
-                                //                 decoration:
-                                //                 dropdownDecorationSearch(
-                                //                     selectedCompanyName.isNotEmpty),
-                                //                 cursorColor: Colors.grey,
-                                //               ),
-                                //             ),
-                                //             items: countryNames,
-                                //             selectedItem: selectedCompanyName,
-                                //             onChanged: (String? company) {
-                                //               setState(() {
-                                //                 selectedCompanyName = company!;
-                                //               });
-                                //             },
-                                //           ),
-                                //         ],
-                                //
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                        width: 140,
+                                        child: Text('Company Name',)),
+                                    // Expanded(
+                                    //   child: AnimatedContainer(
+                                    //     duration: const Duration(seconds: 0),
+                                    //     height: companyError ? 55 : 30,
+                                    //     child: Stack(children: [
+                                    //       if(selectedCompanyName=="")
+                                    //         const Padding(
+                                    //           padding: EdgeInsets.only(left: 12.0,top: 5),
+                                    //           child: Text(
+                                    //             "Select Company",style: TextStyle(color: Colors.black54,fontSize: 16),
+                                    //           ),
+                                    //         ),
+                                    //       DropdownSearch<String>(
+                                    //         validator: (value) {
+                                    //           if (value == null || value.isEmpty) {
+                                    //             setState(() {
+                                    //               companyError = true;
+                                    //             });
+                                    //             return "Select Company";
+                                    //           } else {
+                                    //             setState(() {
+                                    //               companyError = false;
+                                    //             });
+                                    //           }
+                                    //           return null;
+                                    //         },
+                                    //         popupProps: PopupProps.menu(
+                                    //           constraints: const BoxConstraints(
+                                    //               maxHeight: 170),
+                                    //           showSearchBox: true,
+                                    //           searchFieldProps: TextFieldProps(
+                                    //             decoration:
+                                    //             dropdownDecorationSearch(
+                                    //                 selectedCompanyName.isNotEmpty),
+                                    //             cursorColor: Colors.grey,
+                                    //           ),
+                                    //         ),
+                                    //         items: countryNames,
+                                    //         selectedItem: selectedCompanyName,
+                                    //         onChanged: (String? company) {
+                                    //           setState(() {
+                                    //             selectedCompanyName = company!;
+                                    //           });
+                                    //         },
+                                    //       ),
+                                    //     ],
+                                    //
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        width: 282,
+                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(4),
+                                          ),),
+                                        child: CustomPopupMenuButton<String>(
+                                          childHeight: 200,
+                                          childWidth: 282,position: CustomPopupMenuPosition.under,
+                                          decoration: customPopupCreateCompanyName(hintText: createCompanyName),
+                                          hintText: "",
+                                          shape: const RoundedRectangleBorder(
+                                            side: BorderSide(color:Color(0xFFE0E0E0)),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            ),
+                                          ),
+                                          offset: const Offset(1, 12),
+                                          tooltip: '',
+                                          itemBuilder: (context) {
+                                            return createCompanyNames;
+                                          },
+                                          onSelected: (String value)  {
+                                            setState(() {
+                                              createCompanyName = value;
+                                            });
+                                          },
+                                          onCanceled: () {
+
+                                          },
+                                          child: Container(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -2011,10 +2062,10 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                         if (newUser.currentState!.validate()) {
                                           userData = {
                                             "active": true,
-                                            "company_name": selectedCompanyName,
+                                            "company_name": createCompanyName,
                                             "email": newUserEmail.text,
                                             "password": newPassword.text,
-                                            "role": role,
+                                            "role": createUserRole,
                                             "username":newUserName.text ,
                                           };
                                           // print('---check----');
@@ -2118,7 +2169,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  customPopupDecoration ({required String hintText, bool? error}){
+  // Edit Role type/company name.
+  customPopupEditUserRole ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
       border: const OutlineInputBorder(
@@ -2132,7 +2184,36 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  customPopupForCompanyName ({required String hintText, bool? error}){
+  customPopupEditCompanyName ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  // Create Role Type/ Company Name.
+  customPopupCreateUserRole ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupCreateCompanyName ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
       border: const OutlineInputBorder(
