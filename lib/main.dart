@@ -17,6 +17,7 @@ import 'customer/list_customer.dart';
 import 'dashboard/home_screen.dart';
 import 'docket/docket_list.dart';
 import 'login_screen.dart';
+import 'pre_sales/invoice/invoice.dart';
 
  main() async {
   setPathUrlStrategy();
@@ -170,6 +171,19 @@ class _MyAppState extends State<MyApp> {
                       drawerWidth: 190, selectedDestination: 2.11);
                 }
                 newScreen = DocketList(args: docketListArgs );
+              }
+              break;
+            case MotowsRoutes.invoiceListRoute :
+              {
+                InvoiceArguments invoiceArguments;
+                if(settings.arguments!=null){
+                  invoiceArguments = settings.arguments as InvoiceArguments ;
+                }
+                else {
+                  invoiceArguments = InvoiceArguments(
+                      drawerWidth: 190, selectedDestination: 2.11);
+                }
+                newScreen = InvoiceList(args: invoiceArguments );
               }
               break;
             default: newScreen = const InitialScreen();

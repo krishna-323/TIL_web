@@ -3,6 +3,7 @@ import 'package:new_project/utils/static_data/motows_colors.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
 import '../classes/motows_routes.dart';
 import '../docket/docket_list.dart';
+import '../pre_sales/invoice/invoice.dart';
 
 
 
@@ -31,13 +32,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
       homeHovered=true;
     }
    // Services
-    if(_selectedDestination == 1.1 ){
+    if(_selectedDestination == 1.1 || _selectedDestination == 1.21 ){
       serviceHover=false;
       serviceExpanded=true;
     }
     // Pre sales.
-    if(_selectedDestination==2.1 || _selectedDestination==2.11 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
-       _selectedDestination==2.4 || _selectedDestination==2.5){
+    if(_selectedDestination==2.1 || _selectedDestination==2.11 ||_selectedDestination==2.12 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
+       _selectedDestination==2.4){
       preSalesHover=false;
       preSalesExpanded=true;
     }
@@ -181,7 +182,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               }
                             });
                           },
-                          initiallyExpanded: _selectedDestination == 1.1 || _selectedDestination==1.2,
+                          initiallyExpanded: _selectedDestination == 1.1 || _selectedDestination==1.2 || _selectedDestination==1.21,
                           trailing: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
                             child: Icon(
@@ -218,6 +219,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   context,
                                   MotowsRoutes.customerListRoute,
                                   arguments: CustomerArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              hoverColor: mHoverColor,
+                              selectedTileColor: Colors.blue,
+                              selectedColor: Colors.white,
+                              title: Center(
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15.0),
+                                    child: Text(drawerWidth == 60 ? '' : 'Purchase Orders'),
+                                  ),
+                                ),
+                              ),
+                              selected: _selectedDestination == 1.21,
+                              onTap: () {
+                                setState(() {
+                                  _selectedDestination = 1.21;
+                                });
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  MotowsRoutes.estimateRoutes,
+                                  arguments: DisplayEstimateItemsArgs(selectedDestination: 1.21, drawerWidth: widget.drawerWidth),
                                 );
                               },
                             ),
@@ -271,8 +297,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             }
                           });
                         },
-                        initiallyExpanded: _selectedDestination == 2.1 ||_selectedDestination == 2.11 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
-                        _selectedDestination==2.4 || _selectedDestination==2.5,
+                        initiallyExpanded: _selectedDestination == 2.1 ||_selectedDestination == 2.11||_selectedDestination == 2.12 || _selectedDestination==2.2 || _selectedDestination==2.3 ||
+                        _selectedDestination==2.4,
                         trailing: Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: Icon(
@@ -306,6 +332,29 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 context,
                                 MotowsRoutes.docketList,
                                 arguments: DocketListArgs(selectedDestination: 2.11, drawerWidth: widget.drawerWidth),
+                              );
+                            },
+                          ),
+
+
+                          ListTile(
+                            hoverColor: mHoverColor,
+                            selectedTileColor: Colors.blue,
+                            selectedColor: Colors.white,
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Text(drawerWidth == 60 ? '' : 'Invoice', style: const TextStyle()),
+                            ),
+                            selected: _selectedDestination == 2.12,
+                            onTap: () {
+                              setState(() {
+                                _selectedDestination = 2.12;
+
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                MotowsRoutes.invoiceListRoute,
+                                arguments: InvoiceArguments(selectedDestination: 2.12, drawerWidth: widget.drawerWidth),
                               );
                             },
                           ),
@@ -410,31 +459,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               );
                             },
                           ),
-                          ListTile(
-                            hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            title: Center(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Text(drawerWidth == 60 ? '' : 'Purchase Orders'),
-                                ),
-                              ),
-                            ),
-                            selected: _selectedDestination == 2.5,
-                            onTap: () {
-                              setState(() {
-                                _selectedDestination = 2.5;
-                              });
-                              Navigator.pushReplacementNamed(
-                                context,
-                                MotowsRoutes.estimateRoutes,
-                                arguments: DisplayEstimateItemsArgs(selectedDestination: 2.5, drawerWidth: widget.drawerWidth),
-                              );
-                            },
-                          ),
+
                         ],
                       ),
                     ),
