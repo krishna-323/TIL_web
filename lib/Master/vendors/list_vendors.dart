@@ -7,6 +7,7 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import 'add_new_vendor.dart';
 
 class ListVendors extends StatefulWidget {
   final ListVendorsArguments arg;
@@ -104,6 +105,9 @@ class _ListVendorsState extends State<ListVendors> {
                                     // )
                                     // )
                                     // ).then((value) => fetchVendorsData());
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        pageBuilder: (context,animation1,animation2)=>const AddNewVendors(
+                                          selectedDestination: 3.3, drawerWidth: 190,)));
                                   },color: Colors.blue,
                                   child: const Text(
                                       "+ New",
@@ -117,8 +121,8 @@ class _ListVendorsState extends State<ListVendors> {
                                 height: 40,
                                 color: Colors.grey[200],
                                 child:
-                                Row(
-                                  children: const [
+                                const Row(
+                                  children: [
                                     Expanded(child: Center(child: Text("COMPANY NAME"))),
                                     Expanded(child: Center(child: Text("NAME"))),
                                     Expanded(child: Center(child: Text("EMAIL"))),

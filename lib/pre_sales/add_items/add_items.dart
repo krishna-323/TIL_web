@@ -8,6 +8,8 @@ import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
 class AddItems extends StatefulWidget {
 
@@ -183,6 +185,56 @@ class _AddItemsState extends State<AddItems> {
   }
   final addItemsForm=GlobalKey<FormState>();
   bool loading=false;
+  // Custom Unit Type.
+  List <CustomPopupMenuEntry<String>> unitTypes =<CustomPopupMenuEntry<String>>[
+
+    const CustomPopupMenuItem(height: 40,
+      value: 'DOZEN',
+      child: Center(child: SizedBox(width: 350,child: Text('DOZEN',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'BOX',
+      child: Center(child: SizedBox(width: 350,child: Text('BOX',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'GRAMS',
+      child: Center(child: SizedBox(width: 350,child: Text('GRAMS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'KILOGRAMS',
+      child: Center(child: SizedBox(width: 350,child: Text('KILOGRAMS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'METERS',
+      child: Center(child: SizedBox(width: 350,child: Text('METERS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'TABLETS',
+      child: Center(child: SizedBox(width: 350,child: Text('TABLETS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'UNITS',
+      child: Center(child: SizedBox(width: 350,child: Text('UNITS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'PIECES',
+      child: Center(child: SizedBox(width: 350,child: Text('PIECES',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'PAIRS',
+      child: Center(child: SizedBox(width: 350,child: Text('PAIRS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+  ];
+  String unitTypeText = "Select Unit Type";
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -415,7 +467,7 @@ class _AddItemsState extends State<AddItems> {
                                       ),
                                       const SizedBox(height:15),
                                       // unit
-                                      const Row(
+                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
                                           SizedBox(
@@ -474,6 +526,40 @@ class _AddItemsState extends State<AddItems> {
                                           //
                                           //   ),
                                           // ),
+                                          Container(
+                                            height: 30,
+                                            width: 350,
+                                            decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),),
+                                            child: CustomPopupMenuButton<String>( 
+                                            childHeight: 200,
+                                              childWidth: 350,position: CustomPopupMenuPosition.under,
+                                              decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                              hintText: "",
+                                              shape: const RoundedRectangleBorder(
+                                                side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
+                                              ),
+                                              offset: const Offset(1, 12),
+                                              tooltip: '',
+                                              itemBuilder: (context) {
+                                                return unitTypes;
+                                              },
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  unitTypeText = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(height:15),
@@ -2904,6 +2990,20 @@ class _AddItemsState extends State<AddItems> {
       groupValue: _taskTax,
       onChanged: onChanged,
       title: Text(title),
+    );
+  }
+  customPopupCreateAddItem ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
 }
