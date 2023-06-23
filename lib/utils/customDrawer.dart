@@ -42,7 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       preSalesHover=false;
       preSalesExpanded=true;
     }
-    if(_selectedDestination==3.1 || _selectedDestination==3.2){
+    if(_selectedDestination==3.1 || _selectedDestination==3.2 || _selectedDestination==3.2){
       masterHover=false;
       masterExpanded=true;
     }
@@ -509,7 +509,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                              }
                            });
                          },
-                         initiallyExpanded: _selectedDestination == 3.1 || _selectedDestination==3.2,
+                         initiallyExpanded: _selectedDestination == 3.1 || _selectedDestination==3.2 || _selectedDestination==3.3,
                          trailing: Padding(
                            padding: const EdgeInsets.only(right: 10.0),
                            child: Icon(
@@ -574,7 +574,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                );
                              },
                            ),
-
+                           ListTile(
+                             hoverColor: mHoverColor,
+                             selectedTileColor: Colors.blue,
+                             selectedColor: Colors.white,
+                             title: Center(
+                               child: Align(
+                                 alignment: Alignment.topLeft,
+                                 child: Padding(
+                                   padding: const EdgeInsets.only(left: 15.0),
+                                   child: Text(drawerWidth == 60 ? '' : 'Vendors'),
+                                 ),
+                               ),
+                             ),
+                             selected: _selectedDestination == 3.3,
+                             onTap: () {
+                               setState(() {
+                                 _selectedDestination = 3.3;
+                               });
+                               Navigator.pushReplacementNamed(
+                                 context,
+                                 MotowsRoutes.listVendorsRoutes,
+                                 arguments: ListVendorsArguments(selectedDestination: 3.3, drawerWidth: widget.drawerWidth),
+                               );
+                             },
+                           ),
                          ],
                        ),
                      ),

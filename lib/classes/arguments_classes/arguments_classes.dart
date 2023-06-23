@@ -41,6 +41,12 @@ class ListTaxDetailsArgs{
   final double selectedDestination;
   ListTaxDetailsArgs({required this.drawerWidth,required this.selectedDestination});
 }
+//List Vendors.
+class ListVendorsArguments{
+  final double drawerWidth;
+  final double selectedDestination;
+  ListVendorsArguments({required this.drawerWidth,required this.selectedDestination});
+}
 class CompanyManagementArguments{
   final double drawerWidth;
   final double selectedDestination;
