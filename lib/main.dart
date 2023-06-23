@@ -10,6 +10,7 @@ import 'package:new_project/upload_po/upload_po.dart';
 import 'package:new_project/user_mangment/display_user_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'Master/tax/list_tax_details.dart';
 import 'classes/arguments_classes/arguments_classes.dart';
 import 'classes/motows_routes.dart';
 import 'company_management/list_companies.dart';
@@ -117,6 +118,17 @@ class _MyAppState extends State<MyApp> {
                 vehicleMasterArguments = VehicleMasterArguments(drawerWidth: 190, selectedDestination: 3.1);
               }
               newScreen = VehicleMaster(arg:vehicleMasterArguments);
+            }
+            break;
+            case MotowsRoutes.listTaxDetailsRoutes:{
+              ListTaxDetailsArgs listTaxDetailsArgs;
+              if(settings.arguments!=null){
+                listTaxDetailsArgs =settings.arguments as ListTaxDetailsArgs;
+              }
+              else{
+                listTaxDetailsArgs = ListTaxDetailsArgs(drawerWidth: 190, selectedDestination: 3.2);
+              }
+              newScreen = ListTaxDetails(args: listTaxDetailsArgs,);
             }
             break;
             case MotowsRoutes.companyManagement:

@@ -42,7 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       preSalesHover=false;
       preSalesExpanded=true;
     }
-    if(_selectedDestination==3.1){
+    if(_selectedDestination==3.1 || _selectedDestination==3.2){
       masterHover=false;
       masterExpanded=true;
     }
@@ -409,31 +409,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               );
                             },
                           ),
-                          ListTile(
-                            hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            title: Center(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Text(drawerWidth == 60 ? '' : 'Vehicle Invoice'),
-                                ),
-                              ),
-                            ),
-                            selected: _selectedDestination == 2.3,
-                            onTap: () {
-                              setState(() {
-                                _selectedDestination = 2.3;
-                              });
-                              Navigator.pushReplacementNamed(
-                                context,
-                                MotowsRoutes.listVehicleInvoice,
-                                arguments: ListVehicleInvoiceArguments(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
-                              );
-                            },
-                          ),
+                          // ListTile(
+                          //   hoverColor: mHoverColor,
+                          //   selectedTileColor: Colors.blue,
+                          //   selectedColor: Colors.white,
+                          //   title: Center(
+                          //     child: Align(
+                          //       alignment: Alignment.topLeft,
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.only(left: 15.0),
+                          //         child: Text(drawerWidth == 60 ? '' : 'Vehicle Invoice'),
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   selected: _selectedDestination == 2.3,
+                          //   onTap: () {
+                          //     setState(() {
+                          //       _selectedDestination = 2.3;
+                          //     });
+                          //     Navigator.pushReplacementNamed(
+                          //       context,
+                          //       MotowsRoutes.listVehicleInvoice,
+                          //       arguments: ListVehicleInvoiceArguments(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
+                          //     );
+                          //   },
+                          // ),
                           ListTile(
                             hoverColor: mHoverColor,
                             selectedTileColor: Colors.blue,
@@ -509,7 +509,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                              }
                            });
                          },
-                         initiallyExpanded: _selectedDestination == 3.1,
+                         initiallyExpanded: _selectedDestination == 3.1 || _selectedDestination==3.2,
                          trailing: Padding(
                            padding: const EdgeInsets.only(right: 10.0),
                            child: Icon(
@@ -549,6 +549,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                );
                              },
                            ),
+                           ListTile(
+                             hoverColor: mHoverColor,
+                             selectedTileColor: Colors.blue,
+                             selectedColor: Colors.white,
+                             title: Center(
+                               child: Align(
+                                 alignment: Alignment.topLeft,
+                                 child: Padding(
+                                   padding: const EdgeInsets.only(left: 15.0),
+                                   child: Text(drawerWidth == 60 ? '' : 'TAX'),
+                                 ),
+                               ),
+                             ),
+                             selected: _selectedDestination == 3.2,
+                             onTap: () {
+                               setState(() {
+                                 _selectedDestination = 3.2;
+                               });
+                               Navigator.pushReplacementNamed(
+                                 context,
+                                 MotowsRoutes.listTaxDetailsRoutes,
+                                 arguments: ListTaxDetailsArgs(selectedDestination: 3.2, drawerWidth: widget.drawerWidth),
+                               );
+                             },
+                           ),
+
                          ],
                        ),
                      ),

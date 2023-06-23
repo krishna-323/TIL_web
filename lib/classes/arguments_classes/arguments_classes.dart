@@ -35,7 +35,12 @@ class VehicleMasterArguments{
   final double selectedDestination;
   VehicleMasterArguments({required this.drawerWidth,required this.selectedDestination});
 }
-
+// Tax List
+class ListTaxDetailsArgs{
+  final double drawerWidth;
+  final double selectedDestination;
+  ListTaxDetailsArgs({required this.drawerWidth,required this.selectedDestination});
+}
 class CompanyManagementArguments{
   final double drawerWidth;
   final double selectedDestination;
