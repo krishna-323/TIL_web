@@ -119,7 +119,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Container(
                     color: homeHovered?mHoverColor:Colors.transparent,
                     child: ListTileTheme(
-                      contentPadding: EdgeInsets.only(left: 0),
+                      contentPadding: const EdgeInsets.only(left: 0),
                       child: ListTile(
                         onTap: () {
                           Navigator.pushReplacementNamed(context, "/home");
@@ -413,31 +413,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               );
                             },
                           ),
-                          ListTile(
-                            hoverColor: mHoverColor,
-                            selectedTileColor: Colors.blue,
-                            selectedColor: Colors.white,
-                            title: Center(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Text(drawerWidth == 60 ? '' : 'GRN'),
-                                ),
-                              ),
-                            ),
-                            selected: _selectedDestination == 2.2,
-                            onTap: () {
-                              setState(() {
-                                _selectedDestination = 2.2;
-                              });
-                              Navigator.pushReplacementNamed(
-                                context,
-                                MotowsRoutes.listGrnItems,
-                                arguments: ListGrnArguments(selectedDestination: 2.2, drawerWidth: widget.drawerWidth),
-                              );
-                            },
-                          ),
+
                           ListTile(
                             hoverColor: mHoverColor,
                             selectedTileColor: Colors.blue,
@@ -460,6 +436,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 context,
                                 MotowsRoutes.warrantyRoutes,
                                 arguments: WarrantyArgs(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
+                              );
+                            },
+                          ),
+
+                          ListTile(
+                            hoverColor: mHoverColor,
+                            selectedTileColor: Colors.blue,
+                            selectedColor: Colors.white,
+                            title: Center(
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(drawerWidth == 60 ? '' : 'GRN'),
+                                ),
+                              ),
+                            ),
+                            selected: _selectedDestination == 2.2,
+                            onTap: () {
+                              setState(() {
+                                _selectedDestination = 2.2;
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                MotowsRoutes.listGrnItems,
+                                arguments: ListGrnArguments(selectedDestination: 2.2, drawerWidth: widget.drawerWidth),
                               );
                             },
                           ),

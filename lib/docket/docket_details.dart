@@ -2181,6 +2181,7 @@ class _DocketDetailsState extends State<DocketDetails>with SingleTickerProviderS
                               onPressed: (){
                                 Map  requestBody={
                                   "dock_customer_id":widget.docketData["docket_id"],
+                                  "docket_id":widget.docketData["docket_id"],
                                   "general_id":widget.docketData["general_id"],
                                   // "dock_pay_det_id": editDocketDetails["docket_id"],
                                   "oem_consumer_offer": oemConsOffer.text,

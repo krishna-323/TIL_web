@@ -7,6 +7,7 @@ import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
+import '../purchase_orders/add_new_po.dart';
 
 
 
@@ -117,13 +118,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                       Padding(
                                         padding: const EdgeInsets.only(right: 50.0),
                                         child: MaterialButton(onPressed: (){
-                                          // Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                          //     Estimate(selectedDestination: widget.args.selectedDestination,
-                                          //       drawerWidth: widget.args.drawerWidth,)
-                                          // )).then((value) => fetchEstimate());
+                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                              Estimate(selectedDestination: widget.args.selectedDestination,
+                                                drawerWidth: widget.args.drawerWidth,)
+                                          )).then((value) => fetchEstimate());
                                         },
                                           color: Colors.blue,
-                                          child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
+                                          child: const Text('+ Create Part Order',style: TextStyle(color: Colors.white),),
                                         ),
                                       )
                                     ],
