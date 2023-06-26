@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../classes/arguments_classes/arguments_classes.dart';
@@ -24,7 +26,9 @@ class ListTaxDetails extends StatefulWidget {
 class _ListTaxDetailsState extends State<ListTaxDetails> {
 
   List taxList=[];
-  Map createTax={};
+  List displayTax= [];
+  int startVal=0;
+  Map createTax ={};
   bool loading = false;
 
 
@@ -38,6 +42,16 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
           if(value!=null){
             response = value;
             taxList = value;
+            if(displayTax.isEmpty){
+              for(int i=startVal;i<startVal + 15;i++){
+                displayTax.add(taxList[i]);
+              }
+            }
+            else{
+              for(int i=startVal;i<taxList.length;i++){
+                displayTax.add(taxList[i]);
+              }
+            }
             // print('-------------');
             // print(taxList);
           }
@@ -46,7 +60,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
       });
     }
     catch (e) {
-      logOutApi(context: context,exception: e.toString(),response: response);
+      //logOutApi(context: context,exception: e.toString(),response: response);
       setState(() {
         loading = false;
       });
@@ -91,105 +105,221 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
           Expanded(child:
           CustomLoader(
             inAsyncCall: loading,
-            child: ListView(children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 50,right: 50,top: 20),
-                child: Column(
-                  children: [
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40,right: 40,top: 10,bottom: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color(0xFFE0E0E0),)
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:  [
-                        const Text(
-                          "All Taxes List",
-                          style: TextStyle(
-                              color: Colors.indigo,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                          ),
+                    ),
+                    child: Column(
+                      children: [
+                        Container( decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
                         ),
-                        //New Tax Details create.
-                        MaterialButton(
-                          onPressed: () {
-                            createTaxDialog(context);
-
-                          },
-                          color: Colors.blue,
-                          child: const Text(
-                              "+ New",
-                              style: TextStyle(color: Colors.white)),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
-                    Container(
-                        height: 40,
-                        color: Colors.grey[200],
-                        child:
-                        Row(
-                          children: const [
-                            Expanded(child: Center(child: Text("NAME"))),
-                            Expanded(child: Center(child: Text("TAX CODE"))),
-                            Expanded(child: Center(child: Text("TOTAL TAX PERCENTAGE"))),
-                          ],
-                        )
-                    ),
-                    const SizedBox(height: 10,),
-                    //updateTaxDetails(context),
-                    for(int i=0;i<taxList.length;i++)
-                      Column(
-                        children: [
-
-                          InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: (){
-                              // print('-----------------check------------------');
-                              // print(taxList[i]);
-                              editTaxDetails(context,taxList[i]);
-                            },
-
+                        child: Column(children: [
+                          const SizedBox(height: 18,),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: Row(
-                              children: [
-                                Expanded(
-                                    child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: SizedBox(
-                                              height: 28,
-                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                              child: Text(taxList[i]['tax_name']??'')
-                                          ),
-                                        ))
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children:  [
+                                const Text(
+                                  "All Taxes List",
+                                  style: TextStyle(
+                                      color: Colors.indigo,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold
+                                  ),
                                 ),
-                                Expanded(
-                                    child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: SizedBox(height: 28,
-                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                              child: Text(taxList[i]['tax_code']??'')
-                                          ),
-                                        ))),
-                                Expanded(
-                                    child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: SizedBox(height: 28,
-                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                              child: Text(taxList[i]['tax_total']??'')
-                                          ),
-                                        ))),
+                                //New Tax Details create.
+                                MaterialButton(
+                                  onPressed: () {
+                                    createTaxDialog(context);
+
+                                  },
+                                  color: Colors.blue,
+                                  child: const Text(
+                                      "+ New",
+                                      style: TextStyle(color: Colors.white)),
+                                )
                               ],
                             ),
                           ),
+                          const SizedBox(height: 18,),
+                          Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                          Container(
+                             color: Colors.grey[100],height: 32,
+                            child: IgnorePointer(
+                            ignoring: true,
+                            child: MaterialButton(
+                              hoverElevation: 0,
+                              onPressed: () {  },
+                              hoverColor: Colors.transparent,
+                              child: const Padding(
+                                padding: EdgeInsets.only(left:18.0),
+                                child: Row(children: [
+                                  Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Text("NAME")
+                                        ),
+                                      )),
+                                  Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Text("TAX CODE")
+                                        ),
+                                      )),
+                                  Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Text("TOTAL TAX PERCENTAGE")
+                                        ),
+                                      )),
+                                ]),
+                              ),
+                            ),
+                          ),),
+                          Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                        ]),
+                        ),
 
-                        ],
-                      ),
-                  ],
+                        const SizedBox(height: 4,),
+
+                        //updateTaxDetails(context),
+                        for(int i=0;i<=displayTax.length;i++)
+                          Column(
+                            children: [
+                              if(i!=displayTax.length)
+                              MaterialButton(
+                                hoverColor: mHoverColor,
+                                onPressed: () {
+                                  editTaxDetails(context,taxList[i]);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:18,top: 4,bottom: 3),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child:Text(displayTax[i]['tax_name']??"")
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayTax[i]['tax_code']??"")
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayTax[i]['tax_total'].toString())
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if(i!=displayTax.length)
+                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
+
+                              if(i==displayTax.length)
+                                Row(mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+
+                                    Text("${startVal+15>taxList.length?taxList.length:startVal+1}-${startVal+15>taxList.length?taxList.length:startVal+15} of ${taxList.length}",style: const TextStyle(color: Colors.grey)),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(startVal>14){
+                                            displayTax=[];
+                                            startVal = startVal-15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              try{
+                                                setState(() {
+                                                  displayTax.add(taxList[i]);
+                                                });
+                                              }
+                                              catch(e){
+                                                log(e.toString());
+                                              }
+                                            }
+                                          }
+                                          else{
+                                            log('else');
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_forward_ios,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(taxList.length>startVal+15){
+                                            displayTax=[];
+                                            startVal=startVal+15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              try{
+                                                setState(() {
+                                                  displayTax.add(taxList[i]);
+                                                });
+                                              }
+                                              catch(e){
+                                                log(e.toString());
+                                              }
+
+                                            }
+                                          }
+
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20,),
+
+                                  ],
+                                )
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              )
-            ],
-
+              ),
             ),
           ),
           ),
@@ -198,7 +328,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
     );
   }
 
-  updateDetails(Map <dynamic,dynamic> taxDetails)async {
+  updateDetails(Map  taxDetails)async {
     try{
       final response=await http.put(Uri.parse('https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/update_tax'),
           headers: {"Content-Type": "application/json",
@@ -224,7 +354,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
     }
   }
 //Save Tax Post API().
-  saveTaxDetails(Map <dynamic,dynamic> taxMap )async {
+  saveTaxDetails(Map  taxMap )async {
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/add_tax";
     postData(requestBody: taxMap,url: url,context: context).then((value) {
       setState(() {
@@ -1634,9 +1764,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                                           color: Colors.red,
                                                           size: 50,
                                                         ),
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
+
                                                         const Center(
                                                             child: Text(
                                                               'Are You Sure, You Want To Delete ?',

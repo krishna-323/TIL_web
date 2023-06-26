@@ -38,9 +38,12 @@ class _VehicleMasterState extends State<VehicleMaster> {
             response = value;
             vehicleList = value;
             if(displayVehicleList.isEmpty){
+              if(vehicleList.length>5){
                 for(int i=startVal;i<startVal + 15;i++){
                   displayVehicleList.add(vehicleList[i]);
                 }
+              }
+
             }
             else{
               for(int i=startVal;i<vehicleList.length;i++){
@@ -55,7 +58,7 @@ class _VehicleMasterState extends State<VehicleMaster> {
       });
     }
     catch (e) {
-      logOutApi(context: context, exception: e.toString(),response: response);
+      //logOutApi(context: context, exception: e.toString(),response: response);
       setState(() {
         loading = false;
       });

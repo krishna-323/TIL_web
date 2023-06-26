@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
@@ -7,6 +9,7 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
 import 'add_items.dart';
 
 class ListItems extends StatefulWidget {
@@ -19,6 +22,8 @@ class ListItems extends StatefulWidget {
 
 class _ListItemsState extends State<ListItems> {
   List itemList = [];
+  List displayItems =[];
+  int startVal =0;
   String? authToken;
   bool loading = false;
 
@@ -33,6 +38,18 @@ class _ListItemsState extends State<ListItems> {
           if(value!=null){
             response = value;
             itemList = value;
+            if(displayItems.isEmpty){
+
+                for(int i=startVal;i<startVal + 15;i++){
+                  displayItems.add(itemList[i]);
+                }
+
+            }
+            else{
+              for(int i=startVal;i<itemList.length;i++){
+                displayItems.add(itemList[i]);
+              }
+            }
             // print('------- new get --------');
             // print(itemList);
           }
@@ -72,143 +89,196 @@ class _ListItemsState extends State<ListItems> {
             child: CustomLoader(
               inAsyncCall: loading,
               child: Container(
+                color: Colors.grey[50],
                 height: MediaQuery.of(context).size.height,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 50.0,right: 50,top: 20),
-                    child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "All Items ",
-                            style: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.only(left: 40.0,right: 40,top: 10,bottom: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xFFE0E0E0),)
+
+                      ),
+                      child: Column(children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
                           ),
-                          MaterialButton(
-                            onPressed: () {
+                          child: Column(children: [
+                            const SizedBox(height: 18,),
+                            Padding(
+                              padding: const EdgeInsets.only(left:18.0,right: 18),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "All Items ",
+                                    style: TextStyle(
+                                        color: Colors.indigo,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () {
 
-                              Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                  const AddItems(drawerWidth: 190,
-                                    selectedDestination: 2.4,),
-                              transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero
-                              )).then((value) => fetchItemData());
-                            },
-                            color: Colors.blue,
-                            child: const Text("+ New",
-                                style: TextStyle(color: Colors.white)),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                          height: 40,
-                          color: Colors.grey[200],
-                          child: const Row(
-                            children: [
-                              Expanded(child: Center(child: Text("NAME"))),
-                              Expanded(
-                                  child: Center(child: Text("DESCRIPTION"))),
-                              Expanded(child: Center(child: Text("RATE"))),
-                              Expanded(child: Center(child: Text("HSN/SAC"))),
-                              Expanded(
-                                  child: Center(child: Text("USAGE UNIT"))),
-                              Center(child: Icon(CupertinoIcons.chevron_right_circle_fill,
-                                color: Colors.transparent,
-                              ),)
-                            ],
-                          )),
-                      // Align(alignment: Alignment.centerLeft,child: Text("OCT 11, Monday",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue[900],fontSize: 14),)),
-                      // SizedBox(height: 10,),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      //dynamic data code.
-                      for(int i=0;i<itemList.length;i++)
-                        Column(
-                          children: [
-                            Card(
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(10),
-                                  splashColor: const Color(0xFFA2BFEC),
-                                  onTap: (){
-
-                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                        ViewItems(title: 1,itemList: itemList[i],drawerWidth: 190,selectedDestination: 2.4),
-                                        transitionDuration: Duration.zero,
-                                        reverseTransitionDuration: Duration.zero
-                                    ));
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Center(child: Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(height: 28,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Text(itemList[i]['name'])
-                                        ),
-                                      ))),
-                                      Expanded(child: Center(child: Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(height: 28,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Text(itemList[i]['description']??"")
-                                        ),
-                                      ))),
-                                      Expanded(child: Center(child: Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(height: 28,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Center(child: Column(
-                                              children: [
-                                                Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    const Text("Rs. "),
-                                                    Text(itemList[i]['selling_price'].toString()),
-                                                  ],
-                                                ),
-                                              ],
-                                            ))
-                                        ),
-                                      ))),
-
-                                      Expanded(child: Center(child: Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(height: 28,
-                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                      Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                      const AddItems(drawerWidth: 190,
+                                        selectedDestination: 2.4,),
+                                          transitionDuration: Duration.zero,
+                                          reverseTransitionDuration: Duration.zero
+                                      )).then((value) => fetchItemData());
+                                    },
+                                    color: Colors.blue,
+                                    child: const Text("+ New",
+                                        style: TextStyle(color: Colors.white)),
+                                  )
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 18,),
+                            Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                            Container(color: Colors.grey[100],height: 32,
+                              child:  IgnorePointer(
+                                ignoring: true,
+                                child: MaterialButton(
+                                  onPressed: (){},
+                                  hoverColor: Colors.transparent,
+                                  hoverElevation: 0,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(left: 18.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
                                             child: Padding(
-                                              padding: const EdgeInsets.only(left:80),
-                                              child: Row(
-                                                children: [
-                                                  Text(itemList[i]['tax_code']),
-                                                  Text(itemList[i]['sac'].toString())
-                                                ],
+                                              padding: EdgeInsets.only(top: 4.0),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text("NAME")
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 4),
+                                              child: SizedBox(
+                                                  height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text('DESCRIPTION')
                                               ),
                                             )
                                         ),
-                                      ))),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 4),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text("RATE")
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 4),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text("HSN/SAC")
+                                              ),
+                                            )),
+                                        Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 4),
+                                              child: SizedBox(height: 25,
+                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                  child: Text("USAGE UNIT")
+                                              ),
+                                            )),
+                                        Center(child: Padding(
+                                          padding: EdgeInsets.only(right: 8),
+                                          child: Icon(size: 18,
+                                            Icons.more_vert,
+                                            color: Colors.transparent,
+                                          ),
+                                        ),)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                          ]),
+                        ),
 
+                        //dynamic data code.
+                        for(int i=startVal;i<=displayItems.length;i++)
+                          Column(
+                            children: [
+                              if(i!=displayItems.length)
+                              MaterialButton(hoverColor: mHoverColor,
 
-                                      Expanded(child: Center(child: Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: SizedBox(height: 28,
+                                onPressed: () {
+                                  Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                      ViewItems(title: 1,itemList: itemList[i],drawerWidth: 190,selectedDestination: 2.4),
+                                      transitionDuration: Duration.zero,
+                                      reverseTransitionDuration: Duration.zero
+                                  ));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:18.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayItems[i]['name'])
+                                            ),
+                                          )),
+                                      Expanded(child: Padding(
+                                        padding: const EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
                                             //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            child: Center(child: Column(
+                                            child: Text(displayItems[i]['description']??"")
+                                        ),
+                                      )),
+                                      Expanded(child: Padding(
+                                        padding: const EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Column(
                                               children: [
-                                                Center(
-                                                  child: Text(itemList[i]['unit'].toString()),
+                                                Row(
+                                                  //crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    const Text("Rs. "),
+                                                    Text(displayItems[i]['selling_price'].toStringAsFixed(2)),
+                                                  ],
                                                 ),
                                               ],
-                                            ))
+                                            )
                                         ),
-                                      ))),
+                                      )),
+                                      Expanded(child: Padding(
+                                        padding: const EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Row(
+                                              children: [
+                                                Text(displayItems[i]['tax_code']),
+                                                Text(displayItems[i]['sac'].toString())
+                                              ],
+                                            )
+                                        ),
+                                      )),
+                                      Expanded(child: Padding(
+                                        padding: const EdgeInsets.only(top: 4.0),
+                                        child: SizedBox(height: 25,
+                                            //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                            child: Text(displayItems[i]['unit'].toString())
+                                        ),
+                                      )),
                                       const Center(child: Padding(
                                         padding: EdgeInsets.only(right: 8.0),
                                         child: Icon(CupertinoIcons.chevron_right_circle_fill,
@@ -220,10 +290,79 @@ class _ListItemsState extends State<ListItems> {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                    ]),
+                              if(i!=displayItems.length)
+                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
+                              if(i==displayItems.length)
+                                Row(mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+
+                                    Text("${startVal+15>itemList.length?itemList.length:startVal+1}-${startVal+15>itemList.length?itemList.length:startVal+15} of ${itemList.length}",style: const TextStyle(color: Colors.grey)),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(startVal>14){
+                                            displayItems=[];
+                                            startVal = startVal-15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              try{
+                                                setState(() {
+                                                  displayItems.add(itemList[i]);
+                                                });
+                                              }
+                                              catch(e){
+                                                log(e.toString());
+                                              }
+                                            }
+                                          }
+                                          else{
+                                            log('else');
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_forward_ios,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(itemList.length>startVal+15){
+                                            displayItems=[];
+                                            startVal=startVal+15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              try{
+                                                setState(() {
+                                                  displayItems.add(itemList[i]);
+                                                });
+                                              }
+                                              catch(e){
+                                                log(e.toString());
+                                              }
+
+                                            }
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20,),
+
+                                  ],
+                                )
+                            ],
+                          ),
+                      ]),
+                    ),
                   ),
                 ),
               ),
