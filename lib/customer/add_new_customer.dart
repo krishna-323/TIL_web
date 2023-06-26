@@ -1184,6 +1184,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                                   },
                                   controller: makeController,
                                   getSelectedValue: (SearchMake value){
+                                    makeController.text = value.value;
                                     getModelList(value.value);
                                   },
 

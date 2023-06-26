@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:new_project/pre_sales/parts_order/parts_order_list.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
 import '../classes/motows_routes.dart';
 import '../docket/docket_list.dart';
 import '../pre_sales/invoice/invoice.dart';
+import '../pre_sales/warranty/warranty.dart';
 
 
 
@@ -37,7 +39,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       serviceExpanded=true;
     }
     // Pre sales.
-    if(_selectedDestination==2.1   || _selectedDestination==2.2 || _selectedDestination==2.3 ){
+    if(_selectedDestination==2.1   || _selectedDestination==2.2 || _selectedDestination==2.3  || _selectedDestination==2.01){
       preSalesHover=false;
       preSalesExpanded=true;
     }
@@ -219,27 +221,27 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               },
                             ),
 
-                            ListTile(
-                              hoverColor: mHoverColor,
-                              selectedTileColor: Colors.blue,
-                              selectedColor: Colors.white,
-                              title: Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(drawerWidth == 60 ? '' : 'Invoice', style: const TextStyle()),
-                              ),
-                              selected: _selectedDestination == 2.12,
-                              onTap: () {
-                                setState(() {
-                                  _selectedDestination = 2.12;
-
-                                });
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  MotowsRoutes.invoiceListRoute,
-                                  arguments: InvoiceArguments(selectedDestination: 2.12, drawerWidth: widget.drawerWidth),
-                                );
-                              },
-                            ),
+                            // ListTile(
+                            //   hoverColor: mHoverColor,
+                            //   selectedTileColor: Colors.blue,
+                            //   selectedColor: Colors.white,
+                            //   title: Padding(
+                            //     padding: const EdgeInsets.only(left: 15.0),
+                            //     child: Text(drawerWidth == 60 ? '' : 'Invoice', style: const TextStyle()),
+                            //   ),
+                            //   selected: _selectedDestination == 2.12,
+                            //   onTap: () {
+                            //     setState(() {
+                            //       _selectedDestination = 2.12;
+                            //
+                            //     });
+                            //     Navigator.pushReplacementNamed(
+                            //       context,
+                            //       MotowsRoutes.invoiceListRoute,
+                            //       arguments: InvoiceArguments(selectedDestination: 2.12, drawerWidth: widget.drawerWidth),
+                            //     );
+                            //   },
+                            // ),
                             ListTile(
                               hoverColor: mHoverColor,
                               selectedTileColor: Colors.blue,
@@ -249,7 +251,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   alignment: Alignment.topLeft,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 15.0),
-                                    child: Text(drawerWidth == 60 ? '' : 'New Customer'),
+                                    child: Text(drawerWidth == 60 ? '' : 'Customer'),
                                   ),
                                 ),
                               ),
@@ -274,7 +276,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   alignment: Alignment.topLeft,
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 15.0),
-                                    child: Text(drawerWidth == 60 ? '' : 'Purchase Orders'),
+                                    child: Text(drawerWidth == 60 ? '' : 'Invoice'),
                                   ),
                                 ),
                               ),
@@ -340,7 +342,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             }
                           });
                         },
-                        initiallyExpanded: _selectedDestination == 2.1  || _selectedDestination==2.2 || _selectedDestination==2.3 ,
+                        initiallyExpanded: _selectedDestination == 2.1  || _selectedDestination==2.01 || _selectedDestination==2.2 || _selectedDestination==2.3 ,
                         trailing: Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: Icon(
@@ -395,6 +397,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 alignment: Alignment.topLeft,
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(drawerWidth == 60 ? '' : 'Parts Orders'),
+                                ),
+                              ),
+                            ),
+                            selected: _selectedDestination == 2.01,
+                            onTap: () {
+                              setState(() {
+                                _selectedDestination = 2.01;
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                MotowsRoutes.partsOrderListRoutes,
+                                arguments: PartsOrderListArguments(selectedDestination: 2.01, drawerWidth: widget.drawerWidth),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            hoverColor: mHoverColor,
+                            selectedTileColor: Colors.blue,
+                            selectedColor: Colors.white,
+                            title: Center(
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
                                   child: Text(drawerWidth == 60 ? '' : 'GRN'),
                                 ),
                               ),
@@ -408,6 +435,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 context,
                                 MotowsRoutes.listGrnItems,
                                 arguments: ListGrnArguments(selectedDestination: 2.2, drawerWidth: widget.drawerWidth),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            hoverColor: mHoverColor,
+                            selectedTileColor: Colors.blue,
+                            selectedColor: Colors.white,
+                            title: Center(
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(drawerWidth == 60 ? '' : 'Warranty'),
+                                ),
+                              ),
+                            ),
+                            selected: _selectedDestination == 2.3,
+                            onTap: () {
+                              setState(() {
+                                _selectedDestination = 2.3;
+                              });
+                              Navigator.pushReplacementNamed(
+                                context,
+                                MotowsRoutes.warrantyRoutes,
+                                arguments: WarrantyArgs(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
                               );
                             },
                           ),

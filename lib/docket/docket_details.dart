@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'dart:developer';
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -109,11 +110,12 @@ class _DocketDetailsState extends State<DocketDetails>with SingleTickerProviderS
     categoryCode=displayDocketDetails['vehicle_category_code']??"";
     vehicleTypeCode=displayDocketDetails['vehicle_type_code']??"";
     color=displayDocketDetails['color']??"";
-    exShowRoomPrice=displayDocketDetails['ex_showroom_price']??"";
+    exShowRoomPrice=displayDocketDetails['ex_showroom_price'].toString()??"";
     transmission=displayDocketDetails['transmission']??'';
     modelCode=displayDocketDetails['model_code']??"";
     make=displayDocketDetails['make']??"";
     variantName=displayDocketDetails['varient_name']??"";
+    name.text=displayDocketDetails['customer_name']??"";
     // var code = rng.nextInt(900000) + 100000;
     // bookingInvNo.text= "VM${code.toString()}";
   }
@@ -2178,7 +2180,7 @@ class _DocketDetailsState extends State<DocketDetails>with SingleTickerProviderS
                             child: TextButton(
                               onPressed: (){
                                 Map  requestBody={
-                                  "dock_customer_id":widget.docketData["dock_customer_id"],
+                                  "dock_customer_id":widget.docketData["docket_id"],
                                   "general_id":widget.docketData["general_id"],
                                   // "dock_pay_det_id": editDocketDetails["docket_id"],
                                   "oem_consumer_offer": oemConsOffer.text,
@@ -3628,9 +3630,13 @@ class _DocketDetailsState extends State<DocketDetails>with SingleTickerProviderS
   }
 
   Future addPaymentDetails(data) async{
-    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/dock_pay_details/add_dock_pay_details";
+    print("+++++++++++++++++++++++++++Payments Request Data ++++++++++++++++++++++++");
+    print(data);
+    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/salesdocketpaymentdetails/add_salesdock_pay_details";
     postData(context: context, url: url,requestBody: data).then((value) {
       setState(() {
+        print("---------------- Response ------------------");
+        print(value);
         // print(value);
         if(value != null){
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Data Saved")));

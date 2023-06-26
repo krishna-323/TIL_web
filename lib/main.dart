@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:new_project/pre_sales/add_items/list_items.dart';
 import 'package:new_project/pre_sales/grn/list_grn.dart';
 import 'package:new_project/pre_sales/master/vehicle_master.dart';
+import 'package:new_project/pre_sales/parts_order/parts_order_list.dart';
 import 'package:new_project/pre_sales/purchase_orders/purchase_orders_list.dart';
 import 'package:new_project/pre_sales/vehicle_invoice/list_vehicle_invoice.dart';
 import 'package:new_project/pre_sales/vehicle_orders/list_vechile_orders.dart';
+import 'package:new_project/pre_sales/warranty/warranty.dart';
 import 'package:new_project/upload_po/upload_po.dart';
 import 'package:new_project/user_mangment/display_user_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -208,6 +210,32 @@ class _MyAppState extends State<MyApp> {
                       drawerWidth: 190, selectedDestination: 2.11);
                 }
                 newScreen = InvoiceList(args: invoiceArguments );
+              }
+              break;
+            case MotowsRoutes.warrantyRoutes :
+              {
+                WarrantyArgs warrantyArguments;
+                if(settings.arguments!=null){
+                  warrantyArguments = settings.arguments as WarrantyArgs ;
+                }
+                else {
+                  warrantyArguments = WarrantyArgs(
+                      drawerWidth: 190, selectedDestination: 2.3);
+                }
+                newScreen = Warranty(args: warrantyArguments );
+              }
+              break;
+            case MotowsRoutes.partsOrderListRoutes :
+              {
+                PartsOrderListArguments poListArgs;
+                if(settings.arguments!=null){
+                  poListArgs = settings.arguments as PartsOrderListArguments ;
+                }
+                else {
+                  poListArgs = PartsOrderListArguments(
+                      drawerWidth: 190, selectedDestination: 2.01);
+                }
+                newScreen = PartsOrderList(args: poListArgs );
               }
               break;
             default: newScreen = const InitialScreen();
