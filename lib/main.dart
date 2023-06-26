@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return  MaterialApp(
         title: 'Vendor Management',
-        initialRoute: "home",
+        initialRoute: "/",
         onGenerateRoute: (RouteSettings settings){
           Widget newScreen;
           switch (settings.name){
@@ -216,7 +216,7 @@ class _MyAppState extends State<MyApp> {
               reverseTransitionDuration: Duration.zero,transitionDuration: Duration.zero,settings: settings);
         },
         routes: {
-          'home':(context)=> const InitialScreen(),
+          '/':(context)=> const InitialScreen(),
         },
         theme: ThemeData(useMaterial3: true,
 
@@ -224,9 +224,7 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'TitilliumWeb'
         ),
         debugShowCheckedModeBanner: false,
-        home:
-        //MainPage()
-        const InitialScreen()
+
     );
   }
 }
