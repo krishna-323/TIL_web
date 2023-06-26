@@ -482,7 +482,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     List list = [];
     // create a list of 3 objects from a fake json response
     for(int i=0;i<vendorList.length;i++){
-      list.add( VendorModel.fromJson({
+      list.add( VendorModelAddress.fromJson({
         "label":vendorList[i]['company_name'],
         "value":vendorList[i]['company_name'],
         "city":vendorList[i]['payto_city'],
@@ -545,7 +545,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               decoration:textFieldDecoration(hintText: 'Search Vendor') ,
                               controller: vendorSearchController,
                               future: fetchData,
-                              getSelectedValue: (VendorModel value) {
+                              getSelectedValue: (VendorModelAddress value) {
                                 setState(() {
                                   showVendorDetails=true;
                                   vendorData ={
@@ -647,7 +647,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               decoration:textFieldDecoration(hintText: 'Search warehouse'),
                               controller: wareHouseController,
                               future: fetchData,
-                              getSelectedValue: (VendorModel value) {
+                              getSelectedValue: (VendorModelAddress value) {
                                 setState(() {
                                   showWareHouseDetails=true;
                                   wareHouse ={
@@ -1739,14 +1739,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   }
 
 }
-class VendorModel {
+class VendorModelAddress {
   String label;
   String city;
   String state;
   String zipcode;
   String street;
   dynamic value;
-  VendorModel({
+  VendorModelAddress({
     required this.label,
     required this.city,
     required this.state,
@@ -1755,8 +1755,8 @@ class VendorModel {
     this.value
   });
 
-  factory VendorModel.fromJson(Map<String, dynamic> json) {
-    return VendorModel(
+  factory VendorModelAddress.fromJson(Map<String, dynamic> json) {
+    return VendorModelAddress(
       label: json['label'],
       value: json['value'],
       city: json['city'],

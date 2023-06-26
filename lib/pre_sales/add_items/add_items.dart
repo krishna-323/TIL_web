@@ -114,26 +114,8 @@ class _AddItemsState extends State<AddItems> {
   var taxques2dropdownValue = "";
   var acc2dropdownValue = "";
   var exRedropdownValue = "";
-  var unit = [
-    "DOZEN",
-    "BOX",
-    "GRAMS",
-    "KILOGRAMS",
-    "METERS",
-    "TABLETS",
-    "UNITS",
-    "PIECES",
-    "PAIRS"
-  ];
-  var acc1 = [
-    'Discount',
-    'General Income',
-    'Interest Income',
-    'Late Fee Income',
-    'Sales',
-    'Other Charges',
-    'Shipping Charge'
-  ];
+
+
   var taxques = [
     '8',
     '12',
@@ -146,15 +128,7 @@ class _AddItemsState extends State<AddItems> {
     '18',
     '28',
   ];
-  var acc2 = [
-    'Discount',
-    'General Income',
-    'Interest Income',
-    'Late Fee Income',
-    'Sales',
-    'Other Charges',
-    'Shipping Charge'
-  ];
+
   var exmRe = [
     'ExRe 1',
     'ExRe 2',
@@ -235,6 +209,37 @@ class _AddItemsState extends State<AddItems> {
     ),
   ];
   String unitTypeText = "Select Unit Type";
+  // Exception Reason.
+  List <CustomPopupMenuEntry<String>> exceptionTypes =<CustomPopupMenuEntry<String>>[
+
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 1',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 1',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 2',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 2',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 3',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 3',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 4',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 4',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 5',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 5',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+
+  ];
+  String exceptionTypeText = "Select Exception Type";
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -257,7 +262,8 @@ class _AddItemsState extends State<AddItems> {
             child: Scaffold(
 
               body: CustomLoader(
-                inAsyncCall: loading,                  child: SingleChildScrollView(
+                inAsyncCall: loading,
+                child: SingleChildScrollView(
                 child:
                 Form(
                   key:addItemsForm,
@@ -483,49 +489,6 @@ class _AddItemsState extends State<AddItems> {
                                               ],
                                             ),
                                           ),
-                                          // Container(
-                                          //   width: 350,
-                                          //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                          //   child: AnimatedContainer(
-                                          //     duration:const Duration(seconds: 0),
-                                          //     height: unitbool ? 55 : 30,
-                                          //     child: DropdownSearch<String>(
-                                          //       validator: (value) {
-                                          //         if (value == null || value.isEmpty) {
-                                          //           setState(() {
-                                          //             unitbool = true;
-                                          //           });
-                                          //           // print(unitbool);
-                                          //           return "Required";
-                                          //         } else {
-                                          //           setState(() {
-                                          //             unitbool = false;
-                                          //           });
-                                          //         }
-                                          //         return null;
-                                          //       },
-                                          //       popupProps: PopupProps.menu(
-                                          //         constraints:const BoxConstraints(maxHeight: 200),
-                                          //         showSearchBox: true,
-                                          //         searchFieldProps: TextFieldProps(
-                                          //
-                                          //           decoration: dropdownDecorationSearch(unitdropdownValue.isNotEmpty),
-                                          //           cursorColor: Colors.grey,
-                                          //           style:const TextStyle(
-                                          //             fontSize: 14,
-                                          //           ),
-                                          //         ),
-                                          //
-                                          //       ),
-                                          //
-                                          //       items: unit,
-                                          //       selectedItem: unitdropdownValue,
-                                          //
-                                          //       onChanged: unitSelectionChanged,
-                                          //     ),
-                                          //
-                                          //   ),
-                                          // ),
                                           Container(
                                             height: 30,
                                             width: 350,
@@ -657,9 +620,9 @@ class _AddItemsState extends State<AddItems> {
                                           ),
                                           const SizedBox(height:15),
                                           if(_taskTax==1)
-                                            const Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                SizedBox(
+                                                const SizedBox(
                                                   width:180,
                                                   child: Row(
                                                     children: [
@@ -674,49 +637,40 @@ class _AddItemsState extends State<AddItems> {
                                                   ),
                                                 ),
 
-                                                // Column(
-                                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                                //   children: [
-                                                //     Container(
-                                                //       width: 350,
-                                                //       color:const Color.fromRGBO(255, 255, 255, 1),
-                                                //       child: AnimatedContainer(
-                                                //         duration:const Duration(seconds: 0),
-                                                //         height: exemptionbool ? 55 : 30,
-                                                //         child: DropdownSearch<String>(
-                                                //           validator: (value) {
-                                                //             if (value == null || value.isEmpty) {
-                                                //               setState(() {
-                                                //                 exemptionbool = true;
-                                                //               });
-                                                //               // print(exemptionbool);
-                                                //               return "Required";
-                                                //             } else {
-                                                //               setState(() {
-                                                //                 exemptionbool = false;
-                                                //               });
-                                                //             }
-                                                //             return null;
-                                                //           },
-                                                //           popupProps: PopupProps.menu(
-                                                //             constraints:const BoxConstraints(maxHeight: 200),
-                                                //             showSearchBox: true,
-                                                //             searchFieldProps: TextFieldProps(
-                                                //               decoration: dropdownDecorationSearch(exRedropdownValue.isNotEmpty),
-                                                //               cursorColor: Colors.grey,
-                                                //               style:const TextStyle(
-                                                //                 fontSize: 14,
-                                                //               ),
-                                                //             ),
-                                                //           ),
-                                                //           items: exmRe,
-                                                //           selectedItem: exRedropdownValue,
-                                                //           onChanged: exRemSelectionChanged,
-                                                //         ),
-                                                //       ),
-                                                //     ),
-                                                //   ],
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupException(hintText: exceptionTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return exceptionTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        exceptionTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                         ],
@@ -891,50 +845,40 @@ class _AddItemsState extends State<AddItems> {
                                                 ],
                                               ),
                                             ),
+                                            Container(
+                                              height: 30,
+                                              width: 350,
+                                              decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                borderRadius: const BorderRadius.all(
+                                                  Radius.circular(4),
+                                                ),),
+                                              child: CustomPopupMenuButton<String>(
+                                                childHeight: 200,
+                                                childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                                hintText: "",
+                                                shape: const RoundedRectangleBorder(
+                                                  side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(5),
+                                                  ),
+                                                ),
+                                                offset: const Offset(1, 12),
+                                                tooltip: '',
+                                                itemBuilder: (context) {
+                                                  return unitTypes;
+                                                },
+                                                onSelected: (String value)  {
+                                                  setState(() {
+                                                    unitTypeText = value;
+                                                  });
+                                                },
+                                                onCanceled: () {
 
-                                            // Column(
-                                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                                            //   children: [
-                                            //     Container(
-                                            //       width: 350,
-                                            //       color:const Color.fromRGBO(255, 255, 255, 1),
-                                            //       child: AnimatedContainer(
-                                            //         duration:const Duration(seconds: 0),
-                                            //         height: unitbool ? 55 : 30,
-                                            //         child: DropdownSearch<String>(
-                                            //           validator: (value) {
-                                            //             if (value == null || value.isEmpty) {
-                                            //               setState(() {
-                                            //                 unitbool = true;
-                                            //               });
-                                            //               //print(unitbool);
-                                            //               return "Required";
-                                            //             } else {
-                                            //               setState(() {
-                                            //                 unitbool = false;
-                                            //               });
-                                            //             }
-                                            //             return null;
-                                            //           },
-                                            //           popupProps: PopupProps.menu(
-                                            //             constraints:const BoxConstraints(maxHeight: 200),
-                                            //             showSearchBox: true,
-                                            //             searchFieldProps: TextFieldProps(
-                                            //               decoration: dropdownDecorationSearch(unitdropdownValue.isNotEmpty),
-                                            //               cursorColor: Colors.grey,
-                                            //               style:const TextStyle(
-                                            //                 fontSize: 14,
-                                            //               ),
-                                            //             ),
-                                            //           ),
-                                            //           items: unit,
-                                            //           selectedItem: unitdropdownValue,
-                                            //           onChanged: unitSelectionChanged,
-                                            //         ),
-                                            //       ),
-                                            //     ),
-                                            //   ],
-                                            // ),
+                                                },
+                                                child: Container(),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         const SizedBox(height:15),
@@ -1075,44 +1019,40 @@ class _AddItemsState extends State<AddItems> {
                                                       ],
                                                     ),
                                                   ),
-                                                  // Container(
-                                                  //   width: 350,
-                                                  //   color: const Color.fromRGBO(255, 255, 255, 1),
-                                                  //   child: AnimatedContainer(
-                                                  //     duration: const Duration(seconds: 0),
-                                                  //     height: exemptionbool ? 55 : 30,
-                                                  //     child: DropdownSearch<String>(
-                                                  //       validator: (value) {
-                                                  //         if (value == null || value.isEmpty) {
-                                                  //           setState(() {
-                                                  //             exemptionbool = true;
-                                                  //           });
-                                                  //           //print(exemptionbool);
-                                                  //           return "Required";
-                                                  //         } else {
-                                                  //           setState(() {
-                                                  //             exemptionbool = false;
-                                                  //           });
-                                                  //         }
-                                                  //         return null;
-                                                  //       },
-                                                  //       popupProps: PopupProps.menu(
-                                                  //         constraints:const BoxConstraints(maxHeight: 200),
-                                                  //         showSearchBox: true,
-                                                  //         searchFieldProps: TextFieldProps(
-                                                  //           decoration: dropdownDecorationSearch(exRedropdownValue.isNotEmpty),
-                                                  //           cursorColor: Colors.grey,
-                                                  //           style:const TextStyle(
-                                                  //             fontSize: 14,
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       items: exmRe,
-                                                  //       selectedItem: exRedropdownValue,
-                                                  //       onChanged: exRemSelectionChanged,
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
+                                                  Container(
+                                                    height: 30,
+                                                    width: 350,
+                                                    decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(4),
+                                                      ),),
+                                                    child: CustomPopupMenuButton<String>(
+                                                      childHeight: 200,
+                                                      childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                      decoration: customPopupException(hintText: exceptionTypeText),
+                                                      hintText: "",
+                                                      shape: const RoundedRectangleBorder(
+                                                        side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 12),
+                                                      tooltip: '',
+                                                      itemBuilder: (context) {
+                                                        return exceptionTypes;
+                                                      },
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          exceptionTypeText = value;
+                                                        });
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                           ],
@@ -1325,44 +1265,41 @@ class _AddItemsState extends State<AddItems> {
                                             ],
                                           ),
                                           const SizedBox(height:10),
-                                          // Container(
-                                          //   width: 350,
-                                          //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                          //   child: AnimatedContainer(
-                                          //     duration:const Duration(seconds: 0),
-                                          //     height: unitbool ? 55 : 30,
-                                          //     child: DropdownSearch<String>(
-                                          //       validator: (value) {
-                                          //         if (value == null || value.isEmpty) {
-                                          //           setState(() {
-                                          //             unitbool = true;
-                                          //           });
-                                          //           // print(unitbool);
-                                          //           return "Required";
-                                          //         } else {
-                                          //           setState(() {
-                                          //             unitbool = false;
-                                          //           });
-                                          //         }
-                                          //         return null;
-                                          //       },
-                                          //       popupProps: PopupProps.menu(
-                                          //         constraints:const BoxConstraints(maxHeight: 200),
-                                          //         showSearchBox: true,
-                                          //         searchFieldProps: TextFieldProps(
-                                          //           decoration: dropdownDecorationSearch(unitdropdownValue.isNotEmpty),
-                                          //           cursorColor: Colors.grey,
-                                          //           style:const TextStyle(
-                                          //             fontSize: 14,
-                                          //           ),
-                                          //         ),
-                                          //       ),
-                                          //       items: unit,
-                                          //       selectedItem: unitdropdownValue,
-                                          //       onChanged: unitSelectionChanged,
-                                          //     ),
-                                          //   ),
-                                          // ),
+                                          Container(
+                                            height: 30,
+                                            width: 350,
+                                            decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),),
+                                            child: CustomPopupMenuButton<String>(
+                                              childHeight: 200,
+                                              childWidth: 350,position: CustomPopupMenuPosition.under,
+                                              decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                              hintText: "",
+                                              shape: const RoundedRectangleBorder(
+                                                side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
+                                              ),
+                                              offset: const Offset(1, 12),
+                                              tooltip: '',
+                                              itemBuilder: (context) {
+                                                return unitTypes;
+                                              },
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  unitTypeText = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            ),
+                                          ),
+
                                         ],
                                       ),
                                       const SizedBox(height:15),
@@ -1453,9 +1390,9 @@ class _AddItemsState extends State<AddItems> {
                                       ),
                                       const SizedBox(height:15),
                                       if(_taskTax==1)
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                         Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Row(
+                                            Row(
                                               children: [
                                                 Text('Exemption Reason*',
                                                   style: TextStyle(color: Colors.red),
@@ -1466,48 +1403,44 @@ class _AddItemsState extends State<AddItems> {
                                                 )
                                               ],
                                             ),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                // Container(
-                                                //   width: 350,
-                                                //   color: const Color.fromRGBO(255, 255, 255, 1),
-                                                //   child: AnimatedContainer(
-                                                //     duration: const Duration(seconds: 0),
-                                                //     height: exemptionbool ? 55 : 30,
-                                                //     child: DropdownSearch<String>(
-                                                //       validator: (value) {
-                                                //         if (value == null || value.isEmpty) {
-                                                //           setState(() {
-                                                //             exemptionbool = true;
-                                                //           });
-                                                //           //print(exemptionbool);
-                                                //           return "Required";
-                                                //         } else {
-                                                //           setState(() {
-                                                //             exemptionbool = false;
-                                                //           });
-                                                //         }
-                                                //         return null;
-                                                //       },
-                                                //       popupProps: PopupProps.menu(
-                                                //         constraints: const BoxConstraints(maxHeight: 200),
-                                                //         showSearchBox: true,
-                                                //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(exRedropdownValue.isNotEmpty),
-                                                //           cursorColor: Colors.grey,
-                                                //           style: const TextStyle(
-                                                //             fontSize: 14,
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       items: exmRe,
-                                                //       selectedItem: exRedropdownValue,
-                                                //       onChanged: exRemSelectionChanged,
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupException(hintText: exceptionTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return exceptionTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        exceptionTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -1618,6 +1551,7 @@ class _AddItemsState extends State<AddItems> {
                                           ],
                                         ),
                                         const SizedBox(height:15),
+                                        //Discription.
                                         Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const Text('Description'),
@@ -1677,44 +1611,40 @@ class _AddItemsState extends State<AddItems> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                // Container(
-                                                //   width: 350,
-                                                //   color: const Color.fromRGBO(255, 255, 255, 1),
-                                                //   child: AnimatedContainer(
-                                                //     duration: const Duration(seconds: 0),
-                                                //     height: unitbool ? 55 : 30,
-                                                //     child: DropdownSearch<String>(
-                                                //       validator: (value) {
-                                                //         if (value == null || value.isEmpty) {
-                                                //           setState(() {
-                                                //             unitbool = true;
-                                                //           });
-                                                //           // print(unitbool);
-                                                //           return "Required";
-                                                //         } else {
-                                                //           setState(() {
-                                                //             unitbool = false;
-                                                //           });
-                                                //         }
-                                                //         return null;
-                                                //       },
-                                                //       popupProps: PopupProps.menu(
-                                                //         constraints: const BoxConstraints(maxHeight: 200),
-                                                //         showSearchBox: true,
-                                                //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(unitdropdownValue.isNotEmpty),
-                                                //           cursorColor: Colors.grey,
-                                                //           style: const TextStyle(
-                                                //             fontSize: 14,
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       items: unit,
-                                                //       selectedItem: unitdropdownValue,
-                                                //       onChanged: unitSelectionChanged,
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return unitTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        unitTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -1844,44 +1774,40 @@ class _AddItemsState extends State<AddItems> {
                                                     ],
                                                   ),
                                                   const SizedBox(height:10),
-                                                  // Container(
-                                                  //   width: 350,
-                                                  //   color: const Color.fromRGBO(255, 255, 255, 1),
-                                                  //   child: AnimatedContainer(
-                                                  //     duration: const Duration(seconds: 0),
-                                                  //     height: exemptionbool ? 55 : 30,
-                                                  //     child: DropdownSearch<String>(
-                                                  //       validator: (value) {
-                                                  //         if (value == null || value.isEmpty) {
-                                                  //           setState(() {
-                                                  //             exemptionbool = true;
-                                                  //           });
-                                                  //           //print(exemptionbool);
-                                                  //           return "Required";
-                                                  //         } else {
-                                                  //           setState(() {
-                                                  //             exemptionbool = false;
-                                                  //           });
-                                                  //         }
-                                                  //         return null;
-                                                  //       },
-                                                  //       popupProps: PopupProps.menu(
-                                                  //         constraints: const BoxConstraints(maxHeight: 200),
-                                                  //         showSearchBox: true,
-                                                  //         searchFieldProps: TextFieldProps(
-                                                  //           decoration: dropdownDecorationSearch(exRedropdownValue.isNotEmpty),
-                                                  //           cursorColor: Colors.grey,
-                                                  //           style: const TextStyle(
-                                                  //             fontSize: 14,
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       items: exmRe,
-                                                  //       selectedItem: exRedropdownValue,
-                                                  //       onChanged: exRemSelectionChanged,
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
+                                                  Container(
+                                                    height: 30,
+                                                    width: 350,
+                                                    decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(4),
+                                                      ),),
+                                                    child: CustomPopupMenuButton<String>(
+                                                      childHeight: 200,
+                                                      childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                      decoration: customPopupException(hintText: exceptionTypeText),
+                                                      hintText: "",
+                                                      shape: const RoundedRectangleBorder(
+                                                        side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 12),
+                                                      tooltip: '',
+                                                      itemBuilder: (context) {
+                                                        return exceptionTypes;
+                                                      },
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          exceptionTypeText = value;
+                                                        });
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                           ],
@@ -2999,7 +2925,21 @@ class _AddItemsState extends State<AddItems> {
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
-      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      hintStyle: hintText=="Select Unit Type"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupException ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Exception Type"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),

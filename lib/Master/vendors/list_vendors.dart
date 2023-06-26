@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:new_project/Master/vendors/view_vendors_details.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -151,13 +152,15 @@ class _ListVendorsState extends State<ListVendors> {
                                         borderRadius: BorderRadius.circular(10),
                                         splashColor:const Color(0xFFA2BFEC),
                                         onTap: (){
-                                          // Navigator.of(context).push(
-                                          //   PageRouteBuilder(
-                                          //     pageBuilder: (context, animation1, animation2) => ViewVendors(vendorList: vendorList[i],drawerWidth: widget.args.drawerWidth,selectedDestination: widget.args.selectedDestination,),
-                                          //     transitionDuration: Duration.zero,
-                                          //     reverseTransitionDuration: Duration.zero,
-                                          //   ),
-                                          // );
+                                          Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation1, animation2) => ViewVendors(vendorList: vendorList[i],
+                                                drawerWidth: widget.arg.drawerWidth,
+                                                selectedDestination: widget.arg.selectedDestination,),
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration: Duration.zero,
+                                            ),
+                                          );
                                         },
                                         child: Row(mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.center,
