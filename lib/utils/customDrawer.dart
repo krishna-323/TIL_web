@@ -586,7 +586,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                  alignment: Alignment.topLeft,
                                  child: Padding(
                                    padding: const EdgeInsets.only(left: 15.0),
-                                   child: Text(drawerWidth == 60 ? '' : 'Add Items'),
+                                   child: Text(drawerWidth == 60 ? '' : 'Item'),
                                  ),
                                ),
                              ),

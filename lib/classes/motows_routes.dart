@@ -1,7 +1,7 @@
 
 
 abstract class MotowsRoutes{
-  static const String homeRoute = "/home";
+  static const String homeRoute = "/";
   static const String customerListRoute = "/serviceCustomer";
   static const String salesCustomerListRoute = "/salesCustomer";
   static const String docketRoute = "/docket";
