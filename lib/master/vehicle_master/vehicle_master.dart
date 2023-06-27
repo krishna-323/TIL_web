@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
-import 'package:new_project/pre_sales/master/vehicle_master_details.dart';
+import 'package:new_project/master/vehicle_master/vehicle_master_details.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
 
 import '../../utils/api/get_api.dart';

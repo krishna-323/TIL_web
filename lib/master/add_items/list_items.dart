@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
-import 'package:new_project/pre_sales/add_items/view_items.dart';
+import 'package:new_project/master/add_items/view_items.dart';
+
 
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';

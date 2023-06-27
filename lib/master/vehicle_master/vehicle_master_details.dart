@@ -13,6 +13,7 @@ import '../../widgets/input_decoration_text_field.dart';
 import 'add_variant_model.dart';
 import 'bloc/vehicle_details_bloc.dart';
 import 'model/vehicle_details_model.dart';
+
 class VehicleMasterDetails extends StatefulWidget {
   final int title;
   final double drawerWidth;
