@@ -640,7 +640,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                  alignment: Alignment.topLeft,
                                  child: Padding(
                                    padding: const EdgeInsets.only(left: 15.0),
-                                   child: Text(drawerWidth == 60 ? '' : 'Item'),
+                                   child: Text(drawerWidth == 60 ? '' : 'Parts'),
                                  ),
                                ),
                              ),
@@ -651,7 +651,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                });
                                Navigator.pushReplacementNamed(
                                  context,
-                                 MotowsRoutes.listAddItems,
+                                 MotowsRoutes.listParts,
                                  arguments: ListAddItemsArguments(selectedDestination: 2.4, drawerWidth: widget.drawerWidth),
                                );
                              },

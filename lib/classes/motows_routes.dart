@@ -27,7 +27,7 @@ abstract class MotowsRoutes{
   static const String listVehicle= "/vehicleOrderList";
   static const String listGrnItems = "/grn";
   static const String listVehicleInvoice ="/vehicleInvoice";
-  static const String listAddItems ="/item";
+  static const String listParts ="/parts";
   static const String vehicleMaster ="/vehicleMaster";
   static const String docketList="/docketList";
   static const String listTaxDetailsRoutes = "/tax";

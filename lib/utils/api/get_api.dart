@@ -47,7 +47,11 @@ import '../../main.dart';
 }
 
 logOutApi({dynamic response, context, exception}) async {
-  if (response.containsKey("error")) {
+   if(response==null){
+     log("Loading Server Error in logout api");
+
+   }
+  else if (response.containsKey("error")) {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', "");
     prefs.setString('company_name', "");

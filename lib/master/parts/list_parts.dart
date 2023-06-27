@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
-import 'package:new_project/master/add_items/view_items.dart';
+import 'package:new_project/master/parts/add_part.dart';
+import 'package:new_project/master/parts/part_details.dart';
+
 
 
 import '../../utils/api/get_api.dart';
@@ -11,17 +13,18 @@ import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
-import 'add_items.dart';
 
-class ListItems extends StatefulWidget {
+
+
+class ListParts extends StatefulWidget {
   final ListAddItemsArguments arg;
-  const ListItems({Key? key, required this.arg}) : super(key: key);
+  const ListParts({Key? key, required this.arg}) : super(key: key);
 
   @override
-  State<ListItems> createState() => _ListItemsState();
+  State<ListParts> createState() => _ListPartsState();
 }
 
-class _ListItemsState extends State<ListItems> {
+class _ListPartsState extends State<ListParts> {
   List itemList = [];
   List displayItems =[];
   int startVal =0;
@@ -40,15 +43,15 @@ class _ListItemsState extends State<ListItems> {
             response = value;
             itemList = value;
             if(displayItems.isEmpty){
-
-                for(int i=startVal;i<startVal + 15;i++){
+              if(itemList.length>15) {
+                for (int i = startVal; i < startVal + 15; i++) {
                   displayItems.add(itemList[i]);
                 }
-
-            }
-            else{
-              for(int i=startVal;i<itemList.length;i++){
-                displayItems.add(itemList[i]);
+              }
+              else{
+                for(int i=0;i<itemList.length;i++){
+                  displayItems.add(itemList[i]);
+                }
               }
             }
             // print('------- new get --------');
@@ -126,7 +129,7 @@ class _ListItemsState extends State<ListItems> {
                                     onPressed: () {
 
                                       Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                      const AddItems(drawerWidth: 190,
+                                      const AddPart(drawerWidth: 190,
                                         selectedDestination: 2.4,),
                                           transitionDuration: Duration.zero,
                                           reverseTransitionDuration: Duration.zero
@@ -220,7 +223,7 @@ class _ListItemsState extends State<ListItems> {
 
                                 onPressed: () {
                                   Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                      ViewItems(title: 1,itemList: itemList[i],drawerWidth: 190,selectedDestination: 2.4),
+                                      PartDetails(title: 1,itemList: itemList[i],drawerWidth: 190,selectedDestination: 2.4),
                                       transitionDuration: Duration.zero,
                                       reverseTransitionDuration: Duration.zero
                                   ));

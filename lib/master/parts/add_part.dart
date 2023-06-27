@@ -1,91 +1,65 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
+import '../../utils/custom_loader.dart';
+import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
-import 'bloc/item_details_bloc.dart';
-class EditItems extends StatefulWidget {
+class AddPart extends StatefulWidget {
+
   final double drawerWidth;
   final double selectedDestination;
-  final Map itemData;
-  const EditItems({Key? key, required this.drawerWidth, required this.selectedDestination, required this. itemData}) : super(key: key);
+  const AddPart({Key? key,  required this.drawerWidth, required this.selectedDestination}) : super(key: key);
 
   @override
-  _EditItemsState createState() => _EditItemsState();
+  _AddPartState createState() => _AddPartState();
 }
+// enum SingingCharacter {goods, services,taxable, nontaxable }
+// enum SingingCharacter {taxable, nontaxable }
 
-class _EditItemsState extends State<EditItems> {
-
+class _AddPartState extends State<AddPart> {
 
   void unitSelectionChanged(String? u){
     setState(() {
-      unitDropdownValue = u!;
+      unitdropdownValue = u!;
     });
   }
   void acc1SelectionChanged(String? a1){
     setState(() {
-      sellingAccountDropdownValue = a1!;
+      acc1dropdownValue = a1!;
     });
   }
   void acc2SelectionChanged(String? a2){
     setState(() {
-      purchaseDropdownValue = a2!;
+      acc2dropdownValue = a2!;
     });
   }
   void gstSelectionChanged(String? gst){
     setState(() {
-      taxQuesDropdownValue = gst!;
+      taxquesdropdownValue = gst!;
       cgstSgst=double.parse(gst)/2;
+
     });
   }
   void igstSelectionChanged(String? igst){
     setState(() {
-      taxQues2dropdownValue = igst!;
+      taxques2dropdownValue = igst!;
     });
   }
   void exRemSelectionChanged(String? ex){
     setState(() {
-      exceptionDropdownValue = ex!;
+      exRedropdownValue = ex!;
     });
   }
 
 
-  @override
-  void initState(){
-    // print(widget.itemData);
-    selectedId = widget.itemData["newitem_id"];
-    description.text = widget.itemData["description"];
-    exceptionDropdownValue = widget.itemData["exemption_reason"];
-    item.text=widget.itemData['item_code'];
-    nameController.text = widget.itemData["name"];
-    purchaseDropdownValue = widget.itemData["purchase_account"];
-    purchasePrice.text = widget.itemData["purchase_price"].toString();
-    sacController.text = widget.itemData["sac"];
-    sellingAccountDropdownValue = widget.itemData["selling_account"];
-    sellingPrice.text = widget.itemData["selling_price"].toString();
-    taxCodeController.text = widget.itemData["tax_code"];
-    _tasktax = widget.itemData["tax_preference"] == "Taxable"?0:1;
-    _goodsService=widget.itemData["type"]=="Sevices"?1:0;
-    unitDropdownValue = widget.itemData["unit"];
-    getInitialData();
-    // print("-------edit items---------");
-    // print(widget.itemData);
-
-
-    super.initState();
-  }
-
-  getInitialData()async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    authToken= prefs.getString("authToken");
-  }
   List<String> textlist = [];
-
 
   final sellingPrice = TextEditingController();
   // final account = TextEditingController();
@@ -93,11 +67,13 @@ class _EditItemsState extends State<EditItems> {
   final tax = TextEditingController();
   final purchasePrice = TextEditingController();
   // final account2 = TextEditingController();
+  final description2 = TextEditingController();
   final nameController = TextEditingController();
   final item=TextEditingController();
+
   // final unitController = TextEditingController();
   final skuController = TextEditingController();
-  final taxCodeController = TextEditingController();
+  final hsnController = TextEditingController();
   final sacController = TextEditingController();
   final goodsController = TextEditingController();
   final servicesController = TextEditingController();
@@ -108,53 +84,38 @@ class _EditItemsState extends State<EditItems> {
   final purchaseInfoController = TextEditingController();
   final exemptionController = TextEditingController();
 
-  bool sellingPriceError = false;
-  bool accountError = false;
-  bool descriptionError = false;
-  bool taxError = false;
+  double cgstSgst=0;
+
+  bool sellingpricebool = false;
+  bool accountbool = false;
+  bool account1bool=false;
+  bool descriptionbool = false;
+  bool taxbool = false;
   bool tax2bool = false;
-  bool purchasePriceError = false;
-  bool account1bool = false;
+  bool costpricebool = false;
+  bool account2bool = false;
   bool description2bool = false;
-  bool nameError = false;
-  bool itemCodeError=false;
-  bool skuError = false;
-  bool hsnError = false;
-  bool sacError = false;
-  bool unitError = false;
-  bool exemptionError = false;
-  bool checkError = false;
+  bool namebool = false;
+  bool itemcode=false;
+  bool skubool = false;
+  bool hsnbool = false;
+  bool sacbool = false;
+  bool unitbool = false;
+  bool exemptionbool = false;
+  bool checkbool = false;
 
-  bool isDisabled = true;
-  bool isDisabled1 = true;
-  bool isServiceDisable = true;
+  bool isDisabled = false;
+  bool isDisabled1 = false;
+  bool isServiceDisable = false;
 
-  var unitDropdownValue = "";
-  var sellingAccountDropdownValue = "";
-  var taxQuesDropdownValue = "";
-  var taxQues2dropdownValue = "";
-  var purchaseDropdownValue = "";
-  var exceptionDropdownValue = "";
-  var unit = [
-    "DOZEN",
-    "BOX",
-    "GRAMS",
-    "KILOGRAMS",
-    "METERS",
-    "TABLETS",
-    "UNITS",
-    "PIECES",
-    "PAIRS"
-  ];
-  var acc1 = [
-    'Discount',
-    'General Income',
-    'Interest Income',
-    'Late Fee Income',
-    'Sales',
-    'Other Charges',
-    'Shipping Charge'
-  ];
+  var unitdropdownValue = "";
+  var acc1dropdownValue = "";
+  var taxquesdropdownValue = "";
+  var taxques2dropdownValue = "";
+  var acc2dropdownValue = "";
+  var exRedropdownValue = "";
+
+
   var taxques = [
     '8',
     '12',
@@ -167,13 +128,7 @@ class _EditItemsState extends State<EditItems> {
     '18',
     '28',
   ];
-  var acc2 = [
-    'Acc2 1',
-    'Acc2 2',
-    'Acc2 3',
-    'Acc2 4',
-    'Acc2 5',
-  ];
+
   var exmRe = [
     'ExRe 1',
     'ExRe 2',
@@ -183,21 +138,108 @@ class _EditItemsState extends State<EditItems> {
   ];
 
   dynamic size;
-  dynamic height;
+  dynamic    height;
   dynamic width;
 
-  String selectedId = "";
-  String type='';
 
-  int _goodsService = 0;
-  int _tasktax = 0;
-
+  int _character = 0;
+  int _taskTax = 0;
   String? authToken;
+  String? selectedId;
+  getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken= prefs.getString("authToken");
+  }
 
-
-  double cgstSgst=0;
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInitialData();
+  }
   final addItemsForm=GlobalKey<FormState>();
+  bool loading=false;
+  // Custom Unit Type.
+  List <CustomPopupMenuEntry<String>> unitTypes =<CustomPopupMenuEntry<String>>[
+
+    const CustomPopupMenuItem(height: 40,
+      value: 'DOZEN',
+      child: Center(child: SizedBox(width: 350,child: Text('DOZEN',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'BOX',
+      child: Center(child: SizedBox(width: 350,child: Text('BOX',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'GRAMS',
+      child: Center(child: SizedBox(width: 350,child: Text('GRAMS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'KILOGRAMS',
+      child: Center(child: SizedBox(width: 350,child: Text('KILOGRAMS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'METERS',
+      child: Center(child: SizedBox(width: 350,child: Text('METERS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'TABLETS',
+      child: Center(child: SizedBox(width: 350,child: Text('TABLETS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'UNITS',
+      child: Center(child: SizedBox(width: 350,child: Text('UNITS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'PIECES',
+      child: Center(child: SizedBox(width: 350,child: Text('PIECES',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'PAIRS',
+      child: Center(child: SizedBox(width: 350,child: Text('PAIRS',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+  ];
+  String unitTypeText = "Select Unit Type";
+  // Exception Reason.
+  List <CustomPopupMenuEntry<String>> exceptionTypes =<CustomPopupMenuEntry<String>>[
+
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 1',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 1',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 2',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 2',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 3',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 3',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 4',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 4',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+    const CustomPopupMenuItem(height: 40,
+      value: 'ExRe 5',
+      child: Center(child: SizedBox(width: 350,child: Text('ExRe 5',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+    ),
+
+  ];
+  String exceptionTypeText = "Select Exception Type";
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -219,14 +261,16 @@ class _EditItemsState extends State<EditItems> {
           Expanded(
             child: Scaffold(
 
-              body: SingleChildScrollView(
+              body: CustomLoader(
+                inAsyncCall: loading,
+                child: SingleChildScrollView(
                 child:
                 Form(
                   key:addItemsForm,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // -------------- first container-------------------
+                      //-------------- first container-------------------
                       if(width>1000)
                         Container(
                           color: const Color(0xffF4FAFF),
@@ -236,7 +280,7 @@ class _EditItemsState extends State<EditItems> {
                               children: [
                                 const Align(alignment:Alignment.topLeft,
                                   child:  Text(
-                                    "Edit Item",
+                                    "Create Item",
                                     style: TextStyle(
                                         color: Colors.indigo,
                                         fontSize: 18,
@@ -244,13 +288,14 @@ class _EditItemsState extends State<EditItems> {
                                     ),
                                   ),
                                 ),
+                                //type Radio buttons
                                 Row(
                                   children:  [
                                     //type
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 180,
                                       child: Row(
-                                        children: const [
+                                        children: [
                                           Text('Type'),
                                         ],
                                       ),
@@ -262,7 +307,7 @@ class _EditItemsState extends State<EditItems> {
                                             title: "Goods",
                                             value: 0,
                                             onChanged: (newValue) => setState(() {
-                                              _goodsService = newValue;
+                                              _character = newValue;
                                             }),
                                           ),
                                         ),
@@ -271,7 +316,7 @@ class _EditItemsState extends State<EditItems> {
                                             title: "Services",
                                             value: 1,
                                             onChanged: (newValue) => setState(() {
-                                              _goodsService = newValue;
+                                              _character = newValue;
                                             }),
                                           ),
                                         ),
@@ -279,7 +324,7 @@ class _EditItemsState extends State<EditItems> {
                                     ),
                                   ],
                                 ),
-                                if(_goodsService == 0)
+                                if(_character == 0)
                                   Column(
                                     children: [
                                       //name
@@ -291,26 +336,27 @@ class _EditItemsState extends State<EditItems> {
                                             child: Text('Name*',
                                               style: TextStyle(
                                                 color: Colors.red,
-                                              ),),
+                                              ),
+                                            ),
                                           ),
                                           Container(
                                             width: 350,
                                             color: const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
-                                              duration:const Duration(seconds: 0),
-                                              height: nameError ? 55 : 30,
+                                              duration: const Duration(seconds: 0),
+                                              height: namebool ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      nameError = true;
+                                                      namebool = true;
                                                     });
                                                     // print(namebool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      nameError = false;
+                                                      namebool = false;
                                                     });
                                                   }
                                                   return null;
@@ -331,7 +377,7 @@ class _EditItemsState extends State<EditItems> {
                                         ],
                                       ),
                                       const SizedBox(height:15),
-                                      //itemcode
+                                      //Item Code
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
@@ -345,22 +391,22 @@ class _EditItemsState extends State<EditItems> {
                                           ),
                                           Container(
                                             width: 350,
-                                            color:const Color.fromRGBO(255, 255, 255, 1),
+                                            color: const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
-                                              duration:const Duration(seconds: 0),
-                                              height: itemCodeError ? 55 : 30,
+                                              duration: const Duration(seconds: 0),
+                                              height: itemcode ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      itemCodeError = true;
+                                                      itemcode = true;
                                                     });
                                                     // print(namebool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      itemCodeError = false;
+                                                      itemcode = false;
                                                     });
                                                   }
                                                   return null;
@@ -381,7 +427,7 @@ class _EditItemsState extends State<EditItems> {
                                         ],
                                       ),
                                       const SizedBox(height:15),
-                                      //Description
+                                      //description
                                       Row(crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const SizedBox(
@@ -390,9 +436,9 @@ class _EditItemsState extends State<EditItems> {
                                           ),
                                           Container(
                                             width: 350,
-                                            color: const Color.fromRGBO(255, 255, 255, 1),
+                                            color:const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
-                                              height: descriptionError ? 80 : 70,
+                                              height: descriptionbool ? 60 : 50,
                                               // height: 38,
                                               duration: const Duration(seconds: 0),
                                               margin: const EdgeInsets.all(0),
@@ -403,7 +449,7 @@ class _EditItemsState extends State<EditItems> {
                                                 // validator: (value) {
                                                 //   if (value == null || value.isEmpty) {
                                                 //     setState(() {
-                                                //       descriptionError = true;
+                                                //       descriptionbool = true;
                                                 //     });
                                                 //
                                                 //     return "Required";
@@ -427,9 +473,10 @@ class _EditItemsState extends State<EditItems> {
                                       ),
                                       const SizedBox(height:15),
                                       // unit
-                                      Row( crossAxisAlignment: CrossAxisAlignment.start,
+                                       Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
-                                          const SizedBox(
+                                          SizedBox(
                                             width:180,
                                             child: Row(
                                               children: [
@@ -442,44 +489,40 @@ class _EditItemsState extends State<EditItems> {
                                               ],
                                             ),
                                           ),
-                                          // Container(
-                                          //   width: 350,
-                                          //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                          //   child: AnimatedContainer(
-                                          //     duration:const Duration(seconds: 0),
-                                          //     height: unitError ? 55 : 30,
-                                          //     child: DropdownSearch<String>(
-                                          //       validator: (value) {
-                                          //         if (value == null || value.isEmpty) {
-                                          //           setState(() {
-                                          //             unitError = true;
-                                          //           });
-                                          //           //print(unitError);
-                                          //           return "Required";
-                                          //         } else {
-                                          //           setState(() {
-                                          //             unitError = false;
-                                          //           });
-                                          //         }
-                                          //         return null;
-                                          //       },
-                                          //       popupProps: PopupProps.menu(
-                                          //         constraints:const BoxConstraints(maxHeight: 200),
-                                          //         showSearchBox: true,
-                                          //         searchFieldProps: TextFieldProps(
-                                          //           decoration: dropdownDecorationSearch(unitDropdownValue.isNotEmpty),
-                                          //           cursorColor: Colors.grey,
-                                          //           style:const TextStyle(
-                                          //             fontSize: 14,
-                                          //           ),
-                                          //         ),
-                                          //       ),
-                                          //       items: unit,
-                                          //       selectedItem: unitDropdownValue,
-                                          //       onChanged: unitSelectionChanged,
-                                          //     ),
-                                          //   ),
-                                          // ),
+                                          Container(
+                                            height: 30,
+                                            width: 350,
+                                            decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),),
+                                            child: CustomPopupMenuButton<String>( 
+                                            childHeight: 200,
+                                              childWidth: 350,position: CustomPopupMenuPosition.under,
+                                              decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                              hintText: "",
+                                              shape: const RoundedRectangleBorder(
+                                                side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
+                                              ),
+                                              offset: const Offset(1, 12),
+                                              tooltip: '',
+                                              itemBuilder: (context) {
+                                                return unitTypes;
+                                              },
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  unitTypeText = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(height:15),
@@ -501,19 +544,19 @@ class _EditItemsState extends State<EditItems> {
                                             color:const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
                                               duration:const Duration(seconds: 0),
-                                              height: hsnError ? 55 : 30,
+                                              height: hsnbool ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      hsnError = true;
+                                                      hsnbool = true;
                                                     });
-                                                    //print(hsnError);
+                                                    // print(hsnbool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      hsnError = false;
+                                                      hsnbool = false;
                                                     });
                                                   }
                                                   return null;
@@ -523,10 +566,10 @@ class _EditItemsState extends State<EditItems> {
                                                 onChanged: (text) {
                                                   setState(() {});
                                                 },
-                                                controller: taxCodeController,
+                                                controller: hsnController,
                                                 decoration: decorationInput5(
                                                     '',
-                                                    taxCodeController
+                                                    hsnController
                                                         .text.isNotEmpty),
                                               ),
                                             ),
@@ -558,7 +601,7 @@ class _EditItemsState extends State<EditItems> {
                                                       title: "Taxable",
                                                       value: 0,
                                                       onChanged: (newValue) => setState(() {
-                                                        _tasktax = newValue;
+                                                        _taskTax = newValue;
                                                       }),
                                                     ),
                                                   ),
@@ -567,7 +610,7 @@ class _EditItemsState extends State<EditItems> {
                                                       title: "Non-Taxable",
                                                       value: 1,
                                                       onChanged: (newValue) => setState(() {
-                                                        _tasktax = newValue;
+                                                        _taskTax = newValue;
                                                       }),
                                                     ),
                                                   ),
@@ -576,8 +619,8 @@ class _EditItemsState extends State<EditItems> {
                                             ],
                                           ),
                                           const SizedBox(height:15),
-                                          if(_tasktax==1)
-                                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                          if(_taskTax==1)
+                                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 const SizedBox(
                                                   width:180,
@@ -594,56 +637,47 @@ class _EditItemsState extends State<EditItems> {
                                                   ),
                                                 ),
 
-                                                // Column(
-                                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                                //   children: [
-                                                //     Container(
-                                                //       width: 350,
-                                                //       color:const Color.fromRGBO(255, 255, 255, 1),
-                                                //       child: AnimatedContainer(
-                                                //         duration:const Duration(seconds: 0),
-                                                //         height: exemptionError ? 55 : 30,
-                                                //         child: DropdownSearch<String>(
-                                                //           validator: (value) {
-                                                //             if (value == null || value.isEmpty) {
-                                                //               setState(() {
-                                                //                 exemptionError = true;
-                                                //               });
-                                                //               //print(exemptionError);
-                                                //               return "Required";
-                                                //             } else {
-                                                //               setState(() {
-                                                //                 exemptionError = false;
-                                                //               });
-                                                //             }
-                                                //             return null;
-                                                //           },
-                                                //           popupProps: PopupProps.menu(
-                                                //             constraints:const BoxConstraints(maxHeight: 200),
-                                                //             showSearchBox: true,
-                                                //             searchFieldProps: TextFieldProps(
-                                                //               decoration: dropdownDecorationSearch(exceptionDropdownValue.isNotEmpty),
-                                                //               cursorColor: Colors.grey,
-                                                //               style:const TextStyle(
-                                                //                 fontSize: 14,
-                                                //               ),
-                                                //             ),
-                                                //           ),
-                                                //           items: exmRe,
-                                                //           selectedItem: exceptionDropdownValue,
-                                                //           onChanged: exRemSelectionChanged,
-                                                //         ),
-                                                //       ),
-                                                //     ),
-                                                //   ],
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupException(hintText: exceptionTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return exceptionTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        exceptionTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                if (_goodsService == 1)
+                                if (_character == 1)
                                   Column(
                                       children:[
                                         //name
@@ -664,19 +698,19 @@ class _EditItemsState extends State<EditItems> {
                                                   color:const Color.fromRGBO(255, 255, 255, 1),
                                                   child: AnimatedContainer(
                                                     duration:const Duration(seconds: 0),
-                                                    height: nameError ? 55 : 30,
+                                                    height: namebool ? 55 : 30,
                                                     child: TextFormField(
                                                       validator: (value) {
                                                         if (value == null ||
                                                             value.isEmpty) {
                                                           setState(() {
-                                                            nameError = true;
+                                                            namebool = true;
                                                           });
-                                                          // print(nameError);
+                                                          // print(namebool);
                                                           return "Required";
                                                         } else {
                                                           setState(() {
-                                                            nameError = false;
+                                                            namebool = false;
                                                           });
                                                         }
                                                         return null;
@@ -700,7 +734,7 @@ class _EditItemsState extends State<EditItems> {
                                           ],
                                         ),
                                         const SizedBox(height:15),
-                                        //item code
+                                        //Item code
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
@@ -717,19 +751,19 @@ class _EditItemsState extends State<EditItems> {
                                               color:const Color.fromRGBO(255, 255, 255, 1),
                                               child: AnimatedContainer(
                                                 duration:const Duration(seconds: 0),
-                                                height: itemCodeError ? 55 : 30,
+                                                height: itemcode ? 55 : 30,
                                                 child: TextFormField(
                                                   validator: (value) {
                                                     if (value == null ||
                                                         value.isEmpty) {
                                                       setState(() {
-                                                        itemCodeError = true;
+                                                        itemcode = true;
                                                       });
                                                       // print(namebool);
                                                       return "Required";
                                                     } else {
                                                       setState(() {
-                                                        itemCodeError = false;
+                                                        itemcode = false;
                                                       });
                                                     }
                                                     return null;
@@ -750,7 +784,7 @@ class _EditItemsState extends State<EditItems> {
                                           ],
                                         ),
                                         const SizedBox(height:15),
-                                        //Description
+                                        //Discription Row.
                                         Row(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const SizedBox(
@@ -761,7 +795,7 @@ class _EditItemsState extends State<EditItems> {
                                               width: 350,
                                               color:const Color.fromRGBO(255, 255, 255, 1),
                                               child: AnimatedContainer(
-                                                height: descriptionError ? 80 : 70,
+                                                height: descriptionbool ? 80 : 70,
                                                 // height: 38,
                                                 duration: const Duration(seconds: 0),
                                                 margin: const EdgeInsets.all(0),
@@ -811,49 +845,39 @@ class _EditItemsState extends State<EditItems> {
                                                 ],
                                               ),
                                             ),
+                                            Container(
+                                              height: 30,
+                                              width: 350,
+                                              decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                borderRadius: const BorderRadius.all(
+                                                  Radius.circular(4),
+                                                ),),
+                                              child: CustomPopupMenuButton<String>(
+                                                childHeight: 200,
+                                                childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                                hintText: "",
+                                                shape: const RoundedRectangleBorder(
+                                                  side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(5),
+                                                  ),
+                                                ),
+                                                offset: const Offset(1, 12),
+                                                tooltip: '',
+                                                itemBuilder: (context) {
+                                                  return unitTypes;
+                                                },
+                                                onSelected: (String value)  {
+                                                  setState(() {
+                                                    unitTypeText = value;
+                                                  });
+                                                },
+                                                onCanceled: () {
 
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                // Container(
-                                                //   width: 350,
-                                                //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                                //   child: AnimatedContainer(
-                                                //     duration:const Duration(seconds: 0),
-                                                //     height: unitError ? 55 : 30,
-                                                //     child: DropdownSearch<String>(
-                                                //       validator: (value) {
-                                                //         if (value == null || value.isEmpty) {
-                                                //           setState(() {
-                                                //             unitError = true;
-                                                //           });
-                                                //           //print(unitError);
-                                                //           return "Required";
-                                                //         } else {
-                                                //           setState(() {
-                                                //             unitError = false;
-                                                //           });
-                                                //         }
-                                                //         return null;
-                                                //       },
-                                                //       popupProps: PopupProps.menu(
-                                                //         constraints:const BoxConstraints(maxHeight: 200),
-                                                //         showSearchBox: true,
-                                                //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(unitDropdownValue.isNotEmpty),
-                                                //           cursorColor: Colors.grey,
-                                                //           style:const TextStyle(
-                                                //             fontSize: 14,
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       items: unit,
-                                                //       selectedItem: unitDropdownValue,
-                                                //       onChanged: unitSelectionChanged,
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ],
+                                                },
+                                                child: Container(),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -900,19 +924,19 @@ class _EditItemsState extends State<EditItems> {
                                                     color:const Color.fromRGBO(255, 255, 255, 1),
                                                     child: AnimatedContainer(
                                                       duration:const Duration(seconds: 0),
-                                                      height: sacError ? 55 : 30,
+                                                      height: sacbool ? 55 : 30,
                                                       child: TextFormField(
                                                         validator: (value) {
                                                           if (value == null ||
                                                               value.isEmpty) {
                                                             setState(() {
-                                                              sacError = true;
+                                                              sacbool = true;
                                                             });
-                                                            // print(sacError);
+                                                            // print(sacbool);
                                                             return "Required";
                                                           } else {
                                                             setState(() {
-                                                              sacError = false;
+                                                              sacbool = false;
                                                             });
                                                           }
                                                           return null;
@@ -960,7 +984,7 @@ class _EditItemsState extends State<EditItems> {
                                                         title: "Taxable",
                                                         value: 0,
                                                         onChanged: (newValue) => setState(() {
-                                                          _tasktax = newValue;
+                                                          _taskTax = newValue;
                                                         }),
                                                       ),
                                                     ),
@@ -969,7 +993,7 @@ class _EditItemsState extends State<EditItems> {
                                                         title: "Non-Taxable",
                                                         value: 1,
                                                         onChanged: (newValue) => setState(() {
-                                                          _tasktax = newValue;
+                                                          _taskTax = newValue;
                                                         }),
                                                       ),
                                                     ),
@@ -977,7 +1001,8 @@ class _EditItemsState extends State<EditItems> {
                                                 ),
                                               ],
                                             ),
-                                            if(_tasktax==1)
+                                            const SizedBox(height:10),
+                                            if(_taskTax==1)
                                               Row(crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   const SizedBox(
@@ -994,52 +1019,46 @@ class _EditItemsState extends State<EditItems> {
                                                       ],
                                                     ),
                                                   ),
+                                                  Container(
+                                                    height: 30,
+                                                    width: 350,
+                                                    decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(4),
+                                                      ),),
+                                                    child: CustomPopupMenuButton<String>(
+                                                      childHeight: 200,
+                                                      childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                      decoration: customPopupException(hintText: exceptionTypeText),
+                                                      hintText: "",
+                                                      shape: const RoundedRectangleBorder(
+                                                        side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 12),
+                                                      tooltip: '',
+                                                      itemBuilder: (context) {
+                                                        return exceptionTypes;
+                                                      },
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          exceptionTypeText = value;
+                                                        });
+                                                      },
+                                                      onCanceled: () {
 
-                                                  // Container(
-                                                  //   width: 350,
-                                                  //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                                  //   child: AnimatedContainer(
-                                                  //     duration:const Duration(seconds: 0),
-                                                  //     height: exemptionError ? 55 : 30,
-                                                  //     child: DropdownSearch<String>(
-                                                  //       validator: (value) {
-                                                  //         if (value == null || value.isEmpty) {
-                                                  //           setState(() {
-                                                  //             exemptionError = true;
-                                                  //           });
-                                                  //           //print(exemptionError);
-                                                  //           return "Required";
-                                                  //         } else {
-                                                  //           setState(() {
-                                                  //             exemptionError = false;
-                                                  //           });
-                                                  //         }
-                                                  //         return null;
-                                                  //       },
-                                                  //       popupProps: PopupProps.menu(
-                                                  //         constraints:const BoxConstraints(maxHeight: 200),
-                                                  //         showSearchBox: true,
-                                                  //         searchFieldProps: TextFieldProps(
-                                                  //           decoration: dropdownDecorationSearch(exceptionDropdownValue.isNotEmpty),
-                                                  //           cursorColor: Colors.grey,
-                                                  //           style:const TextStyle(
-                                                  //             fontSize: 14,
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       items: exmRe,
-                                                  //       selectedItem: exceptionDropdownValue,
-                                                  //       onChanged: exRemSelectionChanged,
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
+                                                      },
+                                                      child: Container(),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                           ],
                                         ),
                                       ]
                                   ),
-
                               ],
                             ),
                           ),
@@ -1057,10 +1076,10 @@ class _EditItemsState extends State<EditItems> {
                                   crossAxisAlignment:CrossAxisAlignment.start,
                                   children:  [
                                     //type
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 180,
                                       child: Row(
-                                        children: const [
+                                        children: [
                                           Text('Type'),
                                         ],
                                       ),
@@ -1072,24 +1091,26 @@ class _EditItemsState extends State<EditItems> {
                                             title: "Goods",
                                             value: 0,
                                             onChanged: (newValue) => setState(() {
-                                              _goodsService = newValue;
+                                              _character = newValue;
                                             }),
                                           ),
                                         ),
-                                        SizedBox(width: 190,
-                                          child: _typeRadioButton(
-                                            title: "Services",
-                                            value: 1,
-                                            onChanged: (newValue) => setState(() {
-                                              _goodsService = newValue;
-                                            }),
+                                        Expanded(
+                                          child: SizedBox(width: 190,
+                                            child: _typeRadioButton(
+                                              title: "Services",
+                                              value: 1,
+                                              onChanged: (newValue) => setState(() {
+                                                _character = newValue;
+                                              }),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
-                                if(_goodsService == 0)
+                                if(_character == 0)
                                   Column(crossAxisAlignment:CrossAxisAlignment.start,
                                     children: [
                                       //name
@@ -1103,22 +1124,22 @@ class _EditItemsState extends State<EditItems> {
                                           const SizedBox(height:10),
                                           Container(
                                             width: 350,
-                                            color:const Color.fromRGBO(255, 255, 255, 1),
+                                            color: const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
                                               duration:const Duration(seconds: 0),
-                                              height: nameError ? 55 : 30,
+                                              height: namebool ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      nameError = true;
+                                                      namebool = true;
                                                     });
-                                                    // print(nameError);
+                                                    // print(namebool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      nameError = false;
+                                                      namebool = false;
                                                     });
                                                   }
                                                   return null;
@@ -1139,7 +1160,7 @@ class _EditItemsState extends State<EditItems> {
                                         ],
                                       ),
                                       const SizedBox(height:15),
-                                      //Item code.
+                                      //Item Code
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
@@ -1151,22 +1172,22 @@ class _EditItemsState extends State<EditItems> {
                                           const SizedBox(height:10),
                                           Container(
                                             width: 350,
-                                            color:const Color.fromRGBO(255, 255, 255, 1),
+                                            color: const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
-                                              duration:const Duration(seconds: 0),
-                                              height: itemCodeError ? 55 : 30,
+                                              duration: const Duration(seconds: 0),
+                                              height: itemcode ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      itemCodeError = true;
+                                                      itemcode = true;
                                                     });
-                                                    // print(itemCodeError);
+                                                    // print(namebool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      itemCodeError = false;
+                                                      itemcode = false;
                                                     });
                                                   }
                                                   return null;
@@ -1187,7 +1208,7 @@ class _EditItemsState extends State<EditItems> {
                                         ],
                                       ),
                                       const SizedBox(height:15),
-                                      //Description code.
+                                      //Description
                                       Column(crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const Text('Description'),
@@ -1196,7 +1217,7 @@ class _EditItemsState extends State<EditItems> {
                                             width: 350,
                                             color:const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
-                                              height: descriptionError ? 80 : 70,
+                                              height: descriptionbool ? 80 : 70,
                                               // height: 38,
                                               duration: const Duration(seconds: 0),
                                               margin: const EdgeInsets.all(0),
@@ -1207,13 +1228,13 @@ class _EditItemsState extends State<EditItems> {
                                                 // validator: (value) {
                                                 //   if (value == null || value.isEmpty) {
                                                 //     setState(() {
-                                                //       descriptionError = true;
+                                                //       descriptionbool = true;
                                                 //     });
                                                 //
                                                 //     return "Required";
                                                 //   } else {
                                                 //     setState(() {
-                                                //       descriptionError = false;
+                                                //       descriptionbool = false;
                                                 //     });
                                                 //   }
                                                 //   return null;
@@ -1233,8 +1254,8 @@ class _EditItemsState extends State<EditItems> {
                                       // unit
                                       Column( crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
-                                          Row(
-                                            children: const [
+                                          const Row(
+                                            children: [
                                               Text('Unit',
                                                   style: TextStyle(
                                                       color: Colors.red
@@ -1244,44 +1265,41 @@ class _EditItemsState extends State<EditItems> {
                                             ],
                                           ),
                                           const SizedBox(height:10),
-                                          // Container(
-                                          //   width: 350,
-                                          //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                          //   child: AnimatedContainer(
-                                          //     duration:const Duration(seconds: 0),
-                                          //     height: unitError ? 55 : 30,
-                                          //     child: DropdownSearch<String>(
-                                          //       validator: (value) {
-                                          //         if (value == null || value.isEmpty) {
-                                          //           setState(() {
-                                          //             unitError = true;
-                                          //           });
-                                          //           // print(unitError);
-                                          //           return "Required";
-                                          //         } else {
-                                          //           setState(() {
-                                          //             unitError = false;
-                                          //           });
-                                          //         }
-                                          //         return null;
-                                          //       },
-                                          //       popupProps: PopupProps.menu(
-                                          //         constraints:const BoxConstraints(maxHeight: 200),
-                                          //         showSearchBox: true,
-                                          //         searchFieldProps: TextFieldProps(
-                                          //           decoration: dropdownDecorationSearch(unitDropdownValue.isNotEmpty),
-                                          //           cursorColor: Colors.grey,
-                                          //           style:const TextStyle(
-                                          //             fontSize: 14,
-                                          //           ),
-                                          //         ),
-                                          //       ),
-                                          //       items: unit,
-                                          //       selectedItem: unitDropdownValue,
-                                          //       onChanged: unitSelectionChanged,
-                                          //     ),
-                                          //   ),
-                                          // ),
+                                          Container(
+                                            height: 30,
+                                            width: 350,
+                                            decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),),
+                                            child: CustomPopupMenuButton<String>(
+                                              childHeight: 200,
+                                              childWidth: 350,position: CustomPopupMenuPosition.under,
+                                              decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                              hintText: "",
+                                              shape: const RoundedRectangleBorder(
+                                                side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
+                                              ),
+                                              offset: const Offset(1, 12),
+                                              tooltip: '',
+                                              itemBuilder: (context) {
+                                                return unitTypes;
+                                              },
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  unitTypeText = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            ),
+                                          ),
+
                                         ],
                                       ),
                                       const SizedBox(height:15),
@@ -1301,19 +1319,19 @@ class _EditItemsState extends State<EditItems> {
                                             color:const Color.fromRGBO(255, 255, 255, 1),
                                             child: AnimatedContainer(
                                               duration:const Duration(seconds: 0),
-                                              height: hsnError ? 55 : 30,
+                                              height: hsnbool ? 55 : 30,
                                               child: TextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
                                                     setState(() {
-                                                      hsnError = true;
+                                                      hsnbool = true;
                                                     });
-                                                    // print(hsnError);
+                                                    // print(hsnbool);
                                                     return "Required";
                                                   } else {
                                                     setState(() {
-                                                      hsnError = false;
+                                                      hsnbool = false;
                                                     });
                                                   }
                                                   return null;
@@ -1323,10 +1341,10 @@ class _EditItemsState extends State<EditItems> {
                                                 onChanged: (text) {
                                                   setState(() {});
                                                 },
-                                                controller: taxCodeController,
+                                                controller: hsnController,
                                                 decoration: decorationInput5(
                                                     '',
-                                                    taxCodeController
+                                                    hsnController
                                                         .text.isNotEmpty),
                                               ),
                                             ),
@@ -1351,17 +1369,19 @@ class _EditItemsState extends State<EditItems> {
                                                   title: "Taxable",
                                                   value: 0,
                                                   onChanged: (newValue) => setState(() {
-                                                    _tasktax = newValue;
+                                                    _taskTax = newValue;
                                                   }),
                                                 ),
                                               ),
-                                              SizedBox(width: 190,
-                                                child: _taxRadioButton(
-                                                  title: "Non-Taxable",
-                                                  value: 1,
-                                                  onChanged: (newValue) => setState(() {
-                                                    _tasktax = newValue;
-                                                  }),
+                                              Expanded(
+                                                child: SizedBox(width: 190,
+                                                  child: _taxRadioButton(
+                                                    title: "Non-Taxable",
+                                                    value: 1,
+                                                    onChanged: (newValue) => setState(() {
+                                                      _taskTax = newValue;
+                                                    }),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1369,11 +1389,11 @@ class _EditItemsState extends State<EditItems> {
                                         ],
                                       ),
                                       const SizedBox(height:15),
-                                      if(_tasktax==1)
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                      if(_taskTax==1)
+                                         Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
-                                              children: const [
+                                              children: [
                                                 Text('Exemption Reason*',
                                                   style: TextStyle(color: Colors.red),
                                                 ),
@@ -1383,55 +1403,51 @@ class _EditItemsState extends State<EditItems> {
                                                 )
                                               ],
                                             ),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                // Container(
-                                                //   width: 350,
-                                                //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                                //   child: AnimatedContainer(
-                                                //     duration:const Duration(seconds: 0),
-                                                //     height: exemptionError ? 55 : 30,
-                                                //     child: DropdownSearch<String>(
-                                                //       validator: (value) {
-                                                //         if (value == null || value.isEmpty) {
-                                                //           setState(() {
-                                                //             exemptionError = true;
-                                                //           });
-                                                //           //  print(exemptionError);
-                                                //           return "Required";
-                                                //         } else {
-                                                //           setState(() {
-                                                //             exemptionError = false;
-                                                //           });
-                                                //         }
-                                                //         return null;
-                                                //       },
-                                                //       popupProps: PopupProps.menu(
-                                                //         constraints: const BoxConstraints(maxHeight: 200),
-                                                //         showSearchBox: true,
-                                                //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(exceptionDropdownValue.isNotEmpty),
-                                                //           cursorColor: Colors.grey,
-                                                //           style:const TextStyle(
-                                                //             fontSize: 14,
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       items: exmRe,
-                                                //       selectedItem: exceptionDropdownValue,
-                                                //       onChanged: exRemSelectionChanged,
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupException(hintText: exceptionTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return exceptionTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        exceptionTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ],
                                         ),
                                     ],
                                   ),
-                                if (_goodsService == 1)
+                                if (_character == 1)
                                   Column(crossAxisAlignment:CrossAxisAlignment.start,
                                       children:[
                                         //name
@@ -1448,22 +1464,22 @@ class _EditItemsState extends State<EditItems> {
 
                                                 Container(
                                                   width: 350,
-                                                  color:const Color.fromRGBO(255, 255, 255, 1),
+                                                  color: const Color.fromRGBO(255, 255, 255, 1),
                                                   child: AnimatedContainer(
-                                                    duration:const Duration(seconds: 0),
-                                                    height: nameError ? 55 : 30,
+                                                    duration: const Duration(seconds: 0),
+                                                    height: namebool ? 55 : 30,
                                                     child: TextFormField(
                                                       validator: (value) {
                                                         if (value == null ||
                                                             value.isEmpty) {
                                                           setState(() {
-                                                            nameError = true;
+                                                            namebool = true;
                                                           });
-                                                          // print(nameError);
+                                                          // print(namebool);
                                                           return "Required";
                                                         } else {
                                                           setState(() {
-                                                            nameError = false;
+                                                            namebool = false;
                                                           });
                                                         }
                                                         return null;
@@ -1487,7 +1503,7 @@ class _EditItemsState extends State<EditItems> {
                                           ],
                                         ),
                                         const SizedBox(height:10),
-                                        //Item code
+                                        //item code
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
@@ -1499,22 +1515,22 @@ class _EditItemsState extends State<EditItems> {
                                             const SizedBox(height:10),
                                             Container(
                                               width: 350,
-                                              color:const Color.fromRGBO(255, 255, 255, 1),
+                                              color: const Color.fromRGBO(255, 255, 255, 1),
                                               child: AnimatedContainer(
-                                                duration:const Duration(seconds: 0),
-                                                height: itemCodeError ? 55 : 30,
+                                                duration: const Duration(seconds: 0),
+                                                height: itemcode ? 55 : 30,
                                                 child: TextFormField(
                                                   validator: (value) {
                                                     if (value == null ||
                                                         value.isEmpty) {
                                                       setState(() {
-                                                        itemCodeError = true;
+                                                        itemcode = true;
                                                       });
                                                       // print(namebool);
                                                       return "Required";
                                                     } else {
                                                       setState(() {
-                                                        itemCodeError = false;
+                                                        itemcode = false;
                                                       });
                                                     }
                                                     return null;
@@ -1535,16 +1551,16 @@ class _EditItemsState extends State<EditItems> {
                                           ],
                                         ),
                                         const SizedBox(height:15),
-                                        //description
+                                        //Discription.
                                         Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const Text('Description'),
                                             const SizedBox(height:10),
                                             Container(
                                               width: 350,
-                                              color:const Color.fromRGBO(255, 255, 255, 1),
+                                              color: const Color.fromRGBO(255, 255, 255, 1),
                                               child: AnimatedContainer(
-                                                height: descriptionError ? 80 : 70,
+                                                height: descriptionbool ? 80 : 70,
                                                 // height: 38,
                                                 duration: const Duration(seconds: 0),
                                                 margin: const EdgeInsets.all(0),
@@ -1581,8 +1597,8 @@ class _EditItemsState extends State<EditItems> {
                                         // unit
                                         Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            Row(
-                                              children: const [
+                                            const Row(
+                                              children: [
                                                 Text('Unit',
                                                     style: TextStyle(
                                                         color: Colors.red
@@ -1595,44 +1611,40 @@ class _EditItemsState extends State<EditItems> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                // Container(
-                                                //   width: 350,
-                                                //   color:const Color.fromRGBO(255, 255, 255, 1),
-                                                //   child: AnimatedContainer(
-                                                //     duration:const Duration(seconds: 0),
-                                                //     height: unitError ? 55 : 30,
-                                                //     child: DropdownSearch<String>(
-                                                //       validator: (value) {
-                                                //         if (value == null || value.isEmpty) {
-                                                //           setState(() {
-                                                //             unitError = true;
-                                                //           });
-                                                //           // print(unitError);
-                                                //           return "Required";
-                                                //         } else {
-                                                //           setState(() {
-                                                //             unitError = false;
-                                                //           });
-                                                //         }
-                                                //         return null;
-                                                //       },
-                                                //       popupProps: PopupProps.menu(
-                                                //         constraints:const BoxConstraints(maxHeight: 200),
-                                                //         showSearchBox: true,
-                                                //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(unitDropdownValue.isNotEmpty),
-                                                //           cursorColor: Colors.grey,
-                                                //           style:const TextStyle(
-                                                //             fontSize: 14,
-                                                //           ),
-                                                //         ),
-                                                //       ),
-                                                //       items: unit,
-                                                //       selectedItem: unitDropdownValue,
-                                                //       onChanged: unitSelectionChanged,
-                                                //     ),
-                                                //   ),
-                                                // ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 350,
+                                                  decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                    borderRadius: const BorderRadius.all(
+                                                      Radius.circular(4),
+                                                    ),),
+                                                  child: CustomPopupMenuButton<String>(
+                                                    childHeight: 200,
+                                                    childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                    decoration: customPopupCreateAddItem(hintText: unitTypeText),
+                                                    hintText: "",
+                                                    shape: const RoundedRectangleBorder(
+                                                      side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    offset: const Offset(1, 12),
+                                                    tooltip: '',
+                                                    itemBuilder: (context) {
+                                                      return unitTypes;
+                                                    },
+                                                    onSelected: (String value)  {
+                                                      setState(() {
+                                                        unitTypeText = value;
+                                                      });
+                                                    },
+                                                    onCanceled: () {
+
+                                                    },
+                                                    child: Container(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -1640,8 +1652,8 @@ class _EditItemsState extends State<EditItems> {
                                         const SizedBox(height:15),
                                         // checkbox
                                         CheckboxListTile(
-                                          title: Row(
-                                            children: const [
+                                          title: const Row(
+                                            children: [
                                               Text('It is a digital service'),
                                               Icon(CupertinoIcons.question_circle,
                                                 color: Colors.grey,
@@ -1667,40 +1679,46 @@ class _EditItemsState extends State<EditItems> {
                                               ),
                                             ),
                                             const SizedBox(height:10),
-                                            Container(
-                                              width: 350,
-                                              color: const Color.fromRGBO(255, 255, 255, 1),
-                                              child: AnimatedContainer(
-                                                duration: const Duration(seconds: 0),
-                                                height: sacError ? 55: 30,
-                                                child: TextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      setState(() {
-                                                        sacError = true;
-                                                      });
-                                                      // print(sacError);
-                                                      return "Required";
-                                                    } else {
-                                                      setState(() {
-                                                        sacError = false;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  style: const TextStyle(
-                                                      fontSize: 14),
-                                                  onChanged: (text) {
-                                                    setState(() {});
-                                                  },
-                                                  controller: sacController,
-                                                  decoration: decorationInput5(
-                                                      '',
-                                                      sacController
-                                                          .text.isNotEmpty),
-                                                ),
-                                              ),
+                                            Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children:[
+                                                  Container(
+                                                    width: 350,
+                                                    color: const Color.fromRGBO(255, 255, 255, 1),
+                                                    child: AnimatedContainer(
+                                                      duration: const Duration(seconds: 0),
+                                                      height: sacbool ? 55: 30,
+                                                      child: TextFormField(
+                                                        validator: (value) {
+                                                          if (value == null ||
+                                                              value.isEmpty) {
+                                                            setState(() {
+                                                              sacbool = true;
+                                                            });
+                                                            //print(sacbool);
+                                                            return "Required";
+                                                          } else {
+                                                            setState(() {
+                                                              sacbool = false;
+                                                            });
+                                                          }
+                                                          return null;
+                                                        },
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                        onChanged: (text) {
+                                                          setState(() {});
+                                                        },
+                                                        controller: sacController,
+                                                        decoration: decorationInput5(
+                                                            '',
+                                                            sacController
+                                                                .text.isNotEmpty),
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                ]
                                             ),
                                           ],
                                         ),
@@ -1724,7 +1742,7 @@ class _EditItemsState extends State<EditItems> {
                                                         title: "Taxable",
                                                         value: 0,
                                                         onChanged: (newValue) => setState(() {
-                                                          _tasktax = newValue;
+                                                          _taskTax = newValue;
                                                         }),
                                                       ),
                                                     ),
@@ -1733,7 +1751,7 @@ class _EditItemsState extends State<EditItems> {
                                                         title: "Non-Taxable",
                                                         value: 1,
                                                         onChanged: (newValue) => setState(() {
-                                                          _tasktax = newValue;
+                                                          _taskTax = newValue;
                                                         }),
                                                       ),
                                                     ),
@@ -1741,11 +1759,11 @@ class _EditItemsState extends State<EditItems> {
                                                 ),
                                               ],
                                             ),
-                                            if(_tasktax==1)
+                                            if(_taskTax==1)
                                               Column(crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    children: const [
+                                                  const Row(
+                                                    children: [
                                                       Text('Exemption Reason*',
                                                         style: TextStyle(color: Colors.red),
                                                       ),
@@ -1756,44 +1774,40 @@ class _EditItemsState extends State<EditItems> {
                                                     ],
                                                   ),
                                                   const SizedBox(height:10),
-                                                  // Container(
-                                                  //   width: 350,
-                                                  //   color: const Color.fromRGBO(255, 255, 255, 1),
-                                                  //   child: AnimatedContainer(
-                                                  //     duration: const Duration(seconds: 0),
-                                                  //     height: exemptionError ? 55 : 30,
-                                                  //     child: DropdownSearch<String>(
-                                                  //       validator: (value) {
-                                                  //         if (value == null || value.isEmpty) {
-                                                  //           setState(() {
-                                                  //             exemptionError = true;
-                                                  //           });
-                                                  //           // print(exemptionError);
-                                                  //           return "Required";
-                                                  //         } else {
-                                                  //           setState(() {
-                                                  //             exemptionError = false;
-                                                  //           });
-                                                  //         }
-                                                  //         return null;
-                                                  //       },
-                                                  //       popupProps: PopupProps.menu(
-                                                  //         constraints: const BoxConstraints(maxHeight: 200),
-                                                  //         showSearchBox: true,
-                                                  //         searchFieldProps: TextFieldProps(
-                                                  //           decoration: dropdownDecorationSearch(exceptionDropdownValue.isNotEmpty),
-                                                  //           cursorColor: Colors.grey,
-                                                  //           style: const TextStyle(
-                                                  //             fontSize: 14,
-                                                  //           ),
-                                                  //         ),
-                                                  //       ),
-                                                  //       items: exmRe,
-                                                  //       selectedItem: exceptionDropdownValue,
-                                                  //       onChanged: exRemSelectionChanged,
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
+                                                  Container(
+                                                    height: 30,
+                                                    width: 350,
+                                                    decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(4),
+                                                      ),),
+                                                    child: CustomPopupMenuButton<String>(
+                                                      childHeight: 200,
+                                                      childWidth: 350,position: CustomPopupMenuPosition.under,
+                                                      decoration: customPopupException(hintText: exceptionTypeText),
+                                                      hintText: "",
+                                                      shape: const RoundedRectangleBorder(
+                                                        side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 12),
+                                                      tooltip: '',
+                                                      itemBuilder: (context) {
+                                                        return exceptionTypes;
+                                                      },
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          exceptionTypeText = value;
+                                                        });
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                           ],
@@ -1804,7 +1818,7 @@ class _EditItemsState extends State<EditItems> {
                             ),
                           ),
                         ),
-                      // ---------------second container--------------
+                      //---------------second container--------------
 
                       Container(
                         color: const Color.fromRGBO(255, 255, 255, 1),
@@ -1827,8 +1841,8 @@ class _EditItemsState extends State<EditItems> {
                                         Column(
                                           children: [
                                             //sales information
-                                            Row(
-                                              children: const [
+                                            const Row(
+                                              children: [
                                                 Text('Sales Information',
                                                   style: TextStyle(
                                                     fontSize:20,
@@ -1890,7 +1904,7 @@ class _EditItemsState extends State<EditItems> {
                                                                 width: 250,
                                                                 child: AnimatedContainer(
                                                                   duration: const Duration(seconds: 0),
-                                                                  height: sellingPriceError ? 55: 30,
+                                                                  height: sellingpricebool ? 55: 30,
                                                                   child: TextFormField(
                                                                     keyboardType: TextInputType.number,
                                                                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -1898,13 +1912,13 @@ class _EditItemsState extends State<EditItems> {
                                                                       if (value == null ||
                                                                           value.isEmpty) {
                                                                         setState(() {
-                                                                          sellingPriceError = true;
+                                                                          sellingpricebool = true;
                                                                         });
-                                                                        // print(sellingPriceError);
+                                                                        //print(sellingpricebool);
                                                                         return "Required";
                                                                       } else {
                                                                         setState(() {
-                                                                          sellingPriceError = false;
+                                                                          sellingpricebool = false;
                                                                         });
                                                                       }
                                                                       return null;
@@ -1947,36 +1961,36 @@ class _EditItemsState extends State<EditItems> {
                                                 // SizedBox(
                                                 //   width: 310,
                                                 //   child: AnimatedContainer(
-                                                //     duration:const Duration(seconds: 0),
-                                                //     height: accountError ? 55 : 30,
+                                                //     duration: const Duration(seconds: 0),
+                                                //     height: accountbool ? 55 : 30,
                                                 //     child: DropdownSearch<String>(
                                                 //       validator: (value) {
                                                 //         if (value == null || value.isEmpty) {
                                                 //           setState(() {
-                                                //             accountError = true;
+                                                //             accountbool = true;
                                                 //           });
-                                                //           // print(accountError);
+                                                //           print(accountbool);
                                                 //           return "Required";
                                                 //         } else {
                                                 //           setState(() {
-                                                //             accountError = false;
+                                                //             accountbool = false;
                                                 //           });
                                                 //         }
                                                 //         return null;
                                                 //       },
                                                 //       popupProps: PopupProps.menu(
-                                                //         constraints:const BoxConstraints(maxHeight: 200),
+                                                //         constraints: const BoxConstraints(maxHeight: 200),
                                                 //         showSearchBox: true,
                                                 //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(sellingAccountDropdownValue.isNotEmpty),
+                                                //           decoration: dropdownDecorationSearch(acc1dropdownValue.isNotEmpty),
                                                 //           cursorColor: Colors.grey,
-                                                //           style:const TextStyle(
+                                                //           style: const TextStyle(
                                                 //             fontSize: 14,
                                                 //           ),
                                                 //         ),
                                                 //       ),
                                                 //       items: acc1,
-                                                //       selectedItem: sellingAccountDropdownValue,
+                                                //       selectedItem: acc1dropdownValue,
                                                 //       onChanged: acc1SelectionChanged,
                                                 //     ),
                                                 //   ),
@@ -1984,36 +1998,9 @@ class _EditItemsState extends State<EditItems> {
                                               ],
                                             ),
                                             const SizedBox(height:15),
-                                            // //description
-                                            // Row(crossAxisAlignment: CrossAxisAlignment.start,
-                                            //   children: [
-                                            //     const SizedBox(
-                                            //       width:180,
-                                            //       child: Text('Description'),
-                                            //     ),
-                                            //     Container(
-                                            //       width: 310,
-                                            //       child: AnimatedContainer(
-                                            //         height: descriptionbool ? 80 : 70,
-                                            //         // height: 38,
-                                            //         duration: const Duration(seconds: 0),
-                                            //         margin: const EdgeInsets.all(0),
-                                            //         // decoration: name.text.isNotEmpty ?const BoxDecoration():const BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                            //         child: TextFormField(
-                                            //           maxLines: null,
-                                            //
-                                            //           style: const TextStyle(fontSize: 14),
-                                            //           onChanged: (text) {
-                                            //             setState(() {});
-                                            //           },
-                                            //           controller: description,
-                                            //           decoration: decorationInput6("Description", description.text.isNotEmpty),
-                                            //         ),
-                                            //       ),
-                                            //     ),
-                                            //   ],
-                                            // ),
-                                            // const SizedBox(height:15),
+
+                                            const SizedBox(height:15),
+                                            //This Code Is For Gst And Igst.
                                             // //gst
                                             // Row(crossAxisAlignment: CrossAxisAlignment.start,
                                             //   children:  [
@@ -2024,6 +2011,7 @@ class _EditItemsState extends State<EditItems> {
                                             //           const Text('GST %',
                                             //               style:TextStyle(color:Colors.red)
                                             //           ),
+                                            //
                                             //         ],
                                             //       ),
                                             //     ),
@@ -2079,7 +2067,9 @@ class _EditItemsState extends State<EditItems> {
                                             //       width:180,
                                             //       child: Row(
                                             //         children:  [
-                                            //           const Text('IGST %',style:TextStyle(color:Colors.red)),
+                                            //           const Text('IGST %',
+                                            //                   style:TextStyle(color:Colors.red)
+                                            //               ),
                                             //         ],
                                             //       ),
                                             //     ),
@@ -2136,8 +2126,8 @@ class _EditItemsState extends State<EditItems> {
                                         Column(
                                           children: [
                                             //purchase information
-                                            Row(
-                                              children: const [
+                                            const Row(
+                                              children:  [
                                                 Text('Purchase Information',
                                                   style: TextStyle(
                                                     fontSize:20,
@@ -2146,7 +2136,7 @@ class _EditItemsState extends State<EditItems> {
                                               ],
                                             ),
                                             const SizedBox(height:20),
-                                            //purchase price
+                                            //cost price
                                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children:  [
                                                 const SizedBox(
@@ -2195,7 +2185,7 @@ class _EditItemsState extends State<EditItems> {
                                                                 width: 250,
                                                                 child: AnimatedContainer(
                                                                   duration: const Duration(seconds: 0),
-                                                                  height: purchasePriceError ? 55 : 30,
+                                                                  height: costpricebool ? 55 : 30,
                                                                   child: TextFormField(
                                                                     keyboardType: TextInputType.number,
                                                                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -2203,13 +2193,13 @@ class _EditItemsState extends State<EditItems> {
                                                                       if (value == null ||
                                                                           value.isEmpty) {
                                                                         setState(() {
-                                                                          purchasePriceError = true;
+                                                                          costpricebool = true;
                                                                         });
-                                                                        // print(purchasePriceError);
+                                                                        print(costpricebool);
                                                                         return "Required";
                                                                       } else {
                                                                         setState(() {
-                                                                          purchasePriceError = false;
+                                                                          costpricebool = false;
                                                                         });
                                                                       }
                                                                       return null;
@@ -2252,7 +2242,7 @@ class _EditItemsState extends State<EditItems> {
                                                 // SizedBox(
                                                 //   width: 310,
                                                 //   child: AnimatedContainer(
-                                                //     duration:const Duration(seconds: 0),
+                                                //     duration: const Duration(seconds: 0),
                                                 //     height: account1bool ? 55: 30,
                                                 //     child: DropdownSearch<String>(
                                                 //       validator: (value) {
@@ -2260,7 +2250,7 @@ class _EditItemsState extends State<EditItems> {
                                                 //           setState(() {
                                                 //             account1bool = true;
                                                 //           });
-                                                //           //print(account1bool);
+                                                //           print(account1bool);
                                                 //           return "Required";
                                                 //         } else {
                                                 //           setState(() {
@@ -2270,18 +2260,18 @@ class _EditItemsState extends State<EditItems> {
                                                 //         return null;
                                                 //       },
                                                 //       popupProps: PopupProps.menu(
-                                                //         constraints:const BoxConstraints(maxHeight: 200),
+                                                //         constraints: const BoxConstraints(maxHeight: 200),
                                                 //         showSearchBox: true,
                                                 //         searchFieldProps: TextFieldProps(
-                                                //           decoration: dropdownDecorationSearch(purchaseDropdownValue.isNotEmpty),
+                                                //           decoration: dropdownDecorationSearch(acc2dropdownValue.isNotEmpty),
                                                 //           cursorColor: Colors.grey,
-                                                //           style:const TextStyle(
+                                                //           style: const TextStyle(
                                                 //             fontSize: 14,
                                                 //           ),
                                                 //         ),
                                                 //       ),
                                                 //       items: acc2,
-                                                //       selectedItem: purchaseDropdownValue,
+                                                //       selectedItem: acc2dropdownValue,
                                                 //       onChanged: acc2SelectionChanged,
                                                 //     ),
                                                 //   ),
@@ -2289,7 +2279,7 @@ class _EditItemsState extends State<EditItems> {
                                               ],
                                             ),
                                             const SizedBox(height:15),
-                                            //description
+                                            // //description
                                             // Row(crossAxisAlignment: CrossAxisAlignment.start,
                                             //   children: [
                                             //     const SizedBox(
@@ -2327,19 +2317,20 @@ class _EditItemsState extends State<EditItems> {
                             if(width<1100)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+
                                 children: [
                                   SizedBox(
-                                    height: 570,
+                                    height: 350,
                                     width:350,
 
                                     child:
                                     Column(
                                       children: [
                                         //sales information
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:15),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left:15),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Text('Sales Information',
                                                 style: TextStyle(
                                                   fontSize:20,
@@ -2396,7 +2387,7 @@ class _EditItemsState extends State<EditItems> {
                                                     width: 250,
                                                     child: AnimatedContainer(
                                                       duration: const Duration(seconds: 0),
-                                                      height: sellingPriceError ? 55: 30,
+                                                      height: sellingpricebool ? 55: 30,
                                                       child: TextFormField(
                                                         keyboardType: TextInputType.number,
                                                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -2404,13 +2395,13 @@ class _EditItemsState extends State<EditItems> {
                                                           if (value == null ||
                                                               value.isEmpty) {
                                                             setState(() {
-                                                              sellingPriceError = true;
+                                                              sellingpricebool = true;
                                                             });
-                                                            // print(sellingPriceError);
+                                                            // print(sellingpricebool);
                                                             return "Required";
                                                           } else {
                                                             setState(() {
-                                                              sellingPriceError = false;
+                                                              sellingpricebool = false;
                                                             });
                                                           }
                                                           return null;
@@ -2448,18 +2439,18 @@ class _EditItemsState extends State<EditItems> {
                                             //   width: 310,
                                             //   child: AnimatedContainer(
                                             //     duration: const Duration(seconds: 0),
-                                            //     height: accountError ? 55 : 30,
+                                            //     height: accountbool ? 55 : 30,
                                             //     child: DropdownSearch<String>(
                                             //       validator: (value) {
                                             //         if (value == null || value.isEmpty) {
                                             //           setState(() {
-                                            //             accountError = true;
+                                            //             accountbool = true;
                                             //           });
-                                            //           // print(accountError);
+                                            //           print(accountbool);
                                             //           return "Required";
                                             //         } else {
                                             //           setState(() {
-                                            //             accountError = false;
+                                            //             accountbool = false;
                                             //           });
                                             //         }
                                             //         return null;
@@ -2468,7 +2459,7 @@ class _EditItemsState extends State<EditItems> {
                                             //         constraints: const BoxConstraints(maxHeight: 200),
                                             //         showSearchBox: true,
                                             //         searchFieldProps: TextFieldProps(
-                                            //           decoration: dropdownDecorationSearch(sellingAccountDropdownValue.isNotEmpty),
+                                            //           decoration: dropdownDecorationSearch(acc1dropdownValue.isNotEmpty),
                                             //           cursorColor: Colors.grey,
                                             //           style: const TextStyle(
                                             //             fontSize: 14,
@@ -2476,7 +2467,7 @@ class _EditItemsState extends State<EditItems> {
                                             //         ),
                                             //       ),
                                             //       items: acc1,
-                                            //       selectedItem: sellingAccountDropdownValue,
+                                            //       selectedItem: acc1dropdownValue,
                                             //       onChanged: acc1SelectionChanged,
                                             //     ),
                                             //   ),
@@ -2485,122 +2476,126 @@ class _EditItemsState extends State<EditItems> {
                                         ),
                                         const SizedBox(height:15),
                                         //description
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text('Description'),
-                                            const SizedBox(height:10),
-                                            SizedBox(
-                                              width: 310,
-                                              child: AnimatedContainer(
-                                                height: descriptionError ? 80 : 70,
-                                                // height: 38,
-                                                duration: const Duration(seconds: 0),
-                                                margin: const EdgeInsets.all(0),
-                                                // decoration: name.text.isNotEmpty ?const BoxDecoration():const BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child: TextFormField(
-                                                  maxLines: null,
-                                                  style: const TextStyle(fontSize: 14),
-                                                  onChanged: (text) {
-                                                    setState(() {});
-                                                  },
-                                                  controller: description,
-                                                  decoration: decorationInput6("Description", description.text.isNotEmpty),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height:15),
-                                        //gst
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                          children:  [
-                                            const Text('GST %',style:TextStyle(color:Colors.red)),
-                                            const SizedBox(height:10),
-                                            // SizedBox(
-                                            //   width: 310,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: taxError ? 55 : 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       validator: (value) {
-                                            //         if (value == null || value.isEmpty) {
-                                            //           setState(() {
-                                            //             taxError = true;
-                                            //           });
-                                            //           print(taxError);
-                                            //           return "Required";
-                                            //         } else {
-                                            //           setState(() {
-                                            //             taxError = false;
-                                            //           });
-                                            //         }
-                                            //         return null;
-                                            //       },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(maxHeight: 200),
-                                            //         showSearchBox: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration: dropdownDecorationSearch(taxQuesDropdownValue.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: taxques,
-                                            //       selectedItem: taxQuesDropdownValue,
-                                            //       onChanged: gstSelectionChanged,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          ],
-                                        ),
+                                        // Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children: [
+                                        //     Text('Description'),
+                                        //     SizedBox(height:10),
+                                        //     Container(
+                                        //       width: 310,
+                                        //       child: AnimatedContainer(
+                                        //         height: descriptionbool ? 80 : 70,
+                                        //         // height: 38,
+                                        //         duration: const Duration(seconds: 0),
+                                        //         margin: const EdgeInsets.all(0),
+                                        //         // decoration: name.text.isNotEmpty ?const BoxDecoration():const BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                        //         child: TextFormField(
+                                        //           maxLines: null,
+                                        //
+                                        //           style: const TextStyle(fontSize: 14),
+                                        //           onChanged: (text) {
+                                        //             setState(() {});
+                                        //           },
+                                        //           controller: description,
+                                        //           decoration: decorationInput6("Description", description.text.isNotEmpty),
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        // const SizedBox(height:15),
+                                        // //gst
+                                        // Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children:  [
+                                        //     const Text('GST %',
+                                        //             style:TextStyle(color:Colors.red)
+                                        //         ),
+                                        //     SizedBox(height:10),
+                                        //     SizedBox(
+                                        //       width: 310,
+                                        //       child: AnimatedContainer(
+                                        //         duration: Duration(seconds: 0),
+                                        //         height: taxbool ? 55 : 30,
+                                        //         child: DropdownSearch<String>(
+                                        //           validator: (value) {
+                                        //             if (value == null || value.isEmpty) {
+                                        //               setState(() {
+                                        //                 taxbool = true;
+                                        //               });
+                                        //               print(taxbool);
+                                        //               return "Required";
+                                        //             } else {
+                                        //               setState(() {
+                                        //                 taxbool = false;
+                                        //               });
+                                        //             }
+                                        //           },
+                                        //           popupProps: PopupProps.menu(
+                                        //             constraints: BoxConstraints(maxHeight: 200),
+                                        //             showSearchBox: true,
+                                        //             searchFieldProps: TextFieldProps(
+                                        //               decoration: dropdownDecorationSearch(taxquesdropdownValue.isNotEmpty),
+                                        //               cursorColor: Colors.grey,
+                                        //               style: TextStyle(
+                                        //                 fontSize: 14,
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           items: taxques,
+                                        //           selectedItem: taxquesdropdownValue,
+                                        //           onChanged: gstSelectionChanged,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        //
+                                        // const SizedBox(height:15),
+                                        // //igst
+                                        // Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children:[
+                                        //     const Text('IGST %',
+                                        //             style:TextStyle(color:Colors.red)
+                                        //         ),
+                                        //     SizedBox(height:10),
+                                        //     SizedBox(
+                                        //       width: 310,
+                                        //       child: AnimatedContainer(
+                                        //         duration: Duration(seconds: 0),
+                                        //         height: tax2bool ? 55: 30,
+                                        //         child: DropdownSearch<String>(
+                                        //           validator: (value) {
+                                        //             if (value == null || value.isEmpty) {
+                                        //               setState(() {
+                                        //                 tax2bool = true;
+                                        //               });
+                                        //               print(tax2bool);
+                                        //               return "Required";
+                                        //             } else {
+                                        //               setState(() {
+                                        //                 tax2bool = false;
+                                        //               });
+                                        //             }
+                                        //           },
+                                        //           popupProps: PopupProps.menu(
+                                        //             constraints: BoxConstraints(maxHeight: 200),
+                                        //             showSearchBox: true,
+                                        //             searchFieldProps: TextFieldProps(
+                                        //               decoration: dropdownDecorationSearch(taxques2dropdownValue.isNotEmpty),
+                                        //               cursorColor: Colors.grey,
+                                        //               style: TextStyle(
+                                        //                 fontSize: 14,
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           items: taxques2,
+                                        //           selectedItem: taxques2dropdownValue,
+                                        //           onChanged: igstSelectionChanged,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
 
-                                        const SizedBox(height:15),
-                                        //ist
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                          children:  [
-                                            const Text('IGST %',style:TextStyle(color:Colors.red)),
-                                            const SizedBox(height:10),
-                                            // SizedBox(
-                                            //   width: 310,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: tax2bool ? 55: 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       validator: (value) {
-                                            //         if (value == null || value.isEmpty) {
-                                            //           setState(() {
-                                            //             tax2bool = true;
-                                            //           });
-                                            //           print(tax2bool);
-                                            //           return "Required";
-                                            //         } else {
-                                            //           setState(() {
-                                            //             tax2bool = false;
-                                            //           });
-                                            //         }
-                                            //         return null;
-                                            //       },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(maxHeight: 200),
-                                            //         showSearchBox: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration: dropdownDecorationSearch(taxQues2dropdownValue.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: taxques2,
-                                            //       selectedItem: taxQues2dropdownValue,
-                                            //       onChanged: igstSelectionChanged,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          ],
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -2612,10 +2607,10 @@ class _EditItemsState extends State<EditItems> {
                                     Column(
                                       children: [
                                         //purchase information
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:15),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left:15),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Text('Purchase Information',
                                                 style: TextStyle(
                                                   fontSize:20,
@@ -2630,7 +2625,7 @@ class _EditItemsState extends State<EditItems> {
                                           padding: const EdgeInsets.only(left:15),
                                           child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                             children:  [
-                                              const Text('Purchase Price*',
+                                              const Text('Cost Price*',
                                                 style: TextStyle(
                                                   color: Colors.red,
                                                   decoration: TextDecoration.underline,
@@ -2668,7 +2663,7 @@ class _EditItemsState extends State<EditItems> {
                                                     width: 250,
                                                     child: AnimatedContainer(
                                                       duration: const Duration(seconds: 0),
-                                                      height: purchasePriceError ? 55 : 30,
+                                                      height: costpricebool ? 55 : 30,
                                                       child: TextFormField(
                                                         keyboardType: TextInputType.number,
                                                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -2676,13 +2671,12 @@ class _EditItemsState extends State<EditItems> {
                                                           if (value == null ||
                                                               value.isEmpty) {
                                                             setState(() {
-                                                              purchasePriceError = true;
+                                                              costpricebool = true;
                                                             });
-                                                            // print(purchasePriceError);
                                                             return "Required";
                                                           } else {
                                                             setState(() {
-                                                              purchasePriceError = false;
+                                                              costpricebool = false;
                                                             });
                                                           }
                                                           return null;
@@ -2707,56 +2701,82 @@ class _EditItemsState extends State<EditItems> {
                                         ),
                                         const SizedBox(height:15),
                                         //account
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                          children:  [
-                                            const Text('Account*',
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                                decoration: TextDecoration.underline,
-                                                decorationStyle: TextDecorationStyle.dotted,
-                                              ),),
-                                            const SizedBox(height:10),
-                                            // SizedBox(
-                                            //   width: 310,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: account1bool ? 55: 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       validator: (value) {
-                                            //         if (value == null || value.isEmpty) {
-                                            //           setState(() {
-                                            //             account1bool = true;
-                                            //           });
-                                            //           //print(account1bool);
-                                            //           return "Required";
-                                            //         } else {
-                                            //           setState(() {
-                                            //             account1bool = false;
-                                            //           });
-                                            //         }
-                                            //         return null;
-                                            //       },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(maxHeight: 200),
-                                            //         showSearchBox: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration: dropdownDecorationSearch(purchaseDropdownValue.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: acc2,
-                                            //       selectedItem: purchaseDropdownValue,
-                                            //       onChanged: acc2SelectionChanged,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          ],
-                                        ),
+                                        // Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children:  [
+                                        //     const Text('Account*',
+                                        //       style: TextStyle(
+                                        //         color: Colors.red,
+                                        //         decoration: TextDecoration.underline,
+                                        //         decorationStyle: TextDecorationStyle.dotted,
+                                        //       ),),
+                                        //     const SizedBox(height:10),
+                                        //     SizedBox(
+                                        //       width: 310,
+                                        //       child: AnimatedContainer(
+                                        //         duration: const Duration(seconds: 0),
+                                        //         height: account1bool ? 55: 30,
+                                        //         child: DropdownSearch<String>(
+                                        //           validator: (value) {
+                                        //             if (value == null || value.isEmpty) {
+                                        //               setState(() {
+                                        //                 account1bool = true;
+                                        //               });
+                                        //               // print(account1bool);
+                                        //               return "Required";
+                                        //             } else {
+                                        //               setState(() {
+                                        //                 account1bool = false;
+                                        //               });
+                                        //             }
+                                        //             return null;
+                                        //           },
+                                        //           popupProps: PopupProps.menu(
+                                        //             constraints: const BoxConstraints(maxHeight: 200),
+                                        //             showSearchBox: true,
+                                        //             searchFieldProps: TextFieldProps(
+                                        //               decoration: dropdownDecorationSearch(acc2dropdownValue.isNotEmpty),
+                                        //               cursorColor: Colors.grey,
+                                        //               style: const TextStyle(
+                                        //                 fontSize: 14,
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           items: acc2,
+                                        //           selectedItem: acc2dropdownValue,
+                                        //           onChanged: acc2SelectionChanged,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
                                         const SizedBox(height:15),
-
+                                        //description
+                                        // Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children: [
+                                        //     Text('Description'),
+                                        //     SizedBox(height:10),
+                                        //     Container(
+                                        //       width: 310,
+                                        //       child: AnimatedContainer(
+                                        //         height: description2bool ? 80 : 70,
+                                        //         // height: 38,
+                                        //         duration: const Duration(seconds: 0),
+                                        //         margin: const EdgeInsets.all(0),
+                                        //         // decoration: name.text.isNotEmpty ?const BoxDecoration():const BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                        //         child: TextFormField(
+                                        //           maxLines: null,
+                                        //
+                                        //           style: const TextStyle(fontSize: 14),
+                                        //           onChanged: (text) {
+                                        //             setState(() {});
+                                        //           },
+                                        //           controller: description2,
+                                        //           decoration: decorationInput6("Purchase Description", description2.text.isNotEmpty),
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -2767,12 +2787,16 @@ class _EditItemsState extends State<EditItems> {
                           ],
                         ),
                       ),
+
+
                     ],
                   ),
                 ),
               ),
-              bottomNavigationBar:  SizedBox(
+              ),
+              bottomNavigationBar: Container(
                 height:60,
+                decoration:BoxDecoration(border:Border.all(color:const Color.fromRGBO(204, 204, 204, 1))),
                 child: Padding(
                   padding: const EdgeInsets.only(left:50),
                   child: Row(
@@ -2780,165 +2804,52 @@ class _EditItemsState extends State<EditItems> {
                       MaterialButton(
                         color:Colors.blue,
                         textColor:Colors.white,
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           setState(() {
                             if(addItemsForm.currentState!.validate()){
                               Map requestBody={
-                                "newitem_id":widget.itemData["newitem_id"],
                                 "description": description.text,
-                                "exemption_reason": _tasktax == 1 ?exceptionDropdownValue:"",
+                                "exemption_reason": _taskTax == 1 ?exRedropdownValue:"",
                                 'item_code':item.text,
                                 "name": nameController.text,
-                                "purchase_account": purchaseDropdownValue,
-                                "purchase_price": purchasePrice.text,
-                                "sac": _goodsService==1?sacController.text:"",
-                                "selling_account": sellingAccountDropdownValue,
-                                "selling_price": sellingPrice.text,
-                                "tax_code": _goodsService==0?taxCodeController.text:"",
-                                "tax_preference": _tasktax == 0 ?"Taxable":"NonTaxable",
-                                "type": _goodsService==1 ? "Services" : "Goods",
-                                "unit": unitDropdownValue,
+                                "purchase_account": acc2dropdownValue,
+                                "purchase_price":double.parse(purchasePrice.text),
+                                "sac":_character==1?sacController.text:"",
+                                "selling_account": acc1dropdownValue,
+                                "selling_price": double.parse(sellingPrice.text),
+                                "tax_code": _character==0?hsnController.text:"",
+                                "tax_preference": _taskTax == 0 ?"Taxable":"NonTaxable",
+                                "type": _character==1 ? "Sevices" : "Goods",
+                                "unit": unitdropdownValue,
                               };
-                              print('-------Add items details');
+                              print(requestBody);
                               saveData(requestBody);
                             }
-                          });
 
-                        },
-                        child: const Text('Save'),),
-                      const SizedBox(width:10),
-                      MaterialButton(
-                        color: Colors.white70,
-                        // height: 40,
-                        // minWidth: 80,
-                        onPressed: () {
-                          setState(() {
-                            Navigator.of(context).pop();
                           }
                           );
                         },
-                        child: const Text('Cancel',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),),
-                      const SizedBox(width:10),
-                      MaterialButton(
-                        color: Colors.red,
-                        onPressed: (){
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors.transparent,
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return SizedBox(
-                                      height: 200,
-                                      width: 300,
-                                      child: Stack(children: [
-                                        Container(
-                                          decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                          margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                            child: Column(
-                                              children: [
-                                                const SizedBox(
-                                                  height: 20,
-                                                ),
-                                                const Icon(
-                                                  Icons.warning_rounded,
-                                                  color: Colors.red,
-                                                  size: 50,
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                const Center(
-                                                    child: Text(
-                                                      'Are You Sure, You Want To Delete ?',
-                                                      style: TextStyle(
-                                                          color: Colors.indigo,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 15),
-                                                    )),
-                                                const SizedBox(
-                                                  height: 35,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    MaterialButton(
-                                                      color: Colors.red,
-                                                      onPressed: () {
+                        child: const Text('Save'),),
+                      const SizedBox(width:30),
+                      SizedBox(
+                        width: 80,
+                        height: 30,
+                        child: MaterialButton(
+                            onPressed: (){
+                              setState(() {
+                                Navigator.of(context).pop();
 
-                                                        deleteItems();
-                                                      },
-                                                      child: const Text(
-                                                        'Ok',
-                                                        style: TextStyle(color: Colors.white),
-                                                      ),
-                                                    ),
-                                                    MaterialButton(
-                                                      color: Colors.blue,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          Navigator.of(context).pop();
-                                                        });
-                                                      },
-                                                      child: const Text(
-                                                        'Cancel',
-                                                        style: TextStyle(color: Colors.white),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(right: 0.0,
-
-                                          child: InkWell(
-                                            child: Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    border: Border.all(
-                                                      color:
-                                                      const Color.fromRGBO(204, 204, 204, 1),
-                                                    ),
-                                                    color: Colors.blue),
-                                                child: const Icon(
-                                                  Icons.close_sharp,
-                                                  color: Colors.white,
-                                                )),
-                                            onTap: () {
-                                              setState(() {
-                                                Navigator.of(context).pop();
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
+                              });
                             },
-                          );
-
-                        },
-                        child: Row(children: const [
-                          Icon(Icons.delete,color: Colors.white,),
-                          Text("Delete",style: TextStyle(color: Colors.white),)
-                        ]),
-                      )
+                            color: Colors.white,
+                            child: const Center(
+                              child: Text('Cancel',
+                                style: TextStyle(
+                                    color: Colors.black
+                                ),
+                              ),
+                            )),
+                      ),
                     ],
                   ),
                 ),
@@ -2950,91 +2861,90 @@ class _EditItemsState extends State<EditItems> {
     );
   }
 
-  Future<void> saveData(Map<dynamic, dynamic> requestBody) async {
-    try {
-      final response = await http.put(Uri.parse(
-          "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/update_newitem"
-      ),
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': 'Bearer $authToken'
-          },
-          body: json.encode(requestBody)
-      );
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Edit Success"),
-        ));
-        // print("----------from Edit Items --------------");
-        print(response.body);
-        Navigator.of(context).pop();
+  Future<void> saveData(Map <dynamic,dynamic> requestBody) async {
+    String url="https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/add_newitem";
+    postData(context:context ,url:url ,requestBody:requestBody ).then((value) {
+      setState(() {
+        if(value!=null){
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
+          Navigator.of(context).pop();
+        }
+        loading= true;
+      });
+    });
 
-      }
-      else {
-        print("++++++ Status Code ++++++++");
-        print(response.statusCode.toString());
-      }
-    }
-    catch (e) {
-      print(e.toString());
-      print(e);
-    }
+    // try {
+    //   final response = await http.post(Uri.parse(
+    //       "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/add_newitem"),
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         'Authorization': 'Bearer $authToken'
+    //
+    //       },
+    //       body: json.encode(requestBody)
+    //   );
+    //   if (response.statusCode == 200) {
+    //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //       content: Text("Data Saved"),
+    //     ));
+    //     print(response.body);
+    //     Navigator.of(context).pop();
+    //
+    //   }
+    //   else {
+    //     print("++++++ Status Code ++++++++");
+    //     print(response.statusCode.toString());
+    //   }
+    // }
+    // catch (e) {
+    //   print(e.toString());
+    //   print(e);
+    // }
   }
 
   Widget _typeRadioButton({required String title, required int value, required  onChanged}) {
     return RadioListTile(
       value: value,
-      groupValue: _goodsService,
+      groupValue: _character,
       onChanged: onChanged,
       title: Text(title),
     );
   }
-
   Widget _taxRadioButton({required String title, required int value, required  onChanged}) {
     return RadioListTile(
       value: value,
-      groupValue: _tasktax,
+      groupValue: _taskTax,
       onChanged: onChanged,
       title: Text(title),
     );
   }
-
-  Future deleteItems() async{
-    print('========================================');
-    print(selectedId);
-    try{
-      final deleteVendorsValue = await http.delete(
-        Uri.parse(
-            'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/delete_newitem/$selectedId'),
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': 'Bearer $authToken'
-        },
-      );
-      if(deleteVendorsValue.statusCode ==200){
-        setState(() {
-          // print(selectedId);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Data Deleted'),)
-          );
-          // fetchItemData();
-          itemDetailsBloc.fetchItemNetwork(selectedId,type);
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-
-        });
-      }
-      else{
-        //If response Not Getting It Will Through Exception Error.
-        setState(() {
-          print(deleteVendorsValue.statusCode.toString());
-        });
-      }
-    }
-    catch(e){
-      print(e.toString());
-      print(e);
-    }
+  customPopupCreateAddItem ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Unit Type"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  customPopupException ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: hintText=="Select Exception Type"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
   }
 }
 

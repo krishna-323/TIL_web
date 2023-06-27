@@ -1,9 +1,9 @@
 
 
-class ItemModel {
+class PartModel {
 
   List<_ItemModel> _list =[];
-  ItemModel.fromProvider(Map parsedJson) {
+  PartModel.fromProvider(Map parsedJson) {
     List <_ItemModel> temp =[];
     // for(int i =0; i<parsedJson.length; i++) {
     _ItemModel result = _ItemModel(parsedJson);

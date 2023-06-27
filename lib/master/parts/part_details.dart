@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:new_project/master/parts/add_part.dart';
+import 'package:new_project/master/parts/bloc/part_details_bloc.dart';
+import 'package:new_project/master/parts/edit_part.dart';
+import 'package:new_project/master/parts/model/part_detail_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,25 +11,22 @@ import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../widgets/input_decoration_text_field.dart';
-import 'add_items.dart';
-import 'bloc/item_details_bloc.dart';
-import 'edit_items.dart';
-import 'model/item_detail_model.dart';
+
 
 
 //dynamic data code.
-class ViewItems extends StatefulWidget {
+class PartDetails extends StatefulWidget {
   final int title;
   final double drawerWidth;
   final double selectedDestination;
   final Map itemList;
-  const ViewItems( {Key? key, required this.itemList, required this.title, required this.drawerWidth, required this.selectedDestination}) : super(key: key);
+  const PartDetails( {Key? key, required this.itemList, required this.title, required this.drawerWidth, required this.selectedDestination}) : super(key: key);
 
   @override
-  _ViewItemsState createState() => _ViewItemsState();
+  _PartDetailsState createState() => _PartDetailsState();
 }
 
-class _ViewItemsState extends State<ViewItems> {
+class _PartDetailsState extends State<PartDetails> {
 
 
   String selectedId="";
@@ -46,7 +47,7 @@ class _ViewItemsState extends State<ViewItems> {
     loading=true;
     getInitialData().whenComplete(() {
       selectedId=widget.itemList['newitem_id'];
-      itemDetailsBloc.fetchItemNetwork(widget.itemList['newitem_id'],authToken!);
+      partDetailsBloc.fetchItemNetwork(widget.itemList['newitem_id'],authToken!);
       fetchItemData();
 
     });
@@ -160,7 +161,7 @@ class _ViewItemsState extends State<ViewItems> {
                                               SizedBox(width: 60,child: MaterialButton(onPressed: (){
                                                // Navigator.push(context, MaterialPageRoute(builder: (context)=>AddItems(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: widget.selectedDestination))).then((value) =>fetchItemData());
                                                 Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                    const AddItems(drawerWidth: 190, selectedDestination: 2.4,)));
+                                                    const AddPart(drawerWidth: 190, selectedDestination: 2.4,)));
                                               },color: Colors.blue,child: const Text("+ New",style: TextStyle(color: Colors.white)),))
                                             ],
                                           )
@@ -186,7 +187,7 @@ class _ViewItemsState extends State<ViewItems> {
                                               selectedId=itemList[index]['newitem_id'];
                                               setState(() {
                                                 selectedIndex = index;
-                                                itemDetailsBloc.fetchItemNetwork(itemList[index]['newitem_id'],authToken!
+                                                partDetailsBloc.fetchItemNetwork(itemList[index]['newitem_id'],authToken!
 
                                                 );
                                               });
@@ -215,8 +216,8 @@ class _ViewItemsState extends State<ViewItems> {
                       ),
                       const VerticalDivider(width: 1),
                       StreamBuilder(
-                          stream: itemDetailsBloc.getItemDetails,
-                          builder: (context, AsyncSnapshot <ItemModel>snapshot) {
+                          stream: partDetailsBloc.getItemDetails,
+                          builder: (context, AsyncSnapshot <PartModel>snapshot) {
                             if(snapshot.hasData){
 
                               return Expanded(flex: 2,
@@ -936,7 +937,7 @@ class _ViewItemsState extends State<ViewItems> {
                                                 //         (value) =>
                                                 //         fetchItemData());
                                                 Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                EditItems(drawerWidth: 190, selectedDestination: 2.4, itemData:snapshot.data!.docketData[0].itemData,)
+                                                EditPart(drawerWidth: 190, selectedDestination: 2.4, itemData:snapshot.data!.docketData[0].itemData,)
                                                 ));
                                               },
                                               color: Colors.blue,
@@ -993,7 +994,7 @@ class _ViewItemsState extends State<ViewItems> {
           content: Text('Data Deleted'),)
         );
         fetchItemData();
-        itemDetailsBloc.fetchItemNetwork(selectedId,type);
+        partDetailsBloc.fetchItemNetwork(selectedId,type);
         Navigator.of(context).pop();
 
       });
