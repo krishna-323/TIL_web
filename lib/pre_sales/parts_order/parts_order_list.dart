@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:new_project/pre_sales/parts_order/parts_order_details.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -40,7 +41,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
   int startVal=0;
   Future fetchEstimate()async{
     dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_estimate_vehicle';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_parts_purchase_order';
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {
@@ -197,19 +198,19 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                   MaterialButton(
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
-
-                                      // print('-------------inontap------------------');
-                                      // print(estimateItems[i]);
-                                      // Navigator.of(context).push(PageRouteBuilder(
-                                      //     pageBuilder: (context,animation1,animation2) => ViewEstimateItem(
-                                      //       //customerList: displayList[i],
-                                      //       drawerWidth: widget.args.drawerWidth,
-                                      //       selectedDestination: widget.args.selectedDestination,
-                                      //       estimateItem: estimateItems[i],
-                                      //       transitionDuration: Duration.zero,
-                                      //       reverseTransitionDuration: Duration.zero,
-                                      //     )
-                                      // ));
+                                      print("++++++++++++++++++++++++++++++");
+                                      print(estimateItems[i]);
+                                      print("++++++++++++++++++++++++++++++++++++++");
+                                      Navigator.of(context).push(PageRouteBuilder(
+                                          pageBuilder: (context,animation1,animation2) => PartOrderDetails(
+                                            //customerList: displayList[i],
+                                            drawerWidth: widget.args.drawerWidth,
+                                            selectedDestination: widget.args.selectedDestination,
+                                            estimateItem: estimateItems[i],
+                                            transitionDuration: Duration.zero,
+                                            reverseTransitionDuration: Duration.zero,
+                                          )
+                                      ));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 18.0,top: 4,bottom: 3),
