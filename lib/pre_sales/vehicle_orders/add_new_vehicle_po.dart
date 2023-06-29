@@ -1,17 +1,19 @@
-
 import 'dart:developer';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:textfield_search/textfield_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../classes/models/search_models.dart';
+import '../../classes/motows_routes.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
-import '../../widgets/input_decoration_text_field.dart';
+import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
+import '../../utils/static_data/motows_colors.dart';
+import '../../widgets/custom_dividers/custom_vertical_divider.dart';
+import '../../widgets/custom_search_textfield/custom_search_field.dart';
+import '../../widgets/motows_buttons/outlined_icon_mbutton.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 
 class AddNewVehiclePurchaseOrder extends StatefulWidget {
   final double drawerWidth;
@@ -27,1891 +29,271 @@ class AddNewVehiclePurchaseOrder extends StatefulWidget {
 }
 
 class _AddNewPurchaseOrderState extends State<AddNewVehiclePurchaseOrder> {
-  final _addPurchaseForm = GlobalKey<FormState>();
 
-  List taxList = [];
   bool loading = false;
+  bool showVendorDetails = false;
+  bool showWareHouseDetails = false;
+  bool isVehicleSelected = false;
+  // Validation Declaration.
+  bool searchVendor=false;
+  bool searchWareHouse=false;
+  late double width ;
 
-  Future fetchTaxData() async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax";
-    try {
-      await getData(url: url, context: context).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            taxList = value;
-            // print('--------fetch Tax Data--------');
-            // print(taxList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, response: response, exception: e.toString());
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  Future<List> fetchModel() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    List list1 = [];
-    // String _inputText = vendorName.text;
-    for (int i = 0; i < modelList.length; i++) {
-      list1.add(ModelData.fromJson(modelList[i]));
-    }
-
-    return list1;
-  }
-
-  Future<List> fetchVariant() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    List variant = [];
-    // String _inputText = vendorName.text;
-    for (int i = 0; i < variantList.length; i++) {
-      variant.add(VariantData.fromJson(variantList[i]));
-    }
-
-    return variant;
-  }
-
-  Future<List> fetchBrand() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    List _list1 = [];
-    // String _inputText = vendorName.text;
-    for (int i = 0; i < brandList.length; i++) {
-      _list1.add(ItemData.fromJson(brandList[i]));
-    }
-
-    return _list1;
-  }
-
-  Future fetchVendorsData() async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            vendorList = value;
-            // print('----------fetchVendorData--------');
-            // print(vendorList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, exception: e.toString(), response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  String poNo = '';
-
-  Future fetchBrandData() async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehicle/get_all_new_vehicle_brand";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            poNumber.text =
-            "PO-${DateTime.now().hour}${DateTime.now().microsecondsSinceEpoch}";
-            brandList = value;
-            // print('----------fetchBrandData-----------');
-            // print(brandList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, response: response, exception: e.toString());
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  Future fetchModelData(name) async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehicle/get_new_vehicle_model_by_brand/$name";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            modelList = value;
-            // print('----------fetchModelData-----------');
-            // print(modelList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, exception: e.toString(), response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  Future fetchVariantData(name) async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehiclevarient/get_new_vehicle_by_varient/$name";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            variantList = value;
-            print('--------fetchVariantData-----------');
-            print(variantList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, response: response, exception: e.toString());
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  Future<List> fetchData() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    List _list = [];
-    // String _inputText = vendorName.text;
-    for (int i = 0; i < vendorList.length; i++) {
-      _list.add(VendorData.fromJson(vendorList[i]));
-    }
-
-    return _list;
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1999, 8),
-        lastDate: DateTime(2101));
-    if (picked != null) {
-      setState(() {
-        expDeliveryDate.text = (picked.toLocal()).toString().split(' ')[0];
-      });
-    }
-  }
-
-  List vvList = [];
-
-  Future getAllVehicleVariant() async {
-    dynamic response;
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            vvList = value;
-            // print('---------getAllVehicleVariant----------');
-            // print(vvList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, exception: e.toString(), response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  Future getInitialData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    authToken = prefs.getString("authToken");
-  }
-
-  List warehouseList = [];
-
-  //Warehouse details Api.
-  Future fetchListWarehouseData() async {
-    dynamic response;
-    String url =
-        'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/warehouse/get_all_warehouse';
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            warehouseList = value;
-            // print('--------warehouse List get all api---------');
-            // print(warehouseList);
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, exception: toString(), response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
+  var wareHouseController=TextEditingController();
+  var vendorSearchController = TextEditingController();
+  final brandNameController=TextEditingController();
+  var modelNameController = TextEditingController();
+  var variantController=TextEditingController();
+  var salesInvoiceDate = TextEditingController();
+  var subAmountTotal = TextEditingController();
+  var grandTotal = TextEditingController();
+  double grandTotalS =0.0;
+  var subTaxTotal = TextEditingController();
+  var subDiscountTotal = TextEditingController();
+  final termsAndConditions=TextEditingController();
+  final customerNotes = TextEditingController();
+  final salesInvoice=TextEditingController();
+  final freightAmount=TextEditingController();
   @override
   void initState() {
-    // loading = true;
+    // TODO: implement initState
     super.initState();
-    getInitialData().whenComplete(() {
-      //warehouse Details API Calling.
-      fetchListWarehouseData();
-      fetchBrandData();
-      fetchVendorsData();
-      fetchTaxData();
-      // fetchItemData();
-      getAllVehicleVariant();
-    });
-//This is For Tax Code.
-
-    brandController.add(TextEditingController());
-    colorController.add(TextEditingController());
-    modelController.add(TextEditingController());
-    variantController.add(TextEditingController());
-    uiTableData.add({});
-    unitController.add(TextEditingController());
-    discountController.add(TextEditingController());
-    taxController.add(TextEditingController());
-    taxCode.add(TextEditingController());
-
-    itemDetailsController.add(TextEditingController());
-    rateController.add(TextEditingController());
-    totalTaxValueController.add(TextEditingController());
-    sGstController.add(TextEditingController());
-
-    amountController.add(TextEditingController());
-    amountValueController.add(TextEditingController());
-    discountAmountController.add(0.0);
-    discountUnitController.add(0.0);
-    itemVal.add(0);
-    cGstVal.add(0);
-    sGstVal.add(0);
-    selectedQuantity.add("1");
-    selectedColor.add("Black");
-    taxQuantity.add('10');
+    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
+    getAllVehicleVariant();
+    fetchVendorsData();
   }
-
-  String? dropDownValue;
-  String? orgVal;
-  String? customerVal;
-  double total = 0.0;
-  double grandTotal = 0.0;
-  double grandTotal1 = 0.0;
-
   List vendorList = [];
 
-  List brandList = [];
-
-  List modelList = [];
-  List variantList = [];
-
-  Map gstValues = {
-    "cGst4": 0.0,
-    "sGst4": 0.0,
-    "cGst6": 0.0,
-    "sGst6": 0.0,
-    "cGst9": 0.0,
-    "sGst9": 0.0,
-    "cGst14": 0.0,
-    "sGst14": 0.0,
+  Map vendorData = {
+    'Name':'',
+    'city': '',
+    'state': '',
+    'street': '',
+    'zipcode': '',
+    "vendorId":"",
   };
 
-  List uiTableData = [];
+  Map wareHouse ={
+    'Name':'',
+    'city': '',
+    'state': '',
+    'street': '',
+    'zipcode': '',
+    "vendorId":"",
+  };
 
-  var itemSelected = [];
+  List vehicleList = [];
+  List displayList= [];
+  List selectedVehicles=[];
 
-  List tableData = [0];
-  final _quantity = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16"
-  ];
+  var units = <TextEditingController>[];
+  var discountRupees = <TextEditingController>[];
+  var discountPercentage = <TextEditingController>[];
+  var tax = <TextEditingController>[];
+  var lineAmount = <TextEditingController>[];
+  List items=[];
+  Map postDetails={};
+  Map purchaseOrder={};
+  String poId="";
+  List tableData=[0];
+  Future addPurchaseOrder(Map<dynamic, dynamic> data) async {
+    String url="https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehiclepurchase/add_new_vehi_pur";
+    postData(context: context,url: url,requestBody:data ).then((value){
+      setState(() {
+        if(value!=null){
+        Map responseJson={};
+            responseJson =value;
+            if(responseJson.containsKey("id")){
+              poId =responseJson['id'];
+              List lineData=[];
+              for(int i=0;i<selectedVehicles.length;i++){
+                lineData.add(
+                  {
+                    "brand":selectedVehicles[i]['make'],
+                    "model":  selectedVehicles[i]['model_name'],
+                    "varient": selectedVehicles[i]['varient_name'],
+                    "color": selectedVehicles[i]['varient_color1'],
+                    "unit_price":selectedVehicles[i]['onroad_price'].toString(),
+                    "discount": discountPercentage[i].text.toString(),
+                    "quantity":units[i].text,
+                    "amount": lineAmount[i].text,
+                    "tax_code": tax[i].text,
+                    "tax_amount": 0,
+                    "new_pur_vehi_id": poId,
+                    "recieved_quantity": 0,
+                    "short_quantity": 0,
+                  }
+                );
+                // print('+++++++++++table line data +++++++++++++++');
+                // print(lineData);
+                log("Purchase Order Created, Waiting for Table Creation $poId");
+                addTableApi(lineData, true);
+              }
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
+              Navigator.of(context).pushNamed(MotowsRoutes.listVehicle);
+            }
+          // Navigator.of(context).pop();
+        }
+      });
+    });
 
-  // final _color = ["Black", "Blue", "White", "Grey", "Silver"];
-  //final _taxCode = ["10", "20", "30", "40", "50"];
+  }
+  Future addTableApi(List data, bool length) async {
 
-  bool vendorNameError = false;
-  bool purchaseOrderError = false;
-  bool referenceError = false;
-  bool expectedDeliveryError = false;
-  bool shipmentPreError = false;
-  bool customerNotesError = false;
-  bool termsError = false;
+    // print('---------tableData-----------');
+    for (int i = 0; i < tableData.length; i++) {
+      String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehiclepurchaseline/add_new_vehi_pur_line";
 
-  double discountValue = 0.0;
+      postData(requestBody: data[i], url: url, context: context).then((value) {
+        setState(() {
+          if (value != null) {
+          // print('---------value------------');
+          // print(value);
 
-  var itemDetailsController = <TextEditingController>[];
-  var brandController = <TextEditingController>[];
-  var colorController = <TextEditingController>[];
-  var modelController = <TextEditingController>[];
-  var variantController = <TextEditingController>[];
-  var unitController = <TextEditingController>[];
-  var discountController = <TextEditingController>[];
-  var taxController = <TextEditingController>[];
 
-  var taxQuantity = <String>[];
 
-  String? selectedItems;
-  String? authToken;
-
-  var rateController = <TextEditingController>[];
-  var totalTaxValueController = <TextEditingController>[];
-  var sGstController = <TextEditingController>[];
-  var selectedQuantity = <String>[];
-  var selectedColor = <String>[];
-  var cGstVal = <double>[];
-  var sGstVal = <double>[];
-  var itemVal = <double>[];
-
-  var amountController = <TextEditingController>[];
-  var amountValueController = <TextEditingController>[];
-  var discountAmountController = <double>[];
-  var discountUnitController = <double>[];
-  double gTotal = 0.0;
-  double gTATotal = 0.0;
-  double gTotalTotal = 0.0;
-  double gDiscount = 0.0;
-
-  TextEditingController myController = TextEditingController();
-
-  final poNumber = TextEditingController();
-  final vendorName = TextEditingController();
-  final vendorPayToAddress = TextEditingController();
-  final fetchingWarehouseAddress = TextEditingController();
-  final customerNotes = TextEditingController();
-  final termsAndConditions = TextEditingController();
-  final referenceNo = TextEditingController();
-  final expDeliveryDate = TextEditingController();
-  final shipmentReferenceNo = TextEditingController();
-  var freightController = TextEditingController();
-
-  // final discountController = TextEditingController();
-
-  // final _horizontalScrollController = ScrollController();
-  double taxVal = 0.0;
-  String poId = "";
-  String vendorID = "";
-  final taxCode = <TextEditingController>[];
-  final reference = FocusNode();
-  final date = FocusNode();
-  final terms = FocusNode();
-  final notes = FocusNode();
-
+          }
+        });
+      });
+    }
+  }
+  bool tableLineItemIndex = true;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(60), child: CustomAppBar()),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    width =MediaQuery.of(context).size.width;
+    return  Scaffold(
+      backgroundColor: Colors.white,
+      appBar: const PreferredSize(  preferredSize: Size.fromHeight(60),
+          child: CustomAppBar()),
+      body: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CustomDrawer(widget.drawerWidth, widget.selectedDestination),
+          CustomDrawer(widget.drawerWidth,widget.selectedDestination),
           const VerticalDivider(
             width: 1,
             thickness: 1,
           ),
           Expanded(
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              body: CustomLoader(
-                inAsyncCall: loading,
-                child: SingleChildScrollView(
-                    child: Form(
-                      key: _addPurchaseForm,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child:
+            Scaffold(
+              backgroundColor: const Color(0xffF0F4F8),
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(88.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
+                  child: AppBar(
+                    elevation: 1,
+                    surfaceTintColor: Colors.white,
+                    shadowColor: Colors.black,
+                    title: const Text("Create Purchase Order"),
+                    actions: [
+                      Row(
                         children: [
-                          //--------header-------
-                          Padding(
-                            padding: const EdgeInsets.only(left: 50, right: 50),
-                            child: Container(
-                              color: const Color(0xffF4FAFF),
-                              child: Column(
-                                children: [
-                                  Container(
-                                      height: 60,
-                                      color: Colors.white,
-                                      child: const Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "New Purchase Order",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                    width: 160,
-                                                    child: Text(
-                                                      'Vendor Name',
-                                                      style: TextStyle(
-                                                          color: Colors.red[900]),
-                                                    )),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 5),
-                                                      child: Container(
-                                                        width: 290,
-                                                        height: 35,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: Border.all(
-                                                              color: Colors.grey,
-                                                            ),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(5.0)),
-                                                        child: Padding(
-                                                          padding:
-                                                          const EdgeInsets.only(
-                                                              left: 15,
-                                                              bottom: 10),
-                                                          child: TextFieldSearch(
-                                                            textStyle:
-                                                            const TextStyle(
-                                                                fontSize: 16),
-                                                            decoration:
-                                                            const InputDecoration(
-                                                              border:
-                                                              InputBorder.none,
-                                                            ),
-                                                            controller: vendorName,
-                                                            future: () {
-                                                              return fetchData();
-                                                            },
-                                                            getSelectedValue:
-                                                                (VendorData
-                                                            newValue) {
-                                                              vendorName.text =
-                                                                  newValue
-                                                                      .firstName;
-                                                              vendorID =
-                                                                  newValue.vendorID;
-                                                              vendorPayToAddress
-                                                                  .text =
-                                                              '${newValue.payto_address1}, ${newValue.payto_address2}, ${newValue.payto_region}, ${newValue.payto_state}, ${newValue.payto_city}, ${newValue.payto_zip}';
-                                                            },
-                                                            label: '',
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    if (vendorNameError)
-                                                      const Padding(
-                                                        padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            15, 4, 0, 0),
-                                                        child: Text(
-                                                          'Required',
-                                                          style: TextStyle(
-                                                            color: Colors.red,
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                    width: 160,
-                                                    child: Text(
-                                                      'Pay To Address',
-                                                      style: TextStyle(
-                                                          color: Colors.red[900]),
-                                                    )),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                      BorderRadius.circular(5),
-                                                      border: Border.all(
-                                                          color: Colors.grey)),
-                                                  height: 80,
-                                                  width: 290,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(
-                                                        fontSize: 16),
-                                                    readOnly: true,
-                                                    controller: vendorPayToAddress,
-                                                    keyboardType:
-                                                    TextInputType.multiline,
-                                                    maxLines: 4,
-                                                    minLines: 4,
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      border: InputBorder.none,
-                                                      focusedBorder:
-                                                      InputBorder.none,
-                                                      enabledBorder:
-                                                      InputBorder.none,
-                                                      errorBorder: InputBorder.none,
-                                                      disabledBorder:
-                                                      InputBorder.none,
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 15,
-                                                          bottom: 10,
-                                                          top: 11,
-                                                          right: 15),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                    width: 160,
-                                                    child: Text(
-                                                      'Ship To Address',
-                                                      style: TextStyle(
-                                                          color: Colors.red[900]),
-                                                    )),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                      BorderRadius.circular(5),
-                                                      border: Border.all(
-                                                          color: Colors.grey)),
-                                                  height: 80,
-                                                  width: 290,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(
-                                                        fontSize: 16),
-                                                    readOnly: true,
-                                                    onTap: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                          context) {
-                                                            return Dialog(
-                                                              backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                              child: SizedBox(
-                                                                width: 600,
-                                                                height: 400,
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Container(
-                                                                      decoration: BoxDecoration(
-                                                                          color: Colors
-                                                                              .white,
-                                                                          borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20)),
-                                                                      margin: const EdgeInsets
-                                                                          .only(
-                                                                          top: 13.0,
-                                                                          right:
-                                                                          8.0),
-                                                                      child:
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .only(
-                                                                            left:
-                                                                            35.0,
-                                                                            right:
-                                                                            35,
-                                                                            top: 20,
-                                                                            bottom:
-                                                                            20),
-                                                                        child:
-                                                                        Column(
-                                                                          children: [
-                                                                            const Text(
-                                                                              'Select Warehouse Details',
-                                                                              style: TextStyle(
-                                                                                  fontSize: 16,
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                  color: Colors.indigo),
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height:
-                                                                              15,
-                                                                            ),
-                                                                            Expanded(
-                                                                              child:
-                                                                              RawScrollbar(
-                                                                                thumbColor:
-                                                                                Colors.black45,
-                                                                                radius:
-                                                                                const Radius.circular(5.0),
-                                                                                thumbVisibility:
-                                                                                true,
-                                                                                thickness:
-                                                                                5.0,
-                                                                                child:
-                                                                                ListView(
-                                                                                  shrinkWrap: true,
-                                                                                  padding: const EdgeInsets.all(10.0),
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      height: 40,
-                                                                                      color: Colors.grey[200],
-                                                                                      child: const Row(
-                                                                                        children: [
-                                                                                          Expanded(child: Center(child: Text("WAREHOUSE NAME"))),
-                                                                                          Expanded(child: Center(child: Text("WAREHOUSE CODE"))),
-                                                                                          Expanded(child: Center(child: Text("ZIP-CODE"))),
-                                                                                          Expanded(child: Center(child: Text("STATE"))),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ),
-                                                                                    const SizedBox(
-                                                                                      height: 20,
-                                                                                    ),
-                                                                                    for (int i = 0; i < warehouseList.length; i++)
-                                                                                      InkWell(
-                                                                                        onTap: () {
-                                                                                          setState(() {
-                                                                                            fetchingWarehouseAddress.text = warehouseList[i]['warehouse_name'] + ', ' + warehouseList[i]['warehouse_code'].toString() + ', ' + warehouseList[i]['location'] + ', ' + warehouseList[i]['ship_to_name'] + ', ' + warehouseList[i]['branch'] + ', ' + warehouseList[i]['city'] + ', ' + warehouseList[i]['country'] + ', ' + warehouseList[i]['address_line1'] + ', ' + warehouseList[i]['address_line2'] + ', ' + warehouseList[i]['state'] + ', ' + warehouseList[i]['zip_code'].toString();
-                                                                                            Navigator.of(context).pop();
-                                                                                          });
-                                                                                        },
-                                                                                        child: Column(
-                                                                                          children: [
-                                                                                            Row(
-                                                                                              children: [
-                                                                                                Expanded(
-                                                                                                  child: Center(
-                                                                                                    child: Padding(
-                                                                                                      padding: const EdgeInsets.only(right: 50.0),
-                                                                                                      child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        child: Text(warehouseList[i]['warehouse_name']),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Expanded(
-                                                                                                  child: Center(
-                                                                                                    child: Padding(
-                                                                                                      padding: const EdgeInsets.only(right: 50.0),
-                                                                                                      child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        child: Text(warehouseList[i]['warehouse_code'].toString()),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Expanded(
-                                                                                                  child: Center(
-                                                                                                    child: Padding(
-                                                                                                      padding: const EdgeInsets.all(8.0),
-                                                                                                      child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        child: Text(warehouseList[i]['zip_code'].toString()),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Expanded(
-                                                                                                  child: Center(
-                                                                                                    child: Padding(
-                                                                                                      padding: const EdgeInsets.all(8.0),
-                                                                                                      child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        child: Text(warehouseList[i]['state']),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ],
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Positioned(
-                                                                      right: 0.0,
-                                                                      child:
-                                                                      InkWell(
-                                                                        child: Container(
-                                                                            width: 30,
-                                                                            height: 30,
-                                                                            decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(15),
-                                                                                border: Border.all(
-                                                                                  color: const Color.fromRGBO(204, 204, 204, 1),
-                                                                                ),
-                                                                                color: Colors.blue),
-                                                                            child: const Icon(
-                                                                              Icons
-                                                                                  .close_sharp,
-                                                                              color:
-                                                                              Colors.white,
-                                                                            )),
-                                                                        onTap: () {
-                                                                          setState(
-                                                                                  () {
-                                                                                Navigator.of(context)
-                                                                                    .pop();
-                                                                              });
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          });
-                                                    },
-                                                    controller:
-                                                    fetchingWarehouseAddress,
-                                                    keyboardType:
-                                                    TextInputType.multiline,
-                                                    maxLines: 4,
-                                                    minLines: 4,
-                                                    decoration:
-                                                    const InputDecoration(
-                                                      border: InputBorder.none,
-                                                      focusedBorder:
-                                                      InputBorder.none,
-                                                      enabledBorder:
-                                                      InputBorder.none,
-                                                      errorBorder: InputBorder.none,
-                                                      disabledBorder:
-                                                      InputBorder.none,
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 15,
-                                                          bottom: 10,
-                                                          top: 11,
-                                                          right: 15),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                    width: 160,
-                                                    child: Text(
-                                                      'Purchase Order #',
-                                                      style: TextStyle(
-                                                          color: Colors.red[900]),
-                                                    )),
-                                                Container(
-                                                  width: 290,
-                                                  height: 35,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0),
-                                                      border: Border.all(
-                                                        color: Colors.grey,
-                                                      )),
-                                                  child: Padding(
-                                                    padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 8),
-                                                    child: TextField(
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                      controller: poNumber,
-                                                      textAlignVertical:
-                                                      TextAlignVertical.center,
-                                                      decoration:
-                                                      const InputDecoration(
-                                                        border: InputBorder.none,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                    width: 200,
-                                                    child: Text(
-                                                      'Reference #',
-                                                      style: TextStyle(),
-                                                    )),
-                                                Container(
-                                                  color: Colors.white,
-                                                  width: 290,
-                                                  child: AnimatedContainer(
-                                                    duration:
-                                                    const Duration(seconds: 0),
-                                                    height:
-                                                    referenceError ? 50 : 35,
-                                                    child: TextFormField(
-                                                      onFieldSubmitted: (re) {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                            reference);
-                                                      },
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          setState(() {
-                                                            referenceError = true;
-                                                          });
-                                                          return "Required";
-                                                        } else {
-                                                          setState(() {
-                                                            referenceError == false;
-                                                          });
-                                                        }
-                                                        return null;
-                                                      },
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                      onChanged: (text) {
-                                                        setState(() {});
-                                                      },
-                                                      controller: referenceNo,
-                                                      decoration: decorationInput5(
-                                                          '',
-                                                          referenceNo
-                                                              .text.isNotEmpty),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                    width: 200,
-                                                    child: Text(
-                                                      'Expected Delivery Date',
-                                                      style: TextStyle(),
-                                                    )),
-                                                Container(
-                                                  color: Colors.white,
-                                                  width: 290,
-                                                  child: AnimatedContainer(
-                                                    duration:
-                                                    const Duration(seconds: 0),
-                                                    height: expectedDeliveryError
-                                                        ? 50
-                                                        : 35,
-                                                    child: TextFormField(
-                                                      focusNode: reference,
-                                                      onFieldSubmitted: (re) {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(date);
-                                                      },
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          setState(() {
-                                                            expectedDeliveryError =
-                                                            true;
-                                                          });
-                                                          return "Required";
-                                                        } else {
-                                                          setState(() {
-                                                            expectedDeliveryError ==
-                                                                false;
-                                                          });
-                                                        }
-                                                        return null;
-                                                      },
-                                                      onTap: () {
-                                                        _selectDate(context);
-                                                      },
-                                                      readOnly: true,
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                      onChanged: (text) {
-                                                        setState(() {});
-                                                      },
-                                                      controller: expDeliveryDate,
-                                                      decoration: decorationInput5(
-                                                          '',
-                                                          expDeliveryDate
-                                                              .text.isNotEmpty),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                    width: 200,
-                                                    child: Text(
-                                                      'Shipment Preference',
-                                                      style: TextStyle(),
-                                                    )),
-                                                Container(
-                                                  color: Colors.white,
-                                                  width: 290,
-                                                  child: AnimatedContainer(
-                                                    duration:
-                                                    const Duration(seconds: 0),
-                                                    height:
-                                                    shipmentPreError ? 50 : 35,
-                                                    child: TextFormField(
-                                                      focusNode: date,
-                                                      onFieldSubmitted: (t) {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(terms);
-                                                      },
-                                                      validator: (value) {
-                                                        if (value == null ||
-                                                            value.isEmpty) {
-                                                          setState(() {
-                                                            shipmentPreError = true;
-                                                          });
-                                                          return "Required";
-                                                        } else {
-                                                          setState(() {
-                                                            shipmentPreError ==
-                                                                false;
-                                                          });
-                                                        }
-                                                        return null;
-                                                      },
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                      onChanged: (text) {
-                                                        setState(() {});
-                                                      },
-                                                      controller:
-                                                      shipmentReferenceNo,
-                                                      decoration: decorationInput5(
-                                                          '',
-                                                          shipmentReferenceNo
-                                                              .text.isNotEmpty),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          //---------table-------
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 50, right: 50, bottom: 20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  color: Colors.blue,
-                                  height: 25,
-                                  child: const Padding(
-                                    padding:
-                                    EdgeInsets.only(left: 40, right: 40),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              'Variant',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              'Unit Price',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 3,
-                                            child: Text(
-                                              'Discount %',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 3,
-                                            child: Text(
-                                              'Qty',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              'Amount',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              'Tax Percentage',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              'Tax Amount',
-                                              style: TextStyle(color: Colors.white),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  color: Colors.white,
-                                  height: 40,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 40, right: 40, top: 10),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 4,
-                                          child: SizedBox(
-                                            // width: 100,
-                                            height: 35,
-                                            child: TextField(
-                                              readOnly: true,
-                                              controller: variantController[0],
-                                              decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding: EdgeInsets.only(
-                                                      bottom: 10, left: 0),
-                                                  hintText: "Select Variant"),
-                                              onTap: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) => showDialogBox(),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 4,
-                                          child: SizedBox(
-                                            // width: 100,
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                controller: unitController[0],
-                                                decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                              )),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: SizedBox(
-                                            // width: 50,
-                                              child: TextFormField(
-                                                controller: discountController[0],
-                                                decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                                onChanged: (val) {
-                                                  if (val.isEmpty ||
-                                                      val == '' ||
-                                                      variantController[0]
-                                                          .text
-                                                          .isEmpty) {
-                                                    amountController[0].text =
-                                                        unitController[0].text;
-                                                    discountController[0].text = '';
-                                                  } else {
-                                                    setState(() {
-                                                      var tempDis = 0.0;
-                                                      discountValue = 0.0;
-                                                      // for(int i=0; i<)
-                                                      tempDis = (double.parse(val) /
-                                                          100) *
-                                                          double.parse(
-                                                              unitController[0].text);
-                                                      discountAmountController[0] =
-                                                          tempDis;
-                                                      discountUnitController[0] =
-                                                          tempDis;
-                                                      for (int i = 0;
-                                                      i <
-                                                          discountAmountController
-                                                              .length;
-                                                      i++) {
-                                                        discountValue = discountValue +
-                                                            discountAmountController[i];
-                                                      }
+                          SizedBox(
+                            width: 120,height: 28,
+                            child: OutlinedMButton(
+                              text: 'Save and New',
+                              textColor: mSaveButton,
+                              borderColor: mSaveButton,
+                              onTap: (){
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(builder: (context)=>DisplayEstimateItems(
+                                //       drawerWidth:widget.args.drawerWidth ,
+                                //       selectedDestination: widget.args.selectedDestination,
+                                //     )
+                                //     )
+                                // );
+                                setState(() {
 
-                                                      // amountController[index].text = unitController[index].text;
-                                                      amountController[0]
-                                                          .text = (double.parse(
-                                                          unitController[0]
-                                                              .text) -
-                                                          (double.parse(val) /
-                                                              100) *
-                                                              double.parse(
-                                                                  unitController[0]
-                                                                      .text))
-                                                          .toString();
-                                                      amountValueController[0]
-                                                          .text = (double.parse(
-                                                          unitController[0]
-                                                              .text) -
-                                                          (double.parse(val) /
-                                                              100) *
-                                                              double.parse(
-                                                                  unitController[0]
-                                                                      .text))
-                                                          .toString();
+                                });
+                              },
 
-                                                      // print(discountValue);
-                                                    });
-                                                  }
-                                                },
-                                              )),
-                                        ),
-                                        variantController[0].text.isNotEmpty ||
-                                            variantController[0].text != ""
-                                            ? Expanded(
-                                          flex: 3,
-                                          child: PopupMenuButton(
-                                            itemBuilder: (context) {
-                                              return _quantity
-                                                  .map((String items) {
-                                                return PopupMenuItem(
-                                                  value: items,
-                                                  child: Text(items),
-                                                );
-                                              }).toList();
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10),
-                                              child: Row(
-                                                mainAxisSize:
-                                                MainAxisSize.min,
-                                                children: [
-                                                  Text(selectedQuantity[0],
-                                                      style: const TextStyle(
-                                                          fontSize: 16)),
-                                                  const Icon(
-                                                      Icons.arrow_drop_down)
-                                                ],
-                                              ),
-                                            ),
-                                            onSelected: (String? newValue) {
-                                              setState(() {
-                                                discountValue = 0.0;
-                                                selectedQuantity[0] =
-                                                newValue!;
-                                                // amountController[index].text = (double.parse(newValue)*double.parse(amountValueController[index].text)).toString();
-                                                amountController[0]
-                                                    .text = (double.parse(
-                                                    newValue) *
-                                                    double.parse(
-                                                        amountValueController[
-                                                        0]
-                                                            .text))
-                                                    .toStringAsFixed(2);
-                                                var tempValue =
-                                                    discountUnitController[
-                                                    0] *
-                                                        double.parse(
-                                                            selectedQuantity[
-                                                            0]);
-                                                discountAmountController[0] =
-                                                    tempValue;
-                                                totalTaxValueController[0]
-                                                    .text = (taxVal *
-                                                    double.parse(
-                                                        selectedQuantity[
-                                                        0]))
-                                                    .toStringAsFixed(2);
-                                                for (int i = 0;
-                                                i <
-                                                    discountAmountController
-                                                        .length;
-                                                i++) {
-                                                  discountValue = discountValue +
-                                                      discountAmountController[
-                                                      0];
-                                                }
-                                                grandTotal1 = grandTotal;
-                                              });
-                                            },
-                                          ),
-                                        )
-                                            : SizedBox(
-                                            width: 40, child: Container()),
-                                        Expanded(
-                                          flex: 4,
-                                          child: SizedBox(
-                                            // width: 100,
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                controller: amountController[0],
-                                                decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                              )),
-                                        ),
-                                        Expanded(
-                                          flex: 4,
-                                          child: Container(
-                                              height: 35,
-                                              // width: 100,
-                                              color: Colors.white70,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 0, bottom: 0),
-                                                child: TextField(
-                                                  controller: taxCode[0],
-                                                  readOnly: true,
-                                                  onTap: () {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder:
-                                                            (BuildContext context) {
-                                                          return Dialog(
-                                                            backgroundColor:
-                                                            Colors.transparent,
-                                                            child: SizedBox(
-                                                              height: 450,
-                                                              width: 500,
-                                                              child: Stack(
-                                                                children: [
-                                                                  Container(
-                                                                    decoration: BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                    margin: const EdgeInsets
-                                                                        .only(
-                                                                        top: 13.0,
-                                                                        right: 8.0),
-                                                                    child:
-                                                                    SingleChildScrollView(
-                                                                      child:
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            25.0),
-                                                                        child:
-                                                                        Column(
-                                                                          children: [
-                                                                            const Align(
-                                                                              alignment:
-                                                                              Alignment.center,
-                                                                              child:
-                                                                              Text(
-                                                                                'Select Tax percentage',
-                                                                                style: TextStyle(
-                                                                                    color: Colors.indigo,
-                                                                                    fontSize: 16,
-                                                                                    fontWeight: FontWeight.bold),
-                                                                              ),
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height:
-                                                                              15,
-                                                                            ),
-                                                                            Container(
-                                                                                height:
-                                                                                40,
-                                                                                color:
-                                                                                Colors.grey[350],
-                                                                                child: const Row(
-                                                                                  children: [
-                                                                                    Expanded(child: Center(child: Text("Name"))),
-                                                                                    Expanded(child: Center(child: Text("Tax code"))),
-                                                                                    Expanded(child: Center(child: Text("Total tax percentage"))),
-                                                                                  ],
-                                                                                )),
-                                                                            Card(
-                                                                              child:
-                                                                              Column(
-                                                                                children: [
-                                                                                  const SizedBox(
-                                                                                    height: 15,
-                                                                                  ),
-                                                                                  for (int i = 0; i < taxList.length; i++)
-                                                                                    InkWell(
-                                                                                      onTap: () {
-                                                                                        setState(() {
-                                                                                          taxCode[0].text = taxList[i]['tax_total'];
-                                                                                          Navigator.of(context).pop();
-                                                                                          taxVal = (double.parse(taxList[i]['tax_total']) / 100) * double.parse(unitController[0].text);
-                                                                                          // totalTaxValueController[index].text= (taxVal*double.parse(selectedQuantity[index])).toString();
-                                                                                          totalTaxValueController[0].text = (taxVal * double.parse(selectedQuantity[0])).toStringAsFixed(2);
-                                                                                          grandTotal = double.parse(totalTaxValueController[0].text) + double.parse(amountController[0].text) - discountValue;
-                                                                                          grandTotal1 = grandTotal;
-                                                                                          var tempAmount = 0.0;
-                                                                                          for (int i = 0; i < amountController.length; i++) {
-                                                                                            tempAmount = tempAmount + double.parse(amountController[i].text);
-                                                                                          }
-                                                                                          gTotal = tempAmount;
-                                                                                          //-----------------------
-                                                                                          var tempTaxAmount = 0.0;
-                                                                                          for (int i = 0; i < totalTaxValueController.length; i++) {
-                                                                                            tempTaxAmount = tempTaxAmount + double.parse(totalTaxValueController[i].text);
-                                                                                          }
-                                                                                          gTATotal = tempTaxAmount;
-                                                                                          //---------------------------
-                                                                                          var tempTotal = 0.0;
-                                                                                          for (int i = 0; i < grandTotal1; i++) {
-                                                                                            // tempTotal = tempTotal + double.parse(grandTotal1.toString());
-                                                                                            tempTotal = gTotal + gTATotal;
-                                                                                          }
-                                                                                          gTotalTotal = tempTotal;
-                                                                                        });
-                                                                                      },
-                                                                                      child: Row(
-                                                                                        children: [
-                                                                                          Expanded(
-                                                                                              child: Center(
-                                                                                                  child: Padding(
-                                                                                                    padding: const EdgeInsets.all(8.0),
-                                                                                                    child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                                                                        child: Text(taxList[i]['tax_name'] ?? '')),
-                                                                                                  ))),
-                                                                                          Expanded(
-                                                                                              child: Center(
-                                                                                                  child: Padding(
-                                                                                                    padding: const EdgeInsets.all(8.0),
-                                                                                                    child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                                                                        child: Text(taxList[i]['tax_code'] ?? '')),
-                                                                                                  ))),
-                                                                                          Expanded(
-                                                                                              child: Center(
-                                                                                                  child: Padding(
-                                                                                                    padding: const EdgeInsets.all(8.0),
-                                                                                                    child: SizedBox(
-                                                                                                        height: 30,
-                                                                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                                                                        child: Text(taxList[i]['tax_total'] ?? '')),
-                                                                                                  ))),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ),
-                                                                                ],
-                                                                              ),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Positioned(
-                                                                    right: 0.0,
-                                                                    child: InkWell(
-                                                                      child: Container(
-                                                                          width: 30,
-                                                                          height: 30,
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(15),
-                                                                              border: Border.all(
-                                                                                color: const Color.fromRGBO(
-                                                                                    204,
-                                                                                    204,
-                                                                                    204,
-                                                                                    1),
-                                                                              ),
-                                                                              color: Colors.blue),
-                                                                          child: const Icon(
-                                                                            Icons
-                                                                                .close_sharp,
-                                                                            color: Colors
-                                                                                .white,
-                                                                          )),
-                                                                      onTap: () {
-                                                                        setState(
-                                                                                () {
-                                                                              Navigator.of(
-                                                                                  context)
-                                                                                  .pop();
-                                                                            });
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        });
-                                                  },
-                                                  decoration: const InputDecoration(
-                                                      border: InputBorder.none,
-                                                      hintText: "Select Tax",
-                                                      contentPadding:
-                                                      EdgeInsets.only(
-                                                          bottom: 10,
-                                                          left: 10)),
-                                                ),
-                                              )),
-                                        ),
-                                        Expanded(
-                                          flex: 4,
-                                          child: SizedBox(
-                                            // width: 100,
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                controller: totalTaxValueController[0],
-                                                onTap: () {
-                                                  setState(() {});
-                                                },
-                                                keyboardType: const TextInputType
-                                                    .numberWithOptions(decimal: true),
-
-                                                //inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
-                                                decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          //---------footer------
-                          Padding(
-                            padding: const EdgeInsets.only(left: 50, right: 50),
-                            child: SizedBox(
-                              // width: 1200,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 0, bottom: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          const Text("Terms and Conditions"),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: termsError ? 100 : 80,
-                                            width: 300,
-                                            child: TextFormField(
-                                              focusNode: terms,
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty) {
-                                                  setState(() {
-                                                    termsError = true;
-                                                  });
-                                                  return "Required";
-                                                } else {
-                                                  setState(() {
-                                                    termsError = false;
-                                                  });
-                                                }
-                                                return null;
-                                              },
-                                              controller: termsAndConditions,
-                                              keyboardType: TextInputType.multiline,
-                                              maxLines: 4,
-                                              minLines: 4,
-                                              decoration: decorationInput6(
-                                                  '',
-                                                  termsAndConditions
-                                                      .text.isNotEmpty),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10, left: 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          const Text("Customer Notes"),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: customerNotesError ? 100 : 80,
-                                            width: 300,
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty) {
-                                                  setState(() {
-                                                    customerNotesError = true;
-                                                  });
-                                                  return "Required";
-                                                } else {
-                                                  setState(() {
-                                                    customerNotesError = false;
-                                                  });
-                                                }
-                                                return null;
-                                              },
-                                              controller: customerNotes,
-                                              keyboardType: TextInputType.multiline,
-                                              maxLines: 4,
-                                              minLines: 4,
-                                              decoration: decorationInput6('',
-                                                  customerNotes.text.isNotEmpty),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 0, bottom: 0, left: 10),
-                                      child: SizedBox(
-                                        height: 200,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    const Text("Base Price"),
-                                                    Text(
-                                                      gTotal.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    const Text("Discounted Price"),
-                                                    Text(
-                                                      discountValue
-                                                          .toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    const Text("Tax"),
-                                                    Text(
-                                                      gTATotal.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    const Text("Freight Amount"),
-                                                    Container(
-                                                        height: 25,
-                                                        width: 100,
-                                                        color: Colors.grey[100],
-                                                        child: Padding(
-                                                          padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 5),
-                                                          child: TextFormField(
-                                                            textAlign:
-                                                            TextAlign.right,
-                                                            style: const TextStyle(
-                                                                fontSize: 16),
-                                                            decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                InputBorder
-                                                                    .none),
-                                                            controller:
-                                                            freightController,
-                                                            // maxLength: 50,
-                                                            keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                            inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .digitsOnly
-                                                            ],
-                                                            onChanged: (v) {
-                                                              double val = 0.0;
-                                                              setState(() {
-                                                                if (v.isNotEmpty ||
-                                                                    v != "") {
-                                                                  val = gTotal +
-                                                                      discountValue +
-                                                                      gTATotal +
-                                                                      double.parse(
-                                                                          v);
-                                                                } else {
-                                                                  val = gTotal +
-                                                                      discountValue +
-                                                                      gTATotal;
-                                                                }
-                                                              });
-                                                              gTotalTotal = val;
-                                                              // print(grandTotal1);
-                                                              // print(gTotalTotal);
-                                                              // print(freightController.text);
-                                                            },
-                                                          ),
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 30,
-                                              ),
-                                              Container(
-                                                color: Colors.grey[300],
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: [
-                                                      const Text("Total"),
-                                                      // Text(grandTotal1.toString()),
-                                                      Text(
-                                                        gTotalTotal
-                                                            .toStringAsFixed(2),
-                                                        style: const TextStyle(
-                                                            fontSize: 16),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
                             ),
                           ),
                         ],
                       ),
-                    )),
-              ),
-              bottomNavigationBar: SizedBox(
-                height: 50,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding:
-                      const EdgeInsets.only(left: 20, top: 8, bottom: 8),
-                      child: MaterialButton(
-                        color: Colors.blue,
-                        onPressed: () {
-                          setState(() {
-                            vendorName.text.isEmpty
-                                ? vendorNameError = true
-                                : vendorNameError = false;
-                          });
+                      const SizedBox(width: 20),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 100,height: 28,
+                            child: OutlinedMButton(
+                              text: 'Save',
+                              buttonColor:mSaveButton ,
+                              textColor: Colors.white,
+                              borderColor: mSaveButton,
+                              onTap: (){
+                                setState(() {
+                                    if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty){
+                                      searchVendor=true;
+                                      searchWareHouse=true;
+                                    }
+                                    else{
+                                      setState(() {
+                                        searchVendor=false;
+                                        searchWareHouse=false;
+                                        final dateNow = DateFormat('dd-MM-yyyy hh:mm:ss');
+                                        purchaseOrder ={
+                                          "base_price": subAmountTotal.text.isEmpty?0.0:double.parse(subAmountTotal.text),
+                                          "billAddressCity": vendorData['city']??"",
+                                          "billAddressName":  vendorData['Name']??"",
+                                          "billAddressState":  vendorData['state']??"",
+                                          "billAddressStreet":   vendorData['street']??'',
+                                          "billAddressZipcode":vendorData['zipcode']??"",
+                                          "customer_notes": customerNotes.text,
+                                          "date": dateNow.format(DateTime.now()),
+                                          "discounted_price":subDiscountTotal.text.isEmpty?0.0: double.parse(subDiscountTotal.text),
+                                          "expected_delivery_date": salesInvoiceDate.text,
+                                          "freight_amount": freightAmount.text.isEmpty?0.0:double.parse(freightAmount.text),
+                                          "grand_total": grandTotal.text.isEmpty?0 :double.parse(grandTotal.text),
+                                          "grn_status": "Yes",
+                                          "new_vendor_id": vendorData['vendorId'],
+                                          "reference": salesInvoice.text,
+                                          "shipment_preference": "",
+                                          "shippingAddressCity":  wareHouse['city']??"",
+                                          "shippingAddressName":  wareHouse['Name']??"",
+                                          "shippingAddressState": wareHouse['state']??"",
+                                          "shippingAddressStreet":  wareHouse['street']??"",
+                                          "shippingAddressZipcode":  wareHouse['zipcode']??"",
+                                          "tax": subTaxTotal.text.isEmpty?0.0:double.parse(subTaxTotal.text),
+                                          "terms_conditions": termsAndConditions.text,
+                                          "vendor_name": vendorData['Name'],
+                                          "status" :"Waiting",
+                                          "comment" : "",
+                                        };
+                                        // print('-------posting data--------');
+                                        // print(purchaseOrder);
+                                        addPurchaseOrder(purchaseOrder);
+                                      });
 
-                          if (_addPurchaseForm.currentState!.validate() &&
-                              vendorName.text.isNotEmpty) {
-                            final dateNow = DateFormat('dd-MM-yyyy hh:mm:ss');
-                            Map requestData = {
-                              "shipping_address": fetchingWarehouseAddress.text,
-                              "vendor_name": vendorName.text,
-                              "new_vendor_id": vendorID,
-                              "billing_address": vendorPayToAddress.text,
-                              "reference": referenceNo.text,
-                              "expected_delivery_date": expDeliveryDate.text,
-                              "shipment_preference": shipmentReferenceNo.text,
-                              "freight_amount": freightController.text,
-                              "base_price": gTotal,
-                              "discounted_price":
-                              double.parse(discountValue.toString()),
-                              "tax": gTATotal,
-                              "freight_amount": freightController.text,
-                              "grand_total": gTotalTotal,
-                              "customer_notes": customerNotes.text,
-                              "terms_conditions": termsAndConditions.text,
-                              'date': dateNow.format(DateTime.now()),
-                              'grn_status': 'no'
-                            };
+                                    }
 
-                            // print(requestData);
-                            addPurchaseVehicleOrder(requestData);
-                          }
-                        },
-                        child: const Text("Save",
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 30,
-                      child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              Navigator.of(context).pop();
-                            });
-                          },
-                          color: Colors.white,
-                          child: const Center(
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(color: Colors.black),
+                                });
+                              },
+
                             ),
-                          )),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 30),
+                    ],
+                  ),
+                ),
+              ),
+              body: CustomLoader(
+                inAsyncCall: loading,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
+                    child: Column(
+                      children: [
+                        buildHeaderCard(),
+                        const SizedBox(height: 10,),
+                        buildContentCard(),
+
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -1921,312 +303,1355 @@ class _AddNewPurchaseOrderState extends State<AddNewVehiclePurchaseOrder> {
     );
   }
 
-  Widget showDialogBox(){
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: SizedBox(
-        width: 650,
-        height: 400,
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
-              margin: const EdgeInsets.only(top: 13.0, right: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Select Vehicle',
-                        style: TextStyle(
-                            color: Colors.indigo,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: RawScrollbar(
-                        thumbColor: Colors.black45,
-                        radius: const Radius.circular(5.0),
-                        thumbVisibility: true,
-                        thickness: 10.0,
-                        child: ListView(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(10.0),
-                          children: [
-                            Container(
-                              height: 40,
-                              color: Colors.grey[200],
-                              child: const Row(
-                                children: [
-                                  Expanded(child: Center(child: Text("Brand"))),
-                                  Expanded(child: Center(child: Text("Model"))),
-                                  Expanded(child: Center(child: Text("Variant"))),
-                                  Expanded(child: Center(child: Text("On road price"))),
-                                  Expanded(child: Center(child: Text("Color"))),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            for (int i = 0; i < vvList.length; i++)
-                              Card(
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      brandController[0].text = vvList[i]['make'];
-                                      modelController[0].text = vvList[i]['model_name'];
-                                      variantController[0].text = vvList[i]['varient_name'];
-                                      discountController[0].text = '0';
-                                      unitController[0].text = vvList[i]['onroad_price'].toString();
-                                      amountController[0].text = vvList[i]['onroad_price'].toString();
-                                      amountValueController[0].text = vvList[i]['onroad_price'].toString();
-                                      colorController[0].text = vvList[i]['varient_color1'];
-                                      Navigator.of(context).pop();
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 30,
-                                                  child:
-                                                  Text(vvList[i]['make']),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 30,
-                                                  child: Text(
-                                                      vvList[i]['model_name']),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 38,
-                                                  child: Text(vvList[i]['varient_name']),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 30,
-                                                  child: Text(vvList[i]['onroad_price'].toString()),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 38,
-                                                  child: Text(vvList[i]['varient_color1']),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+  Widget buildHeaderCard(){
+    return  Card(color: Colors.white,surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+          side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ///Header Details
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Address",style: TextStyle(fontSize: 18)),
+                const SizedBox(height: 5,),
+                SizedBox(
+                  width: width/2.8,
+                  child: const Text("Ikyam Solutions Private Limited #742, RJ Villa, Cross, 8th A Main Rd, Koramangala 4th Block, Koramangala, Bengaluru, Karnataka 560034",maxLines: 3,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
-              ),
+                const Text("9087877767",style: TextStyle(fontSize: 14,color: Colors.grey))
+
+              ],
             ),
-            Positioned(
-              right: 0.0,
-              child: InkWell(
-                child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: const Color.fromRGBO(204, 204, 204, 1),
-                        ),
-                        color: Colors.blue),
-                    child: const Icon(
-                      Icons.close_sharp,
-                      color: Colors.white,
-                    )),
-                onTap: () {
-                  setState(() {
-                    Navigator.of(context).pop();
-                  });
-                },
-              ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(18.0),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 42,
+                  child: Icon(Icons.car_rental,color: Color(0xffCCBA13),size: 90),
+                ),
+
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
+  fetchVendorsData() async {
+    dynamic response;
+    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    try {
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response = value;
+            vendorList = value;
 
-  Future addPurchaseVehicleOrder(Map<dynamic, dynamic> data) async {
-    String url =
-        "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehiclepurchase/add_new_vehi_pur";
-    // print('----------header url------------');
-    // print(url);
-    postData(context: context, url: url, requestBody: data).then((value) {
-      // print('------------- add purchase value------------');
-      // print(value);
-      setState(() {
-        if (value != null) {
-          Map responseJson = {};
-          responseJson = value;
-          if (responseJson.containsKey('id')) {
-            poId = responseJson['id'];
-            List lineData = [];
-            for (int i = 0; i < tableData.length; i++) {
-              lineData.add({
-                "brand": brandController[i].text,
-                "model": modelController[i].text,
-                "varient": variantController[i].text,
-                "color": colorController[i].text,
-                "unit_price": unitController[i].text,
-                "discount": discountController[i].text,
-                "quantity": selectedQuantity[i],
-                "amount": amountController[i].text,
-                "tax_code": taxCode[i].text,
-                "tax_amount": totalTaxValueController[i].text,
-                "new_pur_vehi_id": poId,
-                "recieved_quantity": 0,
-                "short_quantity": 0,
-              });
-              // print(lineData);
-              log("Purchase Order Created, Waiting for Table Creation $poId");
-              addTableApi(lineData, true);
-              // print('----------addPurchaseVehicleOrder------------');
-              // print(lineData);
-            }
           }
-          Navigator.of(context).pop();
-        }
-        loading = true;
+          loading = false;
+        });
       });
-    });
+    }
+    catch (e) {
+      logOutApi(context: context,exception: e.toString(),response: response);
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
-  Future addTableApi(List data, bool length) async {
-    // print('---------tableData-----------');
-    // print(data);
-    // print('---------tableData-----------');
-    for (int i = 0; i < tableData.length; i++) {
-      String url =
-          "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newvehiclepurchaseline/add_new_vehi_pur_line";
-      // print('------url--------');
-      // print(url);
-      postData(requestBody: data[i], url: url, context: context).then((value) {
+  fetchData() async {
+
+    List list = [];
+    // create a list of 3 objects from a fake json response
+    for(int i=0;i<vendorList.length;i++){
+      list.add( VendorModelAddress.fromJson({
+        "vendorId":vendorList[i]['new_vendor_id'],
+        "label":vendorList[i]['company_name'],
+        "value":vendorList[i]['company_name'],
+        "city":vendorList[i]['payto_city'],
+        "state":vendorList[i]['payto_state'],
+        "zipcode":vendorList[i]['payto_zip'],
+        "street":vendorList[i]['payto_address1']+", "+vendorList[i]['payto_address2'],
+      }));
+    }
+
+    return list;
+  }
+
+
+  Widget buildContentCard(){
+    return Card(color: Colors.white,surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+          side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+      child: Column(
+        children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ///Bill to Details
+              Expanded(
+                child: Column(crossAxisAlignment:  CrossAxisAlignment.start,
+                  children:  [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18.0,top: 8,right: 8,bottom: 4),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:  [
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 2,top: 2),
+                            child: Text("Bill to Address"),
+                          ),
+                          if(showVendorDetails==true)
+                            SizedBox(
+                              height: 24,
+                              child:  OutlinedIconMButton(
+                                text: 'Change Details',
+                                textColor: mSaveButton,
+                                borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
+                                onTap: (){
+                                  setState(() {
+                                    showVendorDetails=false;
+                                  });
+                                },
+                              ),
+                            )
+
+                        ],
+                      ),
+                    ),
+                    const Divider(color: mTextFieldBorder,height: 1),
+                    if(showVendorDetails==false)
+                      const SizedBox(height: 30,),
+                    if(showVendorDetails==false)
+                      Center(
+                        child: SizedBox(height: 32,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 18.0,right: 18),
+                            child: CustomTextFieldSearch(
+                              decoration:textFieldDecoration(hintText: 'Search Vendor') ,
+                              controller: vendorSearchController,
+                              future: fetchData,
+                              getSelectedValue: (VendorModelAddress value) {
+                                // print('-------Check Here------');
+                                // print(value.vendorId);
+                                setState(() {
+                                  showVendorDetails=true;
+                                  vendorData = {
+                                    'Name':value.label,
+                                    'city': value.city,
+                                    'state': value.state,
+                                    'street': value.street,
+                                    'zipcode': value.zipcode,
+                                    "vendorId":value.vendorId,
+                                  };
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    if(showVendorDetails)
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(vendorData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child:  Text("Street")),
+                                const Text(": "),
+                                Expanded(child: Text("${vendorData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("City")),
+                                const Text(": "),
+                                Expanded(child: Text("${vendorData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("State")),
+                                const Text(": "),
+                                Expanded(child: Text("${vendorData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("ZipCode :")),
+                                const Text(": "),
+                                Expanded(child: Text("${vendorData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const CustomVDivider(height: 220, width: 1, color: mTextFieldBorder),
+
+              ///Ship to Details
+              Expanded(
+                child: Column(crossAxisAlignment:  CrossAxisAlignment.start,
+                  children:  [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18.0,top: 8,right: 8,bottom: 4),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:  [
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 2,top: 2),
+                            child: Text("Ship to Address"),
+                          ),
+                          if(showWareHouseDetails==true)
+                            SizedBox(
+                              height: 24,
+                              child:  OutlinedIconMButton(
+                                text: 'Change Details',
+                                textColor: mSaveButton,
+                                borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
+                                onTap: (){
+                                  setState(() {
+                                    showWareHouseDetails=false;
+                                  });
+                                },
+                              ),
+                            )
+
+                        ],
+                      ),
+                    ),
+                    const Divider(color: mTextFieldBorder,height: 1),
+                    if(showWareHouseDetails==false)
+                      const SizedBox(height: 30,),
+                    if(showWareHouseDetails==false)
+                      Center(
+                        child: SizedBox(height: 32,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 18.0,right: 18),
+                            child: CustomTextFieldSearch(
+                              decoration:textFieldDecoration(hintText: 'Search Warehouse'),
+                              controller: wareHouseController,
+                              future: fetchData,
+                              getSelectedValue: (VendorModelAddress value) {
+                                setState(() {
+                                  showWareHouseDetails=true;
+                                  wareHouse ={
+                                    'Name':value.label,
+                                    'city': value.city,
+                                    'state': value.state,
+                                    'street': value.street,
+                                    'zipcode': value.zipcode,
+                                    "vendorId":value.vendorId,
+
+                                  };
+                                });
+
+
+                                // print(value.value);
+                                // print(value.city);
+                                // print(value.street);// this prints the selected option which could be an object
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    if(showWareHouseDetails)
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child:  Text("Street")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("City")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("State")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("ZipCode :")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const CustomVDivider(height: 220, width: 1, color: mTextFieldBorder),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children:  [
+                      Container(
+                        height: 200,
+                        width: 400,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Sales Invoice #'),
+                                        const SizedBox(height: 10,),
+                                        Container(
+                                          width: 120,
+                                          height: 32,
+                                          color: Colors.grey[200],
+                                          child: TextFormField(
+                                            controller: salesInvoice,
+                                            decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
+                                          ),
+                                        )
+                                      ],),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Sales Invoice Date'),
+                                        const SizedBox(height: 10,),
+                                        Container(
+                                          width: 140,
+                                          height: 32,
+                                          color: Colors.grey[200],
+                                          child: TextFormField(showCursor: false,
+                                            controller: salesInvoiceDate,
+                                            onTap: ()async{
+                                              DateTime? pickedDate=await showDatePicker(context: context,
+                                                  initialDate: DateTime.now(),
+                                                  firstDate: DateTime(1999),
+                                                  lastDate: DateTime.now()
+
+                                              );
+                                              if(pickedDate!=null){
+                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                setState(() {
+                                                  salesInvoiceDate.text=formattedDate;
+                                                });
+                                              }
+                                              else{
+                                                log('Date not selected');
+                                              }
+                                            },
+                                            decoration: textFieldSalesInvoiceDate(hintText: 'Invoice Date'),
+                                          ),
+                                        )
+                                      ],)
+                                  ]),
+                              const SizedBox(height: 25,),
+                              Align(alignment: Alignment.topLeft,
+                                child: SizedBox(
+                                  width: 120,height: 28,
+                                  child: OutlinedMButton(
+                                    text: 'Add Due Date',
+                                    textColor: mSaveButton,
+                                    borderColor: mSaveButton,
+                                    onTap: (){
+                                      setState(() {
+
+                                      });
+                                    },
+
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+
+              //Customer TextFields
+            ],
+          ),
+          const Divider(color: mTextFieldBorder,height: 1),
+          const SizedBox(height: 18,),
+          buildLineCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildLineCard(){
+    return SizedBox(
+
+      child: Column(
+        children: [
+
+          ///-----------------------------Table Starts-------------------------
+          const Padding(
+            padding: EdgeInsets.only(left: 18,right: 18),
+            child: Divider(height: 1,color: mTextFieldBorder,),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 18,right: 18),
+            child: Container(color: const Color(0xffF3F3F3),
+              height: 34,
+              child:  const Row(
+                children:  [
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text('SL No'))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text("Qty"))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text("Price/Item"))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text("Discount"))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text("Tax %"))),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Text("Amount"))),
+                  SizedBox(width: 30,height: 30,),
+                  CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                ],
+              ),
+            ),
+          ),
+          if(selectedVehicles.isNotEmpty)
+            const Padding(
+              padding: EdgeInsets.only(left: 18,right: 18),
+              child: Divider(height: 1,color: mTextFieldBorder,),
+            ),
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: selectedVehicles.length,
+            itemBuilder: (context, index) {
+              double tempTax =0;
+              double tempLineData=0;
+              double tempDiscount=0;
+
+              try{
+
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
+                if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
+                {
+                  tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
+                  tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
+
+                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+                  lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                }
+              }
+              catch (e){
+                log(e.toString());
+              }
+              if(index==0){
+                subAmountTotal.text='0';
+                subTaxTotal.text='0';
+                subDiscountTotal.text='0';
+                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
+                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+              }else {
+                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
+                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+              }
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18,right: 18),
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                        children:  [
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Text('${index+1}'))),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Padding(
+                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            child: Container(
+                                decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                                height: 32,
+                                child: TextField(
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  controller: units[index],
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(fontSize: 14),
+                                  decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                      border: InputBorder.none,
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.blue)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.transparent))
+                                  ),
+
+                                  onChanged: (v) {
+                                    setState(() {
+                                      subAmountTotal.text=subAmountTotal.text;
+                                      discountPercentage[index].text='0';
+                                    });
+                                  },
+                                )),
+                          )),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child:  Padding(
+                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            child: Container(
+                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              height: 32,
+                              child: TextField(inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                controller: discountPercentage[index],
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 14),
+                                decoration: const InputDecoration(
+                                    hintText: "%",
+                                    contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                    border: InputBorder.none,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent))
+                                ),
+                                onChanged: (v) {
+                                  setState(() {
+
+                                  });
+                                  discountRupees[index].clear();
+                                  if(v.isNotEmpty||v!=''){
+                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
+                                    //   double tempVal =0;
+                                    //   double tempVal =0;
+                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
+                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
+                                    //   setState(() {
+                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
+                                    //   });
+                                    // }
+                                    // else{
+                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Padding(
+                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            child:
+                            Container(
+                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              height: 32,
+                              child: LayoutBuilder(
+                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                    return CustomPopupMenuButton(elevation: 4,
+                                      decoration:  InputDecoration(
+                                          hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
+                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
+                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
+                                          border: InputBorder.none,
+                                          focusedBorder: const OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.blue)),
+                                          enabledBorder: const OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.transparent))
+                                      ),
+                                      hintText: '',
+                                      // textController: tax[index],
+                                      childWidth: constraints.maxWidth,
+                                      textAlign: TextAlign.right,
+                                      shape:   const RoundedRectangleBorder(
+                                        side: BorderSide(color:mTextFieldBorder),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                      ),
+                                      offset: const Offset(1, 40),
+                                      tooltip: '',
+                                      itemBuilder:  (BuildContext context) {
+                                        return ['2','4','8','10','12'].map((value) {
+                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
+                                            textAlign: MainAxisAlignment.end,
+                                            value: value,
+                                            text:value,
+                                            child: Container(),
+                                          );
+                                        }).toList();
+                                      },
+
+                                      onSelected: (String value)  {
+                                        setState(() {
+                                          tax[index].text=value;
+                                        });
+
+                                      },
+                                      onCanceled: () {
+
+                                      },
+                                      child: Container(),
+                                    );
+                                  }
+                              ),
+                            ),
+                          ),)),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Padding(
+                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            child: Container(
+                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              height: 32,
+                              child: TextField(
+                                controller: lineAmount[index],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 14),
+                                decoration: const InputDecoration(
+                                    hintText: 'Total amount',
+                                    contentPadding: EdgeInsets.only(bottom: 12,top: 2),
+                                    border: InputBorder.none,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent))
+                                ),
+                                onChanged: (v) {},
+                              ),
+                            ),
+                          ),)),
+                          InkWell(onTap: (){
+                            setState(() {
+
+
+                              tableLineItemIndex =true;
+                              // print('++++++++++++++++delete Icon++++++++++++====');
+                              // print(tableLineItemIndex);
+                              selectedVehicles.removeAt(index);
+                              units.removeAt(index);
+                              discountRupees.removeAt(index);
+                              discountPercentage.removeAt(index);
+                              tax.removeAt(index);
+                              lineAmount.removeAt(index);
+
+                            });
+                          },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
+                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 18,right: 18),
+                    child: Divider(height: 1,color: mTextFieldBorder,),
+                  )
+                ],
+              );
+
+
+            },),
+          const Padding(
+            padding: EdgeInsets.only(left: 18,right: 18),
+            child: Divider(height: 1,color: mTextFieldBorder,),
+          ),
+
+          const SizedBox(height: 40,),
+         // if(tableLineItemIndex==false)
+          Visibility(
+
+            visible:  tableLineItemIndex,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 18.0),
+              child: SizedBox(
+                height: 38,
+                child: Row(
+                  children:  [
+                    const Expanded(child: Center(child:Text(""))),
+
+                    Expanded(
+                        flex: 4,
+                        child: Center(
+                            child: OutlinedMButton(
+                              text: "+ Add Item/ Service",
+                              borderColor:searchVendor==true?Colors.red: mSaveButton,
+                              textColor: mSaveButton,
+                              onTap: () {
+                                brandNameController.clear();
+                                modelNameController.clear();
+                                variantController.clear();
+                                displayList=vehicleList;
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => showDialogBox(),
+                                ).then((value) {
+                                  if(value!=null){
+                                    setState(() {
+                                      tableLineItemIndex= false;
+                                      // print('+++++++++Inkwell +++++++====');
+                                      // print(tableLineItemIndex);
+                                      isVehicleSelected=true;
+                                      units.add(TextEditingController(text: '1'));
+                                      discountRupees.add(TextEditingController(text: '0'));
+                                      discountPercentage.add(TextEditingController(text: '0'));
+                                      tax.add(TextEditingController(text: '0'));
+                                      lineAmount.add(TextEditingController());
+                                      subAmountTotal.text='0';
+                                      selectedVehicles.add(value);
+                                    });
+                                  }
+                                });
+
+                              },
+                            ))),
+                    const Expanded(flex: 5,child: Center(child: Text(""),))
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 40,),
+          ///-----------------------------Table Ends-------------------------
+
+          ///SUB TOTAL
+          const Divider(height: 1,color: mTextFieldBorder),
+          Container(
+            color: const Color(0xffF3F3F3),
+            height: 34,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 18,right: 18),
+              child: Row(
+                children:   [
+                  const Expanded(child: Center(child: Text(''))),
+                  const Expanded(flex: 4,child: Center(child: Text(""))),
+                  const Expanded(child: Center(child: Text(""))),
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  const Expanded(child: Center(child: Text("Sub Total"))),
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Builder(
+                      builder: (context) {
+                        return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
+                      }
+                  ))),
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Builder(
+                      builder: (context) {
+                        return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
+                      }
+                  ))),
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  Expanded(child: Center(child: Builder(
+                      builder: (context) {
+                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                      }
+                  ))),
+                  const SizedBox(width: 30,height: 30,),
+
+                ],
+              ),
+            ),
+          ),
+          const Divider(height: 1,color: mTextFieldBorder,),
+
+
+
+          ///------Foooter----------
+          buildFooter(),
+          const Divider(height: 1,color: mTextFieldBorder,),
+
+        ],
+      ),
+    );
+  }
+
+  Widget showDialogBox(){
+    return AlertDialog(
+      backgroundColor:
+      Colors.transparent,
+      content:StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width/1.5,
+              height: MediaQuery.of(context).size.height/1.1,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                    margin: const EdgeInsets.only(top: 13.0, right: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Card(surfaceTintColor: Colors.white,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10,),
+                            ///search Fields
+                            Row(
+                              children: [
+                                const SizedBox(width: 10,),
+                                SizedBox(width: 250,
+                                  child: TextFormField(
+                                    controller: brandNameController,
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                          modelNameController.clear();
+                                          variantController.clear();
+                                        }
+                                        else{
+                                          fetchBrandName(brandNameController.text);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10,),
+                                SizedBox(
+                                  width: 250,
+                                  child: TextFormField(
+                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                    controller: modelNameController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                          brandNameController.clear();
+                                          variantController.clear();
+
+                                        }
+                                        else{
+                                          fetchModelName(modelNameController.text);
+                                        }
+
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10,),
+                                SizedBox(width: 250,
+                                  child: TextFormField(
+                                    controller: variantController,
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if(value.isEmpty || value==""){
+                                          displayList=vehicleList;
+                                        }
+                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
+                                          modelNameController.clear();
+                                          brandNameController.clear();
+                                        }
+                                        else{
+                                          fetchVariantName(variantController.text);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20,),
+                            ///Table Header
+                            Container(
+                              height: 40,
+                              color: Colors.grey[200],
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 18.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Text("Brand")),
+                                    Expanded(child: Text("Model")),
+                                    Expanded(child: Text("Variant")),
+                                    Expanded(child: Text("On road price")),
+                                    Expanded(child: Text("Color")),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    for (int i = 0; i < displayList.length; i++)
+                                      InkWell(
+                                        hoverColor: mHoverColor,
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.pop(context,displayList[i],);
+                                          });
+
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 18.0),
+                                          child: SizedBox(height: 30,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 20,
+                                                    child: Text(displayList[i]['make']),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 20,
+                                                    child: Text(
+                                                        displayList[i]['model_name']),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 20,
+                                                    child: Text(displayList[i]['varient_name']),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 20,
+                                                    child: Text(displayList[i]['onroad_price'].toString()),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 20,
+                                                    child: Text(displayList[i]['varient_color1']),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0.0,
+                    child: InkWell(
+                      child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: const Color.fromRGBO(204, 204, 204, 1),
+                              ),
+                              color: Colors.blue),
+                          child: const Icon(
+                            Icons.close_sharp,
+                            color: Colors.white,
+                          )),
+                      onTap: () {
+                        setState(() {
+                          Navigator.of(context).pop();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget buildFooter(){
+    return Row(crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Column(
+              children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10,),
+                    const Text("Terms and Conditions"),
+                    const SizedBox(height: 10,),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                          height: 80,
+                          child: TextFormField(
+                            controller: termsAndConditions,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration:  const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                            ),
+                          ),
+                        )
+                    )
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Customer Notes",),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(height: 80,
+
+                      decoration: BoxDecoration(border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: TextFormField(style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                          decoration: const InputDecoration(border: InputBorder.none),
+                          controller: customerNotes,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 4,
+                          minLines: 4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const CustomVDivider(height: 280, width: 1, color: mTextFieldBorder),
+        Expanded(child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total Taxable Amount"),
+                  Builder(
+                      builder: (context) {
+                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                      }
+                  ),
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Freight Amount",style: TextStyle(color: mSaveButton)),
+                  Container(
+                      decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                      height: 32,width: 100,
+                      child: TextField(
+                        controller: freightAmount,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(fontSize: 14),
+                        decoration: const InputDecoration(
+
+                            contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                            border: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent))
+                        ),
+                        onChanged: (v) {
+                          setState(() {
+                            if(freightAmount.text.isNotEmpty){
+                              setState(() {
+                                grandTotal.text = (double.parse(freightAmount.text) + double.parse(subAmountTotal.text)).toString();
+                              });
+                            }
+                          });
+                        },
+                      )),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              const Divider(color: mTextFieldBorder),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total"),
+                  Builder(
+                      builder: (context) {
+                        return Text(freightAmount.text.isEmpty?subAmountTotal.text:grandTotal.text);
+                      }
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )),
+      ],
+    );
+  }
+
+  textFieldDecoration({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon: const Icon(Icons.search,size: 18),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: searchVendor==true?const BorderSide(color: Colors.red):const BorderSide(color: mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldBrandNameField({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
-          if (value != null) {
-            // data = value;
-            // print('-------addTableAPI value---------');
-            // print(value);
+          brandNameController.clear();
+        });
+
+      },
+          child: const Icon(Icons.close,size: 18,)
+      ),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldModelNameField({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon:  modelNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
+        modelNameController.clear();
+        displayList=vehicleList;
+      },
+          child: const Icon(Icons.close,size: 18,)
+      ),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldVariantNameField({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
+        variantController.clear();
+      },
+          child: const Icon(Icons.close,size: 18,)
+      ),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+
+  fetchModelName(String modelName)async{
+    dynamic response;
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
+    try{
+      await getData(url:url ,context:context ).then((value) {
+        setState(() {
+          if(value!=null){
+            response=value;
+            displayList=response;
+          }
+        });
+      }
+      );
+    }
+    catch(e){
+      logOutApi(context: context,response: response,exception: e.toString());
+
+    }
+  }
+
+  fetchBrandName(String brandName)async{
+    dynamic response;
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
+    try{
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response=value;
+            displayList=response;
           }
         });
       });
     }
+    catch(e){
+      logOutApi(context: context,exception: e.toString(),response: response);
+    }
   }
-}
 
-class ItemData {
-  final String label;
-  final String name;
+  fetchVariantName(String variantName)async{
+    dynamic response;
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
+    try{
+      await getData(context:context ,url: url).then((value) {
+        setState((){
+          if(value!=null){
+            response=value;
+            displayList=response;
 
-  final String brand;
+          }
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context:context ,response: response,exception: e.toString());
+    }
+  }
 
-  ItemData({
-    required this.label,
-    required this.name,
-    required this.brand,
-  });
+  getAllVehicleVariant() async {
+    dynamic response;
+    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
+    try {
+      await getData(context: context, url: url).then((value) {
+        setState(() {
+          if (value != null) {
+            response = value;
+            vehicleList = value;
+            displayList=vehicleList;
+            // print('------------check proper--------------');
+            // print(displayList);
+          }
+          loading = false;
+        });
+      });
+    } catch (e) {
+      logOutApi(context: context, exception: e.toString(), response: response);
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+  postEstimate(estimate)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
+    postData(context: context,requestBody:estimate ,url:url ).then((value) {
+      setState(() {
+        if(value!=null){
 
-  factory ItemData.fromJson(Map<String, dynamic> json) {
-    return ItemData(
-      label: json['brand'],
-      name: json['name'],
-      brand: json['brand'],
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
+         // Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          //Navigator.of(context).pop();
+          // print('------------------inside api()------------');
+          // print(estimate);
+        }
+      });
+    });
+
+  }
+  textFieldSalesInvoice({required String hintText, bool? error}) {
+    return  InputDecoration(border: InputBorder.none,
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 15),
     );
   }
-}
-
-class ModelData {
-  final String label;
-  final String name;
-
-  final String brand;
-
-  ModelData({
-    required this.label,
-    required this.name,
-    required this.brand,
-  });
-
-  factory ModelData.fromJson(Map<String, dynamic> json) {
-    return ModelData(
-      label: json['name'],
-      name: json['name'],
-      brand: json['brand'],
+  textFieldSalesInvoiceDate({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon: const Icon(Icons.calendar_month_rounded,size: 12,color: Colors.grey,),
+      border: InputBorder.none,
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
+
 }
 
-class VariantData {
-  final String label;
-  final double exShowroomPrice;
-
-  final String model;
-
-  VariantData({
+class VendorModelAddress {
+  String label;
+  String city;
+  String state;
+  String zipcode;
+  String street;
+  String vendorId;
+  dynamic value;
+  VendorModelAddress({
+    required this.vendorId,
     required this.label,
-    required this.exShowroomPrice,
-    required this.model,
+    required this.city,
+    required this.state,
+    required this.zipcode,
+    required this.street,
+    this.value
   });
 
-  factory VariantData.fromJson(Map<String, dynamic> json) {
-    print('--------- variant data --------');
-    print(json);
-    return VariantData(
-      label: json['varient'],
-      exShowroomPrice: json['onroad_price'],
-      model: json['model_name'],
+  factory VendorModelAddress.fromJson(Map<String, dynamic> json) {
+    return VendorModelAddress(
+      vendorId: json['vendorId'],
+      label: json['label'],
+      value: json['value'],
+      city: json['city'],
+      state: json['state'],
+      street: json['street'],
+      zipcode: json['zipcode'],
+
     );
   }
 }

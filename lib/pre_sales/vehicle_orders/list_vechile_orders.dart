@@ -37,7 +37,9 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
         setState(() {
           if(value!=null){
             response = value;
-            poList = value;
+            poList = response;
+            // print('+++++++++Check here++++++++');
+            // print(poList);
             if(displayPoList.isEmpty){
               if(poList.length>15){
                 for(int i=startVal;i<startVal+15;i++){
@@ -45,7 +47,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                 }
               }
               else{
-                for(int i=startVal;i<poList.length;i++){
+                for(int i=0;i<poList.length;i++){
                   displayPoList.add(poList[i]);
                 }
               }
@@ -58,7 +60,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
       });
     }
     catch (e) {
-      logOutApi(context: context,response: response,exception: e.toString());
+     // logOutApi(context: context,response: response,exception: e.toString());
       setState(() {
         loading = false;
       });
@@ -133,7 +135,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                             const AddNewVehiclePurchaseOrder(selectedDestination: 2.1, drawerWidth: 190,),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero
-                                            ));
+                                            )).then((value) => fetchPurchaseData());
 
 
                                           },
@@ -165,7 +167,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                                 padding: EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text("PURCHASE ORDER")
+                                                    child: Text("Purchase Order")
                                                 ),
                                               )),
                                           Expanded(
@@ -174,7 +176,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                                 child: SizedBox(
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text('VENDOR NAME')
+                                                    child: Text('Vendor Name')
                                                 ),
                                               )
                                           ),
@@ -183,7 +185,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                                 padding: EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text("SHIPPING ADDRESS")
+                                                    child: Text("Shipping Address")
                                                 ),
                                               )),
                                           Expanded(
@@ -191,7 +193,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                                 padding: EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text("PAY-TO ADDRESS")
+                                                    child: Text("Pay-To Address")
                                                 ),
                                               )),
                                           Expanded(
@@ -199,7 +201,15 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                                 padding: EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text("TOTAL")
+                                                    child: Text("Total")
+                                                ),
+                                              )),
+                                          Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(top: 4),
+                                                child: SizedBox(height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text("Status")
                                                 ),
                                               )),
                                           Center(child: Padding(
@@ -218,8 +228,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                               Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
                             ]),
                           ),
-
-
+                           const SizedBox(height:4),
                            for(int i=0;i<=displayPoList.length;i++)
                           Column(
                             children: [
@@ -227,7 +236,8 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                               MaterialButton(
                                 hoverColor:mHoverColor,
                                 onPressed: (){
-                                  Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>EditVehiclePurchaseOrder(poList: poList[i], selectedDestination: 2.1, drawerWidth: 190,),
+
+                                  Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>EditVehiclePurchaseOrder(poList: displayPoList[i], selectedDestination: 2.1, drawerWidth: 190,),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero
                                             )).then((value) {
@@ -239,7 +249,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                     Expanded(flex: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 4.0),
-                                          child: SizedBox(height: 40,
+                                          child: SizedBox(height: 25,
                                               //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                               child: Text(displayPoList[i]['po_id']??"")
                                           ),
@@ -247,7 +257,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                     Expanded(flex: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 4.0),
-                                          child: SizedBox(height: 40,
+                                          child: SizedBox(height: 25,
                                               //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                               child: Text(displayPoList[i]['vendor_name']??"")
                                           ),
@@ -255,25 +265,33 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                     Expanded(flex: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 4.0),
-                                          child: SizedBox(height: 40,
+                                          child: SizedBox(height: 25,
                                               //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                              child:Text(displayPoList[i]['shipping_address']??"")
+                                              child:Text(displayPoList[i]['shippingAddressName']??"")
                                           ),
                                         )),
                                     Expanded(flex: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 4.0),
-                                          child: SizedBox(height: 40,
+                                          child: SizedBox(height: 25,
                                               //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                              child:  Text(displayPoList[i]['billing_address']??"")
+                                              child:  Text(displayPoList[i]['shippingAddressName']??"")
                                           ),
                                         )),
                                     Expanded(flex: 4,
                                         child: Padding(
                                           padding: const EdgeInsets.only(top: 4.0),
-                                          child: SizedBox(height: 40,
+                                          child: SizedBox(height: 25,
                                               //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                               child: Text(displayPoList[i]['grand_total'].toStringAsFixed(2))
+                                          ),
+                                        )),
+                                    Expanded(flex: 4,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 4.0),
+                                          child: SizedBox(height: 25,
+                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                              child: Text(displayPoList[i]['status']??"")
                                           ),
                                         )),
                                     const Center(child: Padding(
