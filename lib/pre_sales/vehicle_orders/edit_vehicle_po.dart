@@ -83,7 +83,8 @@ class _EditPurchaseOrderState extends State<EditVehiclePurchaseOrder>
 
   Map storePoList = {};
 
-
+  //Table Line Items Data.
+   var units =<TextEditingController>[];
   // Vehicle Variant Data.
   String vehicleVariantID="";
   List vvList=[];
@@ -98,6 +99,14 @@ class _EditPurchaseOrderState extends State<EditVehiclePurchaseOrder>
             vvList = value;
             // print('-------line Item------');
             // print(vvList);
+           // Table Line Items Assigning.
+           for(int i=0;i<vvList.length;i++){
+             units.add(TextEditingController());
+             units[i].text=vvList[i]['quantity'].toString();
+             // print('-------try to print Qty----------');
+             // print(units[i].text);
+           }
+
           }
 
         });
@@ -625,7 +634,34 @@ class _EditPurchaseOrderState extends State<EditVehiclePurchaseOrder>
                       const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                       Expanded(flex:4,child: Center(child: Text(vvList[index]['model'].toString()))),
                       const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                      Expanded(child: Center(child: Text(vvList[index]['quantity'].toString()))),
+                     // Expanded(child: Center(child: Text(vvList[index]['quantity'].toString()))),
+                      Expanded(child: Padding(
+                        padding: const EdgeInsets.only(left: 12,right: 12,bottom: 2,top:2),
+                        child: Container(
+                            decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                            height: 30,
+                            child: TextField(
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              controller: units[index],
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 14),
+                              decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                  border: InputBorder.none,
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.blue)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.transparent))
+                              ),
+
+                              onChanged: (v) {
+                                setState(() {
+                                  //subAmountTotal.text=subAmountTotal.text;
+                                //  discountPercentage[index].text='0';
+                                });
+                              },
+                            )),
+                      )),
                       const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                       Expanded(flex:2,child: Center(child: Text(vvList[index]['unit_price'].toString()))),
                       const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
