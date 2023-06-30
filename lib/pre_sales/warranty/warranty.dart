@@ -38,7 +38,7 @@ class _WarrantyState extends State<Warranty> {
   int startVal=0;
   Future fetchEstimate()async{
     dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_estimate_vehicle';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_parts_warranty';
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {

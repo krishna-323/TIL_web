@@ -178,6 +178,7 @@ class _PartDetailsState extends State<PartDetails> {
 
                                 itemCount: itemList.length,
                                 itemBuilder: (context, index) {
+                                  print(itemList[index]);
                                   return Column(
                                     children: [
                                       Container(color: selectedId==itemList[index]['newitem_id'] ?Colors.grey[100]: Colors.white,

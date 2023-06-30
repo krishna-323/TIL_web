@@ -56,6 +56,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     super.initState();
 
     estimateItems=widget.estimateItem;
+    print(estimateItems);
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -78,6 +79,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       tax[i].text=estimateItems['items'][i]['tax'].toString();
 
       lineAmount.add(TextEditingController());
+      lineApprovedAmount.add(TextEditingController());
       lineAmount[i].text=estimateItems['items'][i]['amount'].toString();
 
       subDiscountTotal.text = lineAmount[i].text + discountPercentage[i].text;
@@ -120,6 +122,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   var discountPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
+  var lineApprovedAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
   bool newAddress=false;
@@ -367,9 +370,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     "totalTaxableAmount": 0,
                                     "items": [],
                                   };
-                                  putUpdatedEstimated(updateEstimate);
                                   for(int i=0;i<estimateItems['items'].length;i++){
-                                    lineItems.add(
+                                    updateEstimate['items'].add(
                                         {
                                           "amount": lineAmount[i].text,
                                           "discount":  discountPercentage[i].text,
@@ -381,6 +383,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         }
                                     );
                                   }
+                                  putUpdatedEstimated(updateEstimate);
                                 });
                               },
 
@@ -833,17 +836,17 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
+                  Expanded(flex: 6,child: Center(child: Text("Items/Service"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Qty"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Price/Item"))),
+                  Expanded(flex: 2,child: Center(child: Text("Price/Item"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Discount"))),
+                  Expanded(flex: 2,child: Center(child: Text("Approved %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Tax %"))),
+                  Expanded(flex: 2,child: Center(child: Text("Approved Amount"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Amount"))),
+                  Expanded(flex: 2,child: Center(child: Text("Amount"))),
                   SizedBox(width: 30,height: 30,),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                 ],
@@ -851,7 +854,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
             ),
           ),
 
-
+          ///Row Items
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -865,11 +868,12 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
-                  tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
-                  tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
-                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
-
-                  lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
+                   lineApprovedAmount[index].text = tempDiscount.toStringAsFixed(1);
+                   tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
+                  // tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+                  //
+                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
                   // subDiscountTotal.text=tempDiscount.toString();
                 }
               }
@@ -898,7 +902,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex:6,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -928,9 +932,9 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
+                          Expanded(flex: 2,child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child:  Padding(
+                          Expanded(flex: 2,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
@@ -971,64 +975,53 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               ),
                             ),
                           ),),
+
+
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Padding(
+                          Expanded(flex: 2,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      decoration:  InputDecoration(
-                                          hintStyle: const TextStyle(fontSize: 14,color: Colors.black),
-                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
-                                          border: InputBorder.none,
-                                          focusedBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.blue)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.transparent))
-                                      ),
-                                      hintText: '',
-                                      //textController: tax[index],
-                                      childWidth: constraints.maxWidth,
-                                      textAlign: TextAlign.right,
-                                      shape:  const RoundedRectangleBorder(
-                                        side: BorderSide(color:mTextFieldBorder),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
-                                      ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(
-                                            textAlign: MainAxisAlignment.end,
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          tax[index].text=value;
-                                        });
-                                        //print(tax[index].text);
-                                      },
-                                      onCanceled: () {
+                              child: TextField(
+                                controller: lineApprovedAmount[index],
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 14),
+                                decoration: const InputDecoration(
+                                    hintText: "%",
+                                    contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                    border: InputBorder.none,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent))
+                                ),
+                                onChanged: (v) {
+                                  setState(() {
 
-                                      },
-                                      child: Container(),
-                                    );
+                                  });
+
+                                  //discountRupees[index].clear();
+                                  if(v.isNotEmpty||v!=''){
+                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
+                                    //   double tempVal =0;
+                                    //   double tempVal =0;
+                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
+                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
+                                    //   setState(() {
+                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
+                                    //   });
+                                    // }
+                                    // else{
+                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
                                   }
+                                },
                               ),
                             ),
-                          ),)),
+                          ),),
+
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Padding(
+                          Expanded(flex: 2,child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
@@ -1052,7 +1045,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              deleteLineItem(estimateItems['items'][index]['estItemId']);
+                              deleteLineItem(estimateItems['items'][index]['estItemId'],index);
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -1100,7 +1093,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 if(value!=null){
                                   setState(() {
                                     isVehicleSelected=true;
-                                    lineAmount.add(TextEditingController());
+                                    lineAmount.add(TextEditingController(text: "0"));
+                                    lineApprovedAmount.add(TextEditingController(text: '0'));
                                     units.add(TextEditingController(text: '1'));
                                     discountPercentage.add(TextEditingController(text:'0'));
                                     tax.add(TextEditingController());
@@ -1137,12 +1131,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
                         return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
-                      }
-                  ))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Builder(
-                      builder: (context) {
-                        return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
                       }
                   ))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -1434,7 +1422,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
+                  const Text("Additional Charges",style: TextStyle(color: mSaveButton)),
                   Container(
                       decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                       height: 32,width: 100,
@@ -1632,7 +1620,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   }
   putUpdatedEstimated(updatedEstimated)async{
     try{
-      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/update_estimate_vehicle'),
+      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/update_parts_warranty'),
           headers: {
             "Content-Type": "application/json",
             'Authorization': 'Bearer $authToken',
@@ -1641,11 +1629,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       );
       if(response.statusCode==200){
         if(lineItems.isNotEmpty){
-          lineItemsData(lineItems);
+      //    lineItemsData(lineItems);
         }
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
         }
 
       }
@@ -1657,18 +1645,18 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       log(e.toString());
     }
   }
-  lineItemsData(lineItems)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
-    postData(context:context ,url: url,requestBody: lineItems).then((value) => {
-      setState((){
-        if(value!=null){
-          log(value.toString());
-        }
-      })
-    });
-  }
-  deleteLineItem(estimateItemId)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_item_by_id/$estimateItemId';
+  // lineItemsData(lineItems)async{
+  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
+  //   postData(context:context ,url: url,requestBody: lineItems).then((value) => {
+  //     setState((){
+  //       if(value!=null){
+  //         log(value.toString());
+  //       }
+  //     })
+  //   });
+  // }
+  deleteLineItem(estimateItemId, int index)async{
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/delete_parts_warranty_line_item_by_id/$estimateItemId';
     try{
       final response=await http.delete(Uri.parse(url),
           headers: {
@@ -1679,6 +1667,9 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       if(response.statusCode==200){
         setState(() {
           estimateItems['items'].removeWhere((map)=>map['estItemId']==estimateItemId);
+          tax.removeAt(index);
+          lineApprovedAmount.removeAt(index);
+          lineAmount.removeAt(index);
           // print('----------estimatedItemId--------');
           // print(estimateItemId);
           // print('------inside delete api---');
@@ -1698,7 +1689,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     }
   }
   deleteEstimateItemData(estVehicleId)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_vehicle_by_id/$estVehicleId';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/delete_parts_warranty_by_id/$estVehicleId';
     try{
       final response=await http.delete(Uri.parse(url),
           headers: {
@@ -1707,9 +1698,10 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           }
       );
       if(response.statusCode ==200){
+        print(response.body);
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
         }
       }
     }

@@ -43,12 +43,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
       preSalesHover=false;
       preSalesExpanded=true;
     }
-    if(_selectedDestination==3.1 || _selectedDestination==3.2 || _selectedDestination==3.2|| _selectedDestination==3.3 || _selectedDestination==2.4){
+    if(_selectedDestination==3.1 || _selectedDestination==3.2 || _selectedDestination==3.2|| _selectedDestination==3.3 || _selectedDestination==2.4||_selectedDestination ==4.3 ){
       masterHover=false;
       masterExpanded=true;
     }
     //Settings.
-    if(_selectedDestination == 4.1 || _selectedDestination ==4.2 ||_selectedDestination ==4.3 ){
+    if(_selectedDestination == 4.1 || _selectedDestination ==4.2 ){
 
       settingsHover=false;
       settingsExpanded=true;
@@ -541,7 +541,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                              }
                            });
                          },
-                         initiallyExpanded:_selectedDestination == 2.4 || _selectedDestination == 3.1 || _selectedDestination==3.2 || _selectedDestination==3.3,
+                         initiallyExpanded:_selectedDestination == 2.4 || _selectedDestination == 3.1 || _selectedDestination==3.2 || _selectedDestination==3.3 ||_selectedDestination==4.3,
                          trailing: Padding(
                            padding: const EdgeInsets.only(right: 10.0),
                            child: Icon(
@@ -656,6 +656,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                );
                              },
                            ),
+
+                           ListTile(
+                               title: Center(child: Align(alignment: Alignment.topLeft,
+                                   child: Padding(
+                                     padding: const EdgeInsets.only(left: 15.0),
+                                     child: Text(drawerWidth == 60 ? "" : 'Vehicle List'),
+                                   ))),
+                               selected: _selectedDestination == 4.3,
+                               hoverColor:mHoverColor,
+                               selectedTileColor: Colors.blue,
+                               selectedColor: Colors.white,
+                               onTap: () {
+                                 setState(() {
+                                   _selectedDestination=4.3;
+                                 });
+                                 Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 4.3));
+                                 // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
+                               }
+                           ),
                          ],
                        ),
                      ),
@@ -672,7 +691,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: SizedBox(height: 45,
                     child: Icon(Icons.settings,color:_selectedDestination ==4.1
                         ||_selectedDestination==4.2
-                        ||_selectedDestination==4.3
+
                         ? Colors.blue: Colors.black54,),
                   ),
                 ): MouseRegion(
@@ -748,21 +767,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 4.2));
                               }
                           ),
-                          ListTile(
-                              title: Center(child: Align(alignment: Alignment.topLeft,
-                                  child: Text(drawerWidth == 60 ? "" : 'Upload'))),
-                              selected: _selectedDestination == 4.3,
-                              hoverColor:mHoverColor,
-                              selectedTileColor: Colors.blue,
-                              selectedColor: Colors.white,
-                              onTap: () {
-                                setState(() {
-                                  _selectedDestination=4.3;
-                                });
-                                Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 4.3));
-                                // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
-                              }
-                          ),
+
                         ],
                       ),
                     ),

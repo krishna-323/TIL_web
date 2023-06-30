@@ -85,9 +85,10 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
-  var discountPercentage = <TextEditingController>[];
+  var approvedPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
+  var lineApprovedAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
 
@@ -198,6 +199,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       "termsConditions": termsAndConditions.text,
                                       "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      'freight_amount':additionalCharges.text,
+                                      'status':"Waiting",
+                                      "comment":"",
                                       "items": [
 
                                       ]
@@ -208,7 +212,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     postDetails['items'].add(
                                         {
                                           "amount": lineAmount[i].text,
-                                          "discount": discountPercentage[i].text,
+                                          "discount": approvedPercentage[i].text,
                                           "estVehicleId": "string",
                                           "itemsService": selectedVehicles[i]['model_name']??"",
                                           "priceItem": selectedVehicles[i]['onroad_price']??"",
@@ -675,17 +679,17 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
+                  Expanded(flex: 6,child: Center(child: Text("Items/Service"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Qty"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Price/Item"))),
+                  Expanded(flex: 2,child: Center(child: Text("Price/Item"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Discount"))),
+                  Expanded(flex: 2,child: Center(child: Text("Approved %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Tax %"))),
+                  Expanded(flex: 2,child: Center(child: Text("Approved Amount"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Text("Amount"))),
+                  Expanded(flex: 2,child: Center(child: Text("Amount"))),
                   SizedBox(width: 30,height: 30,),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                 ],
@@ -697,6 +701,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
               padding: EdgeInsets.only(left: 18,right: 18),
               child: Divider(height: 1,color: mTextFieldBorder,),
             ),
+
+
+          ///Row Items
 
           ListView.builder(
             shrinkWrap: true,
@@ -712,10 +719,11 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
               try{
 
                 lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
-                if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
+                if(approvedPercentage[index].text!='0'||approvedPercentage[index].text!=''||approvedPercentage[index].text.isNotEmpty)
                 {
-                  tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
-                  tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
+                  tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
+                  tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
+                  lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
 
                   tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
@@ -748,7 +756,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          Expanded(flex: 6,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -772,21 +780,22 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                   onChanged: (v) {
                                     setState(() {
                                       subAmountTotal.text=subAmountTotal.text;
-                                      discountPercentage[index].text='0';
+                                      approvedPercentage[index].text='0';
                                     });
                                   },
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
+                          Expanded(flex: 2,child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child:  Padding(
+
+                          Expanded(flex: 2,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: TextField(
-                                controller: discountPercentage[index],
+                                controller: approvedPercentage[index],
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
@@ -821,65 +830,53 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                             ),
                           ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Padding(
+
+                          Expanded(flex: 2,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
-                            child:
-                            Container(
+                            child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      decoration:  InputDecoration(
-                                          hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
-                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
-                                          border: InputBorder.none,
-                                          focusedBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.blue)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.transparent))
-                                      ),
-                                      hintText: '',
-                                      // textController: tax[index],
-                                      childWidth: constraints.maxWidth,
-                                      textAlign: TextAlign.right,
-                                      shape:   const RoundedRectangleBorder(
-                                        side: BorderSide(color:mTextFieldBorder),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
-                                      ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
-                                            textAlign: MainAxisAlignment.end,
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
+                              child: TextField(
+                                controller: lineApprovedAmount[index],
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(fontSize: 14),
+                                decoration: const InputDecoration(
+                                    hintText: "Approved Amount",
+                                    hintStyle: TextStyle(fontSize: 12),
+                                    contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                    border: InputBorder.none,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent))
+                                ),
+                                onChanged: (v) {
+                                  setState(() {
 
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          tax[index].text=value;
-                                        });
-
-                                      },
-                                      onCanceled: () {
-
-                                      },
-                                      child: Container(),
-                                    );
+                                  });
+                                  discountRupees[index].clear();
+                                  if(v.isNotEmpty||v!=''){
+                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
+                                    //   double tempVal =0;
+                                    //   double tempVal =0;
+                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
+                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
+                                    //   setState(() {
+                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
+                                    //   });
+                                    // }
+                                    // else{
+                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
                                   }
+                                },
                               ),
                             ),
-                          ),)),
+                          ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Padding(
+
+
+
+                          Expanded(flex: 2,child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
@@ -906,9 +903,10 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
-                              discountPercentage.removeAt(index);
+                              approvedPercentage.removeAt(index);
                               tax.removeAt(index);
                               lineAmount.removeAt(index);
+                              lineApprovedAmount.removeAt(index);
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -963,9 +961,10 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     isVehicleSelected=true;
                                     units.add(TextEditingController(text: '1'));
                                     discountRupees.add(TextEditingController(text: '0'));
-                                    discountPercentage.add(TextEditingController(text: '0'));
+                                    approvedPercentage.add(TextEditingController(text: '0'));
                                     tax.add(TextEditingController(text: '0'));
                                     lineAmount.add(TextEditingController());
+                                    lineApprovedAmount.add(TextEditingController());
                                     subAmountTotal.text='0';
                                     selectedVehicles.add(value);
                                   });
@@ -1002,12 +1001,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                         return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
                       }
                   ))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Builder(
-                      builder: (context) {
-                        return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
-                      }
-                  ))),
+
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
@@ -1296,7 +1290,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
+                  const Text("Additional Charges",style: TextStyle(color: mSaveButton)),
                   Container(
                       decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                       height: 32,width: 100,
@@ -1495,13 +1489,14 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
     }
   }
   postEstimate(estimate)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/add_parts_warranty';
+    print(estimate);
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {
         if(value!=null){
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
           //Navigator.of(context).pop();
           // print('------------------inside api()------------');
           // print(estimate);

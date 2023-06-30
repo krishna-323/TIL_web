@@ -94,23 +94,40 @@ class _UploadPOState extends State<UploadPO> {
 
                                     const SizedBox(width: 10,),
                                     MaterialButton(
-
                                       onPressed: () {
-                                        exportToExcel();
+                                        setState(() {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          exportToExcel().whenComplete((){
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          });
+                                        });
+
                                       },
                                       color: Colors.blue,
-                                      child: const Icon(Icons.document_scanner_outlined,color: Colors.white),),
-                                    const SizedBox(width: 10,),
-                                    MaterialButton(onPressed: () async{
-
-
-                                      _loadCSVorXlSX().whenComplete(() {
-                                        saveExcelData(newData).whenComplete(() {
-                                        });
-                                      });
-                                    },
-                                      color: Colors.blue,
-                                      child: const Text("+ Upload",style: TextStyle(color: Colors.white)),),
+                                      child: const Row(
+                                        children: [
+                                          Text('Download ',style: TextStyle(color: Colors.white)),
+                                          Icon(Icons.file_download_outlined,color: Colors.white,size: 18),
+                                        ],
+                                      ),),
+                                    // const SizedBox(width: 10,),
+                                    // MaterialButton(onPressed: () async{
+                                    //     setState(() {
+                                    //       isLoading = true;
+                                    //     });
+                                    //   _loadCSVorXlSX().whenComplete(() {
+                                    //     print(newData.length);
+                                    //     saveExcelData(newData).whenComplete(() {
+                                    //
+                                    //     });
+                                    //   });
+                                    // },
+                                    //   color: Colors.blue,
+                                    //   child: const Text("+ Upload",style: TextStyle(color: Colors.white)),),
                                     if(visibleDelete)
                                       Row(
                                         children: [
@@ -118,10 +135,12 @@ class _UploadPOState extends State<UploadPO> {
                                           MaterialButton(minWidth: 20,
                                             onPressed: () {
                                               // exportToExcel();
-
+                                              setState(() {
+                                                isLoading= true;
+                                              });
                                               if(selectedFields.isNotEmpty){
                                                 for(int i=0;i<selectedFields.length;i++){
-                                                  deletePoData(selectedFields[i]).then((value) {
+                                                  deletePoData(selectedFields[i],i).then((value) {
                                                   });
                                                 }
                                               }
@@ -424,21 +443,24 @@ class _UploadPOState extends State<UploadPO> {
   }
 
 
-  void exportToExcel() async {
+  Future exportToExcel() async {
     var excel = xl.Excel.createExcel();
     xl.Sheet sheetObject = excel['Sheet1'];
 
 
 
     xl.CellStyle cellStyle = xl.CellStyle(backgroundColorHex: "#000000", fontFamily : xl.getFontFamily(xl.FontFamily.Calibri),fontColorHex:'#FFFFFF' ,horizontalAlign: xl.HorizontalAlign.Center);
-    xl.CellStyle cellStyle1 = xl.CellStyle(textWrapping:xl.TextWrapping.WrapText, );
+    xl.CellStyle cellStyle1 = xl.CellStyle(textWrapping:xl.TextWrapping.WrapText,horizontalAlign: xl.HorizontalAlign.Center );
 
     // cellStyle.underline = Underline.Single; // or Underline.Double
     var cellA1 =  sheetObject.cell(xl.CellIndex.indexByString("A1"));
     // var cell1 =  sheetObject.;
     var cellB1 =  sheetObject.cell(xl.CellIndex.indexByString("B1"));
     var cellC1 =  sheetObject.cell(xl.CellIndex.indexByString("C1"));
-    //var cellD1 =  sheetObject.cell(xl.CellIndex.indexByString("D1"));
+    var cellD1 =  sheetObject.cell(xl.CellIndex.indexByString("D1"));
+    var cellE1 =  sheetObject.cell(xl.CellIndex.indexByString("E1"));
+    var cellF1 =  sheetObject.cell(xl.CellIndex.indexByString("F1"));
+    var cellG1 =  sheetObject.cell(xl.CellIndex.indexByString("G1"));
 
     cellA1.cellStyle=cellStyle;
     cellA1.value="Make";
@@ -449,24 +471,48 @@ class _UploadPOState extends State<UploadPO> {
     cellB1.value="Model";
 
     cellC1.cellStyle=cellStyle;
-    cellC1.value="Varient";
+    cellC1.value="Variant";
+
+    cellD1.cellStyle=cellStyle;
+    cellD1.value="Date";
+
+    cellE1.cellStyle=cellStyle;
+    cellE1.value="On-Road Price";
+
+    cellF1.cellStyle=cellStyle;
+    cellF1.value="Color";
+
+    cellG1.cellStyle=cellStyle;
+    cellG1.value="Manufacture Year";
 
 
 
 
     for(int i=0;i<poList.length;i++) {
+
       sheetObject.cell(xl.CellIndex.indexByString("A${i+2}")).value=poList[i]['make'].toString();
       sheetObject.cell(xl.CellIndex.indexByString("A${i+2}")).cellStyle=cellStyle1;
       sheetObject.cell(xl.CellIndex.indexByString("B${i+2}")).value=poList[i]['model'].toString();
       sheetObject.cell(xl.CellIndex.indexByString("C${i+2}")).value=poList[i]['varient'].toString();
-      // sheetObject.cell(CellIndex.indexByString("D${i+2}")).value=poList[i]['billing_address'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("D${i+2}")).value=poList[i]['date'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("E${i+2}")).value=double.parse(poList[i]['on_road_price'].toString());
+      sheetObject.cell(xl.CellIndex.indexByString("F${i+2}")).value=poList[i]['color'].toString();
+      sheetObject.cell(xl.CellIndex.indexByString("G${i+2}")).value=double.parse(poList[i]['year_of_manufacture'].toString());
+      sheetObject.cell(xl.CellIndex.indexByString("G${i+2}")).cellStyle = cellStyle1;
     }
 
 
 
-    sheetObject.setColWidth(0, 20);
-    sheetObject.setColWidth(1, 20);
-    sheetObject.setColWidth(2, 40.49);
+    sheetObject.setColWidth(0, 15);
+    sheetObject.setColWidth(1, 10);
+    sheetObject.setColWidth(2, 15);
+    sheetObject.setColWidth(3, 10);
+    sheetObject.setColWidth(4, 12);
+    sheetObject.setColWidth(5, 16);
+    sheetObject.setColWidth(6, 24);
+
+    var fileBytes = excel.save(fileName: "PO Data Download.xlsx");
+
 
 
 
@@ -504,7 +550,7 @@ class _UploadPOState extends State<UploadPO> {
             'date': formattedDate,
             'on_road_price': int.parse(rows[i][4].toString()),
             'color': rows[i][5].toString(),
-            'year_of_manufacture': rows[i][6].toString(),
+            'year_of_manufacture': rows[i][6].toString()
           };
           setState(() {
             newData.add(tempMap);
@@ -514,16 +560,15 @@ class _UploadPOState extends State<UploadPO> {
 
       else if(typeOfFile.endsWith(".xlsx")){
 
-        print('--------Selected File Is xlsx------');
+
           var bytes = result.files.single.bytes;
-          log("picked file bytes");
+
           if(bytes!=null){
 
             var excel = xl.Excel.decodeBytes(bytes);
             newData=[];
             for (var table in excel.tables.keys) {
 
-              log(table); //sheet Name
               //  print(excel.tables[table]!.maxCols);
               // print(excel.tables[table]!.maxRows);
               for(int i=1;i<excel.tables[table]!.rows.length;i++){
@@ -613,18 +658,22 @@ class _UploadPOState extends State<UploadPO> {
 
 
   Future saveExcelData(List data) async {
+
+    print("Calling saveExcelData");
     String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/add_excel";
-    for(int i=0; i< data.length; i++) {
-      postData(requestBody:data[i],url: url,context: context).then((value) {
-        setState(() {
-          if(value!=null){
-            // data = value;
-            // print('-------addTableAPI value---------');
+    postData(requestBody:data,url: url,context: context).then((value) {
+      setState(() {
+        if(value!=null){
+
+          // data = value;
+          // print('-------addTableAPI value---------');
+          //fetchPoData();
+          print("i Length");
+          print(data.length);
             fetchPoData();
-          }
-        });
+        }
       });
-    }
+    });
   }
 
   Future fetchPoData() async{
@@ -732,7 +781,7 @@ class _UploadPOState extends State<UploadPO> {
     }
   }
 
-  Future deletePoData(selectedField) async {
+  Future deletePoData(selectedField, int i) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString("authToken") ?? "";
     String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/delete_excel/$selectedField';
@@ -746,8 +795,12 @@ class _UploadPOState extends State<UploadPO> {
           displayList.removeWhere((element) => element["excel_id"]==selectedField);
           poList.removeWhere((element) => element["excel_id"]==selectedField);
           poList=[];
-          fetchPoData();
+          startVal=0;
+          displayList=[];
           visibleDelete=false;
+          if(selectedFields.length == i+1){
+            fetchPoData();
+          }
         }
         catch(e){
           log(e.toString());

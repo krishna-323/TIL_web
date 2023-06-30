@@ -1485,8 +1485,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
             response = value;
             partsList = value;
             displayList=partsList;
-            print('------------check proper--------------');
-            print(displayList);
           }
           loading = false;
         });
