@@ -198,9 +198,6 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                   MaterialButton(
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
-                                      print("++++++++++++++++++++++++++++++");
-                                      print(estimateItems[i]);
-                                      print("++++++++++++++++++++++++++++++++++++++");
                                       Navigator.of(context).push(PageRouteBuilder(
                                           pageBuilder: (context,animation1,animation2) => PartOrderDetails(
                                             //customerList: displayList[i],

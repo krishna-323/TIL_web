@@ -367,9 +367,9 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     "totalTaxableAmount": 0,
                                     "items": [],
                                   };
-                                  putUpdatedEstimated(updateEstimate);
+
                                   for(int i=0;i<estimateItems['items'].length;i++){
-                                    lineItems.add(
+                                    updateEstimate['items'].add(
                                         {
                                           "amount": lineAmount[i].text,
                                           "discount":  discountPercentage[i].text,
@@ -381,6 +381,8 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         }
                                     );
                                   }
+
+                                  putUpdatedEstimated(updateEstimate);
                                 });
                               },
 
@@ -851,18 +853,19 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
             ),
           ),
 
-
+/// Row Items
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: estimateItems['items'].length,
             itemBuilder: (BuildContext context, int index) {
-
+              print("+++++++++++++++ Line Items  +++++++++++++++++++++++");
+              print(estimateItems['items'][index]);
               double tempDiscount=0;
               double tempLineData=0;
               double tempTax=0;
               try{
-                lineAmount[index].text=(double.parse(estimateItems['items'][index]['selling_price'].toString())* (double.parse(units[index].text))).toString();
+                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
@@ -888,9 +891,6 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
                 subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse(lineAmount[index].text)).toStringAsFixed(1);
               }
-              print("+++++++++++++++++++++++++++++++++++++");
-              print(estimateItems['items'][index]);
-              print("+++++++++++++++++++++++++++++++++++++++++");
               return  Column(
                 children: [
                   Padding(
@@ -1106,7 +1106,8 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     lineAmount.add(TextEditingController());
                                     units.add(TextEditingController(text: '1'));
                                     discountPercentage.add(TextEditingController(text:'0'));
-                                    tax.add(TextEditingController());
+                                    tax.add(TextEditingController(text: '0'));
+                                    print(value);
                                     estimateItems['items'].add(value);
                                   });
                                 }
@@ -1175,7 +1176,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
       backgroundColor:
       Colors.transparent,
       content:StatefulBuilder(
-          builder: (context, StateSetter setState) {
+          builder: (context, StateSetter setState,) {
             return SizedBox(
               width: MediaQuery.of(context).size.width/1.5,
               height: MediaQuery.of(context).size.height/1.1,
@@ -1271,11 +1272,11 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                 padding: EdgeInsets.only(left: 18.0),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Text("Name")),
-                                    Expanded(child: Text("Description")),
-                                    Expanded(child: Text("Unit")),
-                                    Expanded(child: Text("Price")),
-                                    Expanded(child: Text("Type")),
+                                    Expanded(child: Text("Brand")),
+                                    Expanded(child: Text("Model")),
+                                    Expanded(child: Text("Variant")),
+                                    Expanded(child: Text("On road price")),
+                                    Expanded(child: Text("Color")),
                                   ],
                                 ),
                               ),
@@ -1289,7 +1290,17 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-                                            Navigator.pop(context,displayList[i]);
+
+                                            selectedItems={
+                                              "itemsService":displayList[i]['name']??"",
+                                              "priceItem":displayList[i]['selling_price'].toString(),
+                                              "quantity":1,
+                                              "discount":0,
+                                              "tax":0,
+                                              "amount":displayList[i]['selling_price'].toString(),
+                                              "newitem_id": displayList[i]['newitem_id'].toString(),
+                                            };
+                                            Navigator.pop(context,selectedItems,);
                                           });
 
                                         },
@@ -1613,8 +1624,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
             response = value;
             partsList = value;
             displayList=partsList;
-            print('------------check proper--------------');
-            print(displayList);
+
           }
           loading = false;
         });
@@ -1628,7 +1638,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
   }
   putUpdatedEstimated(updatedEstimated)async{
     try{
-      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/update_estimate_vehicle'),
+      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/update_parts_purchase_order'),
           headers: {
             "Content-Type": "application/json",
             'Authorization': 'Bearer $authToken',
@@ -1637,11 +1647,11 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
       );
       if(response.statusCode==200){
         if(lineItems.isNotEmpty){
-          lineItemsData(lineItems);
+          //lineItemsData(lineItems);
         }
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
         }
 
       }
@@ -1694,7 +1704,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     }
   }
   deleteEstimateItemData(estVehicleId)async{
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_vehicle_by_id/$estVehicleId';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/delete_parts_purchase_order_by_id/$estVehicleId';
     try{
       final response=await http.delete(Uri.parse(url),
           headers: {
@@ -1705,7 +1715,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
       if(response.statusCode ==200){
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
         }
       }
     }
