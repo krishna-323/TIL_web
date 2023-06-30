@@ -108,6 +108,33 @@ class _MyAppState extends State<MyApp> {
                 newScreen = UploadPO(args: uploadDataArguments );
               }
               break;
+            case MotowsRoutes.companyManagement:
+              {
+                CompanyManagementArguments companyManagementArguments;
+                if(settings.arguments!=null){
+                  companyManagementArguments = settings.arguments as CompanyManagementArguments ;
+                }
+                else {
+                  companyManagementArguments = CompanyManagementArguments(
+                      drawerWidth: 190, selectedDestination: 3.1);
+                }
+                newScreen = CompanyManagement(args: companyManagementArguments);
+              }
+              break;
+            case MotowsRoutes.userManagement:
+              {
+                UserManagementArguments userManagement;
+
+                if(settings.arguments!=null){
+                  userManagement = settings.arguments as UserManagementArguments ;
+                }
+                else {
+                  userManagement = UserManagementArguments(
+                      drawerWidth: 190, selectedDestination: 3.2);
+                }
+                newScreen = UserManagement(args : userManagement);
+              }
+              break;
             case MotowsRoutes.listGrnItems:{
               ListGrnArguments listGrn;if(settings.arguments!=null){
                 listGrn =settings.arguments as ListGrnArguments;
@@ -185,33 +212,8 @@ class _MyAppState extends State<MyApp> {
               newScreen = ListVendors(arg:listVendorsArguments);
             }
             break;
-            case MotowsRoutes.companyManagement:
-              {
-                CompanyManagementArguments companyManagementArguments;
-                if(settings.arguments!=null){
-                  companyManagementArguments = settings.arguments as CompanyManagementArguments ;
-                }
-                else {
-                  companyManagementArguments = CompanyManagementArguments(
-                      drawerWidth: 190, selectedDestination: 4.1);
-                }
-                newScreen = CompanyManagement(args: companyManagementArguments);
-              }
-                break;
-            case MotowsRoutes.userManagement:
-              {
-                UserManagementArguments userManagement;
 
-                if(settings.arguments!=null){
-                  userManagement = settings.arguments as UserManagementArguments ;
-                }
-                else {
-                  userManagement = UserManagementArguments(
-                      drawerWidth: 190, selectedDestination: 4.2);
-                }
-                newScreen = UserManagement(args : userManagement);
-              }
-              break;
+
 
             case MotowsRoutes.docketList :
               {

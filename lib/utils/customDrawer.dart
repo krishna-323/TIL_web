@@ -744,25 +744,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               title: Align
                                 (alignment: Alignment.topLeft,
                                   child: Text(drawerWidth == 60 ? "" : 'Company Management')),
-                              selected: _selectedDestination == 4.1,
+                              selected: _selectedDestination == 3.1,
                               onTap: () { setState(() {
-                                _selectedDestination=4.1;
+                                _selectedDestination=3.1;
                               });
-                              Navigator.pushReplacementNamed(context, MotowsRoutes.companyManagement,arguments: CompanyManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 4.1));
+                              Navigator.pushReplacementNamed(context, MotowsRoutes.companyManagement,arguments: CompanyManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.1));
                               }
                           ),
                           ListTile(
                               title: Center(child: Align(alignment: Alignment.topLeft,
                                   child: Text(drawerWidth == 60 ? "" : 'User Management'))),
-                              selected: _selectedDestination == 4.2,
+                              selected: _selectedDestination == 3.2,
                               hoverColor:mHoverColor,
                               selectedTileColor: Colors.blue,
                               selectedColor: Colors.white,
                               onTap: () {
                                 setState(() {
-                                  _selectedDestination=4.2;
+                                  _selectedDestination=3.2;
                                 });
-                                Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 4.2));
+                                Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.2));
                               }
                           ),
 
