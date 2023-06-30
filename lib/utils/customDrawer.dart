@@ -216,11 +216,37 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 });
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  MotowsRoutes.listVehicle,
-                                  arguments: ListVehicleArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+                                  MotowsRoutes.estimateRoutes,
+                                  arguments: DisplayEstimateItemsArgs(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
                                 );
                               },
                             ),
+
+                            // ListTile(
+                            //   hoverColor: mHoverColor,
+                            //   selectedTileColor: Colors.blue,
+                            //   selectedColor: Colors.white,
+                            //   title: Center(
+                            //     child: Align(
+                            //       alignment: Alignment.topLeft,
+                            //       child: Padding(
+                            //         padding: const EdgeInsets.only(left: 15.0),
+                            //         child: Text(drawerWidth == 60 ? '' : 'Vehicle Orders'),
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   selected: _selectedDestination == 1.1,
+                            //   onTap: () {
+                            //     setState(() {
+                            //       _selectedDestination = 1.1;
+                            //     });
+                            //     Navigator.pushReplacementNamed(
+                            //       context,
+                            //       MotowsRoutes.listVehicle,
+                            //       arguments: ListVehicleArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+                            //     );
+                            //   },
+                            // ),
                             ListTile(
                               hoverColor: mHoverColor,
                               selectedTileColor: Colors.blue,

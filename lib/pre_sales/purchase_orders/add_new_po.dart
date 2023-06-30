@@ -51,6 +51,7 @@ class _EstimateState extends State<Estimate> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  final grandTotalAmount =TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -117,7 +118,7 @@ class _EstimateState extends State<Estimate> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Create Purchase Order"),
+                    title: const Text("Create Vehicle Order"),
                     actions: [
                       Row(
                         children: [
@@ -196,6 +197,8 @@ class _EstimateState extends State<Estimate> {
                                       "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
                                       "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
                                       "termsConditions": termsAndConditions.text,
+                                       "status":"In-review",
+                                       "comment":"",
                                       "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       "items": [
@@ -1302,11 +1305,10 @@ class _EstimateState extends State<Estimate> {
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
-
                             contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
                             border: InputBorder.none,
                             focusedBorder: OutlineInputBorder(
@@ -1316,7 +1318,9 @@ class _EstimateState extends State<Estimate> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            if(additionalCharges.text.isNotEmpty){
+                              grandTotalAmount.text = (double.parse(additionalCharges.text) + double.parse(subAmountTotal.text)).toString();
+                            }
                           });
                         },
                       )),
@@ -1329,7 +1333,7 @@ class _EstimateState extends State<Estimate> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        return Text(additionalCharges.text.isNotEmpty?grandTotalAmount.text:subAmountTotal.text);
                       }
                   ),
                 ],

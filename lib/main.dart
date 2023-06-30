@@ -68,6 +68,19 @@ class _MyAppState extends State<MyApp> {
               newScreen = ListVehicleOrders(arg:listVehicleArguments);
             }
             break;
+            case
+            MotowsRoutes.estimateRoutes:{
+              DisplayEstimateItemsArgs displayEstimateItemsArgs;
+              if(settings.arguments!=null){
+                displayEstimateItemsArgs = settings.arguments as DisplayEstimateItemsArgs ;
+              }
+              else {
+                displayEstimateItemsArgs = DisplayEstimateItemsArgs(
+                    drawerWidth: 190, selectedDestination: 1.1);
+              }
+              newScreen= DisplayEstimateItems(args: displayEstimateItemsArgs,);
+            }
+            break;
             case MotowsRoutes.partsOrderListRoutes :
               {
                 PartsOrderListArguments poListArgs;
@@ -166,19 +179,7 @@ class _MyAppState extends State<MyApp> {
               newScreen = ListParts(arg:listAddItemsArguments);
             }
             break;
-            case
-            MotowsRoutes.estimateRoutes:{
-              DisplayEstimateItemsArgs displayEstimateItemsArgs;
-              if(settings.arguments!=null){
-                displayEstimateItemsArgs = settings.arguments as DisplayEstimateItemsArgs ;
-              }
-              else {
-                displayEstimateItemsArgs = DisplayEstimateItemsArgs(
-                    drawerWidth: 190, selectedDestination: 2.5);
-              }
-              newScreen= DisplayEstimateItems(args: displayEstimateItemsArgs,);
-            }
-            break;
+
             case MotowsRoutes.vehicleMaster:{
               VehicleMasterArguments vehicleMasterArguments;
               if(settings.arguments!=null){

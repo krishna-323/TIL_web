@@ -56,6 +56,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     super.initState();
 
     estimateItems=widget.estimateItem;
+    // print('-additional charges');
+    // print(estimateItems);
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -66,7 +68,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     shipToStreet=estimateItems['shipAddressStreet']??"";
     shipToState=estimateItems['shipAddressState']??"";
     shipZipcode=estimateItems['shipAddressZipcode']??"";
-
+    additionalCharges.text=estimateItems['additionalCharges'].toString();
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
@@ -169,7 +171,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Edit Estimate"),
+                    title: const Text("Edit Vehicle Details"),
                     actions: [
                       Row(
                         children: [
@@ -364,6 +366,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                     "subTotalTax": subTaxTotal.text,
                                     "termsConditions": termsAndConditions.text,
                                     "total": subAmountTotal.text,
+                                    "status":"In-review",
+                                    "comment":"",
                                     "totalTaxableAmount": 0,
                                     "items": [],
                                   };
@@ -1120,14 +1124,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           ///-----------------------------Table Ends-------------------------
 
           ///SUB TOTAL
-          const Divider(height: 1,color: mTextFieldBorder),
-          Container(
-            color: const Color(0xffF3F3F3),
-            height: 34,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 18,right: 18),
+          const Padding(
+            padding: EdgeInsets.only(left:18.0,right: 18),
+            child: Divider(height: 1,color: mTextFieldBorder),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left:18.0,right:18),
+            child: Container(
+              color: const Color(0xffF3F3F3),
+              height: 34,
               child: Row(
                 children:   [
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   const Expanded(child: Center(child: Text(''))),
                   const Expanded(flex: 4,child: Center(child: Text(""))),
                   const Expanded(child: Center(child: Text(""))),
@@ -1152,12 +1160,15 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       }
                   ))),
                   const SizedBox(width: 30,height: 30,),
-
+                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                 ],
               ),
             ),
           ),
-          const Divider(height: 1,color: mTextFieldBorder,),
+          const Padding(
+            padding: EdgeInsets.only(left:18.0,right:18),
+            child: Divider(height: 1,color: mTextFieldBorder,),
+          ),
 
           ///------Foooter----------
           buildFooter(),
@@ -1440,7 +1451,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(

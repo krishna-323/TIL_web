@@ -41,6 +41,8 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
           if(value!=null){
             response=value;
             estimateItems=response;
+            // print('---------response-------');
+            // print(estimateItems);
             if(displayListItems.isEmpty){
               if(estimateItems.length>15){
                 for(int i=startVal;i<startVal+15;i++){
@@ -65,6 +67,10 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
       });
     }
   }
+  // Search Controller Declaration.
+  final searchByStatus=TextEditingController();
+  final searchByName=TextEditingController();
+  final searchByOrder=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +90,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                 color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 40,right: 40,top: 30),
+                    padding: const EdgeInsets.only(left: 40,right: 40,top: 20,bottom: 20),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -103,29 +109,127 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                             child: Column(
                               children: [
                                 const SizedBox(height: 18,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 18.0),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 18.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:   [
-                                      const Text("Items List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
+                                      Text("Vehicle Orders List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 50.0),
-                                        child: MaterialButton(onPressed: (){
-                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                              Estimate(selectedDestination: widget.args.selectedDestination,
-                                                drawerWidth: widget.args.drawerWidth,)
-                                          )).then((value) => fetchEstimate());
-                                        },
-                                          color: Colors.blue,
-                                          child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
-                                        ),
-                                      )
+
                                     ],
                                   ),
                                 ),
                                 const SizedBox(height: 18,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:18.0),
+                                  child: SizedBox(height: 100,
+                                    child: Row(
+                                      children: [
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            SizedBox(  width: 190,height: 30, child: TextFormField(
+                                              controller:searchByName,
+                                              onChanged: (value){
+                                                // if(value.isEmpty || value==""){
+                                                //   startVal=0;
+                                                //  // displayList=[];
+                                                // //  fetchListCustomerData();
+                                                // }
+                                                // else if(phoneController.text.isNotEmpty || cityNameController.text.isNotEmpty){
+                                                //   phoneController.clear();
+                                                //   cityNameController.clear();
+                                                // }
+                                                // else{
+                                                //   startVal=0;
+                                                //   displayList=[];
+                                                //   fetchCustomerName(customerNameController.text);
+                                                // }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchNameDecoration(hintText: 'Search By Name'),  ),),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:searchByOrder,
+                                                  onChanged: (value){
+                                                    // if(value.isEmpty || value==""){
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchListCustomerData();
+                                                    // }
+                                                    // else if(phoneController.text.isNotEmpty || customerNameController.text.isNotEmpty){
+                                                    //   phoneController.clear();
+                                                    //   customerNameController.clear();
+                                                    // }
+                                                    // else{
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchCityNames(cityNameController.text);
+                                                    // }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchStatusDecoration(hintText: 'Search By Order #'),  ),),
+                                                const SizedBox(width: 10,),
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:searchByStatus,
+                                                  onChanged: (value){
+                                                    // if(value.isEmpty || value==""){
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchListCustomerData();
+                                                    // }
+                                                    // else if(customerNameController.text.isNotEmpty || cityNameController.text.isNotEmpty){
+                                                    //   customerNameController.clear();
+                                                    //   cityNameController.clear();
+                                                    // }
+                                                    // else{
+                                                    //   try{
+                                                    //     startVal=0;
+                                                    //     displayList=[];
+                                                    //     fetchPhoneName(phoneController.text);
+                                                    //   }
+                                                    //   catch(e){
+                                                    //     log(e.toString());
+                                                    //   }
+                                                    // }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),
+                                                  //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                  maxLength: 10,
+                                                  decoration: searchByOrderDecoration(hintText: 'Search By Status'),  ),),
+                                                const SizedBox(width: 10,),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 44),
+                                            Row(mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(right: 50.0),
+                                                  child: MaterialButton(onPressed: (){
+                                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                        Estimate(selectedDestination: widget.args.selectedDestination,
+                                                          drawerWidth: widget.args.drawerWidth,)
+                                                    )).then((value) => fetchEstimate());
+                                                  },
+                                                    color: Colors.blue,
+                                                    child: const Text('+ Create Vehicle Order',style: TextStyle(color: Colors.white),),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 20,),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
                                 Container(color: Colors.grey[100],
                                   //height: 32,
@@ -139,6 +243,14 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                         padding: EdgeInsets.only(left: 18.0),
                                         child: Row(
                                           children: [
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Vehicle Id")
+                                                  ),
+                                                )),
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
@@ -162,7 +274,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Estimated Vehicle Id")
+                                                      child: Text("Total Amount")
                                                   ),
                                                 )),
                                             Expanded(
@@ -170,7 +282,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Total Amount")
+                                                      child: Text("Status")
                                                   ),
                                                 )),
                                           ],
@@ -211,6 +323,16 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                         children: [
                                           Expanded(
                                               child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
+                                                child: SizedBox(
+                                                    height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                ),
+                                              )
+                                          ),
+                                          Expanded(
+                                              child: Padding(
                                                 padding: const EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
@@ -230,21 +352,21 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                           Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
-                                                ),
-                                              )
-                                          ),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                     child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
                                                 ),
                                               )),
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
+                                                child: SizedBox(
+                                                    height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text(displayListItems[i]['status']??'--')
+                                                ),
+                                              )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -328,6 +450,78 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
           ),
         ],
       ),
+    );
+  }
+  // Search Text field Decoration.
+  searchNameDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: searchByName.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+          onTap: (){
+            setState(() {
+              startVal=0;
+              // displayList=[];
+              // customerNameController.clear();
+              // fetchListCustomerData();
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  searchStatusDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: searchByStatus.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+          onTap: (){
+            setState(() {
+              startVal=0;
+              // displayList=[];
+              // cityNameController.clear();
+              // fetchListCustomerData();
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  searchByOrderDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: searchByOrder.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+          onTap: (){
+            setState(() {
+              setState(() {
+                startVal=0;
+                // displayList=[];
+                // phoneController.clear();
+                // fetchListCustomerData();
+              });
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
 }

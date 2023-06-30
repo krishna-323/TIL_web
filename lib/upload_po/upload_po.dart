@@ -64,12 +64,12 @@ class _UploadPOState extends State<UploadPO> {
                 color:Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 40.0,right: 40,top:30),
+                    padding: const EdgeInsets.only(left: 40.0,right: 40,top:20,bottom: 20),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                         // border: Border.all(color:const Color(0xFFE0E0E0) )
+                          border: Border.all(color:const Color(0xFFE0E0E0) )
                       ),
                       child: Column(
                         children: [
@@ -720,8 +720,8 @@ class _UploadPOState extends State<UploadPO> {
     }
   }
   Future getPoByCate(poDate) async{
-    print('-----selected po date');
-    print(poDate);
+    // print('-----selected po date');
+    // print(poDate);
     dynamic response;
     String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_by_date/$poDate";
     try {

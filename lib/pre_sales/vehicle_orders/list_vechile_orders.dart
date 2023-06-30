@@ -132,7 +132,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                           color: Colors.blue,
                                           onPressed: (){
                                             Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                            const AddNewVehiclePurchaseOrder(selectedDestination: 2.1, drawerWidth: 190,),
+                                            const AddNewVehiclePurchaseOrder(selectedDestination: 1.1, drawerWidth: 190,),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero
                                             )).then((value) => fetchPurchaseData());
@@ -237,7 +237,7 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
                                 hoverColor:mHoverColor,
                                 onPressed: (){
 
-                                  Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>EditVehiclePurchaseOrder(poList: displayPoList[i], selectedDestination: 2.1, drawerWidth: 190,),
+                                  Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>EditVehiclePurchaseOrder(poList: displayPoList[i], selectedDestination: 1.1, drawerWidth: 190,),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero
                                             )).then((value) {
