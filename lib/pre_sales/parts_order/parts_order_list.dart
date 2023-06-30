@@ -96,7 +96,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
                 color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 40,right: 40,top: 30),
+                    padding: const EdgeInsets.only(left: 40,right: 40,top: 20,bottom: 20),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,

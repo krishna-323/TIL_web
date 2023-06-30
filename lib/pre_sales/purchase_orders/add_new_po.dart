@@ -173,6 +173,13 @@ class _EstimateState extends State<Estimate> {
                                   //   }
                                   //
                                   // }
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  }
+                                  catch(e){
+                                    tempTotal= double.parse(subAmountTotal.text);
+                                  }
                                   if(showVendorDetails==false || showWareHouseDetails==false){
                                     print('-------------go inside-----------');
                                   }
@@ -199,7 +206,7 @@ class _EstimateState extends State<Estimate> {
                                       "termsConditions": termsAndConditions.text,
                                        "status":"In-review",
                                        "comment":"",
-                                      "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       "items": [
 
@@ -1318,9 +1325,12 @@ class _EstimateState extends State<Estimate> {
                         ),
                         onChanged: (v) {
                           setState(() {
-                            if(additionalCharges.text.isNotEmpty){
-                              grandTotalAmount.text = (double.parse(additionalCharges.text) + double.parse(subAmountTotal.text)).toString();
-                            }
+                           try{
+                             double.parse(v.toString());
+                           }
+                           catch(e){
+                             additionalCharges.clear();
+                           }
                           });
                         },
                       )),
@@ -1333,7 +1343,20 @@ class _EstimateState extends State<Estimate> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text(additionalCharges.text.isNotEmpty?grandTotalAmount.text:subAmountTotal.text);
+                        double tempValue=0;
+                        try{
+                          tempValue = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          if(subAmountTotal.text.isEmpty){
+                            tempValue=0;
+                          }
+                          else{
+                            tempValue=double.parse(subAmountTotal.text);
+                          }
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue");
                       }
                   ),
                 ],

@@ -1329,8 +1329,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        print("+++++++++++++++++++++++++++++++++");
-                        print(subAmountTotal.text);
                         double tempValue= 0;
                         try {
                           tempValue= (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));

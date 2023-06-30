@@ -158,21 +158,13 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  // if(selectedCity=='Select City'){
-                                  //   setState(() {
-                                  //     _invalidCity=true;
-                                  //   });
-                                  // }
-                                  //
-                                  //
-                                  // ///Main Validation
-                                  // if(_formKey.currentState!.validate()){
-                                  //   if(_invalidType==false && _invalidCity==false) {
-                                  //     print("Call Api");
-                                  //     _selectedIndex=1;
-                                  //   }
-                                  //
-                                  // }
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  }
+                                  catch(e){
+                                    tempTotal= double.parse(subAmountTotal.text);
+                                  }
                                   if(showVendorDetails==false || showWareHouseDetails==false){
                                     print('-------------go inside-----------');
                                   }
@@ -197,7 +189,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
                                       "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
                                       "termsConditions": termsAndConditions.text,
-                                      "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       'freight_amount':additionalCharges.text,
                                       'status':"Waiting",
@@ -1310,7 +1302,12 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            try{
+                              double.parse(v.toString());
+                            }
+                            catch(e){
+                              additionalCharges.clear();
+                            }
                           });
                         },
                       )),
@@ -1323,7 +1320,20 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        double tempValue=0;
+                        try{
+                          tempValue = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          if(subAmountTotal.text.isEmpty){
+                            tempValue=0;
+                          }
+                          else{
+                            tempValue=double.parse(subAmountTotal.text);
+                          }
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue");
                       }
                   ),
                 ],

@@ -344,6 +344,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  }
+                                  catch(e){
+                                    tempTotal = double.parse(subAmountTotal.text);
+                                  }
                                   updateEstimate =    {
                                     "additionalCharges": additionalCharges.text,
                                     "address": "string",
@@ -365,7 +372,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                     "subTotalDiscount": subDiscountTotal.text,
                                     "subTotalTax": subTaxTotal.text,
                                     "termsConditions": termsAndConditions.text,
-                                    "total": subAmountTotal.text,
+                                    "total":tempTotal.toString(),
                                     "status":"In-review",
                                     "comment":"",
                                     "totalTaxableAmount": 0,
@@ -1465,7 +1472,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            try{
+                              double.parse(v.toString());
+                            }
+                            catch(e){
+                              additionalCharges.clear();
+                            }
                           });
                         },
                       )),
@@ -1478,8 +1490,22 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
-                      }
+                        double tempValue=0;
+                        try{
+                          tempValue = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          if(subAmountTotal.text.isEmpty){
+                            tempValue=0;
+                          }
+                          else{
+                            tempValue=double.parse(subAmountTotal.text);
+                          }
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue");
+
+                     }
                   ),
                 ],
               ),

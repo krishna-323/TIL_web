@@ -1466,7 +1466,12 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            try{
+                              double.parse(v.toString());
+                            }
+                            catch(e){
+                              additionalCharges.clear();
+                            }
                           });
                         },
                       )),
