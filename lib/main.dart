@@ -63,11 +63,51 @@ class _MyAppState extends State<MyApp> {
                 listVehicleArguments =settings.arguments as ListVehicleArguments;
               }
               else{
-                listVehicleArguments = ListVehicleArguments(drawerWidth:190 ,selectedDestination:2.1 );
+                listVehicleArguments = ListVehicleArguments(drawerWidth:190 ,selectedDestination:1.1 );
               }
               newScreen = ListVehicleOrders(arg:listVehicleArguments);
             }
             break;
+            case MotowsRoutes.partsOrderListRoutes :
+              {
+                PartsOrderListArguments poListArgs;
+                if(settings.arguments!=null){
+                  poListArgs = settings.arguments as PartsOrderListArguments ;
+                }
+                else {
+                  poListArgs = PartsOrderListArguments(
+                      drawerWidth: 190, selectedDestination: 1.2);
+                }
+                newScreen = PartsOrderList(args: poListArgs );
+              }
+              break;
+            case MotowsRoutes.warrantyRoutes :
+              {
+                WarrantyArgs warrantyArguments;
+                if(settings.arguments!=null){
+                  warrantyArguments = settings.arguments as WarrantyArgs ;
+                }
+                else {
+                  warrantyArguments = WarrantyArgs(
+                      drawerWidth: 190, selectedDestination: 1.3);
+                }
+                newScreen = Warranty(args: warrantyArguments );
+              }
+              break;
+            case MotowsRoutes.uploadData :
+              {
+                UploadDataArguments uploadDataArguments;
+
+                if(settings.arguments!=null){
+                  uploadDataArguments = settings.arguments as UploadDataArguments ;
+                }
+                else {
+                  uploadDataArguments = UploadDataArguments(
+                      drawerWidth: 190, selectedDestination: 2.1);
+                }
+                newScreen = UploadPO(args: uploadDataArguments );
+              }
+              break;
             case MotowsRoutes.listGrnItems:{
               ListGrnArguments listGrn;if(settings.arguments!=null){
                 listGrn =settings.arguments as ListGrnArguments;
@@ -172,20 +212,7 @@ class _MyAppState extends State<MyApp> {
                 newScreen = UserManagement(args : userManagement);
               }
               break;
-            case MotowsRoutes.uploadData :
-              {
-                UploadDataArguments uploadDataArguments;
 
-                if(settings.arguments!=null){
-                  uploadDataArguments = settings.arguments as UploadDataArguments ;
-                }
-                else {
-                  uploadDataArguments = UploadDataArguments(
-                      drawerWidth: 190, selectedDestination: 4.3);
-                }
-                newScreen = UploadPO(args: uploadDataArguments );
-              }
-              break;
             case MotowsRoutes.docketList :
               {
                 DocketListArgs docketListArgs;
@@ -212,32 +239,8 @@ class _MyAppState extends State<MyApp> {
                 newScreen = InvoiceList(args: invoiceArguments );
               }
               break;
-            case MotowsRoutes.warrantyRoutes :
-              {
-                WarrantyArgs warrantyArguments;
-                if(settings.arguments!=null){
-                  warrantyArguments = settings.arguments as WarrantyArgs ;
-                }
-                else {
-                  warrantyArguments = WarrantyArgs(
-                      drawerWidth: 190, selectedDestination: 2.3);
-                }
-                newScreen = Warranty(args: warrantyArguments );
-              }
-              break;
-            case MotowsRoutes.partsOrderListRoutes :
-              {
-                PartsOrderListArguments poListArgs;
-                if(settings.arguments!=null){
-                  poListArgs = settings.arguments as PartsOrderListArguments ;
-                }
-                else {
-                  poListArgs = PartsOrderListArguments(
-                      drawerWidth: 190, selectedDestination: 2.01);
-                }
-                newScreen = PartsOrderList(args: poListArgs );
-              }
-              break;
+
+
             default: newScreen = const InitialScreen();
           }
           return PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => newScreen,
