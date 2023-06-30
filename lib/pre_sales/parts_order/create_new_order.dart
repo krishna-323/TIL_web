@@ -172,8 +172,16 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   //   }
                                   //
                                   // }
+
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                                  }
+                                  catch (e){
+                                    tempTotal = double.parse(subAmountTotal.text);
+                                  }
                                   if(showVendorDetails==false || showWareHouseDetails==false){
-                                    print('-------------go inside-----------');
+
                                   }
                                   if(showVendorDetails==true && showWareHouseDetails==true && selectedPart.isNotEmpty){
                                     postDetails= {
@@ -196,10 +204,11 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                       "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
                                       "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
                                       "termsConditions": termsAndConditions.text,
-                                      "total": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       "status": "In-review",
                                       "comment": "",
+                                      "freight_amount":additionalCharges.text,
                                       "items": [
 
                                       ]
@@ -1283,13 +1292,12 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
+                  const Text("Additional Charges",style: TextStyle(color: mSaveButton)),
                   Container(
                       decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
@@ -1303,7 +1311,12 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            try{
+                              double.parse(v.toString());
+                            }
+                            catch(e){
+                              additionalCharges.clear();
+                            }
                           });
                         },
                       )),
@@ -1316,7 +1329,23 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        print("+++++++++++++++++++++++++++++++++");
+                        print(subAmountTotal.text);
+                        double tempValue= 0;
+                        try {
+                          tempValue= (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          if(subAmountTotal.text.isEmpty){
+                            tempValue =0;
+                          }
+                          else{
+                            tempValue =double.parse(subAmountTotal.text);
+                          }
+
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue");
                       }
                   ),
                 ],

@@ -66,7 +66,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     shipToStreet=estimateItems['shipAddressStreet']??"";
     shipToState=estimateItems['shipAddressState']??"";
     shipZipcode=estimateItems['shipAddressZipcode']??"";
-
+    additionalCharges.text=widget.estimateItem['freight_amount']??"";
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
@@ -341,6 +341,14 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
+                                double temptotal =0;
+                                try{
+                                  temptotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                                }
+                                catch (e){
+                                  print("llllllllll");
+                                  temptotal = double.parse(subAmountTotal.text);
+                                }
                                 setState(() {
                                   updateEstimate =    {
                                     "additionalCharges": additionalCharges.text,
@@ -363,11 +371,11 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     "subTotalDiscount": subDiscountTotal.text,
                                     "subTotalTax": subTaxTotal.text,
                                     "termsConditions": termsAndConditions.text,
-                                    "total": subAmountTotal.text,
+                                    "total": temptotal.toString(),
                                     "totalTaxableAmount": 0,
                                     "status": widget.estimateItem['status']??"In-review",
                                     "comment":widget.estimateItem['comment']??"",
-                                    "freight_amount": '0',
+                                    "freight_amount": additionalCharges.text,
                                     "items": [],
                                   };
 
@@ -1439,13 +1447,12 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("+ Add Additional Charges",style: TextStyle(color: mSaveButton)),
+                  const Text("Additional Charges",style: TextStyle(color: mSaveButton)),
                   Container(
                       decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
@@ -1472,7 +1479,15 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        double tempValue= 0;
+                        try {
+                          tempValue= (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          tempValue =double.parse(subAmountTotal.text);
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue",textAlign: TextAlign.end,);
                       }
                   ),
                 ],
