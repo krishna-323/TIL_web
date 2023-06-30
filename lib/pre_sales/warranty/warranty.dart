@@ -36,6 +36,11 @@ class _WarrantyState extends State<Warranty> {
   List estimateItems=[];
   List displayListItems=[];
   int startVal=0;
+
+  final customerNameController=TextEditingController();
+  final phoneController=TextEditingController();
+  final cityNameController=TextEditingController();
+
   Future fetchEstimate()async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_parts_warranty';
@@ -115,30 +120,159 @@ class _WarrantyState extends State<Warranty> {
                             ),
                             child: Column(
                               children: [
-                                const SizedBox(height: 18,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 18.0),
+                                const SizedBox(height: 28,),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 18.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:   [
-                                      const Text("Items List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
+                                      Text("Warranty Orders List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 50.0),
-                                        child: MaterialButton(onPressed: (){
-                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                              AddNewWarranty(selectedDestination: widget.args.selectedDestination,
-                                                drawerWidth: widget.args.drawerWidth,)
-                                          )).then((value) => fetchEstimate());
-                                        },
-                                          color: Colors.blue,
-                                          child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
-                                        ),
-                                      )
+                                      // Padding(
+                                      //   padding: const EdgeInsets.only(right: 50.0),
+                                      //   child: MaterialButton(onPressed: (){
+                                      //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                      //         AddNewWarranty(selectedDestination: widget.args.selectedDestination,
+                                      //           drawerWidth: widget.args.drawerWidth,)
+                                      //     )).then((value) => fetchEstimate());
+                                      //   },
+                                      //     color: Colors.blue,
+                                      //     child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                 ),
                                 const SizedBox(height: 18,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:18.0),
+                                  child: SizedBox(height: 100,
+                                    child: Row(
+                                      children: [
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            SizedBox(  width: 190,height: 30, child: TextFormField(
+                                              controller:customerNameController,
+                                              onChanged: (value){
+                                                // if(value.isEmpty || value==""){
+                                                //   startVal=0;
+                                                //  // displayList=[];
+                                                // //  fetchListCustomerData();
+                                                // }
+                                                // else if(phoneController.text.isNotEmpty || cityNameController.text.isNotEmpty){
+                                                //   phoneController.clear();
+                                                //   cityNameController.clear();
+                                                // }
+                                                // else{
+                                                //   startVal=0;
+                                                //   displayList=[];
+                                                //   fetchCustomerName(customerNameController.text);
+                                                // }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCustomerNameDecoration(hintText: 'Search By Name'),  ),),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:cityNameController,
+                                                  onChanged: (value){
+                                                    // if(value.isEmpty || value==""){
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchListCustomerData();
+                                                    // }
+                                                    // else if(phoneController.text.isNotEmpty || customerNameController.text.isNotEmpty){
+                                                    //   phoneController.clear();
+                                                    //   customerNameController.clear();
+                                                    // }
+                                                    // else{
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchCityNames(cityNameController.text);
+                                                    // }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCityNameDecoration(hintText: 'Search By Order #'),  ),),
+                                                const SizedBox(width: 10,),
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:phoneController,
+                                                  onChanged: (value){
+                                                    // if(value.isEmpty || value==""){
+                                                    //   startVal=0;
+                                                    //   displayList=[];
+                                                    //   fetchListCustomerData();
+                                                    // }
+                                                    // else if(customerNameController.text.isNotEmpty || cityNameController.text.isNotEmpty){
+                                                    //   customerNameController.clear();
+                                                    //   cityNameController.clear();
+                                                    // }
+                                                    // else{
+                                                    //   try{
+                                                    //     startVal=0;
+                                                    //     displayList=[];
+                                                    //     fetchPhoneName(phoneController.text);
+                                                    //   }
+                                                    //   catch(e){
+                                                    //     log(e.toString());
+                                                    //   }
+                                                    // }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),
+                                               //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                  maxLength: 10,
+                                                  decoration: searchCustomerPhoneNumber(hintText: 'Search By Status'),  ),),
+                                                const SizedBox(width: 10,),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 44),
+                                            Row(mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: MaterialButton(onPressed: (){
+                                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                        AddNewWarranty(selectedDestination: widget.args.selectedDestination,
+                                                          drawerWidth: widget.args.drawerWidth,)
+                                                    )).then((value) => fetchEstimate());
+                                                  },
+                                                    color: Colors.blue,
+                                                    child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
+                                                  )
+                                                ),
+                                                const SizedBox(width: 20,),
+                                                // SizedBox(width: 10,),
+                                                // MaterialButton(
+                                                //   minWidth: 20,
+                                                //   shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(12.0) ),
+                                                //   color: Colors.white,
+                                                //   onPressed: () {
+                                                //     Navigator.push(
+                                                //         context,
+                                                //         MaterialPageRoute(builder: (context)=>OrderDetails(
+                                                //           drawerWidth:widget.arg.drawerWidth ,
+                                                //           selectedDestination: widget.arg.selectedDestination, title: 1,
+                                                //         )
+                                                //         )
+                                                //     ).then((value) => fetchListCustomerData());
+                                                //   },
+                                                //   child: const Icon(
+                                                //       Icons.more_vert,
+                                                //     color: Colors.black,
+                                                //       ),
+                                                // )
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                                 Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
                                 Container(color: Colors.grey[100],
                                   //height: 32,
@@ -339,6 +473,78 @@ class _WarrantyState extends State<Warranty> {
           ),
         ],
       ),
+    );
+  }
+
+  searchCustomerNameDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: customerNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+          onTap: (){
+            setState(() {
+              startVal=0;
+              // displayList=[];
+              // customerNameController.clear();
+              // fetchListCustomerData();
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  searchCityNameDecoration ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: cityNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+          onTap: (){
+            setState(() {
+              startVal=0;
+              // displayList=[];
+              // cityNameController.clear();
+              // fetchListCustomerData();
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+  searchCustomerPhoneNumber ({required String hintText, bool? error}){
+    return InputDecoration(hoverColor: mHoverColor,
+      suffixIcon: phoneController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+          onTap: (){
+            setState(() {
+              setState(() {
+                startVal=0;
+                // displayList=[];
+                // phoneController.clear();
+                // fetchListCustomerData();
+              });
+            });
+          },
+          child: const Icon(Icons.close,size: 14,)),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints:  const BoxConstraints(maxHeight:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
+      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
 }

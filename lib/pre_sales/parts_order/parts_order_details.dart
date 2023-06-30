@@ -365,6 +365,9 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     "termsConditions": termsAndConditions.text,
                                     "total": subAmountTotal.text,
                                     "totalTaxableAmount": 0,
+                                    "status": widget.estimateItem['status']??"In-review",
+                                    "comment":widget.estimateItem['comment']??"",
+                                    "freight_amount": '0',
                                     "items": [],
                                   };
 
@@ -777,23 +780,23 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         )
                                       ],)
                                   ]),
-                              const SizedBox(height: 25,),
-                              Align(alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 120,height: 28,
-                                  child: OutlinedMButton(
-                                    text: 'Add Due Date',
-                                    textColor: mSaveButton,
-                                    borderColor: mSaveButton,
-                                    onTap: (){
-                                      setState(() {
-
-                                      });
-                                    },
-
-                                  ),
-                                ),
-                              ),
+                              // const SizedBox(height: 25,),
+                              // Align(alignment: Alignment.topLeft,
+                              //   child: SizedBox(
+                              //     width: 120,height: 28,
+                              //     child: OutlinedMButton(
+                              //       text: 'Add Due Date',
+                              //       textColor: mSaveButton,
+                              //       borderColor: mSaveButton,
+                              //       onTap: (){
+                              //         setState(() {
+                              //
+                              //         });
+                              //       },
+                              //
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -859,8 +862,6 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: estimateItems['items'].length,
             itemBuilder: (BuildContext context, int index) {
-              print("+++++++++++++++ Line Items  +++++++++++++++++++++++");
-              print(estimateItems['items'][index]);
               double tempDiscount=0;
               double tempLineData=0;
               double tempTax=0;
@@ -1107,7 +1108,6 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     units.add(TextEditingController(text: '1'));
                                     discountPercentage.add(TextEditingController(text:'0'));
                                     tax.add(TextEditingController(text: '0'));
-                                    print(value);
                                     estimateItems['items'].add(value);
                                   });
                                 }

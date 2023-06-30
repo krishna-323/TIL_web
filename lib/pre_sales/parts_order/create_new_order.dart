@@ -620,23 +620,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                         )
                                       ],)
                                   ]),
-                              const SizedBox(height: 25,),
-                              Align(alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 120,height: 28,
-                                  child: OutlinedMButton(
-                                    text: 'Add Due Date',
-                                    textColor: mSaveButton,
-                                    borderColor: mSaveButton,
-                                    onTap: (){
-                                      setState(() {
 
-                                      });
-                                    },
-
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -971,7 +955,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     lineAmount.add(TextEditingController());
                                     subAmountTotal.text='0';
                                     selectedPart.add(value);
-                                    print(value.toString());
                                   });
                                 }
                               });
