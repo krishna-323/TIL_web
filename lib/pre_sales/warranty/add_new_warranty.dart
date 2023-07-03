@@ -16,7 +16,6 @@ import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
-import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
 
 class AddNewWarranty extends StatefulWidget {
@@ -55,7 +54,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
+    //salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
   }
@@ -192,7 +191,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
                                       'freight_amount':additionalCharges.text,
-                                      'status':"Waiting",
+                                      'status':"In-review",
                                       "comment":"",
                                       "items": [
 
@@ -200,6 +199,8 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     };
 
                                   }
+                                  // print('-------------------salesInvoiceDate------------------');
+                                  // print(salesInvoiceDate.text);
                                   for (int i = 0; i < selectedVehicles.length; i++) {
                                     postDetails['items'].add(
                                         {
@@ -376,7 +377,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
+                            child: CustomTextFieldSearch(showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Vendor') ,
                               controller: vendorSearchController,
                               future: fetchData,
@@ -480,7 +481,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
+                            child: CustomTextFieldSearch(showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Warehouse'),
                               controller: wareHouseController,
                               future: fetchData,
@@ -575,6 +576,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                           height: 32,
                                           color: Colors.grey[200],
                                           child: TextFormField(
+                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                             controller: salesInvoice,
                                             decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
                                           ),
@@ -599,7 +601,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
                                               );
                                               if(pickedDate!=null){
-                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
                                                 setState(() {
                                                   salesInvoiceDate.text=formattedDate;
                                                 });
@@ -1498,18 +1500,16 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
       });
     }
   }
-  postEstimate(estimate)async{
+  postEstimate(Map estimate)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/add_parts_warranty';
-    print(estimate);
+    // print('----------inside post api-------');
+    // print(estimate);
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {
         if(value!=null){
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
-          //Navigator.of(context).pop();
-          // print('------------------inside api()------------');
-          // print(estimate);
         }
       });
     });

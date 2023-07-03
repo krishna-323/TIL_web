@@ -11,11 +11,9 @@ import '../../../widgets/custom_search_textfield/custom_search_field.dart';
 import '../../../widgets/motows_buttons/outlined_icon_mbutton.dart';
 import '../../../widgets/motows_buttons/outlined_mbutton.dart';
 import '../../utils/api/get_api.dart';
-import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
-import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
 class WarrantyDetails extends StatefulWidget {
   final double drawerWidth;
@@ -56,7 +54,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     super.initState();
 
     estimateItems=widget.estimateItem;
-    print(estimateItems);
+    // print('----------------');
+    // print(estimateItems);
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -67,7 +66,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     shipToStreet=estimateItems['shipAddressStreet']??"";
     shipToState=estimateItems['shipAddressState']??"";
     shipZipcode=estimateItems['shipAddressZipcode']??"";
-
+    additionalCharges.text=estimateItems['additionalCharges'].toString();
+    salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??"";
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
@@ -87,13 +87,12 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
     subTaxTotal.text=estimateItems['subTotalTax'].toString();
     subAmountTotal.text=estimateItems['subTotalAmount'].toString();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
+   // salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
     salesInvoice.text=estimateItems['serviceInvoice']??"";
     termsAndConditions.text=estimateItems['termsConditions']??"";
     getInitialData();
-
   }
   List vendorList = [];
   Map vendorData ={
@@ -345,6 +344,13 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
+                                  double tempTotal=0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  }
+                                  catch(e){
+                                    tempTotal = double.parse(subAmountTotal.text);
+                                  }
                                   updateEstimate =    {
                                     "additionalCharges": additionalCharges.text,
                                     "address": "string",
@@ -366,7 +372,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     "subTotalDiscount": subDiscountTotal.text,
                                     "subTotalTax": subTaxTotal.text,
                                     "termsConditions": termsAndConditions.text,
-                                    "total": subAmountTotal.text,
+                                    "total": tempTotal.toString(),
                                     "totalTaxableAmount": 0,
                                     "items": [],
                                   };
@@ -1428,7 +1434,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
@@ -1442,7 +1447,12 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                         ),
                         onChanged: (v) {
                           setState(() {
-
+                            try{
+                              double.parse(v.toString());
+                            }
+                            catch(e){
+                              additionalCharges.clear();
+                            }
                           });
                         },
                       )),
@@ -1455,7 +1465,20 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   const Text("Total"),
                   Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        double tempValue=0;
+                        try{
+                          tempValue = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                        }
+                        catch(e){
+                          if(subAmountTotal.text.isEmpty){
+                            tempValue=0;
+                          }
+                          else{
+                            tempValue=double.parse(subAmountTotal.text);
+                          }
+                          log(e.toString());
+                        }
+                        return Text("₹ $tempValue");
                       }
                   ),
                 ],
@@ -1698,7 +1721,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           }
       );
       if(response.statusCode ==200){
-        print(response.body);
+       // print(response.body);
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);

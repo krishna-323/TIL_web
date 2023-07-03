@@ -50,6 +50,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
   Map estimateItems={};
   List lineItems=[];
   Map updateEstimate={};
+  var storeSaleInvoiceDate = DateFormat("dd-M-yyyy");
   @override
   void initState() {
     // TODO: implement initState
@@ -67,6 +68,9 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     shipToState=estimateItems['shipAddressState']??"";
     shipZipcode=estimateItems['shipAddressZipcode']??"";
     additionalCharges.text=widget.estimateItem['freight_amount']??"";
+    salesInvoiceDate.text =estimateItems['serviceInvoiceDate']??"";
+    // print('salesInvoice Date');
+    // print(salesInvoiceDate.text);
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
@@ -85,7 +89,6 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
     subTaxTotal.text=estimateItems['subTotalTax'].toString();
     subAmountTotal.text=estimateItems['subTotalAmount'].toString();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getPartsMaster();
     fetchVendorsData();
     salesInvoice.text=estimateItems['serviceInvoice']??"";
@@ -346,7 +349,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                   temptotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
                                 }
                                 catch (e){
-                                  print("llllllllll");
+                                  //print("llllllllll");
                                   temptotal = double.parse(subAmountTotal.text);
                                 }
                                 setState(() {
@@ -392,11 +395,11 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         }
                                     );
                                   }
-
+                                  // print('-----=--sales invoicedate----------');
+                                  // print(salesInvoiceDate.text);
                                   putUpdatedEstimated(updateEstimate);
                                 });
                               },
-
                             ),
                           ),
                         ],
@@ -774,9 +777,9 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
 
                                               );
                                               if(pickedDate!=null){
-                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
                                                 setState(() {
-                                                  salesInvoiceDate.text=formattedDate;
+                                                  salesInvoiceDate.text= formattedDate;
                                                 });
                                               }
                                               else{

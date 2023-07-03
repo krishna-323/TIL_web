@@ -390,7 +390,7 @@ class _EstimateState extends State<Estimate> {
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
+                            child: CustomTextFieldSearch(showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Vendor') ,
                               controller: vendorSearchController,
                               future: fetchData,
@@ -494,7 +494,7 @@ class _EstimateState extends State<Estimate> {
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
+                            child: CustomTextFieldSearch(showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Warehouse'),
                               controller: wareHouseController,
                               future: fetchData,

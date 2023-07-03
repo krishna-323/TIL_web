@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:new_project/pre_sales/parts_order/parts_order_details.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
@@ -40,9 +41,9 @@ class _PartsOrderListState extends State<PartsOrderList> {
   List displayListItems=[];
   int startVal=0;
 
-  final customerNameController=TextEditingController();
-  final phoneController=TextEditingController();
-  final cityNameController=TextEditingController();
+  final salesInvoiceDataController = TextEditingController();
+  final searchByOrderId=TextEditingController();
+  final searchByStatusController=TextEditingController();
 
   Future fetchEstimate()async{
     dynamic response;
@@ -120,7 +121,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:   [
-                                      Text("Items List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
+                                      Text("Parts Order List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                       // Padding(
                                       //   padding: const EdgeInsets.only(right: 50.0),
@@ -146,76 +147,105 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             SizedBox(  width: 190,height: 30, child: TextFormField(
-                                              controller:customerNameController,
-                                              onChanged: (value){
-                                                // if(value.isEmpty || value==""){
-                                                //   startVal=0;
-                                                //  // displayList=[];
-                                                // //  fetchListCustomerData();
-                                                // }
-                                                // else if(phoneController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                //   phoneController.clear();
-                                                //   cityNameController.clear();
-                                                // }
-                                                // else{
-                                                //   startVal=0;
-                                                //   displayList=[];
-                                                //   fetchCustomerName(customerNameController.text);
-                                                // }
+                                              controller:salesInvoiceDataController,
+                                              onTap: ()async{
+                                                DateTime? pickedDate=await showDatePicker(context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1999),
+                                                    lastDate: DateTime.now()
+
+                                                );
+                                                if(pickedDate!=null){
+                                                  String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                  setState(() {
+                                                    salesInvoiceDataController.text = formattedDate;
+                                                    // print('----------date---');
+                                                    // print(salesInvoiceDataController.text);
+                                                    displayListItems=[];
+                                                    fetchInvoiceDate(salesInvoiceDataController.text);
+                                                  });
+                                                }
+                                                else{
+                                                  log('Date not selected');
+                                                }
                                               },
-                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCustomerNameDecoration(hintText: 'Search By Name'),  ),),
+
+                                              onChanged: (value){
+                                                if(value.isEmpty || value==""){
+                                                  startVal=0;
+                                                  displayListItems=[];
+                                                  fetchEstimate();
+                                                }
+                                                else if(searchByOrderId.text.isNotEmpty || searchByStatusController.text.isNotEmpty){
+                                                  searchByOrderId.clear();
+                                                  searchByStatusController.clear();
+                                                }
+                                                else{
+                                                    try{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      // print('-==========else condition========');
+                                                      // print(salesInvoiceDataController.text);
+                                                      fetchInvoiceDate(salesInvoiceDataController.text);
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchInvoiceDate(hintText: 'Search By Date'),  ),),
                                             const SizedBox(height: 20),
                                             Row(
                                               children: [
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                  controller:cityNameController,
+                                                  controller:searchByOrderId,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(phoneController.text.isNotEmpty || customerNameController.text.isNotEmpty){
-                                                    //   phoneController.clear();
-                                                    //   customerNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchCityNames(cityNameController.text);
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByStatusController.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
+                                                      searchByStatusController.clear();
+                                                      salesInvoiceDataController.clear();
+                                                    }
+                                                    else{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchByOrderId(searchByOrderId.text);
+                                                    }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCityNameDecoration(hintText: 'Search By Order #'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order Id #'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                  controller:phoneController,
+                                                  controller:searchByStatusController,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(customerNameController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                    //   customerNameController.clear();
-                                                    //   cityNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   try{
-                                                    //     startVal=0;
-                                                    //     displayList=[];
-                                                    //     fetchPhoneName(phoneController.text);
-                                                    //   }
-                                                    //   catch(e){
-                                                    //     log(e.toString());
-                                                    //   }
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByOrderId.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
+                                                      searchByOrderId.clear();
+                                                      salesInvoiceDataController.clear();
+                                                    }
+                                                    else{
+                                                      try{
+                                                        startVal=0;
+                                                        displayListItems=[];
+                                                        fetchByStatusItems(searchByStatusController.text);
+                                                      }
+                                                      catch(e){
+                                                        log(e.toString());
+                                                      }
+                                                    }
                                                   },
                                                   style: const TextStyle(fontSize: 14),
                                                   //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                   maxLength: 10,
-                                                  decoration: searchCustomerPhoneNumber(hintText: 'Search By Status'),  ),),
+                                                  decoration: searchByStatusDecoration(hintText: 'Search By Status'),  ),),
                                                 const SizedBox(width: 10,),
                                               ],
                                             ),
@@ -348,7 +378,8 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                   MaterialButton(
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
-                                      print(displayListItems[i]);
+                                      // print('-Item Line Data');
+                                      // print(displayListItems[i]);
                                       Navigator.of(context).push(PageRouteBuilder(
                                           pageBuilder: (context,animation1,animation2) => PartOrderDetails(
                                             //customerList: displayList[i],
@@ -501,17 +532,113 @@ class _PartsOrderListState extends State<PartsOrderList> {
       ),
     );
   }
+  // Search Async Functions.
+  Future fetchInvoiceDate(String orderDate)async{
+    dynamic response;
+    String url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_serviceinvoicedate/$orderDate";
+    try{
+      await getData(url:url ,context: context).then((value){
+        setState(() {
+          if(value!=null){
+            response=value;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal +15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+                // print('------------check data------------');
+                // print(displayListItems);
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+     log(e.toString());
 
+    }
+  }
+  Future fetchByOrderId(String orderID)async{
+    // print('------fetchByOrderId-----');
+    // print(orderID);
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_estvehicleid/$orderID";
+    try{
+      await getData(context:context ,url: url).then((value){
+        setState(() {
+          if(value!=null){
+            response=value;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length > 15){
+                for(int i=startVal;i<startVal +15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  Future fetchByStatusItems(String status)async{
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_status/$status";
+    try{
+     await getData(url:url ,context: context).then((statusItems){
+       setState(() {
+         if(statusItems!=null){
+           response=statusItems;
+           estimateItems=response;
+           displayListItems=[];
+           if(displayListItems.isEmpty){
+             if(estimateItems.length>15){
+               for(int i=startVal;i<startVal +15;i++){
+                 displayListItems.add(estimateItems[i]);
+               }
+             }
+             else{
+               for(int i=0;i<estimateItems.length;i++){
+                 displayListItems.add(estimateItems[i]);
+               }
+             }
+           }
+         }
+       });
+     });
 
-  searchCustomerNameDecoration ({required String hintText, bool? error}){
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+
+  searchInvoiceDate ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: customerNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: salesInvoiceDataController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // customerNameController.clear();
-              // fetchListCustomerData();
+               displayListItems=[];
+              salesInvoiceDataController.clear();
+               fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -526,15 +653,15 @@ class _PartsOrderListState extends State<PartsOrderList> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchCityNameDecoration ({required String hintText, bool? error}){
+  searchOrderByIdDeoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: cityNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: searchByOrderId.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // cityNameController.clear();
-              // fetchListCustomerData();
+               displayListItems=[];
+               searchByOrderId.clear();
+               fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -549,16 +676,16 @@ class _PartsOrderListState extends State<PartsOrderList> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchCustomerPhoneNumber ({required String hintText, bool? error}){
+  searchByStatusDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: phoneController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+      suffixIcon: searchByStatusController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
             setState(() {
               setState(() {
                 startVal=0;
-                // displayList=[];
-                // phoneController.clear();
-                // fetchListCustomerData();
+                 displayListItems=[];
+                searchByStatusController.clear();
+                 fetchEstimate();
               });
             });
           },

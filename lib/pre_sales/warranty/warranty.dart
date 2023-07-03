@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -37,9 +38,9 @@ class _WarrantyState extends State<Warranty> {
   List displayListItems=[];
   int startVal=0;
 
-  final customerNameController=TextEditingController();
-  final phoneController=TextEditingController();
-  final cityNameController=TextEditingController();
+  final searchByDateController = TextEditingController();
+  final searchByStatus = TextEditingController();
+  final searchByOrderID = TextEditingController();
 
   Future fetchEstimate()async{
     dynamic response;
@@ -120,7 +121,7 @@ class _WarrantyState extends State<Warranty> {
                             ),
                             child: Column(
                               children: [
-                                const SizedBox(height: 28,),
+                                const SizedBox(height: 18,),
                                 const Padding(
                                   padding: EdgeInsets.only(left: 18.0),
                                   child: Row(
@@ -152,76 +153,94 @@ class _WarrantyState extends State<Warranty> {
                                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             SizedBox(  width: 190,height: 30, child: TextFormField(
-                                              controller:customerNameController,
-                                              onChanged: (value){
-                                                // if(value.isEmpty || value==""){
-                                                //   startVal=0;
-                                                //  // displayList=[];
-                                                // //  fetchListCustomerData();
-                                                // }
-                                                // else if(phoneController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                //   phoneController.clear();
-                                                //   cityNameController.clear();
-                                                // }
-                                                // else{
-                                                //   startVal=0;
-                                                //   displayList=[];
-                                                //   fetchCustomerName(customerNameController.text);
-                                                // }
+                                              onTap: ()async{
+                                                DateTime? pickedDate=await showDatePicker(context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1999),
+                                                    lastDate: DateTime.now()
+
+                                                );
+                                                if(pickedDate!=null){
+                                                  String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                  setState(() {
+                                                    searchByDateController.text=formattedDate;
+                                                    fetchDate(searchByDateController.text);
+                                                  });
+                                                }
+                                                else{
+                                                  log('Date not selected');
+                                                }
                                               },
-                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCustomerNameDecoration(hintText: 'Search By Name'),  ),),
+                                              controller:searchByDateController,
+                                              onChanged: (value){
+                                                if(value.isEmpty || value==""){
+                                                  startVal=0;
+                                                  displayListItems=[];
+                                                  fetchEstimate();
+                                                }
+                                                else if(searchByOrderID.text.isNotEmpty || searchByStatus.text.isNotEmpty){
+                                                  searchByOrderID.clear();
+                                                  searchByStatus.clear();
+                                                }
+                                                else{
+                                                  startVal=0;
+                                                  displayListItems=[];
+                                                  fetchDate(searchByDateController.text);
+                                                }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByDateDecoration(hintText: 'Search By Date'),  ),),
                                             const SizedBox(height: 20),
                                             Row(
                                               children: [
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                  controller:cityNameController,
+                                                  controller:searchByOrderID,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(phoneController.text.isNotEmpty || customerNameController.text.isNotEmpty){
-                                                    //   phoneController.clear();
-                                                    //   customerNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchCityNames(cityNameController.text);
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByStatus.text.isNotEmpty || searchByDateController.text.isNotEmpty){
+                                                      searchByStatus.clear();
+                                                      searchByDateController.clear();
+                                                    }
+                                                    else{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchByOrderID(searchByOrderID.text);
+                                                    }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchCityNameDecoration(hintText: 'Search By Order #'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByOrderIDDecoration(hintText: 'Search By Order ID#'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                  controller:phoneController,
+                                                  controller:searchByStatus,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(customerNameController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                    //   customerNameController.clear();
-                                                    //   cityNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   try{
-                                                    //     startVal=0;
-                                                    //     displayList=[];
-                                                    //     fetchPhoneName(phoneController.text);
-                                                    //   }
-                                                    //   catch(e){
-                                                    //     log(e.toString());
-                                                    //   }
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByOrderID.text.isNotEmpty || searchByDateController.text.isNotEmpty){
+                                                      searchByOrderID.clear();
+                                                      searchByDateController.clear();
+                                                    }
+                                                    else{
+                                                      try{
+                                                        startVal=0;
+                                                        displayListItems=[];
+                                                        fetchByStatus(searchByStatus.text);
+                                                      }
+                                                      catch(e){
+                                                        log(e.toString());
+                                                      }
+                                                    }
                                                   },
                                                   style: const TextStyle(fontSize: 14),
                                                //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                   maxLength: 10,
-                                                  decoration: searchCustomerPhoneNumber(hintText: 'Search By Status'),  ),),
+                                                  decoration: searchByStatusDecoration(hintText: 'Search By Status'),  ),),
                                                 const SizedBox(width: 10,),
                                               ],
                                             ),
@@ -288,6 +307,14 @@ class _WarrantyState extends State<Warranty> {
                                           children: [
                                             Expanded(
                                                 child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Estimated Vehicle Id")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
                                                   padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
@@ -309,15 +336,15 @@ class _WarrantyState extends State<Warranty> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Estimated Vehicle Id")
+                                                      child: Text("Total Amount")
                                                   ),
                                                 )),
                                             Expanded(
                                                 child: Padding(
-                                                  padding: EdgeInsets.only(top: 4),
+                                                  padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Total Amount")
+                                                      child: Text("Status")
                                                   ),
                                                 )),
                                           ],
@@ -356,6 +383,16 @@ class _WarrantyState extends State<Warranty> {
                                         children: [
                                           Expanded(
                                               child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
+                                                child: SizedBox(
+                                                    height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                ),
+                                              )
+                                          ),
+                                          Expanded(
+                                              child: Padding(
                                                 padding: const EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
@@ -375,19 +412,17 @@ class _WarrantyState extends State<Warranty> {
                                           Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(
-                                                    height: 25,
+                                                child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                    child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                           Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
+                                                    child: Text(displayListItems[i]['status']??"")
                                                 ),
                                               )),
                                         ],
@@ -475,16 +510,106 @@ class _WarrantyState extends State<Warranty> {
       ),
     );
   }
+  //Fetch By Names Apis.
+  Future fetchDate(String searchByDate)async{
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$searchByDate";
+    try{
+     await getData(url:url ,context: context).then((date){
+       setState(() {
+         if(date!=null){
+           response = date;
+           estimateItems=response;
+           displayListItems=[];
+           if(displayListItems.isEmpty){
+             if(estimateItems.length>15){
+               for(int i=startVal;i<startVal +15;i++){
+                 displayListItems.add(estimateItems[i]);
+               }
+             }
+             else{
+               for(int i=0;i<estimateItems.length;i++){
+                 displayListItems.add(estimateItems[i]);
+               }
+             }
+           }
+         }
+       });
+     });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  Future fetchByOrderID(String orderID)async{
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
+    try{
+      await getData(context: context,url: url).then((orderID){
+        setState(() {
+        if(orderID!=null){
+          response=orderID;
+          estimateItems=response;
+          if(displayListItems.isEmpty){
+            if(estimateItems.length>15){
+              for(int i=startVal;i<startVal+15;i++){
+                displayListItems.add(estimateItems[i]);
+              }
+            }
+            else{
+              for(int i=0;i<estimateItems.length;i++){
+                displayListItems.add(estimateItems[i]);
+              }
+            }
+          }
+        }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  Future fetchByStatus(String status)async{
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$status";
+    try{
+      await getData(context: context,url: url).then((status){
+        setState(() {
+          if(status!=null){
+            response =status;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=0;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
 
-  searchCustomerNameDecoration ({required String hintText, bool? error}){
+  searchByDateDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: customerNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: searchByDateController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // customerNameController.clear();
-              // fetchListCustomerData();
+              displayListItems=[];
+              searchByDateController.clear();
+             fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -499,15 +624,15 @@ class _WarrantyState extends State<Warranty> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchCityNameDecoration ({required String hintText, bool? error}){
+  searchByOrderIDDecoration ({required String hintText, bool? error}) {
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: cityNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: searchByOrderID.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // cityNameController.clear();
-              // fetchListCustomerData();
+              displayListItems=[];
+              searchByOrderID.clear();
+              fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -522,16 +647,16 @@ class _WarrantyState extends State<Warranty> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchCustomerPhoneNumber ({required String hintText, bool? error}){
+  searchByStatusDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: phoneController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+      suffixIcon: searchByStatus.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
             setState(() {
               setState(() {
                 startVal=0;
-                // displayList=[];
-                // phoneController.clear();
-                // fetchListCustomerData();
+                displayListItems=[];
+                searchByStatus.clear();
+               fetchEstimate();
               });
             });
           },

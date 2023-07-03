@@ -157,21 +157,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  // if(selectedCity=='Select City'){
-                                  //   setState(() {
-                                  //     _invalidCity=true;
-                                  //   });
-                                  // }
-                                  //
-                                  //
-                                  // ///Main Validation
-                                  // if(_formKey.currentState!.validate()){
-                                  //   if(_invalidType==false && _invalidCity==false) {
-                                  //     print("Call Api");
-                                  //     _selectedIndex=1;
-                                  //   }
-                                  //
-                                  // }
+
 
                                   double tempTotal =0;
                                   try{
@@ -393,6 +379,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: CustomTextFieldSearch(
+                              showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Vendor') ,
                               controller: vendorSearchController,
                               future: fetchData,
@@ -496,7 +483,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                         child: SizedBox(height: 32,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
+                            child: CustomTextFieldSearch(showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Warehouse'),
                               controller: wareHouseController,
                               future: fetchData,
@@ -615,7 +602,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
                                               );
                                               if(pickedDate!=null){
-                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
                                                 setState(() {
                                                   salesInvoiceDate.text=formattedDate;
                                                 });
@@ -1513,7 +1500,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
         if(value!=null){
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+          Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
           //Navigator.of(context).pop();
           // print('------------------inside api()------------');
           // print(estimate);
