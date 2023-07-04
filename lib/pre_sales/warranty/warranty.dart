@@ -211,7 +211,7 @@ class _WarrantyState extends State<Warranty> {
                                                       fetchByOrderID(searchByOrderID.text);
                                                     }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByOrderIDDecoration(hintText: 'Search By Order ID#'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByOrderIDDecoration(hintText: 'Search By Order #'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
@@ -260,7 +260,7 @@ class _WarrantyState extends State<Warranty> {
                                                     )).then((value) => fetchEstimate());
                                                   },
                                                     color: Colors.blue,
-                                                    child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
+                                                    child: const Text('+ Create Warranty Order',style: TextStyle(color: Colors.white),),
                                                   )
                                                 ),
                                                 const SizedBox(width: 20,),
@@ -310,7 +310,7 @@ class _WarrantyState extends State<Warranty> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Estimated Vehicle Id")
+                                                      child: Text("Order ID")
                                                   ),
                                                 )),
                                             Expanded(
