@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
@@ -390,96 +389,4 @@ class _ListVehicleOrdersState extends State<ListVehicleOrders> {
     );
   }
 
-  void exportToExcel() async {
-    var excel = Excel.createExcel();
-    Sheet sheetObject = excel['Sheet1'];
-
-
-
-    CellStyle cellStyle = CellStyle(backgroundColorHex: "#000000", fontFamily : getFontFamily(FontFamily.Calibri),fontColorHex:'#FFFFFF' ,horizontalAlign: HorizontalAlign.Center);
-    CellStyle cellStyle1 = CellStyle(textWrapping:TextWrapping.WrapText, );
-
-    // cellStyle.underline = Underline.Single; // or Underline.Double
-    var cellA1 =  sheetObject.cell(CellIndex.indexByString("A1"));
-    // var cell1 =  sheetObject.;
-    var cellB1 =  sheetObject.cell(CellIndex.indexByString("B1"));
-    var cellC1 =  sheetObject.cell(CellIndex.indexByString("C1"));
-    var cellD1 =  sheetObject.cell(CellIndex.indexByString("D1"));
-
-    cellA1.cellStyle=cellStyle;
-    cellA1.value="Purchase Order Number";
-
-    // cell1.cellStyle=cellStyle;
-
-    cellB1.cellStyle=cellStyle;
-    cellB1.value="Vendor Name";
-
-    cellC1.cellStyle=cellStyle;
-    cellC1.value="Shipping Address";
-
-    cellD1.cellStyle=cellStyle;
-    cellD1.value="Billing Address";
-
-
-    for(int i=0;i<poList.length;i++) {
-      sheetObject.cell(CellIndex.indexByString("A${i+2}")).value=poList[i]['po_id'].toString();
-      sheetObject.cell(CellIndex.indexByString("A${i+2}")).cellStyle=cellStyle1;
-      sheetObject.cell(CellIndex.indexByString("B${i+2}")).value=poList[i]['vendor_name'].toString();
-      sheetObject.cell(CellIndex.indexByString("C${i+2}")).value=poList[i]['shipping_address'].toString();
-      sheetObject.cell(CellIndex.indexByString("D${i+2}")).value=poList[i]['billing_address'].toString();
-    }
-
-
-
-    sheetObject.setColWidth(0, 20);
-    sheetObject.setColWidth(1, 20);
-    sheetObject.setColWidth(2, 40.49);
-    sheetObject.setColWidth(3, 60);
-
-    ///
-    /// Inserting and removing column and rows
-    //
-    // // insert column at index = 8
-    // sheetObject.insertColumn(8);
-    //
-    // // remove column at index = 18
-    // sheetObject.removeColumn(18);
-    //
-    // // insert row at index = 82
-    // sheetObject.removeRow(82);
-    //
-    // // remove row at index = 80
-    // sheetObject.removeRow(80);
-   // var fileBytes = excel.save(fileName: "My_Excel_File_Name.xlsx");
-
-// // Create a new Workbook
-//     final Workbook workbook = Workbook();
-//     final Worksheet worksheet = workbook.worksheets[0];
-// // Add data to cells
-// //
-//     worksheet.getRangeByName('A1').setText('Address');
-//     worksheet.getRangeByName('B1').setText('Name');
-//     worksheet.getRangeByName('C1').setText('Age');
-//     //
-//     // for(int i=0;i<jsonData.length;i++) {
-//     //   worksheet.getRangeByName('A${i+2}').setValue(10);
-//     //   worksheet.getRangeByName('B${i+2}').setValue(20);
-//     //   worksheet.getRangeByName('C${i+2}').setValue(30);
-//     //
-//     // }
-//
-// // Save the workbook to a file
-//     // Save and dispose workbook.
-//     final bytes = workbook.saveAsStream();
-//    // await saveAndLaunchFile(bytes, 'JanuaryData');
-//     dynamic decodeData =(base64.encode(bytes));
-//     print("+++++++++++++++++++000000000000000000000");
-//     print(bytes);
-//     var excel = Excel.decodeBytes(bytes);
-//     var fileBytes = excel.save(fileName: "My_Excel_File_Name.xlsx");
-//     // AnchorElement(
-//     //     href: 'data:application/octet-stream;charset=utf-16le;base64,$decodeData')
-//     //   ..setAttribute('download', '1.xlsx')
-//     //   ..click();
-  }
 }

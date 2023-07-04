@@ -1939,13 +1939,21 @@ class BarChartData extends StatefulWidget {
 }
 
 class _BarChartDataState extends State<BarChartData> {
+  late TooltipBehavior _tooltipBehavior;
 
-  final List<ChartData> chartData = [
+
+  @override
+  void initState() {
+    _tooltipBehavior = TooltipBehavior(enable: true,animationDuration: 1);
+    super.initState();
+  }
+    final List<ChartData> chartData = [
     ChartData('Jan', 25, const Color.fromRGBO(9,0,136,1)),
     ChartData('Feb', 38, const Color.fromRGBO(147,0,119,1)),
     ChartData('Mar', 34, const Color.fromRGBO(228,0,124,1)),
     ChartData('April', 34, const Color.fromRGBO(228,0,124,1)),
     ChartData('May', 23, const Color.fromRGBO(228,0,124,1)),
+      ChartData('Jun', 33, const Color.fromRGBO(228,0,124,1)),
     ChartData('Others', 52, const Color.fromRGBO(255,189,57,1))
   ];
 
@@ -1955,16 +1963,18 @@ class _BarChartDataState extends State<BarChartData> {
     ChartData('Mar', 41, const Color.fromRGBO(228,0,124,1)),
     ChartData('April', 31, const Color.fromRGBO(228,0,124,1)),
     ChartData('May', 41, const Color.fromRGBO(228,0,124,1)),
+    ChartData('Jun', 51, const Color.fromRGBO(228,0,124,1)),
     ChartData('Others', 22, const Color.fromRGBO(255,189,57,1))
   ];
 
   @override
   Widget build(BuildContext context) {
     return  SfCartesianChart(
+      tooltipBehavior: _tooltipBehavior,
       isTransposed: true,
       primaryXAxis: CategoryAxis(),
       series: <ChartSeries>[
-        BarSeries<ChartData, String>(color: Colors.blue,
+        BarSeries<ChartData, String>(color: Color(0xff747AF2),
           dataSource: chartData,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
@@ -2067,23 +2077,16 @@ class _PirChartDataState extends State<PirChartData> {
   late TooltipBehavior _tooltipBehavior;
 
   final List<ChartData> chartData = [
-    ChartData('David', 25, const Color.fromRGBO(9,0,136,1)),
+    ChartData('David', 25,  const Color.fromRGBO(0,37, 150, 190)),
     ChartData('Steve', 38, const Color.fromRGBO(147,0,119,1)),
     ChartData('Jack', 34, const Color.fromRGBO(228,0,124,1)),
     ChartData('Others', 52, const Color.fromRGBO(255,189,57,1))
   ];
 
-  final List<ChartData> chartData2 = [
-    ChartData('David', 60, const Color.fromRGBO(9,0,136,1)),
-    ChartData('Steve', 32, const Color.fromRGBO(147,0,119,1)),
-    ChartData('Jack', 31, const Color.fromRGBO(228,0,124,1)),
-    ChartData('Others', 22, const Color.fromRGBO(255,189,57,1))
-  ];
-
   @override
   void initState() {
 
-    _tooltipBehavior = TooltipBehavior(enable: true);
+    _tooltipBehavior = TooltipBehavior(enable: true,animationDuration:1 );
     super.initState();
   }
   @override
@@ -2100,7 +2103,7 @@ class _PirChartDataState extends State<PirChartData> {
             yValueMapper: (ChartData data, _) => data.y,
             dataLabelSettings: DataLabelSettings(isVisible: true,
               builder: (data, point, series, pointIndex, seriesIndex) {
-                return Text("${data.x} ${data.y}",style: const TextStyle(color: Colors.white,fontSize: 12),);
+                return Text("${data.x}",style: const TextStyle(color: Colors.white,fontSize: 12),);
               },
             )
         ),
