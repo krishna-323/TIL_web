@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../classes/arguments_classes/arguments_classes.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
@@ -69,7 +70,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   }
   // Search Controller Declaration.
   final searchByStatus=TextEditingController();
-  final searchByName=TextEditingController();
+  final searchByDate=TextEditingController();
   final searchByOrder=TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                 color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 40,right: 40,top: 20,bottom: 20),
+                    padding: const EdgeInsets.only(left: 40,right: 40,top: 30,bottom: 30),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -129,24 +130,42 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             SizedBox(  width: 190,height: 30, child: TextFormField(
-                                              controller:searchByName,
-                                              onChanged: (value){
-                                                // if(value.isEmpty || value==""){
-                                                //   startVal=0;
-                                                //  // displayList=[];
-                                                // //  fetchListCustomerData();
-                                                // }
-                                                // else if(phoneController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                //   phoneController.clear();
-                                                //   cityNameController.clear();
-                                                // }
-                                                // else{
-                                                //   startVal=0;
-                                                //   displayList=[];
-                                                //   fetchCustomerName(customerNameController.text);
-                                                // }
+                                              onTap: ()async{
+                                                DateTime? pickedDate=await showDatePicker(context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1999),
+                                                    lastDate: DateTime.now()
+
+                                                );
+                                                if(pickedDate!=null){
+                                                  String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                  setState(() {
+                                                    searchByDate.text=formattedDate;
+                                                    fetchSearchByDate( searchByDate.text);
+                                                  });
+                                                }
+                                                else{
+                                                  log('Date not selected');
+                                                }
                                               },
-                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchNameDecoration(hintText: 'Search By Name'),  ),),
+                                              controller:searchByDate,
+                                              onChanged: (value){
+                                                if(value.isEmpty || value==""){
+                                                  startVal=0;
+                                                  displayListItems=[];
+                                                  fetchEstimate();
+                                                }
+                                                else if(searchByStatus.text.isNotEmpty || searchByOrder.text.isNotEmpty){
+                                                  searchByStatus.clear();
+                                                  searchByOrder.clear();
+                                                }
+                                                else{
+                                                  startVal=0;
+                                                  displayListItems = [];
+                                                  fetchSearchByDate(searchByDate.text);
+                                                }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchDateDecoration(hintText: 'Search By Date'),  ),),
                                             const SizedBox(height: 20),
                                             Row(
                                               children: [
@@ -154,51 +173,55 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
                                                   controller:searchByOrder,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(phoneController.text.isNotEmpty || customerNameController.text.isNotEmpty){
-                                                    //   phoneController.clear();
-                                                    //   customerNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchCityNames(cityNameController.text);
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems =[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByDate.text.isNotEmpty || searchByStatus.text.isNotEmpty){
+                                                      searchByStatus.clear();
+                                                      searchByDate.clear();
+                                                    }
+                                                    else{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      if(searchByOrder.text.length>6){
+                                                        // print('------ser-------');
+                                                        // print(searchByOrder.text.length);
+                                                        fetchOrderIDItems(searchByOrder.text);
+                                                      }
+                                                    }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchStatusDecoration(hintText: 'Search By Order #'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByOrderIDDecoration(hintText: 'Search By Order #'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
                                                   controller:searchByStatus,
                                                   onChanged: (value){
-                                                    // if(value.isEmpty || value==""){
-                                                    //   startVal=0;
-                                                    //   displayList=[];
-                                                    //   fetchListCustomerData();
-                                                    // }
-                                                    // else if(customerNameController.text.isNotEmpty || cityNameController.text.isNotEmpty){
-                                                    //   customerNameController.clear();
-                                                    //   cityNameController.clear();
-                                                    // }
-                                                    // else{
-                                                    //   try{
-                                                    //     startVal=0;
-                                                    //     displayList=[];
-                                                    //     fetchPhoneName(phoneController.text);
-                                                    //   }
-                                                    //   catch(e){
-                                                    //     log(e.toString());
-                                                    //   }
-                                                    // }
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByDate.text.isNotEmpty || searchByOrder.text.isNotEmpty){
+                                                      searchByDate.clear();
+                                                      searchByOrder.clear();
+                                                    }
+                                                    else{
+                                                      try{
+                                                        startVal=0;
+                                                        displayListItems=[];
+                                                        fetchByStatus(searchByStatus.text);
+                                                      }
+                                                      catch(e){
+                                                        log(e.toString());
+                                                      }
+                                                    }
                                                   },
                                                   style: const TextStyle(fontSize: 14),
                                                   //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                   maxLength: 10,
-                                                  decoration: searchByOrderDecoration(hintText: 'Search By Status'),  ),),
+                                                  decoration: searchByStatusDecoration(hintText: 'Search By Status'),  ),),
                                                 const SizedBox(width: 10,),
                                               ],
                                             ),
@@ -210,7 +233,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                             Row(mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.only(right: 50.0),
+                                                  padding: const EdgeInsets.all(8),
                                                   child: MaterialButton(onPressed: (){
                                                     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
                                                         Estimate(selectedDestination: widget.args.selectedDestination,
@@ -304,7 +327,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
 
-                                      // print('-------------inontap------------------');
+                                      // print('-------------in on tap------------------');
                                       // print(estimateItems[i]);
                                       Navigator.of(context).push(PageRouteBuilder(
                                           pageBuilder: (context,animation1,animation2) => ViewEstimateItem(
@@ -452,16 +475,111 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
       ),
     );
   }
+  // Fetch Functions.
+  fetchSearchByDate(String date)async{
+    // print('-----inside get date api----');
+    // print(date);
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_serviceinvoicedate/$date";
+    try {
+      await getData(url:url ,context: context).then((date){
+        setState(() {
+          if(date!=null){
+            response=date;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  fetchOrderIDItems(String orderID)async{
+    // print('--------orderID-----');
+    // print(orderID);
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_estvehicleid/$orderID";
+    try{
+      await getData(context:context ,url: url).then((orderID){
+        setState(() {
+          if(orderID!=null){
+            response=orderID;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  fetchByStatus(String status)async{
+    dynamic response;
+    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_status/$status";
+    try{
+      await getData(url:url ,context: context).then((searchByStatus){
+        setState(() {
+          if(searchByStatus!=null){
+            response=searchByStatus;
+            estimateItems=response;
+            displayListItems=[];
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
   // Search Text field Decoration.
-  searchNameDecoration ({required String hintText, bool? error}){
+  searchDateDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: searchByName.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: searchByDate.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // customerNameController.clear();
-              // fetchListCustomerData();
+              displayListItems=[];
+              searchByDate.clear();
+              fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -476,15 +594,15 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchStatusDecoration ({required String hintText, bool? error}){
+  searchByOrderIDDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: searchByStatus.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
+      suffixIcon: searchByOrder.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
             setState(() {
               startVal=0;
-              // displayList=[];
-              // cityNameController.clear();
-              // fetchListCustomerData();
+              displayListItems=[];
+              searchByOrder.clear();
+              fetchEstimate();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -499,9 +617,9 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-  searchByOrderDecoration ({required String hintText, bool? error}){
+  searchByStatusDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: searchByOrder.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+      suffixIcon: searchByStatus.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
             setState(() {
               setState(() {

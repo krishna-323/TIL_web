@@ -18,7 +18,7 @@ class AddPart extends StatefulWidget {
   const AddPart({Key? key,  required this.drawerWidth, required this.selectedDestination}) : super(key: key);
 
   @override
-  _AddPartState createState() => _AddPartState();
+  State<AddPart> createState() => _AddPartState();
 }
 // enum SingingCharacter {goods, services,taxable, nontaxable }
 // enum SingingCharacter {taxable, nontaxable }

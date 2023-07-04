@@ -19,13 +19,11 @@ class AddNewVehiclePurchaseOrder extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
 
-  const AddNewVehiclePurchaseOrder(
-      {Key? key, required this.selectedDestination, required this.drawerWidth})
-      : super(key: key);
+  const AddNewVehiclePurchaseOrder({Key? key, required this.selectedDestination, required this.drawerWidth}) : super(key: key);
 
 
   @override
-  _AddNewPurchaseOrderState createState() => _AddNewPurchaseOrderState();
+  State<AddNewVehiclePurchaseOrder> createState() => _AddNewPurchaseOrderState();
 }
 
 class _AddNewPurchaseOrderState extends State<AddNewVehiclePurchaseOrder> {

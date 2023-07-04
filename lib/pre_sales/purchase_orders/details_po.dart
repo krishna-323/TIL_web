@@ -68,6 +68,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     shipToStreet=estimateItems['shipAddressStreet']??"";
     shipToState=estimateItems['shipAddressState']??"";
     shipZipcode=estimateItems['shipAddressZipcode']??"";
+    salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??'';
     additionalCharges.text=estimateItems['additionalCharges'].toString();
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
@@ -87,7 +88,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
     subTaxTotal.text=estimateItems['subTotalTax'].toString();
     subAmountTotal.text=estimateItems['subTotalAmount'].toString();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
     salesInvoice.text=estimateItems['serviceInvoice']??"";
@@ -772,7 +772,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
                                               );
                                               if(pickedDate!=null){
-                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
                                                 setState(() {
                                                   salesInvoiceDate.text=formattedDate;
                                                 });

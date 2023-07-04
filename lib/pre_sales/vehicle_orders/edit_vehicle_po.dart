@@ -24,11 +24,10 @@ class EditVehiclePurchaseOrder extends StatefulWidget {
   const EditVehiclePurchaseOrder({Key? key, required this.selectedDestination, required this.drawerWidth,required this.poList}) : super(key: key);
 
   @override
-  _EditPurchaseOrderState createState() => _EditPurchaseOrderState();
+  State<EditVehiclePurchaseOrder> createState() => _EditPurchaseOrderState();
 }
 
-class _EditPurchaseOrderState extends State<EditVehiclePurchaseOrder>
-{
+class _EditPurchaseOrderState extends State<EditVehiclePurchaseOrder> {
 
   late double width ;
 

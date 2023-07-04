@@ -103,7 +103,7 @@ class _WarrantyState extends State<Warranty> {
                 color: Colors.grey[50],
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 40,right: 40,top: 30),
+                    padding: const EdgeInsets.only(left: 40,right: 40,top: 30,bottom: 30),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,

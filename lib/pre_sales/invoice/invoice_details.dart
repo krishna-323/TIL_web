@@ -13,7 +13,7 @@ class InvoiceDetails extends StatefulWidget {
   const InvoiceDetails(this.invoiceData,this.docketDetails, {Key? key}) : super(key: key);
 
   @override
-  _InvoiceDetailsState createState() => _InvoiceDetailsState();
+  State<InvoiceDetails> createState() => _InvoiceDetailsState();
 }
 
 class _InvoiceDetailsState extends State<InvoiceDetails> {
@@ -185,7 +185,7 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                       //     ),
                       //   ],
                       // )),
-                      Expanded(child: const SizedBox(width: 10,)),
+                      const Expanded(child: SizedBox(width: 10,)),
                       Expanded(flex: 2,
                           child: Column(
                             children: [
@@ -271,35 +271,35 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                               ],
                             ),
                           )),
-                          Expanded(
+                          const Expanded(
                               flex: 1,
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10,),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Expanded(flex: 1,child: Text("Ex-ShowRoom Price")),
                                     ],
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10,),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Expanded(flex: 1,child: Text("On-Road Price")),
                                     ],
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10,),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Expanded(flex: 1,child: Text("Discount")),
                                     ],
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10,),
                                   Row(
-                                    children: const [
+                                    children: [
                                       Expanded(flex: 1,child: Text("Accessory Value")),
                                     ],
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10,),
                                 ],
                               )),
                           Expanded(flex: 1,child:
@@ -348,7 +348,7 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:  [
                           Expanded(flex: 3,child: Container()),
-                          Expanded(
+                          const Expanded(
                               flex: 1,
                               child: Column(
                                 children: [

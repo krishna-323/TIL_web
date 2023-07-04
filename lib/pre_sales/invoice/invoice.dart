@@ -23,7 +23,7 @@ class InvoiceList extends StatefulWidget {
   const InvoiceList({Key? key,required this.args}) : super(key: key);
 
   @override
-  _InvoiceListState createState() => _InvoiceListState();
+ State<InvoiceList> createState() => _InvoiceListState();
 }
 
 class _InvoiceListState extends State<InvoiceList> {

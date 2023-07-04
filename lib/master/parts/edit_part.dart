@@ -17,7 +17,7 @@ class EditPart extends StatefulWidget {
   const EditPart({Key? key, required this.drawerWidth, required this.selectedDestination, required this. itemData}) : super(key: key);
 
   @override
-  _EditPartState createState() => _EditPartState();
+  State<EditPart> createState() => _EditPartState();
 }
 
 class _EditPartState extends State<EditPart> {
@@ -248,10 +248,10 @@ class _EditPartState extends State<EditPart> {
                                 Row(
                                   children:  [
                                     //type
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 180,
                                       child: Row(
-                                        children: const [
+                                        children: [
                                           Text('Type'),
                                         ],
                                       ),
@@ -428,9 +428,9 @@ class _EditPartState extends State<EditPart> {
                                       ),
                                       const SizedBox(height:15),
                                       // unit
-                                      Row( crossAxisAlignment: CrossAxisAlignment.start,
+                                      const Row( crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
-                                          const SizedBox(
+                                          SizedBox(
                                             width:180,
                                             child: Row(
                                               children: [
@@ -578,9 +578,9 @@ class _EditPartState extends State<EditPart> {
                                           ),
                                           const SizedBox(height:15),
                                           if(_tasktax==1)
-                                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                            const Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                const SizedBox(
+                                                SizedBox(
                                                   width:180,
                                                   child: Row(
                                                     children: [
@@ -797,9 +797,9 @@ class _EditPartState extends State<EditPart> {
                                         ),
                                         const SizedBox(height:15),
                                         // unit
-                                        Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Row(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            const SizedBox(
+                                            SizedBox(
                                               width:180,
                                               child: Row(
                                                 children: [
@@ -979,9 +979,9 @@ class _EditPartState extends State<EditPart> {
                                               ],
                                             ),
                                             if(_tasktax==1)
-                                              Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                              const Row(crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     width:180,
                                                     child: Row(
                                                       children: [
@@ -1058,10 +1058,10 @@ class _EditPartState extends State<EditPart> {
                                   crossAxisAlignment:CrossAxisAlignment.start,
                                   children:  [
                                     //type
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 180,
                                       child: Row(
-                                        children: const [
+                                        children: [
                                           Text('Type'),
                                         ],
                                       ),
@@ -1232,10 +1232,10 @@ class _EditPartState extends State<EditPart> {
                                       ),
                                       const SizedBox(height:15),
                                       // unit
-                                      Column( crossAxisAlignment: CrossAxisAlignment.start,
+                                      const Column( crossAxisAlignment: CrossAxisAlignment.start,
                                         children:  [
                                           Row(
-                                            children: const [
+                                            children: [
                                               Text('Unit',
                                                   style: TextStyle(
                                                       color: Colors.red
@@ -1244,7 +1244,7 @@ class _EditPartState extends State<EditPart> {
                                                 color: Colors.grey,)
                                             ],
                                           ),
-                                          const SizedBox(height:10),
+                                          SizedBox(height:10),
                                           // Container(
                                           //   width: 350,
                                           //   color:const Color.fromRGBO(255, 255, 255, 1),
@@ -1371,10 +1371,10 @@ class _EditPartState extends State<EditPart> {
                                       ),
                                       const SizedBox(height:15),
                                       if(_tasktax==1)
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
-                                              children: const [
+                                              children: [
                                                 Text('Exemption Reason*',
                                                   style: TextStyle(color: Colors.red),
                                                 ),
@@ -1384,7 +1384,7 @@ class _EditPartState extends State<EditPart> {
                                                 )
                                               ],
                                             ),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
@@ -1580,10 +1580,10 @@ class _EditPartState extends State<EditPart> {
                                         ),
                                         const SizedBox(height:15),
                                         // unit
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
                                             Row(
-                                              children: const [
+                                              children: [
                                                 Text('Unit',
                                                     style: TextStyle(
                                                         color: Colors.red
@@ -1592,7 +1592,7 @@ class _EditPartState extends State<EditPart> {
                                                   color: Colors.grey,)
                                               ],
                                             ),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
@@ -1641,8 +1641,8 @@ class _EditPartState extends State<EditPart> {
                                         const SizedBox(height:15),
                                         // checkbox
                                         CheckboxListTile(
-                                          title: Row(
-                                            children: const [
+                                          title: const Row(
+                                            children: [
                                               Text('It is a digital service'),
                                               Icon(CupertinoIcons.question_circle,
                                                 color: Colors.grey,
@@ -1743,10 +1743,10 @@ class _EditPartState extends State<EditPart> {
                                               ],
                                             ),
                                             if(_tasktax==1)
-                                              Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                              const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
-                                                    children: const [
+                                                    children: [
                                                       Text('Exemption Reason*',
                                                         style: TextStyle(color: Colors.red),
                                                       ),
@@ -1756,7 +1756,7 @@ class _EditPartState extends State<EditPart> {
                                                       )
                                                     ],
                                                   ),
-                                                  const SizedBox(height:10),
+                                                  SizedBox(height:10),
                                                   // Container(
                                                   //   width: 350,
                                                   //   color: const Color.fromRGBO(255, 255, 255, 1),
@@ -1828,8 +1828,8 @@ class _EditPartState extends State<EditPart> {
                                         Column(
                                           children: [
                                             //sales information
-                                            Row(
-                                              children: const [
+                                            const Row(
+                                              children: [
                                                 Text('Sales Information',
                                                   style: TextStyle(
                                                     fontSize:20,
@@ -1934,9 +1934,9 @@ class _EditPartState extends State<EditPart> {
                                             ),
                                             const SizedBox(height:15),
                                             //account
-                                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                            const Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children:  [
-                                                const SizedBox(
+                                                SizedBox(
                                                   width:180,
                                                   child: Text('Account*',
                                                     style: TextStyle(
@@ -2137,8 +2137,8 @@ class _EditPartState extends State<EditPart> {
                                         Column(
                                           children: [
                                             //purchase information
-                                            Row(
-                                              children: const [
+                                            const Row(
+                                              children: [
                                                 Text('Purchase Information',
                                                   style: TextStyle(
                                                     fontSize:20,
@@ -2239,9 +2239,9 @@ class _EditPartState extends State<EditPart> {
                                             ),
                                             const SizedBox(height:15),
                                             //account
-                                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                            const Row(crossAxisAlignment: CrossAxisAlignment.start,
                                               children:  [
-                                                const SizedBox(
+                                                SizedBox(
                                                   width:180,
                                                   child: Text('Account*',
                                                     style: TextStyle(
@@ -2337,10 +2337,10 @@ class _EditPartState extends State<EditPart> {
                                     Column(
                                       children: [
                                         //sales information
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:15),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left:15),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Text('Sales Information',
                                                 style: TextStyle(
                                                   fontSize:20,
@@ -2436,15 +2436,15 @@ class _EditPartState extends State<EditPart> {
                                         ),
                                         const SizedBox(height:15),
                                         //account
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            const Text('Account*',
+                                            Text('Account*',
                                               style: TextStyle(
                                                 color: Colors.red,
                                                 decoration: TextDecoration.underline,
                                                 decorationStyle: TextDecorationStyle.dotted,
                                               ),),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             // SizedBox(
                                             //   width: 310,
                                             //   child: AnimatedContainer(
@@ -2513,10 +2513,10 @@ class _EditPartState extends State<EditPart> {
                                         ),
                                         const SizedBox(height:15),
                                         //gst
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            const Text('GST %',style:TextStyle(color:Colors.red)),
-                                            const SizedBox(height:10),
+                                            Text('GST %',style:TextStyle(color:Colors.red)),
+                                            SizedBox(height:10),
                                             // SizedBox(
                                             //   width: 310,
                                             //   child: AnimatedContainer(
@@ -2559,10 +2559,10 @@ class _EditPartState extends State<EditPart> {
 
                                         const SizedBox(height:15),
                                         //ist
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            const Text('IGST %',style:TextStyle(color:Colors.red)),
-                                            const SizedBox(height:10),
+                                            Text('IGST %',style:TextStyle(color:Colors.red)),
+                                            SizedBox(height:10),
                                             // SizedBox(
                                             //   width: 310,
                                             //   child: AnimatedContainer(
@@ -2613,10 +2613,10 @@ class _EditPartState extends State<EditPart> {
                                     Column(
                                       children: [
                                         //purchase information
-                                        Padding(
-                                          padding: const EdgeInsets.only(left:15),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left:15),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Text('Purchase Information',
                                                 style: TextStyle(
                                                   fontSize:20,
@@ -2708,15 +2708,15 @@ class _EditPartState extends State<EditPart> {
                                         ),
                                         const SizedBox(height:15),
                                         //account
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        const Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children:  [
-                                            const Text('Account*',
+                                            Text('Account*',
                                               style: TextStyle(
                                                 color: Colors.red,
                                                 decoration: TextDecoration.underline,
                                                 decorationStyle: TextDecorationStyle.dotted,
                                               ),),
-                                            const SizedBox(height:10),
+                                            SizedBox(height:10),
                                             // SizedBox(
                                             //   width: 310,
                                             //   child: AnimatedContainer(
@@ -2935,7 +2935,7 @@ class _EditPartState extends State<EditPart> {
                           );
 
                         },
-                        child: Row(children: const [
+                        child: const Row(children: [
                           Icon(Icons.delete,color: Colors.white,),
                           Text("Delete",style: TextStyle(color: Colors.white),)
                         ]),

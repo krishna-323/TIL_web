@@ -228,6 +228,8 @@ class _EstimateState extends State<Estimate> {
                                     );
 
                                   }
+                                  print('-----serviceInvoiceDate-----');
+                                  print(salesInvoiceDate.text);
                                   postEstimate(postDetails);
                                 });
                               },
@@ -613,7 +615,7 @@ class _EstimateState extends State<Estimate> {
 
                                               );
                                               if(pickedDate!=null){
-                                                String formattedDate=DateFormat('dd/MM/yyyy').format(pickedDate);
+                                                String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
                                                 setState(() {
                                                   salesInvoiceDate.text=formattedDate;
                                                 });
