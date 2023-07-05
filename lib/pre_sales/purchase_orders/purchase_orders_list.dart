@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/arguments_classes/arguments_classes.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
@@ -26,16 +27,36 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   @override
   void  initState(){
     super.initState();
-    fetchEstimate();
+    getInitialData().whenComplete(() {
+      print("User Role : $role");
+      fetchEstimate();
+    });
+
     loading=true;
   }
   bool loading=false;
   List estimateItems=[];
   List displayListItems=[];
   int startVal=0;
+
+  String role ='';
+  String userId ='';
+
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("managerId")??"";
+  }
+
   Future fetchEstimate()async{
     dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_estimate_vehicle';
+    String url='';
+    if(role=='Manager'){
+      url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/Manager/$userId';
+    }
+    else{
+      url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/User/$userId";
+    }
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {

@@ -28,6 +28,7 @@ class _UserManagementState extends State<UserManagement> {
 
   String customerType ="Select User Role";
   String companyName ="Select Company Name";
+
   final userEmail = TextEditingController();
 
   @override
@@ -74,12 +75,16 @@ class _UserManagementState extends State<UserManagement> {
   String? authToken;
   String? assignUserId;
   String userID='';
+  String managerId ="";
+  String orgId ="";
 
 //Passing token.
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
     userID = prefs.getString("userId") ??'';
+    managerId = prefs.getString("managerId") ??'';
+    orgId = prefs.getString("orgId") ??'';
   }
 
   // post api.
@@ -204,10 +209,10 @@ class _UserManagementState extends State<UserManagement> {
           }
 
           else{
-
-            //get all user api()
-            getUserData();
             Navigator.of(context).pop();
+            //get all user api()
+
+
             alertDialogWidget(context: context,fromTop: true, color: Colors.blue,message: 'User Created...');
           }
 
@@ -296,9 +301,7 @@ class _UserManagementState extends State<UserManagement> {
       body: json.encode(updateRequestBody),
     );
     if (response.statusCode == 200) {
-
-
-      updateUserDetailsStore=jsonDecode(response.body);
+      updateUserDetailsStore=json.decode(response.body);
       if(updateUserDetailsStore['error']=='user already exist' || updateUserDetailsStore['error']=="email already exist"){
         if(updateUserDetailsStore['error']=="user already exist"){
           setState(() {
@@ -314,10 +317,6 @@ class _UserManagementState extends State<UserManagement> {
           });
 
         }
-        if(mounted) {
-          Navigator.of(context).pop();
-        }
-
         setState((){
           showDialog(
             context: context,
@@ -412,14 +411,18 @@ class _UserManagementState extends State<UserManagement> {
         },);
       }
 
-      else{
+      else if(updateUserDetailsStore.containsKey('status')){
+        if(updateUserDetailsStore['status']=="success"){
+          if(mounted) {
+            Navigator.of(context).pop();
+          }
+          displayUserData =[];
+        }
+
 
         getUserData();
         // print('------------------------satuscode-----------');
         // print(response.statusCode);
-        if(mounted) {
-          Navigator.of(context).pop();
-        }
 
       }
 
@@ -549,7 +552,7 @@ class _UserManagementState extends State<UserManagement> {
                               value,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 14),
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ),
                         ),
@@ -843,6 +846,8 @@ class _UserManagementState extends State<UserManagement> {
                                                     'token':'',
                                                     'token_creation_date':'',
                                                     'company_name': selectedCompanyName,
+                                                    "manager_id" : managerId ,
+                                                    "org_id": orgId
                                                     //editCompanyName.text,
                                                   };
                                                   updateUserDetails(editUserManagement);
@@ -1543,7 +1548,7 @@ class _UserManagementState extends State<UserManagement> {
                                       hoverColor: Colors.transparent,
                                       hoverElevation: 0,
                                       child:  Padding(
-                                        padding: EdgeInsets.only(left: 18.0),
+                                        padding: const EdgeInsets.only(left: 18.0),
                                         child:Row(
                                           children: [
                                             const Expanded(
@@ -1789,7 +1794,7 @@ class _UserManagementState extends State<UserManagement> {
                       value,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
@@ -2160,6 +2165,7 @@ class _UserManagementState extends State<UserManagement> {
                                     color: Colors.blue,
                                     onPressed: () {
                                       setState(() {
+                                        loading= true;
                                         if (newUser.currentState!.validate()) {
                                           userData = {
                                             "active": true,
@@ -2168,10 +2174,14 @@ class _UserManagementState extends State<UserManagement> {
                                             "password": newPassword.text,
                                             "role": customerType,
                                             "username": newUserName.text,
+                                            "manager_id" : managerId ,
+                                            "org_id": orgId
                                           };
                                           // print('---check----');
                                           // print(userData);
-                                          userDetails(userData);
+                                          userDetails(userData).whenComplete(() {
+                                            getUserData();
+                                          });
 
                                         }
                                       });
@@ -2250,7 +2260,7 @@ class _UserManagementState extends State<UserManagement> {
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
-      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      hintStyle: hintText=="Select User Role"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
@@ -2264,7 +2274,7 @@ class _UserManagementState extends State<UserManagement> {
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
-      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      hintStyle: hintText=="Select Company Name"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
@@ -2279,7 +2289,7 @@ class _UserManagementState extends State<UserManagement> {
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
-      hintStyle: hintText=="Select User Role"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      hintStyle: hintText=="Select User Role"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
@@ -2293,7 +2303,7 @@ class _UserManagementState extends State<UserManagement> {
           borderSide: BorderSide(color:  Colors.blue)),
       constraints:  const BoxConstraints(maxHeight:35),
       hintText: hintText,
-      hintStyle: hintText=="Select Company Name"? TextStyle(color: Colors.black54):TextStyle(color: Colors.black,),
+      hintStyle: hintText=="Select Company Name"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),

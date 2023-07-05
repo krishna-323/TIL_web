@@ -19,24 +19,24 @@ import '../../main.dart';
   if (response.statusCode == 200) {
     dynamic responseBody;
     try {
-      responseBody = jsonDecode(response.body);
+      responseBody = json.decode(response.body);
       if (responseBody.runtimeType.toString() != "List<dynamic>") {
         log("Its a Map Data");
+        log(responseBody);
         if (responseBody.containsKey("error")) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('authToken', "");
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const MyApp()));
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // prefs.setString('authToken', "");
+          // Navigator.pushReplacement(
+          //     context, MaterialPageRoute(builder: (context) => const MyApp()));
           return null;
         } else {
-          return jsonDecode(response.body);
+          return json.decode(response.body);
         }
       } else {
-        log("Its a List");
-        return jsonDecode(response.body);
+        return responseBody;
       }
     } catch (e) {
-      return jsonDecode(response.body);
+      return json.decode(response.body);
     }
   } else {
 // If the server did not return a 200 OK response,

@@ -212,13 +212,23 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       Map responseData = jsonDecode(response.body);
       if(responseData.containsKey("token")){
-        if(responseData['role'].toString()=="Admin"){
+        if(responseData['role'].toString()=="Manager"){
+          prefs.setString("authToken", responseData['token'].toString());
+          prefs.setString("role", responseData['role'].toString());
+          prefs.setString("companyName", responseData['company_name'].toString());
+          prefs.setString("userId", responseData['userid'].toString());
+          prefs.setString("managerId", responseData['userid'].toString());
+          prefs.setString("orgId", responseData['org_id'].toString());
+        }
+        else{
+          prefs.setString("authToken", responseData['token'].toString());
+          prefs.setString("role", responseData['role'].toString());
+          prefs.setString("companyName", responseData['company_name'].toString());
+          prefs.setString("userId", responseData['userid'].toString());
+          prefs.setString("managerId", responseData['manager_id'].toString());
+          prefs.setString("orgId", responseData['org_id'].toString());
         }
 
-        prefs.setString("authToken", responseData['token'].toString());
-        prefs.setString("role", responseData['role'].toString());
-        prefs.setString("companyName", responseData['company_name'].toString());
-        prefs.setString("userId", responseData['userid'].toString());
         return 200;
       }
       else if (responseData.containsKey("error")){
