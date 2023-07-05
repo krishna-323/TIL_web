@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/motows_routes.dart';
 import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
@@ -57,8 +58,17 @@ class _EstimateState extends State<Estimate> {
     // TODO: implement initState
     super.initState();
     salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
-    getAllVehicleVariant();
-    fetchVendorsData();
+    getInitialData().whenComplete(() {
+      getAllVehicleVariant();
+      fetchVendorsData();
+    });
+  }
+
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("managerId")??"";
+    orgId= prefs.getString("managerId")??"";
   }
   List vendorList = [];
 
@@ -91,6 +101,9 @@ class _EstimateState extends State<Estimate> {
   var lineAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
+  String role ='';
+  String userId ='';
+  String orgId ='';
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +221,8 @@ class _EstimateState extends State<Estimate> {
                                        "comment":"",
                                       "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "manager_id": userId,
+                                      "org_id": orgId,
                                       "items": [
 
                                       ]
