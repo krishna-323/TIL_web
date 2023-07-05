@@ -149,22 +149,6 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                 }
                                               },
                                               controller:searchByDate,
-                                              onChanged: (value){
-                                                if(value.isEmpty || value==""){
-                                                  startVal=0;
-                                                  displayListItems=[];
-                                                  fetchEstimate();
-                                                }
-                                                else if(searchByStatus.text.isNotEmpty || searchByOrder.text.isNotEmpty){
-                                                  searchByStatus.clear();
-                                                  searchByOrder.clear();
-                                                }
-                                                else{
-                                                  startVal=0;
-                                                  displayListItems = [];
-                                                  fetchSearchByDate(searchByDate.text);
-                                                }
-                                              },
                                               style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchDateDecoration(hintText: 'Search By Date'),  ),),
                                             const SizedBox(height: 20),
                                             Row(
@@ -271,7 +255,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Vehicle Id")
+                                                      child: Text("Order Id")
                                                   ),
                                                 )),
                                             Expanded(
@@ -289,6 +273,16 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                       height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                       child: Text('Ship To Name')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text('Date')
                                                   ),
                                                 )
                                             ),
@@ -369,6 +363,16 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                     child: Text(displayListItems[i]['shipAddressName']?? '')
+                                                ),
+                                              )
+                                          ),
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
+                                                child: SizedBox(
+                                                    height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text(displayListItems[i]['serviceInvoiceDate']?? '')
                                                 ),
                                               )
                                           ),
