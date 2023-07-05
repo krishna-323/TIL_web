@@ -48,6 +48,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   Map estimateItems={};
   List lineItems=[];
   Map updateEstimate={};
+  bool warrantyLineDataBool=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -68,6 +69,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     shipZipcode=estimateItems['shipAddressZipcode']??"";
     additionalCharges.text=estimateItems['additionalCharges'].toString();
     salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??"";
+
     for(int i=0;i<estimateItems['items'].length;i++){
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
@@ -344,52 +346,61 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  double tempTotal=0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  if(estimateItems['items'].isEmpty){
+                                    warrantyLineDataBool=true;
                                   }
-                                  catch(e){
-                                    tempTotal = double.parse(subAmountTotal.text);
+                                  else{
+                                    double tempTotal=0;
+                                    try{
+                                      tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                    }
+                                    catch(e){
+                                      tempTotal = double.parse(subAmountTotal.text);
+                                    }
+                                    updateEstimate =    {
+                                      "additionalCharges": additionalCharges.text,
+                                      "address": "string",
+                                      "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                      "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                      "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                      "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                      "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                      "serviceDueDate": "",
+                                      "estVehicleId": estimateItems['estVehicleId']??"",
+                                      "serviceInvoice": salesInvoice.text,
+                                      "serviceInvoiceDate": salesInvoiceDate.text,
+                                      "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                      "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                      "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                      "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                      "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                      "subTotalAmount": subAmountTotal.text,
+                                      "subTotalDiscount": subDiscountTotal.text,
+                                      "subTotalTax": subTaxTotal.text,
+                                      "status":estimateItems['status']??"In-review",
+                                      "comment":"",
+                                      "termsConditions": termsAndConditions.text,
+                                      "total": tempTotal.toString(),
+                                      "totalTaxableAmount": 0,
+                                      "items": [],
+                                    };
+                                    for(int i=0;i<estimateItems['items'].length;i++){
+                                      updateEstimate['items'].add(
+                                          {
+                                            "amount": lineAmount[i].text,
+                                            "discount":  discountPercentage[i].text,
+                                            "estVehicleId": estimateItems['estVehicleId'],
+                                            "itemsService": estimateItems['items'][i]['itemsService'],
+                                            "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                            "quantity": units[i].text,
+                                            "tax": tax[i].text,
+                                          }
+                                      );
+                                    }
+                                    print('-------satus --------');
+                                    print(estimateItems['status']??"");
+                                    putUpdatedEstimated(updateEstimate);
                                   }
-                                  updateEstimate =    {
-                                    "additionalCharges": additionalCharges.text,
-                                    "address": "string",
-                                    "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                    "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                    "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                    "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                    "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
-                                    "serviceDueDate": "",
-                                    "estVehicleId": estimateItems['estVehicleId']??"",
-                                    "serviceInvoice": salesInvoice.text,
-                                    "serviceInvoiceDate": salesInvoiceDate.text,
-                                    "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                    "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                    "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                    "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                    "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
-                                    "subTotalAmount": subAmountTotal.text,
-                                    "subTotalDiscount": subDiscountTotal.text,
-                                    "subTotalTax": subTaxTotal.text,
-                                    "termsConditions": termsAndConditions.text,
-                                    "total": tempTotal.toString(),
-                                    "totalTaxableAmount": 0,
-                                    "items": [],
-                                  };
-                                  for(int i=0;i<estimateItems['items'].length;i++){
-                                    updateEstimate['items'].add(
-                                        {
-                                          "amount": lineAmount[i].text,
-                                          "discount":  discountPercentage[i].text,
-                                          "estVehicleId": estimateItems['estVehicleId'],
-                                          "itemsService": estimateItems['items'][i]['itemsService'],
-                                          "priceItem": estimateItems['items'][i]['priceItem'].toString(),
-                                          "quantity": units[i].text,
-                                          "tax": tax[i].text,
-                                        }
-                                    );
-                                  }
-                                  putUpdatedEstimated(updateEstimate);
                                 });
                               },
 
@@ -1074,47 +1085,60 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           ),
 
           const SizedBox(height: 40,),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: SizedBox(
-              height: 38,
-              child: Row(
-                children:  [
-                  const Expanded(child: Center(child:Text(""))),
-                  Expanded(
-                      flex: 4,
-                      child: Center(
-                          child: OutlinedMButton(
-                            text: "+ Add Item/ Service",
-                            borderColor: mSaveButton,
-                            textColor: mSaveButton,
-                            onTap: () {
-                              brandNameController.clear();
-                              modelNameController.clear();
-                              variantController.clear();
-                              displayList=vehicleList;
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => showDialogBox()).then((value) {
-                                if(value!=null){
-                                  setState(() {
-                                    isVehicleSelected=true;
-                                    lineAmount.add(TextEditingController(text: "0"));
-                                    lineApprovedAmount.add(TextEditingController(text: '0'));
-                                    units.add(TextEditingController(text: '1'));
-                                    discountPercentage.add(TextEditingController(text:'0'));
-                                    tax.add(TextEditingController());
-                                    estimateItems['items'].add(value);
+          Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    children:  [
+                      const Expanded(child: Center(child:Text(""))),
+                      Expanded(
+                          flex: 4,
+                          child: Center(
+                              child: OutlinedMButton(
+                                text: "+ Add Item/ Service",
+                                borderColor: warrantyLineDataBool==true? Colors.red: mSaveButton,
+                                textColor: mSaveButton,
+                                onTap: () {
+                                  if(displayList.length>0){
+                                    warrantyLineDataBool=false;
+                                  }
+                                  brandNameController.clear();
+                                  modelNameController.clear();
+                                  variantController.clear();
+                                  displayList=vehicleList;
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => showDialogBox()).then((value) {
+                                    if(value!=null){
+                                      setState(() {
+                                        isVehicleSelected=true;
+                                        lineAmount.add(TextEditingController(text: "0"));
+                                        lineApprovedAmount.add(TextEditingController(text: '0'));
+                                        units.add(TextEditingController(text: '1'));
+                                        discountPercentage.add(TextEditingController(text:'0'));
+                                        tax.add(TextEditingController());
+                                        estimateItems['items'].add(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
 
-                            },
-                          ))),
-                  const Expanded(flex: 5,child: Center(child: Text(""),))
-                ],
+                                },
+                              ))),
+                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                    ],
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5,),
+              if(warrantyLineDataBool==true)
+                const Padding(
+                  padding: EdgeInsets.only(left:200),
+                  child: Text("Please Add Warranty Line Data",style: TextStyle(color: Colors.red),),
+                ),
+            ],
           ),
           const SizedBox(height: 40,),
           ///-----------------------------Table Ends-------------------------

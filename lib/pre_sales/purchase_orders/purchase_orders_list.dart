@@ -45,7 +45,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
-    userId= prefs.getString("managerId")??"";
+    userId= prefs.getString("userId")??"";
   }
 
   Future fetchEstimate()async{
@@ -57,6 +57,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
     else{
       url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/User/$userId";
     }
+    //print(url);
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {

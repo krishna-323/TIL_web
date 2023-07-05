@@ -213,10 +213,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                     else{
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      fetchByOrderId(searchByOrderId.text);
+                                                      if(searchByOrderId.text.length>6){
+                                                        fetchByOrderId(searchByOrderId.text);
+                                                      }
+
                                                     }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order Id #'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order #'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
@@ -235,7 +238,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                       try{
                                                         startVal=0;
                                                         displayListItems=[];
-                                                        fetchByStatusItems(searchByStatusController.text);
+                                                          fetchByStatusItems(searchByStatusController.text);
                                                       }
                                                       catch(e){
                                                         log(e.toString());
@@ -339,11 +342,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4),
-                                                  child: SizedBox(height: 25,
+                                                  child: SizedBox(
+                                                      height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Estimated Vehicle Id")
+                                                      child: Text('Date')
                                                   ),
-                                                )),
+                                                )
+                                            ),
                                             Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.only(top: 4),
@@ -427,7 +432,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                 child: SizedBox(
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                    child: Text(displayListItems[i]['serviceInvoiceDate']?? '')
                                                 ),
                                               )
                                           ),

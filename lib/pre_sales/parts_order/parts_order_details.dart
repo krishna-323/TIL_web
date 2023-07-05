@@ -50,7 +50,8 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
   Map estimateItems={};
   List lineItems=[];
   Map updateEstimate={};
-  var storeSaleInvoiceDate = DateFormat("dd-M-yyyy");
+  // Validation.
+  bool editVehicleOrderBool=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -172,7 +173,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Edit Estimate"),
+                    title: const Text("Edit Part Order"),
                     actions: [
                       Row(
                         children: [
@@ -344,61 +345,64 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
-                                double temptotal =0;
-                                try{
-                                  temptotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
-                                }
-                                catch (e){
-                                  //print("llllllllll");
-                                  temptotal = double.parse(subAmountTotal.text);
-                                }
-                                setState(() {
-                                  updateEstimate =    {
-                                    "additionalCharges": additionalCharges.text,
-                                    "address": "string",
-                                    "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                    "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                    "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                    "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                    "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
-                                    "serviceDueDate": "",
-                                    "estVehicleId": estimateItems['estVehicleId']??"",
-                                    "serviceInvoice": salesInvoice.text,
-                                    "serviceInvoiceDate": salesInvoiceDate.text,
-                                    "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                    "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                    "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                    "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                    "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
-                                    "subTotalAmount": subAmountTotal.text,
-                                    "subTotalDiscount": subDiscountTotal.text,
-                                    "subTotalTax": subTaxTotal.text,
-                                    "termsConditions": termsAndConditions.text,
-                                    "total": temptotal.toString(),
-                                    "totalTaxableAmount": 0,
-                                    "status": widget.estimateItem['status']??"In-review",
-                                    "comment":widget.estimateItem['comment']??"",
-                                    "freight_amount": additionalCharges.text,
-                                    "items": [],
-                                  };
-
-                                  for(int i=0;i<estimateItems['items'].length;i++){
-                                    updateEstimate['items'].add(
-                                        {
-                                          "amount": lineAmount[i].text,
-                                          "discount":  discountPercentage[i].text,
-                                          "estVehicleId": estimateItems['estVehicleId'],
-                                          "itemsService": estimateItems['items'][i]['itemsService'],
-                                          "priceItem": estimateItems['items'][i]['priceItem'].toString(),
-                                          "quantity": units[i].text,
-                                          "tax": tax[i].text,
-                                        }
-                                    );
-                                  }
-                                  // print('-----=--sales invoicedate----------');
-                                  // print(salesInvoiceDate.text);
-                                  putUpdatedEstimated(updateEstimate);
-                                });
+                               setState(() {
+                                 if(estimateItems['items'].isEmpty){
+                                   editVehicleOrderBool=true;
+                                 }
+                                 else{
+                                   double tempTotal =0;
+                                   try{
+                                     tempTotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                                   }
+                                   catch (e){
+                                     tempTotal = double.parse(subAmountTotal.text);
+                                   }
+                                   updateEstimate =    {
+                                     "additionalCharges": additionalCharges.text,
+                                     "address": "string",
+                                     "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                     "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                     "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                     "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                     "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                     "serviceDueDate": "",
+                                     "estVehicleId": estimateItems['estVehicleId']??"",
+                                     "serviceInvoice": salesInvoice.text,
+                                     "serviceInvoiceDate": salesInvoiceDate.text,
+                                     "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                     "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                     "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                     "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                     "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                     "subTotalAmount": subAmountTotal.text,
+                                     "subTotalDiscount": subDiscountTotal.text,
+                                     "subTotalTax": subTaxTotal.text,
+                                     "termsConditions": termsAndConditions.text,
+                                     "total": tempTotal.toString(),
+                                     "totalTaxableAmount": 0,
+                                     "status": widget.estimateItem['status']??"In-review",
+                                     "comment":widget.estimateItem['comment']??"",
+                                     "freight_amount": additionalCharges.text,
+                                     "items": [],
+                                   };
+                                   for(int i=0;i<estimateItems['items'].length;i++){
+                                     updateEstimate['items'].add(
+                                         {
+                                           "amount": lineAmount[i].text,
+                                           "discount":  discountPercentage[i].text,
+                                           "estVehicleId": estimateItems['estVehicleId'],
+                                           "itemsService": estimateItems['items'][i]['itemsService'],
+                                           "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                           "quantity": units[i].text,
+                                           "tax": tax[i].text,
+                                         }
+                                     );
+                                   }
+                                   // print('-----=--sales invoicedate----------');
+                                   // print(salesInvoiceDate.text);
+                                   putUpdatedEstimated(updateEstimate);
+                                 }
+                               });
                               },
                             ),
                           ),
@@ -1090,46 +1094,59 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
           ),
 
           const SizedBox(height: 40,),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: SizedBox(
-              height: 38,
-              child: Row(
-                children:  [
-                  const Expanded(child: Center(child:Text(""))),
-                  Expanded(
-                      flex: 4,
-                      child: Center(
-                          child: OutlinedMButton(
-                            text: "+ Add Item/ Service",
-                            borderColor: mSaveButton,
-                            textColor: mSaveButton,
-                            onTap: () {
-                              brandNameController.clear();
-                              modelNameController.clear();
-                              variantController.clear();
-                              displayList=partsList;
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => showDialogBox()).then((value) {
-                                if(value!=null){
-                                  setState(() {
-                                    isVehicleSelected=true;
-                                    lineAmount.add(TextEditingController());
-                                    units.add(TextEditingController(text: '1'));
-                                    discountPercentage.add(TextEditingController(text:'0'));
-                                    tax.add(TextEditingController(text: '0'));
-                                    estimateItems['items'].add(value);
+          Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    children:  [
+                      const Expanded(child: Center(child:Text(""))),
+                      Expanded(
+                          flex: 4,
+                          child: Center(
+                              child: OutlinedMButton(
+                                text: "+ Add Item/ Service",
+                                borderColor:editVehicleOrderBool==true?Colors.red: mSaveButton,
+                                textColor: mSaveButton,
+                                onTap: () {
+                                  if(displayList.length>0){
+                                    editVehicleOrderBool=false;
+                                  }
+                                  brandNameController.clear();
+                                  modelNameController.clear();
+                                  variantController.clear();
+                                  displayList=partsList;
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => showDialogBox()).then((value) {
+                                    if(value!=null){
+                                      setState(() {
+                                        isVehicleSelected=true;
+                                        lineAmount.add(TextEditingController());
+                                        units.add(TextEditingController(text: '1'));
+                                        discountPercentage.add(TextEditingController(text:'0'));
+                                        tax.add(TextEditingController(text: '0'));
+                                        estimateItems['items'].add(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
 
-                            },
-                          ))),
-                  const Expanded(flex: 5,child: Center(child: Text(""),))
-                ],
+                                },
+                              ))),
+                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                    ],
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5,),
+              if(editVehicleOrderBool==true)
+                const Padding(
+                  padding: EdgeInsets.only(left:200),
+                  child: Text('Please Add Part Line Item',style: TextStyle(color: Colors.red),),
+                )
+            ],
           ),
           const SizedBox(height: 40,),
           ///-----------------------------Table Ends-------------------------

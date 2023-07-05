@@ -90,7 +90,10 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   var lineAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
-
+  // Error Validation.
+  int indexNumber=0;
+  bool searchVendor=false;
+  bool tableLineDataBool=false;
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
@@ -157,19 +160,28 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
+                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
+                                    setState(() {
+                                      searchVendor=true;
+                                      if(indexNumber==0){
+                                        tableLineDataBool=true;
+                                      }
+                                      else{
+                                        tableLineDataBool=false;
+                                      }
+                                    });
 
+                                  }
 
-                                  double tempTotal =0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
-                                  }
-                                  catch (e){
-                                    tempTotal = double.parse(subAmountTotal.text);
-                                  }
-                                  if(showVendorDetails==false || showWareHouseDetails==false){
+                                  else{
+                                    double tempTotal =0;
+                                    try{
+                                      tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text) + double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
+                                    }
+                                    catch (e){
+                                      tempTotal = double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                    }
 
-                                  }
-                                  if(showVendorDetails==true && showWareHouseDetails==true && selectedPart.isNotEmpty){
                                     postDetails= {
                                       "additionalCharges": additionalCharges.text,
                                       "address": "string",
@@ -202,21 +214,22 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     for (int i = 0; i < selectedPart.length; i++) {
                                       postDetails['items'].add(
                                           {
-                                           "amount": lineAmount[i].text,
-                                           "discount": discountPercentage[i].text,
-                                           "itemsService": selectedPart[i]['name']+" "+selectedPart[i]['description'],
-                                           "priceItem": selectedPart[i]['selling_price']??"",
-                                           "quantity": units[i].text,
-                                           "tax": tax[i].text,
+                                            "amount": lineAmount[i].text,
+                                            "discount": discountPercentage[i].text,
+                                            "itemsService": selectedPart[i]['name']+" "+selectedPart[i]['description'],
+                                            "priceItem": selectedPart[i]['selling_price']??"",
+                                            "quantity": units[i].text,
+                                            "tax": tax[i].text,
                                             "newitem_id": selectedPart[i]['newitem_id']??"",
                                           }
                                       );
 
                                     }
+
+                                    // print(selectedPart);
+                                    // print(postDetails);
+                                    postEstimate(postDetails);
                                   }
-                                  // print(selectedPart);
-                                  // print(postDetails);
-                                  postEstimate(postDetails);
                                 });
                               },
 
@@ -688,11 +701,12 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
             itemBuilder: (context, index) {
               //print('----inside list view builder--------');
               //print(selectedVehicles);
+
               double tempTax =0;
               double tempLineData=0;
               double tempDiscount=0;
 
-              try{
+              try{indexNumber = index+1;
 
                 lineAmount[index].text=(double.parse(selectedPart[index]['selling_price'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
@@ -886,6 +900,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
+                              indexNumber=0;
                               selectedPart.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -915,52 +930,63 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
           ),
 
           const SizedBox(height: 40,),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: SizedBox(
-              height: 38,
-              child: Row(
-                children:  [
-                  const Expanded(child: Center(child:Text(""))),
-                  Expanded(
-                      flex: 4,
-                      child: Center(
-                          child: OutlinedMButton(
-                            text: "+ Add Item/ Service",
-                            borderColor: mSaveButton,
-                            textColor: mSaveButton,
-                            onTap: () {
-
-
-
-                              brandNameController.clear();
-                              modelNameController.clear();
-                              variantController.clear();
-                              displayList=partsList;
-                              showDialog(
-                                context: context,
-                                builder: (context) => showDialogBox(),
-                              ).then((value) {
-                                if(value!=null){
-                                  setState(() {
-                                    isVehicleSelected=true;
-                                    units.add(TextEditingController(text: '1'));
-                                    discountRupees.add(TextEditingController(text: '0'));
-                                    discountPercentage.add(TextEditingController(text: '0'));
-                                    tax.add(TextEditingController(text: '0'));
-                                    lineAmount.add(TextEditingController());
-                                    subAmountTotal.text='0';
-                                    selectedPart.add(value);
+          Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    children:  [
+                      const Expanded(child: Center(child:Text(""))),
+                      Expanded(
+                          flex: 4,
+                          child: Center(
+                              child: OutlinedMButton(
+                                text: "+ Add Item/ Service",
+                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                               // borderColor: if(tableLineDataBool),
+                                textColor: mSaveButton,
+                                onTap: () {
+                                  if(displayList.length>0){
+                                    tableLineDataBool=false;
+                                  }
+                                  brandNameController.clear();
+                                  modelNameController.clear();
+                                  variantController.clear();
+                                  displayList=partsList;
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => showDialogBox(),
+                                  ).then((value) {
+                                    if(value!=null){
+                                      setState(() {
+                                        isVehicleSelected=true;
+                                        units.add(TextEditingController(text: '1'));
+                                        discountRupees.add(TextEditingController(text: '0'));
+                                        discountPercentage.add(TextEditingController(text: '0'));
+                                        tax.add(TextEditingController(text: '0'));
+                                        lineAmount.add(TextEditingController());
+                                        subAmountTotal.text='0';
+                                        selectedPart.add(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
 
-                            },
-                          ))),
-                  const Expanded(flex: 5,child: Center(child: Text(""),))
-                ],
+                                },
+                              ))),
+                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                    ],
+                  ),
+                ),
               ),
-            ),
+                const SizedBox(height: 5,),
+              if(tableLineDataBool==true)
+                const Padding(
+                  padding: EdgeInsets.only(left:200.0),
+                  child: Text('Please Add Part Line Item',style: TextStyle(color: Colors.red),),
+                ),
+            ],
           ),
           const SizedBox(height: 40,),
           ///-----------------------------Table Ends-------------------------
@@ -1004,17 +1030,9 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
             ),
           ),
           const Divider(height: 1,color: mTextFieldBorder,),
-
-
-
           ///------Foooter----------
           buildFooter(),
           const Divider(height: 1,color: mTextFieldBorder,),
-
-
-
-
-
 
         ],
       ),
@@ -1352,7 +1370,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true? Colors.red: mSaveButton)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }

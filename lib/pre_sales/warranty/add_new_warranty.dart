@@ -50,11 +50,14 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  //Validation Error.
+  int indexNumber=0;
+  bool tableLineDataBool=false;
+  bool searchVendor=false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    //salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
     getAllVehicleVariant();
     fetchVendorsData();
   }
@@ -117,7 +120,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                     elevation: 1,
                     surfaceTintColor: Colors.white,
                     shadowColor: Colors.black,
-                    title: const Text("Create Purchase Order"),
+                    title: const Text("Create Warranty Purchase Order"),
                     actions: [
                       Row(
                         children: [
@@ -157,17 +160,30 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  double tempTotal =0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
+                                    setState(() {
+                                      searchVendor=true;
+                                      if(indexNumber==0){
+                                        print('------if condition-------');
+                                        print(indexNumber);
+                                        tableLineDataBool=true;
+                                      }
+                                      else{
+                                        print('------Else condition-------');
+                                        print(indexNumber);
+                                        tableLineDataBool=false;
+                                      }
+                                    });
+
                                   }
-                                  catch(e){
-                                    tempTotal= double.parse(subAmountTotal.text);
-                                  }
-                                  if(showVendorDetails==false || showWareHouseDetails==false){
-                                    print('-------------go inside-----------');
-                                  }
-                                  if(showVendorDetails==true && showWareHouseDetails==true && selectedVehicles.isNotEmpty){
+                                  else{
+                                    double tempTotal =0;
+                                    try{
+                                      tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                    }
+                                    catch(e){
+                                      tempTotal= double.parse(subAmountTotal.text);
+                                    }
                                     postDetails= {
                                       "additionalCharges": additionalCharges.text,
                                       "address": "string",
@@ -197,25 +213,25 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
                                       ]
                                     };
+                                    // print('-------------------salesInvoiceDate------------------');
+                                    // print(salesInvoiceDate.text);
+                                    for (int i = 0; i < selectedVehicles.length; i++) {
+                                      postDetails['items'].add(
+                                          {
+                                            "amount": lineAmount[i].text,
+                                            "discount": approvedPercentage[i].text,
+                                            "estVehicleId": "string",
+                                            "itemsService": selectedVehicles[i]['model_name']??"",
+                                            "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                            "quantity": units[i].text,
+                                            "tax": tax[i].text,
+                                          }
+                                      );
 
+                                    }
+                                    postEstimate(postDetails);
                                   }
-                                  // print('-------------------salesInvoiceDate------------------');
-                                  // print(salesInvoiceDate.text);
-                                  for (int i = 0; i < selectedVehicles.length; i++) {
-                                    postDetails['items'].add(
-                                        {
-                                          "amount": lineAmount[i].text,
-                                          "discount": approvedPercentage[i].text,
-                                          "estVehicleId": "string",
-                                          "itemsService": selectedVehicles[i]['model_name']??"",
-                                          "priceItem": selectedVehicles[i]['onroad_price']??"",
-                                          "quantity": units[i].text,
-                                          "tax": tax[i].text,
-                                        }
-                                    );
 
-                                  }
-                                  postEstimate(postDetails);
                                 });
                               },
 
@@ -706,6 +722,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
             itemBuilder: (context, index) {
               //print('----inside list view builder--------');
               //print(selectedVehicles);
+              indexNumber = index+1;
               double tempTax =0;
               double tempLineData=0;
               double tempDiscount=0;
@@ -894,6 +911,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
+                              indexNumber=0;
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -924,53 +942,63 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
           ),
 
           const SizedBox(height: 40,),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: SizedBox(
-              height: 38,
-              child: Row(
-                children:  [
-                  const Expanded(child: Center(child:Text(""))),
-                  Expanded(
-                      flex: 4,
-                      child: Center(
-                          child: OutlinedMButton(
-                            text: "+ Add Item/ Service",
-                            borderColor: mSaveButton,
-                            textColor: mSaveButton,
-                            onTap: () {
-
-
-
-                              brandNameController.clear();
-                              modelNameController.clear();
-                              variantController.clear();
-                              displayList=vehicleList;
-                              showDialog(
-                                context: context,
-                                builder: (context) => showDialogBox(),
-                              ).then((value) {
-                                if(value!=null){
-                                  setState(() {
-                                    isVehicleSelected=true;
-                                    units.add(TextEditingController(text: '1'));
-                                    discountRupees.add(TextEditingController(text: '0'));
-                                    approvedPercentage.add(TextEditingController(text: '0'));
-                                    tax.add(TextEditingController(text: '0'));
-                                    lineAmount.add(TextEditingController());
-                                    lineApprovedAmount.add(TextEditingController());
-                                    subAmountTotal.text='0';
-                                    selectedVehicles.add(value);
+          Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    children:  [
+                      const Expanded(child: Center(child:Text(""))),
+                      Expanded(
+                          flex: 4,
+                          child: Center(
+                              child: OutlinedMButton(
+                                text: "+ Add Item/ Service",
+                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                                textColor: mSaveButton,
+                                onTap: () {
+                                  if(displayList.length>0){
+                                    tableLineDataBool=false;
+                                  }
+                                  brandNameController.clear();
+                                  modelNameController.clear();
+                                  variantController.clear();
+                                  displayList=vehicleList;
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => showDialogBox(),
+                                  ).then((value) {
+                                    if(value!=null){
+                                      setState(() {
+                                        isVehicleSelected=true;
+                                        units.add(TextEditingController(text: '1'));
+                                        discountRupees.add(TextEditingController(text: '0'));
+                                        approvedPercentage.add(TextEditingController(text: '0'));
+                                        tax.add(TextEditingController(text: '0'));
+                                        lineAmount.add(TextEditingController());
+                                        lineApprovedAmount.add(TextEditingController());
+                                        subAmountTotal.text='0';
+                                        selectedVehicles.add(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
 
-                            },
-                          ))),
-                  const Expanded(flex: 5,child: Center(child: Text(""),))
-                ],
+                                },
+                              ))),
+                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                    ],
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5,),
+              if(tableLineDataBool==true)
+                const Padding(
+                  padding: EdgeInsets.only(left:200),
+                  child: Text("Please Add  Warranty Line Data",style: TextStyle(color: Colors.red),),
+                )
+            ],
           ),
           const SizedBox(height: 40,),
           ///-----------------------------Table Ends-------------------------
@@ -1357,7 +1385,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: searchVendor==true?Colors.red:mSaveButton)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }

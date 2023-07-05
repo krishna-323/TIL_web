@@ -7,6 +7,7 @@ import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 import 'add_new_warranty.dart';
 import 'warranty_details.dart';
 
@@ -208,7 +209,10 @@ class _WarrantyState extends State<Warranty> {
                                                     else{
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      fetchByOrderID(searchByOrderID.text);
+                                                      if(searchByOrderID.text.length>6){
+                                                        fetchByOrderID(searchByOrderID.text);
+                                                      }
+
                                                     }
                                                   },
                                                   style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchByOrderIDDecoration(hintText: 'Search By Order #'),  ),),
@@ -264,26 +268,6 @@ class _WarrantyState extends State<Warranty> {
                                                   )
                                                 ),
                                                 const SizedBox(width: 20,),
-                                                // SizedBox(width: 10,),
-                                                // MaterialButton(
-                                                //   minWidth: 20,
-                                                //   shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(12.0) ),
-                                                //   color: Colors.white,
-                                                //   onPressed: () {
-                                                //     Navigator.push(
-                                                //         context,
-                                                //         MaterialPageRoute(builder: (context)=>OrderDetails(
-                                                //           drawerWidth:widget.arg.drawerWidth ,
-                                                //           selectedDestination: widget.arg.selectedDestination, title: 1,
-                                                //         )
-                                                //         )
-                                                //     ).then((value) => fetchListCustomerData());
-                                                //   },
-                                                //   child: const Icon(
-                                                //       Icons.more_vert,
-                                                //     color: Colors.black,
-                                                //       ),
-                                                // )
                                               ],
                                             ),
                                           ],
@@ -328,6 +312,16 @@ class _WarrantyState extends State<Warranty> {
                                                       height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                       child: Text('Ship To Name')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text('Date')
                                                   ),
                                                 )
                                             ),
@@ -412,6 +406,16 @@ class _WarrantyState extends State<Warranty> {
                                           Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
+                                                child: SizedBox(
+                                                    height: 25,
+                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                    child: Text(displayListItems[i]['serviceInvoiceDate']?? '')
+                                                ),
+                                              )
+                                          ),
+                                          Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                     child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
@@ -420,11 +424,16 @@ class _WarrantyState extends State<Warranty> {
                                           Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['status']??"")
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(height: 25,width: 100,
+                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                        child:OutlinedMButton(text: displayListItems[i]['status'], borderColor: displayListItems[i]['status'] =="Approved" ?  Colors.green:mSaveButton, textColor: displayListItems[i]['status'] =="Approved" ?  Colors.green:mSaveButton,)
+                                                      //child: Text(displayListItems[i]['status']??"")
+                                                    ),
+                                                  ],
                                                 ),
-                                              )),
+                                              ))
                                         ],
                                       ),
                                     ),

@@ -67,7 +67,8 @@ class _EstimateState extends State<Estimate> {
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
-    userId= prefs.getString("managerId")??"";
+    userId= prefs.getString("userId")??"";
+    managerId= prefs.getString("managerId")??"";
     orgId= prefs.getString("orgId")??"";
   }
   List vendorList = [];
@@ -103,6 +104,7 @@ class _EstimateState extends State<Estimate> {
   Map postDetails={};
   String role ='';
   String userId ='';
+  String managerId ='';
   String orgId ='';
 
   @override
@@ -221,7 +223,8 @@ class _EstimateState extends State<Estimate> {
                                        "comment":"",
                                       "total": tempTotal.toString(),
                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "manager_id": userId,
+                                      "manager_id": managerId,
+                                      "userid": userId,
                                       "org_id": orgId,
                                       "items": [
 
@@ -243,8 +246,6 @@ class _EstimateState extends State<Estimate> {
                                     );
 
                                   }
-                                  print('-----serviceInvoiceDate-----');
-                                  print(salesInvoiceDate.text);
                                   postEstimate(postDetails);
                                 });
                               },
