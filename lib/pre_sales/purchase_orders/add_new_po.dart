@@ -68,7 +68,7 @@ class _EstimateState extends State<Estimate> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("managerId")??"";
-    orgId= prefs.getString("managerId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
   List vendorList = [];
 

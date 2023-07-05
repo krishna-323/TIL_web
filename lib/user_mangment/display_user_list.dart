@@ -237,18 +237,23 @@ class _UserManagementState extends State<UserManagement> {
           if (value != null) {
             response = value;
             userdata = response;
-            if(displayUserData.isEmpty){
-              if(userdata.length>15){
-                for(int i=0;i<startVal+15;i++){
-                  displayUserData.add(userdata[i]);
-                }
-              }
-              else{
-                for(int i=0;i<userdata.length;i++){
-                  displayUserData.add(userdata[i]);
-                }
-              }
-            }
+           try{
+             if(displayUserData.isEmpty){
+               if(userdata.length>15){
+                 for(int i=0;i<startVal+15;i++){
+                   displayUserData.add(userdata[i]);
+                 }
+               }
+               else{
+                 for(int i=0;i<userdata.length;i++){
+                   displayUserData.add(userdata[i]);
+                 }
+               }
+             }
+           }
+           catch(e){
+             log(e.toString());
+           }
           }
           loading=false;
         });
