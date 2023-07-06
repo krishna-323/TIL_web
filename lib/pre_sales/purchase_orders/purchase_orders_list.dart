@@ -29,7 +29,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   void  initState(){
     super.initState();
     getInitialData().whenComplete(() {
-      print("User Role : $role");
+      //print("User Role : $role");
       fetchEstimate();
     });
 
@@ -47,10 +47,6 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
-    print('----role---');
-    print(role);
-    print('---------userId----------');
-    print(userId);
   }
 
   Future fetchEstimate()async{

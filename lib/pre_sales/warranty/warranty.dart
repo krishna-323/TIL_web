@@ -32,7 +32,9 @@ class _WarrantyState extends State<Warranty> {
   @override
   void  initState(){
     super.initState();
-    fetchEstimate();
+    getInitialData().whenComplete(() {
+      fetchEstimate();
+    });
     loading=true;
   }
   bool loading=false;
@@ -49,14 +51,16 @@ class _WarrantyState extends State<Warranty> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
-    print('----role---');
-    print(role);
-    print('---------userId----------');
-    print(userId);
   }
   Future fetchEstimate()async{
     dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_parts_warranty';
+    String url='';
+    if(role=="Manager"){
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_uesr_or_manager/Manager/$userId";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_uesr_or_manager/User/$userId";
+    }
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {
@@ -65,22 +69,13 @@ class _WarrantyState extends State<Warranty> {
             estimateItems=response;
             if(displayListItems.isEmpty){
               if(estimateItems.length>15){
-                for(int i=startVal;i<startVal+15;i++){
-                  if(estimateItems[i]['estVehicleId'] =="SEVH_05590"||estimateItems[i]['estVehicleId'] =="SEVH_05659") {
-                    displayListItems.add(estimateItems[i]);
-                  }
+                for(int i=startVal;i<startVal + 15;i++){
+                  displayListItems.add(estimateItems[i]);
                 }
               }
               else{
                 for(int i=0;i<estimateItems.length;i++){
-
-                  if(estimateItems[i]['estVehicleId'] != "SEVH_05608" && estimateItems[i]['estVehicleId'] != "SEVH_05610" && estimateItems[i]['estVehicleId'] != "SEVH_05612" && estimateItems[i]['estVehicleId'] != "SEVH_05627") {
-
-                    displayListItems.add(estimateItems[i]);
-                  }
-                  else{
-                    print(estimateItems[i]['estVehicleId']);
-                  }
+                  displayListItems.add(estimateItems[i]);
                 }
               }
             }
@@ -90,7 +85,7 @@ class _WarrantyState extends State<Warranty> {
       });
     }
     catch(e){
-      // logOutApi(context: context,exception:e.toString() ,response: response);
+      logOutApi(context: context,exception:e.toString() ,response: response);
       setState(() {
         loading=false;
       });
@@ -141,18 +136,6 @@ class _WarrantyState extends State<Warranty> {
                                     children:   [
                                       Text("Warranty Orders List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
-                                      // Padding(
-                                      //   padding: const EdgeInsets.only(right: 50.0),
-                                      //   child: MaterialButton(onPressed: (){
-                                      //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                      //         AddNewWarranty(selectedDestination: widget.args.selectedDestination,
-                                      //           drawerWidth: widget.args.drawerWidth,)
-                                      //     )).then((value) => fetchEstimate());
-                                      //   },
-                                      //     color: Colors.blue,
-                                      //     child: const Text('+ Create Purchase Order',style: TextStyle(color: Colors.white),),
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                 ),

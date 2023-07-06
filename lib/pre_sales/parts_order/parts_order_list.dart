@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_project/pre_sales/parts_order/parts_order_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -34,8 +35,18 @@ class _PartsOrderListState extends State<PartsOrderList> {
   @override
   void  initState(){
     super.initState();
-    fetchEstimate();
+    getInitialData().whenComplete(() {
+      fetchEstimate();
+    });
     loading=true;
+  }
+  String role ='';
+  String userId ='';
+
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("userId")??"";
   }
   bool loading=false;
   List estimateItems=[];
@@ -48,7 +59,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
 
   Future fetchEstimate()async{
     dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_parts_purchase_order';
+    String url='';
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_uesr_or_manager/Manager/$userId";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_uesr_or_manager/User/$userId";
+    }
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {
@@ -73,7 +90,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
       });
     }
     catch(e){
-      // logOutApi(context: context,exception:e.toString() ,response: response);
+       logOutApi(context: context,exception:e.toString() ,response: response);
       setState(() {
         loading=false;
       });
