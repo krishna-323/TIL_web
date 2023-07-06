@@ -49,6 +49,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   List lineItems=[];
   Map updateEstimate={};
   bool warrantyLineDataBool=false;
+  final commentController=TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -57,6 +58,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     estimateItems=widget.estimateItem;
     // print('----------------');
     // print(estimateItems);
+    userId=estimateItems['userid'];
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -143,9 +145,16 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   String shipToStreet='';
   String shipToState='';
   int shipZipcode=0;
+  String role ='';
+  String userId ='';
+  String managerId ='';
+  String orgId ='';
   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
+    role= prefs.getString("role")??"";
+    managerId= prefs.getString("managerId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
   @override
   Widget build(BuildContext context) {
@@ -175,6 +184,96 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                     shadowColor: Colors.black,
                     title: const Text("Warranty Details"),
                     actions: [
+                      if(role=="Manager")
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 120,height: 28,
+                              child: OutlinedMButton(
+                                text: 'Approve',
+                                textColor: Colors.green,
+                                borderColor: Colors.green,
+                                onTap: (){
+                                  setState(() {
+                                    if(estimateItems['items'].isEmpty){
+                                      warrantyLineDataBool=true;
+                                    }
+                                    else{
+                                      double tempTotal=0;
+                                      try{
+                                        tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                      }
+                                      catch(e){
+                                        tempTotal = double.parse(subAmountTotal.text);
+                                      }
+                                      updateEstimate =    {
+                                        "additionalCharges": additionalCharges.text,
+                                        "address": "string",
+                                        "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                        "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                        "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                        "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                        "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                        "serviceDueDate": "",
+                                        "estVehicleId": estimateItems['estVehicleId']??"",
+                                        "serviceInvoice": salesInvoice.text,
+                                        "serviceInvoiceDate": salesInvoiceDate.text,
+                                        "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                        "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                        "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                        "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                        "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                        "subTotalAmount": subAmountTotal.text,
+                                        "subTotalDiscount": subDiscountTotal.text,
+                                        "subTotalTax": subTaxTotal.text,
+                                        "status":"Approved",
+                                        "comment":estimateItems['comment']??"",
+                                        "termsConditions": termsAndConditions.text,
+                                        "total": tempTotal.toString(),
+                                        "totalTaxableAmount": 0,
+                                        "manager_id": managerId,
+                                        "userid": userId,
+                                        "org_id": orgId,
+                                        "items": [],
+                                      };
+                                      for(int i=0;i<estimateItems['items'].length;i++){
+                                        updateEstimate['items'].add(
+                                            {
+                                              "amount": lineAmount[i].text,
+                                              "discount":  discountPercentage[i].text,
+                                              "estVehicleId": estimateItems['estVehicleId'],
+                                              "itemsService": estimateItems['items'][i]['itemsService'],
+                                              "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                              "quantity": units[i].text,
+                                              "tax": tax[i].text,
+                                            }
+                                        );
+                                      }
+                                      // print('-------Post details --------');
+                                      // print(updateEstimate);
+                                      putUpdatedEstimated(updateEstimate);
+                                    }
+                                  });
+                                },
+
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                            SizedBox(
+                              width: 120,height: 28,
+                              child: OutlinedMButton(
+                                text: 'Reject',
+                                textColor:  Colors.red,
+                                borderColor: Colors.red,
+                                onTap: (){
+                                 rejectShowDialog();
+                                },
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(width: 20),
                       Row(
                         children: [
                           SizedBox(
@@ -311,33 +410,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Save and New',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context)=>DisplayEstimateItems(
-                                //       drawerWidth:widget.args.drawerWidth ,
-                                //       selectedDestination: widget.args.selectedDestination,
-                                //     )
-                                //     )
-                                // );
-                                setState(() {
-
-                                });
-                              },
-
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          SizedBox(
                             width: 100,height: 28,
                             child: OutlinedMButton(
                               text: 'Update',
@@ -382,6 +454,9 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                       "termsConditions": termsAndConditions.text,
                                       "total": tempTotal.toString(),
                                       "totalTaxableAmount": 0,
+                                      "manager_id": managerId,
+                                      "userid": userId,
+                                      "org_id": orgId,
                                       "items": [],
                                     };
                                     for(int i=0;i<estimateItems['items'].length;i++){
@@ -397,8 +472,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                           }
                                       );
                                     }
-                                    print('-------satus --------');
-                                    print(estimateItems['status']??"");
+                                    // print('-------Post details --------');
+                                    // print(updateEstimate);
                                     putUpdatedEstimated(updateEstimate);
                                   }
                                 });
@@ -1102,7 +1177,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 borderColor: warrantyLineDataBool==true? Colors.red: mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
-                                  if(displayList.length>0){
+                                  if(displayList.isNotEmpty){
                                     warrantyLineDataBool=false;
                                   }
                                   brandNameController.clear();
@@ -1675,9 +1750,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           body: jsonEncode(updatedEstimated)
       );
       if(response.statusCode==200){
-        if(lineItems.isNotEmpty){
-      //    lineItemsData(lineItems);
-        }
+        // print('-------response----------');
+        // print(response.body);
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
@@ -1692,16 +1766,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       log(e.toString());
     }
   }
-  // lineItemsData(lineItems)async{
-  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_item';
-  //   postData(context:context ,url: url,requestBody: lineItems).then((value) => {
-  //     setState((){
-  //       if(value!=null){
-  //         log(value.toString());
-  //       }
-  //     })
-  //   });
-  // }
   deleteLineItem(estimateItemId, int index)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/delete_parts_warranty_line_item_by_id/$estimateItemId';
     try{
@@ -1776,7 +1840,189 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
       contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
+  rejectShowDialog(){
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return SizedBox(
+                height: 200,
+                width: 300,
+                child: Stack(children: [
+                  Container(
+                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0,right: 25),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Column(
+                            children:  [
+                              const Center(
+                                  child: Text(
+                                    'Comment',
+                                    style: TextStyle(
+                                        fontSize: 15),
+                                  )),
+                              const  SizedBox(height:10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                child: Container(
+                                  height: 80,
+                                  decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(8)),
+                                  child: TextFormField(
+                                    controller: commentController,
+                                    style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    decoration:  const InputDecoration(
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Reject',
+                                  textColor: Colors.red,
+                                  borderColor: Colors.red,
+                                  onTap: (){
+                                    setState(() {
+                                      if(estimateItems['items'].isEmpty){
+                                        warrantyLineDataBool=true;
+                                      }
+                                      else{
+                                        double tempTotal=0;
+                                        try{
+                                          tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                        }
+                                        catch(e){
+                                          tempTotal = double.parse(subAmountTotal.text);
+                                        }
+                                        updateEstimate =    {
+                                          "additionalCharges": additionalCharges.text,
+                                          "address": "string",
+                                          "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                          "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                          "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                          "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                          "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                          "serviceDueDate": "",
+                                          "estVehicleId": estimateItems['estVehicleId']??"",
+                                          "serviceInvoice": salesInvoice.text,
+                                          "serviceInvoiceDate": salesInvoiceDate.text,
+                                          "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                          "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                          "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                          "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                          "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                          "subTotalAmount": subAmountTotal.text,
+                                          "subTotalDiscount": subDiscountTotal.text,
+                                          "subTotalTax": subTaxTotal.text,
+                                          "status":"Rejected",
+                                          "comment":commentController.text,
+                                          "termsConditions": termsAndConditions.text,
+                                          "total": tempTotal.toString(),
+                                          "totalTaxableAmount": 0,
+                                          "manager_id": managerId,
+                                          "userid": userId,
+                                          "org_id": orgId,
+                                          "items": [],
+                                        };
+                                        for(int i=0;i<estimateItems['items'].length;i++){
+                                          updateEstimate['items'].add(
+                                              {
+                                                "amount": lineAmount[i].text,
+                                                "discount":  discountPercentage[i].text,
+                                                "estVehicleId": estimateItems['estVehicleId'],
+                                                "itemsService": estimateItems['items'][i]['itemsService'],
+                                                "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                                "quantity": units[i].text,
+                                                "tax": tax[i].text,
+                                              }
+                                          );
+                                        }
+                                        // print('-------Post details --------');
+                                        // print(updateEstimate);
+                                        putUpdatedEstimated(updateEstimate);
+                                      }
+                                    });
+                                  },
 
+                                ),
+                              ),
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Cancel',
+                                  textColor: Colors.green,
+                                  borderColor: Colors.green,
+                                  onTap: (){
+                                    Navigator.of(context).pop();
+                                  },
+
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(right: 0.0,
+
+                    child: InkWell(
+                      child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color:
+                                const Color.fromRGBO(204, 204, 204, 1),
+                              ),
+                              color: Colors.blue),
+                          child: const Icon(
+                            Icons.close_sharp,
+                            color: Colors.white,
+                          )),
+                      onTap: () {
+                        setState(() {
+                          Navigator.of(context).pop();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 }
 class VendorModelAddress {
   String label;
