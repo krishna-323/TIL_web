@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -42,7 +43,17 @@ class _WarrantyState extends State<Warranty> {
   final searchByDateController = TextEditingController();
   final searchByStatus = TextEditingController();
   final searchByOrderID = TextEditingController();
-
+  String role ='';
+  String userId ='';
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("userId")??"";
+    print('----role---');
+    print(role);
+    print('---------userId----------');
+    print(userId);
+  }
   Future fetchEstimate()async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/get_all_parts_warranty';
@@ -352,11 +363,13 @@ class _WarrantyState extends State<Warranty> {
                               ],
                             ),
                           ),
-                          for(int i=0;i<=displayListItems.length;i++)
-                            Column(
+                          ListView.builder(shrinkWrap: true,
+                            itemCount: displayListItems.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                            if(index < displayListItems.length){
+                            return  Column(
                               children: [
-                                if(i!=displayListItems.length)
-                                  MaterialButton(
+                                MaterialButton(
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
 
@@ -365,7 +378,7 @@ class _WarrantyState extends State<Warranty> {
                                             //customerList: displayList[i],
                                             drawerWidth: widget.args.drawerWidth,
                                             selectedDestination: widget.args.selectedDestination,
-                                            estimateItem: displayListItems[i],
+                                            estimateItem: displayListItems[index],
                                             transitionDuration: Duration.zero,
                                             reverseTransitionDuration: Duration.zero,
                                           )
@@ -381,7 +394,7 @@ class _WarrantyState extends State<Warranty> {
                                                 child: SizedBox(
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                    child: Text(displayListItems[index]['estVehicleId']?? '')
                                                 ),
                                               )
                                           ),
@@ -390,7 +403,7 @@ class _WarrantyState extends State<Warranty> {
                                                 padding: const EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['billAddressName']??"")
+                                                    child: Text(displayListItems[index]['billAddressName']??"")
                                                 ),
                                               )),
                                           Expanded(
@@ -399,7 +412,7 @@ class _WarrantyState extends State<Warranty> {
                                                 child: SizedBox(
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['shipAddressName']?? '')
+                                                    child: Text(displayListItems[index]['shipAddressName']?? '')
                                                 ),
                                               )
                                           ),
@@ -409,7 +422,7 @@ class _WarrantyState extends State<Warranty> {
                                                 child: SizedBox(
                                                     height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['serviceInvoiceDate']?? '')
+                                                    child: Text(displayListItems[index]['serviceInvoiceDate']?? '')
                                                 ),
                                               )
                                           ),
@@ -418,7 +431,7 @@ class _WarrantyState extends State<Warranty> {
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(height: 25,
                                                     //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
+                                                    child: Text(double.parse(displayListItems[index]['total'].toString()).toStringAsFixed(2))
                                                 ),
                                               )),
                                           Expanded(
@@ -428,7 +441,7 @@ class _WarrantyState extends State<Warranty> {
                                                   children: [
                                                     SizedBox(height: 25,width: 100,
                                                         //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child:OutlinedMButton(text: displayListItems[i]['status'], borderColor: displayListItems[i]['status'] =="Approved" ?  Colors.green:mSaveButton, textColor: displayListItems[i]['status'] =="Approved" ?  Colors.green:mSaveButton,)
+                                                        child:OutlinedMButton(text: displayListItems[index]['status'], borderColor: displayListItems[index]['status'] =="Approved" ?  Colors.green:mSaveButton, textColor: displayListItems[index]['status'] =="Approved" ?  Colors.green:mSaveButton,)
                                                       //child: Text(displayListItems[i]['status']??"")
                                                     ),
                                                   ],
@@ -438,75 +451,85 @@ class _WarrantyState extends State<Warranty> {
                                       ),
                                     ),
                                   ),
-                                if(i!=displayListItems.length)
-                                  Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                if(i==displayListItems.length)
-                                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-
-                                      Text("${startVal+15>displayListItems.length?displayListItems.length:startVal+1}-${startVal+15>displayListItems.length?displayListItems.length:startVal+15} of ${displayListItems.length}",style: const TextStyle(color: Colors.grey)),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal>14){
-                                              displayListItems=[];
-                                              startVal = startVal-15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  displayListItems.add(estimateItems[i]);
-                                                });
-                                              }
-                                            }
-                                            else{
-                                              log('else');
-                                            }
-
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_forward_ios,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal+1+5>estimateItems.length){
-                                              // print("Block");
-                                            }
-                                            else
-                                            if(estimateItems.length>startVal+15){
-                                              displayListItems=[];
-                                              startVal=startVal+15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  try{
-                                                    displayListItems.add(estimateItems[i]);
-                                                  }
-                                                  catch(e){
-                                                    log(e.toString());
-                                                  }
-
-                                                });
-                                              }
-                                            }
-
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20,),
-                                    ],
-                                  )
+                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
                               ],
-                            ),
+                            );
+                            }
+                            else{
+                              return
+                                Column(
+                                  children: [
+                                    Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    Row(mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+
+                                        Text("${startVal+15>displayListItems.length?displayListItems.length:startVal+1}-${startVal+15>displayListItems.length?displayListItems.length:startVal+15} of ${displayListItems.length}",style: const TextStyle(color: Colors.grey)),
+                                        const SizedBox(width: 10,),
+                                        Material(color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                            ),
+                                            onTap: (){
+                                              if(startVal>14){
+                                                displayListItems=[];
+                                                startVal = startVal-15;
+                                                for(int i=startVal;i<startVal+15;i++){
+                                                  setState(() {
+                                                    displayListItems.add(estimateItems[i]);
+                                                  });
+                                                }
+                                              }
+                                              else{
+                                                log('else');
+                                              }
+
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        Material(color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_forward_ios,size: 12),
+                                            ),
+                                            onTap: (){
+                                              if(startVal+1+5>estimateItems.length){
+                                                // print("Block");
+                                              }
+                                              else
+                                              if(estimateItems.length>startVal+15){
+                                                displayListItems=[];
+                                                startVal=startVal+15;
+                                                for(int i=startVal;i<startVal+15;i++){
+                                                  setState(() {
+                                                    try{
+                                                      displayListItems.add(estimateItems[i]);
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+
+                                                  });
+                                                }
+                                              }
+
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20,),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                            }
+                          },
+
+                          )
                         ],
                       ),
                     ),

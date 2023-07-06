@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/motows_routes.dart';
 import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
@@ -55,9 +56,22 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
-    getPartsMaster();
-    fetchVendorsData();
+    salesInvoiceDate.text=DateFormat('dd-MM-yyyy').format(DateTime.now());
+    getInitialData().whenComplete(() {
+      getPartsMaster();
+      fetchVendorsData();
+    });
+  }
+  String role ='';
+  String userId ='';
+  String managerId ='';
+  String orgId ='';
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("userId")??"";
+    managerId= prefs.getString("managerId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
   List vendorList = [];
 
@@ -207,6 +221,9 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                       "status": "In-review",
                                       "comment": "",
                                       "freight_amount":additionalCharges.text,
+                                      "manager_id": managerId,
+                                      "userid": userId,
+                                      "org_id": orgId,
                                       "items": [
 
                                       ]
@@ -226,8 +243,12 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
                                     }
 
-                                    // print(selectedPart);
-                                    // print(postDetails);
+                                    print('-----user Id-------');
+                                    print(userId);
+                                    print('----------- Manager Id------');
+                                    print(managerId);
+                                    print('--------   org id---------');
+                                    print(orgId);
                                     postEstimate(postDetails);
                                   }
                                 });

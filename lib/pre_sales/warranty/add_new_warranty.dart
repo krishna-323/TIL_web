@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/motows_routes.dart';
 import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
@@ -54,12 +55,28 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   int indexNumber=0;
   bool tableLineDataBool=false;
   bool searchVendor=false;
+
+  String role ='';
+  String userId ='';
+  String managerId ='';
+  String orgId ='';
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getAllVehicleVariant();
-    fetchVendorsData();
+    salesInvoiceDate.text=DateFormat('dd-MM-yyyy').format(DateTime.now());
+    getInitialData().whenComplete(() {
+      getAllVehicleVariant();
+      fetchVendorsData();
+    });
+
+  }
+  Future getInitialData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    role= prefs.getString("role")??"";
+    userId= prefs.getString("userId")??"";
+    managerId= prefs.getString("managerId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
   List vendorList = [];
 
@@ -164,13 +181,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     setState(() {
                                       searchVendor=true;
                                       if(indexNumber==0){
-                                        print('------if condition-------');
-                                        print(indexNumber);
                                         tableLineDataBool=true;
                                       }
                                       else{
-                                        print('------Else condition-------');
-                                        print(indexNumber);
                                         tableLineDataBool=false;
                                       }
                                     });
@@ -209,6 +222,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       'freight_amount':additionalCharges.text,
                                       'status':"In-review",
                                       "comment":"",
+                                      "manager_id": managerId,
+                                      "userid": userId,
+                                      "org_id": orgId,
                                       "items": [
 
                                       ]
@@ -229,6 +245,12 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       );
 
                                     }
+                                    print('------userId-------');
+                                    print(userId);
+                                    print('------manager id---------');
+                                    print(managerId);
+                                    print('------------Org id---------------');
+                                    print(orgId);
                                     postEstimate(postDetails);
                                   }
 

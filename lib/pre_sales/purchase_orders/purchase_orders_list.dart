@@ -9,6 +9,7 @@ import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 import 'add_new_po.dart';
 import 'details_po.dart';
 
@@ -46,6 +47,10 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
+    print('----role---');
+    print(role);
+    print('---------userId----------');
+    print(userId);
   }
 
   Future fetchEstimate()async{
@@ -335,160 +340,173 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                               ],
                             ),
                           ),
-                          for(int i=0;i<=displayListItems.length;i++)
-                            Column(
-                              children: [
-                                if(i!=displayListItems.length)
-                                  MaterialButton(
-                                    hoverColor: Colors.blue[50],
-                                    onPressed: (){
-
-                                      // print('-------------in on tap------------------');
-                                      // print(estimateItems[i]);
-                                      Navigator.of(context).push(PageRouteBuilder(
-                                          pageBuilder: (context,animation1,animation2) => ViewEstimateItem(
-                                            //customerList: displayList[i],
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: displayListItems.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index < displayListItems.length) {
+                                return Column(
+                                  children: [
+                                    MaterialButton(
+                                      hoverColor: Colors.blue[50],
+                                      onPressed: () {
+                                        Navigator.of(context).push(PageRouteBuilder(
+                                          pageBuilder: (context, animation1, animation2) => ViewEstimateItem(
                                             drawerWidth: widget.args.drawerWidth,
                                             selectedDestination: widget.args.selectedDestination,
-                                            estimateItem: estimateItems[i],
+                                            estimateItem: estimateItems[index],
                                             transitionDuration: Duration.zero,
                                             reverseTransitionDuration: Duration.zero,
-                                          )
-                                      ));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 18.0,top: 4,bottom: 3),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
+                                          ),
+                                        ));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 18.0, top: 4, bottom: 3),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['estVehicleId']?? '')
+                                                  height: 25,
+                                                  child: Text(displayListItems[index]['estVehicleId'] ?? ''),
                                                 ),
-                                              )
-                                          ),
-                                          Expanded(
+                                              ),
+                                            ),
+                                            Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4.0),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['billAddressName']??"")
+                                                child: SizedBox(
+                                                  height: 25,
+                                                  child: Text(displayListItems[index]['billAddressName'] ?? ''),
                                                 ),
-                                              )),
-                                          Expanded(
+                                              ),
+                                            ),
+                                            Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['shipAddressName']?? '')
+                                                  height: 25,
+                                                  child: Text(displayListItems[index]['shipAddressName'] ?? ''),
                                                 ),
-                                              )
-                                          ),
-                                          Expanded(
+                                              ),
+                                            ),
+                                            Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['serviceInvoiceDate']?? '')
+                                                  height: 25,
+                                                  child: Text(displayListItems[index]['serviceInvoiceDate'] ?? ''),
                                                 ),
-                                              )
-                                          ),
-                                          Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 4),
-                                                child: SizedBox(height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(double.parse(displayListItems[i]['total'].toString()).toStringAsFixed(2))
-                                                ),
-                                              )),
-                                          Expanded(
+                                              ),
+                                            ),
+                                            Expanded(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
-                                                    height: 25,
-                                                    //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                    child: Text(displayListItems[i]['status']??'--')
+                                                  height: 25,
+                                                  child: Text(double.parse(displayListItems[index]['total'].toString()).toStringAsFixed(2)),
                                                 ),
-                                              )
-                                          ),
-                                        ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 4),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 25,
+                                                      width: 100,
+                                                      child: OutlinedMButton(
+                                                        text: displayListItems[index]['status'],
+                                                        borderColor: displayListItems[index]['status'] == "Approved" ? Colors.green : mSaveButton,
+                                                        textColor: displayListItems[index]['status'] == "Approved" ? Colors.green : mSaveButton,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+
                                     ),
-                                  ),
-                                if(i!=displayListItems.length)
-                                  Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                if(i==displayListItems.length)
-                                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-
-                                      Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: const TextStyle(color: Colors.grey)),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal>14){
-                                              displayListItems=[];
-                                              startVal = startVal-15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  displayListItems.add(estimateItems[i]);
-                                                });
-                                              }
-                                            }
-                                            else{
-                                              log('else');
-                                            }
-
-                                          },
+                                    Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                  ],
+                                );
+                              }
+                              else {
+                                return Column(
+                                  children: [
+                                    Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "${startVal + 15 > estimateItems.length ? estimateItems.length : startVal + 1}-${startVal + 15 > estimateItems.length ? estimateItems.length : startVal + 15} of ${estimateItems.length}",
+                                          style: const TextStyle(color: Colors.grey),
                                         ),
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_forward_ios,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal+1+5>estimateItems.length){
-                                              // print("Block");
-                                            }
-                                            else
-                                            if(estimateItems.length>startVal+15){
-                                              displayListItems=[];
-                                              startVal=startVal+15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  try{
+                                        const SizedBox(width: 10),
+                                        Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_back_ios_sharp, size: 12),
+                                            ),
+                                            onTap: () {
+                                              if (startVal > 14) {
+                                                displayListItems = [];
+                                                startVal = startVal - 15;
+                                                for (int i = startVal; i < startVal + 15; i++) {
+                                                  setState(() {
                                                     displayListItems.add(estimateItems[i]);
-                                                  }
-                                                  catch(e){
-                                                    log(e.toString());
-                                                  }
-
-                                                });
+                                                  });
+                                                }
+                                              } else {
+                                                log('else');
                                               }
-                                            }
-
-                                          },
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 20,),
-                                    ],
-                                  )
-                              ],
-                            ),
+                                        const SizedBox(width: 10),
+                                        Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_forward_ios, size: 12),
+                                            ),
+                                            onTap: () {
+                                              if (startVal + 1 + 5 > estimateItems.length) {
+                                                // print("Block");
+                                              } else if (estimateItems.length > startVal + 15) {
+                                                displayListItems = [];
+                                                startVal = startVal + 15;
+                                                for (int i = startVal; i < startVal + 15; i++) {
+                                                  setState(() {
+                                                    try {
+                                                      displayListItems.add(estimateItems[i]);
+                                                    } catch (e) {
+                                                      log(e.toString());
+                                                    }
+                                                  });
+                                                }
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 20),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          )
                         ],
                       ),
                     ),

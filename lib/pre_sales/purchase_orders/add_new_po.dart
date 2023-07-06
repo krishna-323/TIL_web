@@ -53,11 +53,15 @@ class _EstimateState extends State<Estimate> {
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
   final grandTotalAmount =TextEditingController();
+  // Validation
+  bool searchVendor=false;
+  int indexNumber=0;
+  bool tableLineDataBool =false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    salesInvoiceDate.text=DateFormat('dd/MM/yyyy').format(DateTime.now());
+    salesInvoiceDate.text=DateFormat('dd-MM-yyyy').format(DateTime.now());
     getInitialData().whenComplete(() {
       getAllVehicleVariant();
       fetchVendorsData();
@@ -173,80 +177,72 @@ class _EstimateState extends State<Estimate> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  // if(selectedCity=='Select City'){
-                                  //   setState(() {
-                                  //     _invalidCity=true;
-                                  //   });
-                                  // }
-                                  //
-                                  //
-                                  // ///Main Validation
-                                  // if(_formKey.currentState!.validate()){
-                                  //   if(_invalidType==false && _invalidCity==false) {
-                                  //     print("Call Api");
-                                  //     _selectedIndex=1;
-                                  //   }
-                                  //
-                                  // }
-                                  double tempTotal =0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
-                                  }
-                                  catch(e){
-                                    tempTotal= double.parse(subAmountTotal.text);
-                                  }
-                                  if(showVendorDetails==false || showWareHouseDetails==false){
-                                    print('-------------go inside-----------');
-                                  }
-                                  if(showVendorDetails==true && showWareHouseDetails==true && selectedVehicles.isNotEmpty){
-                                    postDetails= {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName": vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet": vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "string",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                      "termsConditions": termsAndConditions.text,
-                                       "status":"In-review",
-                                       "comment":"",
-                                      "total": tempTotal.toString(),
-                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "manager_id": managerId,
-                                      "userid": userId,
-                                      "org_id": orgId,
-                                      "items": [
-
-                                      ]
-                                    };
+                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
+                                    setState(() {
+                                      searchVendor=true;
+                                      if(indexNumber==0){
+                                        tableLineDataBool=true;
+                                      }
+                                      else{
+                                        tableLineDataBool=false;
+                                      }
+                                    });
 
                                   }
-                                  for (int i = 0; i < selectedVehicles.length; i++) {
-                                    postDetails['items'].add(
-                                        {
-                                          "amount": lineAmount[i].text,
-                                          "discount": discountPercentage[i].text,
-                                          "estVehicleId": "string",
-                                          "itemsService": selectedVehicles[i]['model_name']??"",
-                                          "priceItem": selectedVehicles[i]['onroad_price']??"",
-                                          "quantity": units[i].text,
-                                          "tax": tax[i].text,
-                                        }
-                                    );
+                                 else{
+                                    double tempTotal =0;
+                                    try{
+                                      tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
+                                    }
+                                    catch(e){
+                                      tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                    }
+                                      postDetails= {
+                                        "additionalCharges": additionalCharges.text,
+                                        "address": "string",
+                                        "billAddressCity": vendorData['city']??"",
+                                        "billAddressName": vendorData['Name']??"",
+                                        "billAddressState": vendorData['state']??"",
+                                        "billAddressStreet": vendorData['street']??"",
+                                        "billAddressZipcode": vendorData['zipcode']??"",
+                                        "serviceDueDate": "string",
+                                        "serviceInvoice": salesInvoice.text,
+                                        "serviceInvoiceDate": salesInvoiceDate.text,
+                                        "shipAddressCity": wareHouse['city']??"",
+                                        "shipAddressName": wareHouse['Name']??"",
+                                        "shipAddressState": wareHouse['state']??"",
+                                        "shipAddressStreet": wareHouse['street']??"",
+                                        "shipAddressZipcode": wareHouse['zipcode']??"",
+                                        "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                        "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                        "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                        "termsConditions": termsAndConditions.text,
+                                        "status":"In-review",
+                                        "comment":"",
+                                        "total": tempTotal.toString(),
+                                        "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                        "manager_id": managerId,
+                                        "userid": userId,
+                                        "org_id": orgId,
+                                        "items": [
 
+                                        ]
+                                      };
+                                    for (int i = 0; i < selectedVehicles.length; i++) {
+                                      postDetails['items'].add({
+                                        "amount": lineAmount[i].text,
+                                        "discount": discountPercentage[i].text,
+                                        "estVehicleId": "string",
+                                        "itemsService": selectedVehicles[i]['model_name']??"",
+                                        "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                        "quantity": units[i].text,
+                                        "tax": tax[i].text,
+                                      }
+                                      );
+                                    }
+                                    postEstimate(postDetails);
                                   }
-                                  postEstimate(postDetails);
+
                                 });
                               },
 
@@ -737,7 +733,7 @@ class _EstimateState extends State<Estimate> {
               double tempLineData=0;
               double tempDiscount=0;
 
-              try{
+              try{indexNumber = index+1;
 
                 lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
@@ -931,6 +927,7 @@ class _EstimateState extends State<Estimate> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
+                              indexNumber=0;
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -960,52 +957,62 @@ class _EstimateState extends State<Estimate> {
           ),
 
           const SizedBox(height: 40,),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: SizedBox(
-              height: 38,
-              child: Row(
-                children:  [
-                  const Expanded(child: Center(child:Text(""))),
-                  Expanded(
-                      flex: 4,
-                      child: Center(
-                          child: OutlinedMButton(
-                            text: "+ Add Item/ Service",
-                            borderColor: mSaveButton,
-                            textColor: mSaveButton,
-                            onTap: () {
-
-
-
-                              brandNameController.clear();
-                              modelNameController.clear();
-                              variantController.clear();
-                              displayList=vehicleList;
-                              showDialog(
-                                context: context,
-                                builder: (context) => showDialogBox(),
-                              ).then((value) {
-                                if(value!=null){
-                                  setState(() {
-                                    isVehicleSelected=true;
-                                    units.add(TextEditingController(text: '1'));
-                                    discountRupees.add(TextEditingController(text: '0'));
-                                    discountPercentage.add(TextEditingController(text: '0'));
-                                    tax.add(TextEditingController(text: '0'));
-                                    lineAmount.add(TextEditingController());
-                                    subAmountTotal.text='0';
-                                    selectedVehicles.add(value);
+          Column(crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    children:  [
+                      const Expanded(child: Center(child:Text(""))),
+                      Expanded(
+                          flex: 4,
+                          child: Center(
+                              child: OutlinedMButton(
+                                text: "+ Add Item/ Service",
+                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                                textColor: mSaveButton,
+                                onTap: () {
+                                  if(displayList.isNotEmpty){
+                                    tableLineDataBool=false;
+                                  }
+                                  brandNameController.clear();
+                                  modelNameController.clear();
+                                  variantController.clear();
+                                  displayList=vehicleList;
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => showDialogBox(),
+                                  ).then((value) {
+                                    if(value!=null){
+                                      setState(() {
+                                        isVehicleSelected=true;
+                                        units.add(TextEditingController(text: '1'));
+                                        discountRupees.add(TextEditingController(text: '0'));
+                                        discountPercentage.add(TextEditingController(text: '0'));
+                                        tax.add(TextEditingController(text: '0'));
+                                        lineAmount.add(TextEditingController());
+                                        subAmountTotal.text='0';
+                                        selectedVehicles.add(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
 
-                            },
-                          ))),
-                  const Expanded(flex: 5,child: Center(child: Text(""),))
-                ],
+                                },
+                              ))),
+                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                    ],
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5,),
+              if(tableLineDataBool==true)
+                const Padding(
+                  padding: EdgeInsets.only(left:200),
+                  child: Text('Please Add Vehicle Line Data',style: TextStyle(color: Colors.red),),
+                )
+            ],
           ),
           const SizedBox(height: 40,),
           ///-----------------------------Table Ends-------------------------
@@ -1396,7 +1403,7 @@ class _EstimateState extends State<Estimate> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true?Colors.red: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }

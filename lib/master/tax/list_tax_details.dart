@@ -588,9 +588,8 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                     duration: const Duration(seconds: 0),
                                     height: tax1PerError ? 55 : 30,
                                     child: TextFormField(
-
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),],
                                       validator: (value) {
                                         if (value == null ||
                                             value.isEmpty) {
@@ -684,7 +683,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (value) {
@@ -766,7 +765,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
@@ -848,7 +847,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
@@ -930,7 +929,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
@@ -1275,7 +1274,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                     child: TextFormField(
 
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       validator: (value) {
                                         if (value == null ||
                                             value.isEmpty) {
@@ -1385,7 +1384,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                       },
 
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (value) {
@@ -1467,7 +1466,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
@@ -1549,7 +1548,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
@@ -1631,7 +1630,7 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                         return null;
                                       },
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
                                       style: const TextStyle(
                                           fontSize: 14),
                                       onChanged: (text) {
