@@ -24,10 +24,10 @@ import '../../main.dart';
         log("Its a Map Data");
         log(responseBody);
         if (responseBody.containsKey("error")) {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setString('authToken', "");
-          // Navigator.pushReplacement(
-          //     context, MaterialPageRoute(builder: (context) => const MyApp()));
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('authToken', "");
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const MyApp()));
           return null;
         } else {
           return json.decode(response.body);
