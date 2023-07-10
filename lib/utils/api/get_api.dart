@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../bloc/bloc.dart';
 import '../../main.dart';
 
  getData({context, url}) async {
@@ -26,6 +27,8 @@ import '../../main.dart';
         if (responseBody.containsKey("error")) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('authToken', "");
+          bloc.setSubRole(false);
+          bloc.setMangerRole(false);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const MyApp()));
           return null;
@@ -52,11 +55,15 @@ logOutApi({dynamic response, context, exception}) async {
      prefs.setString('authToken', "");
      prefs.setString('company_name', "");
      prefs.setString('role', "");
+     bloc.setSubRole(false);
+     bloc.setMangerRole(false);
      Navigator.pushReplacement(
          context, MaterialPageRoute(builder: (context) => const MyApp()));
 
    }
   else if (response.containsKey("error")) {
+     bloc.setSubRole(false);
+     bloc.setMangerRole(false);
     prefs.setString('authToken', "");
     prefs.setString('company_name', "");
     prefs.setString('role', "");

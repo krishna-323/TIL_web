@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../bloc/bloc.dart';
 import '../main.dart';
 import 'custom_popup_dropdown/custom_popup_dropdown.dart';
 
@@ -55,6 +56,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           if(value=="2"){
 
             setState(() {
+              bloc.setSubRole(false);
+              bloc.setMangerRole(false);
               //   prefs.remove('authToken');
               prefs!.setString('authToken', "");
               prefs!.setString('companyName', "");
@@ -386,6 +389,8 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
 
             setState(() {
               //   prefs.remove('authToken');
+              bloc.setSubRole(false);
+              bloc.setMangerRole(false);
               prefs!.setString('authToken', "");
               prefs!.setString('companyName', "");
               prefs!.setString('role', "");

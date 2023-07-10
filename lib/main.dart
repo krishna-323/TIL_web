@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'Master/tax/list_tax_details.dart';
 import 'Master/vendors/list_vendors.dart';
+import 'bloc/bloc.dart';
 import 'classes/arguments_classes/arguments_classes.dart';
 import 'classes/motows_routes.dart';
 import 'company_management/list_companies.dart';
@@ -288,6 +289,12 @@ class _InitialScreenState extends State<InitialScreen> {
 
    getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getString('role')=="Admin") {
+      bloc.setSubRole(true);
+    }
+    if(prefs.getString('role')=="Manager") {
+      bloc.setMangerRole(true);
+    }
     setState(() {
       authToken = prefs.getString("authToken")??"";
       isLoading=false;
