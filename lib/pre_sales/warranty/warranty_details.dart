@@ -928,7 +928,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 6,child: Center(child: Text("Items/Service"))),
+                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Qty"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -936,7 +936,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(flex: 2,child: Center(child: Text("Approved %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 2,child: Center(child: Text("Approved Amount"))),
+                  Expanded(flex: 3,child: Center(child: Text("Approved Amount"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(flex: 2,child: Center(child: Text("Amount"))),
                   SizedBox(width: 30,height: 30,),
@@ -944,6 +944,10 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 ],
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 18,right: 18),
+            child: Divider(height: 1,color: mTextFieldBorder,),
           ),
 
           ///Row Items
@@ -994,7 +998,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:6,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1067,10 +1071,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               ),
                             ),
                           ),),
-
-
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 2,child:  Padding(
+                          Expanded(flex: 3,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
@@ -1111,7 +1113,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               ),
                             ),
                           ),),
-
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(flex: 2,child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1137,7 +1138,23 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              deleteLineItem(estimateItems['items'][index]['estItemId'],index);
+                              if(estimateItems['items'][index]['estItemId']!=null){
+                                deleteLineItem(estimateItems['items'][index]['estItemId'],index);
+                              }
+                              else{
+                                try{
+                                  estimateItems['items'].removeAt(index);
+                                  units.removeAt(index);
+                                  discountRupees.removeAt(index);
+                                  discountPercentage.removeAt(index);
+                                  tax.removeAt(index);
+                                  lineAmount.removeAt(index);
+                                }
+                                catch(e){
+                                  log(e.toString());
+                                }
+                              }
+
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),

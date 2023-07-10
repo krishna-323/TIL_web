@@ -55,7 +55,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   int indexNumber=0;
   bool tableLineDataBool=false;
   bool searchVendor=false;
-
+  bool searchWarehouse=false;
   String role ='';
   String userId ='';
   String managerId ='';
@@ -177,14 +177,20 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
+                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
                                     setState(() {
                                       searchVendor=true;
-                                      if(indexNumber==0){
-                                        tableLineDataBool=true;
+                                      searchWarehouse=true;
+                                      if(vendorSearchController.text.isNotEmpty){
+                                        searchVendor=false;
                                       }
-                                      else{
-                                        tableLineDataBool=false;
+                                      if(wareHouseController.text.isNotEmpty){
+                                        searchWarehouse=false;
+                                      }
+                                      if(indexNumber==0){
+                                        // print('-------if condition------');
+                                        // print(indexNumber);
+                                        tableLineDataBool=true;
                                       }
                                     });
 
@@ -245,12 +251,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       );
 
                                     }
-                                    print('------userId-------');
-                                    print(userId);
-                                    print('------manager id---------');
-                                    print(managerId);
-                                    print('------------Org id---------------');
-                                    print(orgId);
                                     postEstimate(postDetails);
                                   }
 
@@ -399,6 +399,8 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 onTap: (){
                                   setState(() {
                                     showVendorDetails=false;
+                                    vendorSearchController.clear();
+                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -429,11 +431,18 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     'street': value.street,
                                     'zipcode': value.zipcode,
                                   };
+                                  searchVendor=false;
                                 });
                               },
                             ),
                           ),
                         ),
+                      ),
+                    const SizedBox(height:5),
+                    if(searchVendor)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18),
+                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showVendorDetails)
                       Padding(
@@ -503,6 +512,8 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 onTap: (){
                                   setState(() {
                                     showWareHouseDetails=false;
+                                    wareHouseController.clear();
+                                    searchWarehouse=true;
                                   });
                                 },
                               ),
@@ -533,16 +544,18 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                     'street': value.street,
                                     'zipcode': value.zipcode,
                                   };
+                                  searchWarehouse=false;
                                 });
-
-
-                                // print(value.value);
-                                // print(value.city);
-                                // print(value.street);// this prints the selected option which could be an object
                               },
                             ),
                           ),
                         ),
+                      ),
+                    const SizedBox(height:5),
+                    if(searchWarehouse)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18.0),
+                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showWareHouseDetails)
                       Padding(
@@ -711,7 +724,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 6,child: Center(child: Text("Items/Service"))),
+                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Qty"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -719,7 +732,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(flex: 2,child: Center(child: Text("Approved %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 2,child: Center(child: Text("Approved Amount"))),
+                  Expanded(flex: 3,child: Center(child: Text("Approved Amount"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(flex: 2,child: Center(child: Text("Amount"))),
                   SizedBox(width: 30,height: 30,),
@@ -789,7 +802,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 6,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -864,7 +877,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
 
-                          Expanded(flex: 2,child:  Padding(
+                          Expanded(flex: 3,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
@@ -906,9 +919,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                             ),
                           ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-
-
-
                           Expanded(flex: 2,child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
@@ -933,7 +943,18 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              indexNumber=0;
+                              for(int i=0;i<indexNumber.bitLength;i++){
+                                if(i==0){
+                                  setState(() {
+                                    tableLineDataBool=true;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    tableLineDataBool=false;
+                                  });
+                                }
+                              }
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -981,7 +1002,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
-                                  if(displayList.length>0){
+                                  if(displayList.isNotEmpty){
                                     tableLineDataBool=false;
                                   }
                                   brandNameController.clear();

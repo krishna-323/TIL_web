@@ -53,6 +53,37 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
   // Validation.
   bool editVehicleOrderBool=false;
   final commentController=TextEditingController();
+  // Tax Percentage.
+  List taxPercentage=[];
+  List taxCodes=[];
+  Future fetchTaxData() async {
+    dynamic response;
+    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
+    try{
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response = value;
+            taxCodes = response;
+            if(taxCodes.isNotEmpty){
+              for(int i=0;i<taxCodes.length;i++){
+                taxPercentage.add(taxCodes[i]['tax_total']);
+              }
+              // print('------taxCodes----');
+              // print(taxPercentage);
+            }
+          }
+          loading = false;
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,response: response,exception: e.toString());
+      setState(() {
+        loading = false;
+      });
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -99,6 +130,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     getInitialData().whenComplete((){
       getPartsMaster();
       fetchVendorsData();
+      fetchTaxData();
     });
 
   }
@@ -1075,52 +1107,58 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      decoration:  InputDecoration(
-                                          hintStyle: const TextStyle(fontSize: 14,color: Colors.black),
-                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
-                                          border: InputBorder.none,
-                                          focusedBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.blue)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.transparent))
+                                builder: (BuildContext context, BoxConstraints constraints) {
+                                  return CustomPopupMenuButton(childHeight: 200,
+                                    elevation: 4,
+                                    decoration: InputDecoration(
+                                      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+                                      hintText: tax[index].text.isEmpty || tax[index].text == '' ? "Tax" : tax[index].text,
+                                      contentPadding: const EdgeInsets.only(bottom: 15, right: 8),
+                                      border: InputBorder.none,
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue),
                                       ),
-                                      hintText: '',
-                                      //textController: tax[index],
-                                      childWidth: constraints.maxWidth,
-                                      textAlign: TextAlign.right,
-                                      shape:  const RoundedRectangleBorder(
-                                        side: BorderSide(color:mTextFieldBorder),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent),
                                       ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(
-                                            textAlign: MainAxisAlignment.end,
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          tax[index].text=value;
-                                        });
-                                        //print(tax[index].text);
-                                      },
-                                      onCanceled: () {
-
-                                      },
-                                      child: Container(),
-                                    );
-                                  }
+                                    ),
+                                    hintText: '',
+                                    childWidth: constraints.maxWidth,
+                                    textAlign: TextAlign.right,
+                                    shape: const RoundedRectangleBorder(
+                                      side: BorderSide(color: mTextFieldBorder),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    offset: const Offset(1, 40),
+                                    tooltip: '',
+                                    itemBuilder: (BuildContext context) {
+                                      return taxPercentage.map((value) {
+                                        // print('-----values -----');
+                                        // print(value);
+                                        return CustomPopupMenuItem(
+                                          textStyle: const TextStyle(color: Colors.black),
+                                          textAlign: MainAxisAlignment.end,
+                                          value: value.toString(),
+                                          text: value.toString(),
+                                          child: Container(),
+                                        );
+                                      }).toList();
+                                    },
+                                    onSelected: (String value) {
+                                      // print('--------what it is getting ------------');
+                                      // print(value);
+                                      setState(() {
+                                        tax[index].text = value;
+                                        // print('-----assigned Value-----');
+                                        // print(tax[index].text);
+                                      });
+                                    },
+                                    onCanceled: () {},
+                                    child: Container(),
+                                  );
+                                },
                               ),
                             ),
                           ),)),
@@ -1149,7 +1187,22 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              deleteLineItem(estimateItems['items'][index]['estItemId']);
+                              if(estimateItems['items'][index]['estItemId']!=null){
+                                deleteLineItem(estimateItems['items'][index]['estItemId']);
+                              }
+                              else{
+                                try{
+                                  estimateItems['items'].removeAt(index);
+                                  units.removeAt(index);
+                                  discountRupees.removeAt(index);
+                                  discountPercentage.removeAt(index);
+                                  tax.removeAt(index);
+                                  lineAmount.removeAt(index);
+                                }
+                                catch(e){
+                                  log(e.toString());
+                                }
+                              }
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),

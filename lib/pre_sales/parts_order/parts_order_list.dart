@@ -468,8 +468,22 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                   )),
                                               if(displayListItems[index]['status'] == "Approved")
                                               Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(top: 4),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 25,
+                                                      width: 100,
+                                                      child: OutlinedMButton(
+                                                        text: displayListItems[index]['status'],
+                                                        borderColor: Colors.green,
+                                                        textColor:Colors.green,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              if(displayListItems[index]['status']=="In-review")
+                                                Expanded(
                                                   child: Row(
                                                     children: [
                                                       SizedBox(
@@ -477,50 +491,27 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                         width: 100,
                                                         child: OutlinedMButton(
                                                           text: displayListItems[index]['status'],
-                                                          borderColor: Colors.green,
-                                                          textColor:Colors.green,
+                                                          borderColor: Colors.blue,
+                                                          textColor: Colors.blue,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                              if(displayListItems[index]['status']=="In-review")
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 25,
-                                                          width: 100,
-                                                          child: OutlinedMButton(
-                                                            text: displayListItems[index]['status'],
-                                                            borderColor: Colors.blue,
-                                                            textColor: Colors.blue,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
                                               if(displayListItems[index]['status'] == "Rejected")
                                                 Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 25,
-                                                          width: 100,
-                                                          child: OutlinedMButton(
-                                                            text: displayListItems[index]['status'],
-                                                            borderColor: Colors.red,
-                                                            textColor:Colors.red,
-                                                          ),
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 25,
+                                                        width: 100,
+                                                        child: OutlinedMButton(
+                                                          text: displayListItems[index]['status'],
+                                                          borderColor: Colors.red,
+                                                          textColor:Colors.red,
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                             ],

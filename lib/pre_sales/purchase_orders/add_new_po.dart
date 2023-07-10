@@ -54,8 +54,9 @@ class _EstimateState extends State<Estimate> {
   final additionalCharges=TextEditingController();
   final grandTotalAmount =TextEditingController();
   // Validation
-  bool searchVendor=false;
   int indexNumber=0;
+  bool searchVendor=false;
+  bool searchWarehouse=false;
   bool tableLineDataBool =false;
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _EstimateState extends State<Estimate> {
     getInitialData().whenComplete(() {
       getAllVehicleVariant();
       fetchVendorsData();
+      fetchTaxData();
     });
   }
 
@@ -110,6 +112,36 @@ class _EstimateState extends State<Estimate> {
   String userId ='';
   String managerId ='';
   String orgId ='';
+  List taxCodes=[];
+  List taxPercentage =[];
+  Future fetchTaxData() async {
+    dynamic response;
+    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
+    try{
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response = value;
+            taxCodes = response;
+            if(taxCodes.isNotEmpty){
+              for(int i=0;i<taxCodes.length;i++){
+               taxPercentage.add(taxCodes[i]['tax_total']);
+              }
+              // print('------taxCodes----');
+              // print(taxPercentage);
+            }
+          }
+          loading = false;
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,response: response,exception: e.toString());
+      setState(() {
+        loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,20 +208,26 @@ class _EstimateState extends State<Estimate> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
-                                setState(() {
-                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
-                                    setState(() {
-                                      searchVendor=true;
-                                      if(indexNumber==0){
-                                        tableLineDataBool=true;
-                                      }
-                                      else{
-                                        tableLineDataBool=false;
-                                      }
-                                    });
+                                if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
+                                  setState(() {
+                                    searchVendor=true;
+                                    searchWarehouse=true;
+                                    if(vendorSearchController.text.isNotEmpty){
+                                      searchVendor=false;
+                                    }
+                                    if(wareHouseController.text.isNotEmpty){
+                                      searchWarehouse=false;
+                                    }
+                                    if(indexNumber==0){
+                                      // print('-------if condition------');
+                                      // print(indexNumber);
+                                      tableLineDataBool=true;
+                                    }
+                                  });
 
-                                  }
-                                 else{
+                                }
+                                  else{
+                                    print('--------else condition-----------------');
                                     double tempTotal =0;
                                     try{
                                       tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
@@ -197,37 +235,37 @@ class _EstimateState extends State<Estimate> {
                                     catch(e){
                                       tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
                                     }
-                                      postDetails= {
-                                        "additionalCharges": additionalCharges.text,
-                                        "address": "string",
-                                        "billAddressCity": vendorData['city']??"",
-                                        "billAddressName": vendorData['Name']??"",
-                                        "billAddressState": vendorData['state']??"",
-                                        "billAddressStreet": vendorData['street']??"",
-                                        "billAddressZipcode": vendorData['zipcode']??"",
-                                        "serviceDueDate": "string",
-                                        "serviceInvoice": salesInvoice.text,
-                                        "serviceInvoiceDate": salesInvoiceDate.text,
-                                        "shipAddressCity": wareHouse['city']??"",
-                                        "shipAddressName": wareHouse['Name']??"",
-                                        "shipAddressState": wareHouse['state']??"",
-                                        "shipAddressStreet": wareHouse['street']??"",
-                                        "shipAddressZipcode": wareHouse['zipcode']??"",
-                                        "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                        "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                        "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                        "termsConditions": termsAndConditions.text,
-                                        "status":"In-review",
-                                        "comment":"",
-                                        "total": tempTotal.toString(),
-                                        "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                        "manager_id": managerId,
-                                        "userid": userId,
-                                        "org_id": orgId,
-                                        "items": [
+                                    postDetails= {
+                                      "additionalCharges": additionalCharges.text,
+                                      "address": "string",
+                                      "billAddressCity": vendorData['city']??"",
+                                      "billAddressName": vendorData['Name']??"",
+                                      "billAddressState": vendorData['state']??"",
+                                      "billAddressStreet": vendorData['street']??"",
+                                      "billAddressZipcode": vendorData['zipcode']??"",
+                                      "serviceDueDate": "string",
+                                      "serviceInvoice": salesInvoice.text,
+                                      "serviceInvoiceDate": salesInvoiceDate.text,
+                                      "shipAddressCity": wareHouse['city']??"",
+                                      "shipAddressName": wareHouse['Name']??"",
+                                      "shipAddressState": wareHouse['state']??"",
+                                      "shipAddressStreet": wareHouse['street']??"",
+                                      "shipAddressZipcode": wareHouse['zipcode']??"",
+                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                      "termsConditions": termsAndConditions.text,
+                                      "status":"In-review",
+                                      "comment":"",
+                                      "total": tempTotal.toString(),
+                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                      "manager_id": managerId,
+                                      "userid": userId,
+                                      "org_id": orgId,
+                                      "items": [
 
-                                        ]
-                                      };
+                                      ]
+                                    };
                                     for (int i = 0; i < selectedVehicles.length; i++) {
                                       postDetails['items'].add({
                                         "amount": lineAmount[i].text,
@@ -240,10 +278,10 @@ class _EstimateState extends State<Estimate> {
                                       }
                                       );
                                     }
+                                    // print('-------postDetails--------');
+                                    // print(postDetails);
                                     postEstimate(postDetails);
                                   }
-
-                                });
                               },
 
                             ),
@@ -388,6 +426,8 @@ class _EstimateState extends State<Estimate> {
                                 onTap: (){
                                   setState(() {
                                     showVendorDetails=false;
+                                    vendorSearchController.clear();
+                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -401,29 +441,36 @@ class _EstimateState extends State<Estimate> {
                       const SizedBox(height: 30,),
                     if(showVendorDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Vendor') ,
-                              controller: vendorSearchController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
-                                setState(() {
-                                  showVendorDetails=true;
-                                  vendorData ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                });
-                              },
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            showAdd: false,
+                            decoration:textFieldVendorDecoration(hintText: 'Search Vendor',) ,
+                            controller: vendorSearchController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showVendorDetails=true;
+                                vendorData ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchVendor=false;
+                              });
+                            },
                           ),
                         ),
                       ),
+                    const SizedBox(height: 5,),
+                    if(searchVendor)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18),
+                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
+                      ),
+
                     if(showVendorDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -492,6 +539,8 @@ class _EstimateState extends State<Estimate> {
                                 onTap: (){
                                   setState(() {
                                     showWareHouseDetails=false;
+                                    wareHouseController.clear();
+                                    searchWarehouse=true;
                                   });
                                 },
                               ),
@@ -505,33 +554,35 @@ class _EstimateState extends State<Estimate> {
                       const SizedBox(height: 30,),
                     if(showWareHouseDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Warehouse'),
-                              controller: wareHouseController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
-                                setState(() {
-                                  showWareHouseDetails=true;
-                                  wareHouse ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                });
-
-
-                                // print(value.value);
-                                // print(value.city);
-                                // print(value.street);// this prints the selected option which could be an object
-                              },
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            showAdd: false,
+                            decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',),
+                            controller: wareHouseController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showWareHouseDetails=true;
+                                searchWarehouse=false;
+                                wareHouse ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchWarehouse=false;
+                              });
+                            },
                           ),
                         ),
+                      ),
+                    const SizedBox(height: 5,),
+                    if(searchWarehouse)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18.0),
+                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showWareHouseDetails)
                       Padding(
@@ -823,9 +874,6 @@ class _EstimateState extends State<Estimate> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
-                                  setState(() {
-
-                                  });
                                   discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
                                     //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
@@ -845,63 +893,68 @@ class _EstimateState extends State<Estimate> {
                             ),
                           ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Padding(
+                          Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child:
                             Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      decoration:  InputDecoration(
-                                          hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
-                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
-                                          border: InputBorder.none,
-                                          focusedBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.blue)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.transparent))
+                              child:LayoutBuilder(
+                                builder: (BuildContext context, BoxConstraints constraints) {
+                                  return CustomPopupMenuButton(childHeight: 200,
+                                    elevation: 4,
+                                    decoration: InputDecoration(
+                                      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+                                      hintText: tax[index].text.isEmpty || tax[index].text == '' ? "Tax" : tax[index].text,
+                                      contentPadding: const EdgeInsets.only(bottom: 15, right: 8),
+                                      border: InputBorder.none,
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue),
                                       ),
-                                      hintText: '',
-                                      // textController: tax[index],
-                                      childWidth: constraints.maxWidth,
-                                      textAlign: TextAlign.right,
-                                      shape:   const RoundedRectangleBorder(
-                                        side: BorderSide(color:mTextFieldBorder),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent),
                                       ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
-                                            textAlign: MainAxisAlignment.end,
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
-
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          tax[index].text=value;
-                                        });
-
-                                      },
-                                      onCanceled: () {
-
-                                      },
-                                      child: Container(),
-                                    );
-                                  }
+                                    ),
+                                    hintText: '',
+                                    childWidth: constraints.maxWidth,
+                                    textAlign: TextAlign.right,
+                                    shape: const RoundedRectangleBorder(
+                                      side: BorderSide(color: mTextFieldBorder),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    offset: const Offset(1, 40),
+                                    tooltip: '',
+                                    itemBuilder: (BuildContext context) {
+                                      return taxPercentage.map((value) {
+                                        // print('-----values -----');
+                                        // print(value);
+                                        return CustomPopupMenuItem(
+                                          textStyle: const TextStyle(color: Colors.black),
+                                          textAlign: MainAxisAlignment.end,
+                                          value: value.toString(),
+                                          text: value.toString(),
+                                          child: Container(),
+                                        );
+                                      }).toList();
+                                    },
+                                    onSelected: (String value) {
+                                      // print('--------what it is getting ------------');
+                                      // print(value);
+                                      setState(() {
+                                        tax[index].text = value;
+                                        // print('-----assigned Value-----');
+                                        // print(tax[index].text);
+                                      });
+                                    },
+                                    onCanceled: () {},
+                                    child: Container(),
+                                  );
+                                },
                               ),
                             ),
-                          ),)),
+                          )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -927,7 +980,18 @@ class _EstimateState extends State<Estimate> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              indexNumber=0;
+                              for(int i=0;i<indexNumber.bitLength;i++){
+                                if(i==0){
+                                  setState(() {
+                                    tableLineDataBool=true;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    tableLineDataBool=false;
+                                  });
+                                }
+                              }
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -971,8 +1035,9 @@ class _EstimateState extends State<Estimate> {
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                                borderColor:tableLineDataBool==true?Colors.redAccent: mSaveButton,
                                 textColor: mSaveButton,
+
                                 onTap: () {
                                   if(displayList.isNotEmpty){
                                     tableLineDataBool=false;
@@ -1000,7 +1065,8 @@ class _EstimateState extends State<Estimate> {
                                   });
 
                                 },
-                              ))),
+                              )
+                          )),
                       const Expanded(flex: 5,child: Center(child: Text(""),))
                     ],
                   ),
@@ -1337,7 +1403,7 @@ class _EstimateState extends State<Estimate> {
                       height: 32,width: 100,
                       child: TextField(
                         controller: additionalCharges,
-                        inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r"[0-9.]"))],
+                        inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r"[\d.]"))],
                         textAlign: TextAlign.right,
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
@@ -1393,7 +1459,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  textFieldDecoration({required String hintText, bool? error}) {
+  textFieldVendorDecoration({required String hintText, bool? error}) {
     return  InputDecoration(
       suffixIcon: const Icon(Icons.search,size: 18),
       border: const OutlineInputBorder(
@@ -1403,7 +1469,21 @@ class _EstimateState extends State<Estimate> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true?Colors.red: mTextFieldBorder)),
+      enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true? Colors.red:mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldWarehouseDecoration({required String hintText, bool? error}) {
+    return  InputDecoration(
+      suffixIcon: const Icon(Icons.search,size: 18),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color:searchWarehouse == true? Colors.red: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1582,7 +1662,6 @@ class _EstimateState extends State<Estimate> {
       contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
-
 }
 
 class VendorModelAddress {

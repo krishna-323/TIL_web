@@ -52,6 +52,37 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  // Tax Codes.
+  List taxCodes=[];
+  List taxPercentage=[];
+  Future fetchTaxData() async {
+    dynamic response;
+    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
+    try{
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response = value;
+            taxCodes = response;
+            if(taxCodes.isNotEmpty){
+              for(int i=0;i<taxCodes.length;i++){
+                taxPercentage.add(taxCodes[i]['tax_total']);
+              }
+              // print('------taxCodes----');
+              // print(taxPercentage);
+            }
+          }
+          loading = false;
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,response: response,exception: e.toString());
+      setState(() {
+        loading = false;
+      });
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -60,6 +91,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
     getInitialData().whenComplete(() {
       getPartsMaster();
       fetchVendorsData();
+      fetchTaxData();
     });
   }
   String role ='';
@@ -107,6 +139,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   // Error Validation.
   int indexNumber=0;
   bool searchVendor=false;
+  bool searchWarehouse=false;
   bool tableLineDataBool=false;
   @override
   Widget build(BuildContext context) {
@@ -174,19 +207,24 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  if(vendorSearchController.text.isEmpty || wareHouseController.text.isEmpty || indexNumber==0){
+                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
                                     setState(() {
                                       searchVendor=true;
-                                      if(indexNumber==0){
-                                        tableLineDataBool=true;
+                                      searchWarehouse=true;
+                                      if(vendorSearchController.text.isNotEmpty){
+                                        searchVendor=false;
                                       }
-                                      else{
-                                        tableLineDataBool=false;
+                                      if(wareHouseController.text.isNotEmpty){
+                                        searchWarehouse=false;
+                                      }
+                                      if(indexNumber==0){
+                                        // print('-------if condition------');
+                                        // print(indexNumber);
+                                        tableLineDataBool=true;
                                       }
                                     });
 
                                   }
-
                                   else{
                                     double tempTotal =0;
                                     try{
@@ -242,13 +280,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                       );
 
                                     }
-
-                                    print('-----user Id-------');
-                                    print(userId);
-                                    print('----------- Manager Id------');
-                                    print(managerId);
-                                    print('--------   org id---------');
-                                    print(orgId);
                                     postEstimate(postDetails);
                                   }
                                 });
@@ -396,6 +427,8 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                 onTap: (){
                                   setState(() {
                                     showVendorDetails=false;
+                                    vendorSearchController.clear();
+                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -427,11 +460,18 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     'street': value.street,
                                     'zipcode': value.zipcode,
                                   };
+                                  searchVendor=false;
                                 });
                               },
                             ),
                           ),
                         ),
+                      ),
+                    const SizedBox(height:5),
+                    if(searchVendor)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18),
+                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showVendorDetails)
                       Padding(
@@ -501,6 +541,8 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                 onTap: (){
                                   setState(() {
                                     showWareHouseDetails=false;
+                                    wareHouseController.clear();
+                                    searchWarehouse=true;
                                   });
                                 },
                               ),
@@ -531,16 +573,18 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     'street': value.street,
                                     'zipcode': value.zipcode,
                                   };
+                                  searchWarehouse=false;
                                 });
-
-
-                                // print(value.value);
-                                // print(value.city);
-                                // print(value.street);// this prints the selected option which could be an object
                               },
                             ),
                           ),
                         ),
+                      ),
+                    const SizedBox(height: 5,),
+                    if(searchWarehouse)
+                      const Padding(
+                        padding: EdgeInsets.only(left:18.0),
+                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showWareHouseDetails)
                       Padding(
@@ -845,54 +889,59 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                             Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      decoration:  InputDecoration(
-                                          hintStyle:  const TextStyle(fontSize: 14,color: Colors.black,),
-                                          hintText:tax[index].text.isEmpty ||tax[index].text==''? "Tax":tax[index].text,
-                                          contentPadding: const EdgeInsets.only(bottom: 15,right: 8,),
-                                          border: InputBorder.none,
-                                          focusedBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.blue)),
-                                          enabledBorder: const OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.transparent))
+                              child:LayoutBuilder(
+                                builder: (BuildContext context, BoxConstraints constraints) {
+                                  return CustomPopupMenuButton(childHeight: 200,
+                                    elevation: 4,
+                                    decoration: InputDecoration(
+                                      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+                                      hintText: tax[index].text.isEmpty || tax[index].text == '' ? "Tax" : tax[index].text,
+                                      contentPadding: const EdgeInsets.only(bottom: 15, right: 8),
+                                      border: InputBorder.none,
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue),
                                       ),
-                                      hintText: '',
-                                      // textController: tax[index],
-                                      childWidth: constraints.maxWidth,
-                                      textAlign: TextAlign.right,
-                                      shape:   const RoundedRectangleBorder(
-                                        side: BorderSide(color:mTextFieldBorder),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent),
                                       ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return ['2','4','8','10','12'].map((value) {
-                                          return CustomPopupMenuItem(textStyle: const TextStyle(color: Colors.black),
-                                            textAlign: MainAxisAlignment.end,
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
-
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          tax[index].text=value;
-                                        });
-
-                                      },
-                                      onCanceled: () {
-
-                                      },
-                                      child: Container(),
-                                    );
-                                  }
+                                    ),
+                                    hintText: '',
+                                    childWidth: constraints.maxWidth,
+                                    textAlign: TextAlign.right,
+                                    shape: const RoundedRectangleBorder(
+                                      side: BorderSide(color: mTextFieldBorder),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    offset: const Offset(1, 40),
+                                    tooltip: '',
+                                    itemBuilder: (BuildContext context) {
+                                      return taxPercentage.map((value) {
+                                        // print('-----values -----');
+                                        // print(value);
+                                        return CustomPopupMenuItem(
+                                          textStyle: const TextStyle(color: Colors.black),
+                                          textAlign: MainAxisAlignment.end,
+                                          value: value.toString(),
+                                          text: value.toString(),
+                                          child: Container(),
+                                        );
+                                      }).toList();
+                                    },
+                                    onSelected: (String value) {
+                                      // print('--------what it is getting ------------');
+                                      // print(value);
+                                      setState(() {
+                                        tax[index].text = value;
+                                        // print('-----assigned Value-----');
+                                        // print(tax[index].text);
+                                      });
+                                    },
+                                    onCanceled: () {},
+                                    child: Container(),
+                                  );
+                                },
                               ),
                             ),
                           ),)),
@@ -921,7 +970,18 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              indexNumber=0;
+                              for(int i=0;i<indexNumber.bitLength;i++){
+                                if(i==0){
+                                  setState(() {
+                                    tableLineDataBool=true;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    tableLineDataBool=false;
+                                  });
+                                }
+                              }
                               selectedPart.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
@@ -969,7 +1029,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                // borderColor: if(tableLineDataBool),
                                 textColor: mSaveButton,
                                 onTap: () {
-                                  if(displayList.length>0){
+                                  if(displayList.isNotEmpty){
                                     tableLineDataBool=false;
                                   }
                                   brandNameController.clear();
