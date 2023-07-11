@@ -874,20 +874,9 @@ class _EstimateState extends State<Estimate> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
-                                  discountRupees[index].clear();
-                                  if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
-                                  }
+                                  setState(() {
+
+                                  });
                                 },
                               ),
                             ),
