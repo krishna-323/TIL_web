@@ -103,7 +103,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   List selectedVehicles=[];
 
   var units = <TextEditingController>[];
-  var discountRupees = <TextEditingController>[];
+ // var discountRupees = <TextEditingController>[];
   var approvedPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
@@ -732,9 +732,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(flex: 2,child: Center(child: Text("Approved %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 3,child: Center(child: Text("Approved Amount"))),
+                  Expanded(flex: 3,child: Center(child: Text("Approved Amount/Unit"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 2,child: Center(child: Text("Amount"))),
+                  Expanded(flex: 2,child: Center(child: Text("Total Amount"))),
                   SizedBox(width: 30,height: 30,),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                 ],
@@ -761,23 +761,40 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
               double tempTax =0;
               double tempLineData=0;
               double tempDiscount=0;
-
               try{
-
-                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
-                if(approvedPercentage[index].text!='0'||approvedPercentage[index].text!=''||approvedPercentage[index].text.isNotEmpty)
-                {
-                  tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
-                  tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
-                  lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
-
-                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
-                  lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
-                }
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toStringAsFixed(1);
               }
-              catch (e){
+              catch(e){
                 log(e.toString());
               }
+              if(approvedPercentage[index].text.isNotEmpty) {
+                try{
+                    tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['onroad_price']));
+                    tempLineData =(tempDiscount);
+                    //  tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
+                    lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
+                    tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+                    lineAmount[index].text =(double.parse((tempLineData+tempTax).toStringAsFixed(1))*double.parse(units[index].text)).toStringAsFixed(1);
+                  }
+                catch(e){
+                  log("Inside try block $e");
+                }
+                } else if (lineApprovedAmount[index].text.isNotEmpty) {
+                try {
+                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['onroad_price'])*100;
+                    approvedPercentage[index].text = tempTax.toStringAsFixed(1);
+                    //lineAmount[index].text =(double.parse(approvedPercentage[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
+                    lineAmount[index].text=(double.parse(lineApprovedAmount[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
+                    if(double.parse(approvedPercentage[index].text)>100){
+                      approvedPercentage[index].text ="0.0";
+                      lineApprovedAmount[index].text="0.0";
+                      lineAmount[index].text="0.0";
+                    }
+                  } catch (e) {
+                  log(e.toString());
+                }
+              }
+
               if(index==0){
                 subAmountTotal.text='0';
                 subTaxTotal.text='0';
@@ -854,22 +871,21 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+                                  double tempValue =0.0;
                                   setState(() {
-
+                                    lineApprovedAmount[index].clear();
                                   });
-                                  discountRupees[index].clear();
+
                                   if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                    try{
+                                      tempValue = double.parse(v.toString());
+                                      if(tempValue>100){
+                                        approvedPercentage[index].clear();
+                                      }
+                                    }
+                                    catch(e){
+                                      approvedPercentage[index].clear();
+                                    }
                                   }
                                 },
                               ),
@@ -899,8 +915,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 onChanged: (v) {
                                   setState(() {
 
+                                    approvedPercentage[index].clear();
+
                                   });
-                                  discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
                                     //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
                                     //   double tempVal =0;
@@ -957,7 +974,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               }
                               selectedVehicles.removeAt(index);
                               units.removeAt(index);
-                              discountRupees.removeAt(index);
                               approvedPercentage.removeAt(index);
                               tax.removeAt(index);
                               lineAmount.removeAt(index);
@@ -1017,7 +1033,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       setState(() {
                                         isVehicleSelected=true;
                                         units.add(TextEditingController(text: '1'));
-                                        discountRupees.add(TextEditingController(text: '0'));
                                         approvedPercentage.add(TextEditingController(text: '0'));
                                         tax.add(TextEditingController(text: '0'));
                                         lineAmount.add(TextEditingController());
@@ -1404,7 +1419,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           else{
                             tempValue=double.parse(subAmountTotal.text);
                           }
-                          log(e.toString());
                         }
                         return Text("₹ $tempValue");
                       }
