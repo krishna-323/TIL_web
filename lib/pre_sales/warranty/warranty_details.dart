@@ -59,6 +59,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     // print('----------------');
     // print(estimateItems);
     userId=estimateItems['userid'];
+    commentController.text=estimateItems['comment']??"";
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -1091,11 +1092,13 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+
+
                                   setState(() {
 
                                   });
 
-                                  //discountRupees[index].clear();
+                                  discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
                                     //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
                                     //   double tempVal =0;
@@ -1497,37 +1500,70 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(28.0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
               children: [
-                const SizedBox(height: 10,),
-                const Text("Terms and Conditions"),
-                const SizedBox(height: 10,),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                      height: 80,
-                      child: TextFormField(
-                        controller: termsAndConditions,
-                        style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration:  const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                        ),
-                      ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10,),
+                    const Text("Terms and Conditions"),
+                    const SizedBox(height: 10,),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                          height: 80,
+                          child: TextFormField(
+                            controller: termsAndConditions,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration:  const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                            ),
+                          ),
+                        )
                     )
-                )
+                  ],
+                ),
+                if(commentController.text.isNotEmpty)
+                  Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10,),
+                      const Text("Comments"),
+                      const SizedBox(height: 10,),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                            height: 80,
+                            child: TextFormField(readOnly: true,
+                              controller: commentController,
+                              style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration:  const InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                              ),
+                            ),
+                          )
+                      )
+                    ],
+                  ),
               ],
             ),
           ),
         ),
-        const CustomVDivider(height: 200, width: 1, color: mTextFieldBorder),
+        const CustomVDivider(height: 280, width: 1, color: mTextFieldBorder),
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(

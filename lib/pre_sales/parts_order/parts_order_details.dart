@@ -1064,7 +1064,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: TextField(
+                              child: TextField(inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 controller: discountPercentage[index],
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 14),
@@ -1168,7 +1168,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child: TextField(
+                              child: TextField(inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 controller: lineAmount[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(fontSize: 14),
@@ -1551,37 +1551,70 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(28.0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
               children: [
-                const SizedBox(height: 10,),
-                const Text("Terms and Conditions"),
-                const SizedBox(height: 10,),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                      height: 80,
-                      child: TextFormField(
-                        controller: termsAndConditions,
-                        style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration:  const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                        ),
-                      ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10,),
+                    const Text("Terms and Conditions"),
+                    const SizedBox(height: 10,),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                          height: 80,
+                          child: TextFormField(
+                            controller: termsAndConditions,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration:  const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                            ),
+                          ),
+                        )
                     )
-                )
+                  ],
+                ),
+                 if(commentController.text.isNotEmpty)
+                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10,),
+                    const Text("Comments"),
+                    const SizedBox(height: 10,),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                          height: 80,
+                          child: TextFormField(readOnly: true,
+                            controller: commentController,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration:  const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                            ),
+                          ),
+                        )
+                    )
+                  ],
+                ),
               ],
             ),
           ),
         ),
-        const CustomVDivider(height: 200, width: 1, color: mTextFieldBorder),
+        const CustomVDivider(height: 280, width: 1, color: mTextFieldBorder),
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -1952,7 +1985,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                   decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(8)),
                                   child: TextFormField(
                                     controller: commentController,
-                                    style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),
                                     keyboardType: TextInputType.multiline,
                                     maxLines: null,
                                     decoration:  const InputDecoration(
