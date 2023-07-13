@@ -54,9 +54,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     estimateItems=widget.estimateItem;
-    // print('----------------');
+    // print('--------estimateItems--------');
     // print(estimateItems);
     userId=estimateItems['userid'];
     commentController.text=estimateItems['comment']??"";
@@ -72,22 +71,29 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
     shipZipcode=estimateItems['shipAddressZipcode']??"";
     additionalCharges.text=estimateItems['additionalCharges'].toString();
     salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??"";
-
     for(int i=0;i<estimateItems['items'].length;i++){
+      selectedVehicles.add(
+        {
+          "model_name":estimateItems['items'][i]['itemsService'],
+          "onroad_price":estimateItems["items"][i]["priceItem"],
+
+        }
+
+      );
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
 
-      discountPercentage.add(TextEditingController());
-      discountPercentage[i].text= estimateItems['items'][i]['discount'].toString();
-
+      approvedPercentage.add(TextEditingController());
+      approvedPercentage[i].text= estimateItems['items'][i]['discount'].toString();
       tax.add(TextEditingController());
       tax[i].text=estimateItems['items'][i]['tax'].toString();
 
       lineAmount.add(TextEditingController());
       lineApprovedAmount.add(TextEditingController());
+      lineApprovedAmount[i].text=estimateItems['items'][i]['tax'].toString();
       lineAmount[i].text=estimateItems['items'][i]['amount'].toString();
 
-      subDiscountTotal.text = lineAmount[i].text + discountPercentage[i].text;
+      subDiscountTotal.text = lineAmount[i].text + approvedPercentage[i].text;
     }
     subDiscountTotal.text=estimateItems['subTotalDiscount'].toString();
     subTaxTotal.text=estimateItems['subTotalTax'].toString();
@@ -123,7 +129,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   List selectedVehicles=[];
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
-  var discountPercentage = <TextEditingController>[];
+  var approvedPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
   var lineApprovedAmount = <TextEditingController>[];
@@ -150,6 +156,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   String userId ='';
   String managerId ='';
   String orgId ='';
+  bool quantity=false;
   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
@@ -237,16 +244,16 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         "org_id": orgId,
                                         "items": [],
                                       };
-                                      for(int i=0;i<estimateItems['items'].length;i++){
+                                      for(int i=0;i<selectedVehicles.length;i++){
                                         updateEstimate['items'].add(
                                             {
                                               "amount": lineAmount[i].text,
-                                              "discount":  discountPercentage[i].text,
+                                              "discount":  approvedPercentage[i].text,
                                               "estVehicleId": estimateItems['estVehicleId'],
-                                              "itemsService": estimateItems['items'][i]['itemsService'],
-                                              "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                              "itemsService": selectedVehicles[i]['model_name'],
+                                              "priceItem": selectedVehicles[i]['onroad_price'].toString(),
                                               "quantity": units[i].text,
-                                              "tax": tax[i].text,
+                                              "tax": lineApprovedAmount[i].text,
                                             }
                                         );
                                       }
@@ -460,16 +467,16 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                       "org_id": orgId,
                                       "items": [],
                                     };
-                                    for(int i=0;i<estimateItems['items'].length;i++){
+                                    for(int i=0;i<selectedVehicles.length;i++){
                                       updateEstimate['items'].add(
                                           {
                                             "amount": lineAmount[i].text,
-                                            "discount":  discountPercentage[i].text,
+                                            "discount":  approvedPercentage[i].text,
                                             "estVehicleId": estimateItems['estVehicleId'],
-                                            "itemsService": estimateItems['items'][i]['itemsService'],
-                                            "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                            "itemsService": selectedVehicles[i]['model_name'],
+                                            "priceItem": selectedVehicles[i]['onroad_price'].toString(),
                                             "quantity": units[i].text,
-                                            "tax": tax[i].text,
+                                            "tax": lineApprovedAmount[i].text,
                                           }
                                       );
                                     }
@@ -955,28 +962,43 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: estimateItems['items'].length,
-            itemBuilder: (BuildContext context, int index) {
+            itemCount: selectedVehicles.length,
+            itemBuilder: (context, index) {
+              //print('----inside list view builder--------');
+              //print(selectedVehicles);
 
-              double tempDiscount=0;
+              double tempTax =0;
               double tempLineData=0;
-              double tempTax=0;
-              try{
-                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
-                if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
-                {
-                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
-                   lineApprovedAmount[index].text = tempDiscount.toStringAsFixed(1);
-                   tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
-                  // tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
-                  //
-                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
-                  // subDiscountTotal.text=tempDiscount.toString();
+              double tempDiscount=0;
+              lineAmount[index].text="0.0";
+
+              if(approvedPercentage[index].text.isNotEmpty) {
+                try{
+                  tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['onroad_price'].toString()));
+                  tempLineData =(tempDiscount);
+                  lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
+                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
+                  lineAmount[index].text =(double.parse((tempLineData).toStringAsFixed(1))*double.parse(units[index].text)).toStringAsFixed(1);
+                }
+                catch(e){
+                  log("Inside try block $e");
                 }
               }
-              catch (e){
-                log(e.toString());
+              else if (lineApprovedAmount[index].text.isNotEmpty) {
+                try {
+                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['onroad_price'].toString())*100;
+                  approvedPercentage[index].text = tempTax.toStringAsFixed(1);
+                  lineAmount[index].text=(double.parse(lineApprovedAmount[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
+                  if(double.parse(approvedPercentage[index].text)>100){
+                    approvedPercentage[index].text ="0.0";
+                    lineApprovedAmount[index].text="0.0";
+                    lineAmount[index].text="0.0";
+                  }
+                } catch (e) {
+                  log(e.toString());
+                }
               }
+
               if(index==0){
                 subAmountTotal.text='0';
                 subTaxTotal.text='0';
@@ -987,19 +1009,21 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
               }else {
                 subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
                 subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse(lineAmount[index].text)).toStringAsFixed(1);
+                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
               }
-              return  Column(
+
+              return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 18.0,right: 18),
-                    child: SizedBox(height: 50,
+                    padding: const EdgeInsets.only(left: 18,right: 18),
+                    child: SizedBox(
+                      height: 50,
                       child: Row(
-                        children: [
+                        children:  [
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1023,21 +1047,22 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                   onChanged: (v) {
                                     setState(() {
                                       subAmountTotal.text=subAmountTotal.text;
-                                      discountPercentage[index].text='0';
+                                      approvedPercentage[index].text='0';
                                     });
                                   },
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 2,child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
+                          Expanded(flex: 2,child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+
                           Expanded(flex: 2,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
                               decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: TextField(
-                                controller: discountPercentage[index],
+                                controller: approvedPercentage[index],
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
@@ -1050,29 +1075,29 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+                                  double tempValue =0.0;
                                   setState(() {
-
+                                    lineApprovedAmount[index].clear();
+                                    lineAmount[index].clear();
                                   });
 
-                                  //discountRupees[index].clear();
                                   if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                    try{
+                                      tempValue = double.parse(v.toString());
+                                      if(tempValue>100){
+                                        approvedPercentage[index].clear();
+                                      }
+                                    }
+                                    catch(e){
+                                      approvedPercentage[index].clear();
+                                    }
                                   }
                                 },
                               ),
                             ),
                           ),),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+
                           Expanded(flex: 3,child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
                             child: Container(
@@ -1083,7 +1108,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
-                                    hintText: "%",
+                                    hintText: "Approved Amount",
+                                    hintStyle: TextStyle(fontSize: 12),
                                     contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
                                     border: InputBorder.none,
                                     focusedBorder: OutlineInputBorder(
@@ -1092,26 +1118,13 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
-
-
                                   setState(() {
+
+                                    approvedPercentage[index].clear();
+                                    lineAmount[index].clear();
 
                                   });
 
-                                  discountRupees[index].clear();
-                                  if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
-                                  }
                                 },
                               ),
                             ),
@@ -1141,23 +1154,12 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              if(estimateItems['items'][index]['estItemId']!=null){
-                                deleteLineItem(estimateItems['items'][index]['estItemId'],index);
-                              }
-                              else{
-                                try{
-                                  estimateItems['items'].removeAt(index);
-                                  units.removeAt(index);
-                                  discountRupees.removeAt(index);
-                                  discountPercentage.removeAt(index);
-                                  tax.removeAt(index);
-                                  lineAmount.removeAt(index);
-                                }
-                                catch(e){
-                                  log(e.toString());
-                                }
-                              }
-
+                              selectedVehicles.removeAt(index);
+                              units.removeAt(index);
+                              approvedPercentage.removeAt(index);
+                              tax.removeAt(index);
+                              lineAmount.removeAt(index);
+                              lineApprovedAmount.removeAt(index);
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -1172,8 +1174,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   )
                 ],
               );
-            },
-          ),
+
+
+            },),
+
+
           const Padding(
             padding: EdgeInsets.only(left: 18,right: 18),
             child: Divider(height: 1,color: mTextFieldBorder,),
@@ -1210,12 +1215,15 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     if(value!=null){
                                       setState(() {
                                         isVehicleSelected=true;
-                                        lineAmount.add(TextEditingController(text: "0"));
-                                        lineApprovedAmount.add(TextEditingController(text: '0'));
                                         units.add(TextEditingController(text: '1'));
-                                        discountPercentage.add(TextEditingController(text:'0'));
-                                        tax.add(TextEditingController());
-                                        estimateItems['items'].add(value);
+                                        approvedPercentage.add(TextEditingController(text:'0'));
+                                        tax.add(TextEditingController(text:"0"));
+                                        lineAmount.add(TextEditingController());
+                                        lineApprovedAmount.add(TextEditingController());
+                                        subAmountTotal.text="0";
+                                        selectedVehicles.add(value);
+                                        // print('---------------');
+                                        // print( value);
                                       });
                                     }
                                   });
@@ -1253,11 +1261,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   const Expanded(child: Center(child: Text("Sub Total"))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(child: Center(child: Builder(
-                      builder: (context) {
-                        return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
-                      }
-                  ))),
+                  // Expanded(child: Center(child: Builder(
+                  //     builder: (context) {
+                  //       return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
+                  //     }
+                  // ))),
                   const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
@@ -1399,10 +1407,9 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-
                                             selectedItems={
-                                              "itemsService":displayList[i]['model_name']??"",
-                                              "priceItem":displayList[i]['onroad_price'].toString(),
+                                              "model_name":displayList[i]['model_name']??"",
+                                              "onroad_price":displayList[i]['onroad_price'].toString(),
                                               "quantity":1,
                                               "discount":0,
                                               "tax":0,
@@ -2003,16 +2010,16 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                           "org_id": orgId,
                                           "items": [],
                                         };
-                                        for(int i=0;i<estimateItems['items'].length;i++){
+                                        for(int i=0;i<selectedVehicles.length;i++){
                                           updateEstimate['items'].add(
                                               {
                                                 "amount": lineAmount[i].text,
-                                                "discount":  discountPercentage[i].text,
+                                                "discount":  approvedPercentage[i].text,
                                                 "estVehicleId": estimateItems['estVehicleId'],
-                                                "itemsService": estimateItems['items'][i]['itemsService'],
-                                                "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                                "itemsService": selectedVehicles[i]['model_name'],
+                                                "priceItem": selectedVehicles[i]['onroad_price'].toString(),
                                                 "quantity": units[i].text,
-                                                "tax": tax[i].text,
+                                                "tax": lineApprovedAmount[i].text,
                                               }
                                           );
                                         }
