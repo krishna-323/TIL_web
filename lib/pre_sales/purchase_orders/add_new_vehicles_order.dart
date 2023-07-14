@@ -874,9 +874,21 @@ class _EstimateState extends State<Estimate> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+                                  double tempValue=0.0;
                                   setState(() {
 
                                   });
+                                  if(v.isNotEmpty || v!=""){
+                                    try{
+                                      tempValue=double.parse(v.toString());
+                                      if(tempValue>100){
+                                        discountPercentage[index].clear();
+                                      }
+                                    }
+                                    catch(e){
+                                      discountPercentage[index].clear();
+                                    }
+                                  }
                                 },
                               ),
                             ),
@@ -931,6 +943,9 @@ class _EstimateState extends State<Estimate> {
                                     onSelected: (String value) {
                                       // print('--------what it is getting ------------');
                                       // print(value);
+                                      if(discountPercentage[index].text.isEmpty || discountPercentage[index].text==""){
+                                        discountPercentage[index].text="0";
+                                      }
                                       setState(() {
                                         tax[index].text = value;
                                         // print('-----assigned Value-----');

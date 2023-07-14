@@ -861,22 +861,20 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+                                  double tempValue=0.0;
                                   setState(() {
 
                                   });
-                                  discountRupees[index].clear();
-                                  if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                  if(v.isNotEmpty || v!=""){
+                                    try{
+                                      tempValue=double.parse(v.toString());
+                                      if(tempValue>100){
+                                        discountPercentage[index].clear();
+                                      }
+                                    }
+                                    catch(e){
+                                      discountPercentage[index].clear();
+                                    }
                                   }
                                 },
                               ),
