@@ -12,7 +12,7 @@ import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
 
 import '../../widgets/motows_buttons/outlined_mbutton.dart';
-import 'create_new_order.dart';
+import 'add_new_parts_order.dart';
 
 
 
