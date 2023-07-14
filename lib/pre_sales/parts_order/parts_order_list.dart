@@ -280,37 +280,26 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                 children: [
                                                   Padding(
                                                       padding: const EdgeInsets.all(8.0),
-                                                      child: MaterialButton(onPressed: (){
-                                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                            CreatePartOrder(selectedDestination: widget.args.selectedDestination,
-                                                              drawerWidth: widget.args.drawerWidth,)
-                                                        )).then((value) => fetchEstimate());
-                                                      },
-                                                        color: Colors.blue,
-                                                        child: const Text('+ Create Part Order',style: TextStyle(color: Colors.white),),
-                                                      )
+                                                      child:SizedBox(
+
+                                                        width: 150,
+                                                        height:30,
+                                                        child: OutlinedMButton(
+                                                          text: '+ Create Part Order',
+                                                          buttonColor:mSaveButton ,
+                                                          textColor: Colors.white,
+                                                          borderColor: mSaveButton,
+                                                          onTap:(){
+                                                            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                                CreatePartOrder(selectedDestination: widget.args.selectedDestination,
+                                                                  drawerWidth: widget.args.drawerWidth,)
+                                                            )).then((value) => fetchEstimate());
+                                                          },
+                                                        ),
+                                                      ),
                                                   ),
                                                   const SizedBox(width: 20,),
-                                                  // SizedBox(width: 10,),
-                                                  // MaterialButton(
-                                                  //   minWidth: 20,
-                                                  //   shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(12.0) ),
-                                                  //   color: Colors.white,
-                                                  //   onPressed: () {
-                                                  //     Navigator.push(
-                                                  //         context,
-                                                  //         MaterialPageRoute(builder: (context)=>OrderDetails(
-                                                  //           drawerWidth:widget.arg.drawerWidth ,
-                                                  //           selectedDestination: widget.arg.selectedDestination, title: 1,
-                                                  //         )
-                                                  //         )
-                                                  //     ).then((value) => fetchListCustomerData());
-                                                  //   },
-                                                  //   child: const Icon(
-                                                  //       Icons.more_vert,
-                                                  //     color: Colors.black,
-                                                  //       ),
-                                                  // )
+
                                                 ],
                                               ),
                                             ],

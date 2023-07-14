@@ -251,15 +251,22 @@ class _WarrantyState extends State<Warranty> {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: MaterialButton(onPressed: (){
-                                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                        AddNewWarranty(selectedDestination: widget.args.selectedDestination,
-                                                          drawerWidth: widget.args.drawerWidth,)
-                                                    )).then((value) => fetchEstimate());
-                                                  },
-                                                    color: Colors.blue,
-                                                    child: const Text('+ Create Warranty Order',style: TextStyle(color: Colors.white),),
-                                                  )
+                                                  child:SizedBox(
+                                                    height: 30,
+                                                    width: 180,
+                                                    child: OutlinedMButton(
+                                                      text: '+ Create Warranty Order',
+                                                      buttonColor:mSaveButton ,
+                                                      textColor: Colors.white,
+                                                      borderColor: mSaveButton,
+                                                      onTap:(){
+                                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                            AddNewWarranty(selectedDestination: widget.args.selectedDestination,
+                                                              drawerWidth: widget.args.drawerWidth,)
+                                                        )).then((value) => fetchEstimate());
+                                                      },
+                                                    ),
+                                                  ),
                                                 ),
                                                 const SizedBox(width: 20,),
                                               ],

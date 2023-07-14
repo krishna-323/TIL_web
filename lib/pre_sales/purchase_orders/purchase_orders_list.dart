@@ -241,15 +241,24 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.all(8),
-                                                  child: MaterialButton(onPressed: (){
-                                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                        Estimate(selectedDestination: widget.args.selectedDestination,
-                                                          drawerWidth: widget.args.drawerWidth,)
-                                                    )).then((value) => fetchEstimate());
-                                                  },
-                                                    color: Colors.blue,
-                                                    child: const Text('+ Create Vehicle Order',style: TextStyle(color: Colors.white),),
-                                                  ),
+                                                  child: SizedBox(
+
+                                                    width: 150,
+                                                    height:30,
+                                                    child: OutlinedMButton(
+                                                      text: '+ Create Vehicle Order',
+                                                      buttonColor:mSaveButton ,
+                                                      textColor: Colors.white,
+                                                      borderColor: mSaveButton,
+                                                      onTap:(){
+                                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                            Estimate(selectedDestination: widget.args.selectedDestination,
+                                                              drawerWidth: widget.args.drawerWidth,)
+                                                        )).then((value) => fetchEstimate());
+                                                      },
+                                                    ),
+                                                  )
+
                                                 ),
                                                 const SizedBox(width: 20,),
                                               ],
@@ -694,9 +703,9 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
             setState(() {
               setState(() {
                 startVal=0;
-                // displayList=[];
-                // phoneController.clear();
-                // fetchListCustomerData();
+                displayListItems=[];
+                searchByStatus.clear();
+                fetchEstimate();
               });
             });
           },
