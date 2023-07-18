@@ -33,7 +33,7 @@ class _WarrantyState extends State<Warranty> {
   void  initState(){
     super.initState();
     getInitialData().whenComplete(() {
-      fetchEstimate();
+      fetchWarrantyList();
     });
     loading=true;
   }
@@ -52,7 +52,7 @@ class _WarrantyState extends State<Warranty> {
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
   }
-  Future fetchEstimate()async{
+  Future fetchWarrantyList()async{
     dynamic response;
     String url='';
     if(role=="Manager"){
@@ -171,7 +171,7 @@ class _WarrantyState extends State<Warranty> {
                                                 if(value.isEmpty || value==""){
                                                   startVal=0;
                                                   displayListItems=[];
-                                                  fetchEstimate();
+                                                  fetchWarrantyList();
                                                 }
                                                 else if(searchByOrderID.text.isNotEmpty || searchByStatus.text.isNotEmpty){
                                                   searchByOrderID.clear();
@@ -194,7 +194,7 @@ class _WarrantyState extends State<Warranty> {
                                                     if(value.isEmpty || value==""){
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      fetchEstimate();
+                                                      fetchWarrantyList();
                                                     }
                                                     else if(searchByStatus.text.isNotEmpty || searchByDateController.text.isNotEmpty){
                                                       searchByStatus.clear();
@@ -218,7 +218,7 @@ class _WarrantyState extends State<Warranty> {
                                                     if(value.isEmpty || value==""){
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      fetchEstimate();
+                                                      fetchWarrantyList();
                                                     }
                                                     else if(searchByOrderID.text.isNotEmpty || searchByDateController.text.isNotEmpty){
                                                       searchByOrderID.clear();
@@ -263,7 +263,7 @@ class _WarrantyState extends State<Warranty> {
                                                         Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
                                                             AddNewWarranty(selectedDestination: widget.args.selectedDestination,
                                                               drawerWidth: widget.args.drawerWidth,)
-                                                        )).then((value) => fetchEstimate());
+                                                        )).then((value) => fetchWarrantyList());
                                                       },
                                                     ),
                                                   ),
@@ -570,7 +570,13 @@ class _WarrantyState extends State<Warranty> {
   //Fetch By Names Apis.
   Future fetchDate(String searchByDate)async{
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$searchByDate";
+    String url="";
+    if(role=="Manager"){
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$searchByDate";
+    }
+    else{
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$userId/$searchByDate";
+    }
     try{
      await getData(url:url ,context: context).then((date){
        setState(() {
@@ -600,7 +606,13 @@ class _WarrantyState extends State<Warranty> {
   }
   Future fetchByOrderID(String orderID)async{
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$role/$orderID";
+    }
     try{
       await getData(context: context,url: url).then((orderID){
         setState(() {
@@ -629,12 +641,19 @@ class _WarrantyState extends State<Warranty> {
   }
   Future fetchByStatus(String status)async{
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$status";
+    String url='';
+    if(role=="Manager"){
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$status";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$userId/$status";
+    }
     try{
       await getData(context: context,url: url).then((status){
         setState(() {
           if(status!=null){
             response =status;
+            print(response);
             estimateItems=response;
             displayListItems=[];
             if(displayListItems.isEmpty){
@@ -666,7 +685,7 @@ class _WarrantyState extends State<Warranty> {
               startVal=0;
               displayListItems=[];
               searchByDateController.clear();
-             fetchEstimate();
+             fetchWarrantyList();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -689,7 +708,7 @@ class _WarrantyState extends State<Warranty> {
               startVal=0;
               displayListItems=[];
               searchByOrderID.clear();
-              fetchEstimate();
+              fetchWarrantyList();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -713,7 +732,7 @@ class _WarrantyState extends State<Warranty> {
                 startVal=0;
                 displayListItems=[];
                 searchByStatus.clear();
-               fetchEstimate();
+               fetchWarrantyList();
               });
             });
           },

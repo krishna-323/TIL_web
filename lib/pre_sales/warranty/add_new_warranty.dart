@@ -139,30 +139,23 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                     shadowColor: Colors.black,
                     title: const Text("Create Warranty Purchase Order"),
                     actions: [
-                      Row(
+                      const Row(
                         children: [
-                          SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Save and New',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context)=>DisplayEstimateItems(
-                                //       drawerWidth:widget.args.drawerWidth ,
-                                //       selectedDestination: widget.args.selectedDestination,
-                                //     )
-                                //     )
-                                // );
-                                setState(() {
-
-                                });
-                              },
-
-                            ),
-                          ),
+                          // SizedBox(
+                          //   width: 120,height: 28,
+                          //   child: OutlinedMButton(
+                          //     text: 'Save and New',
+                          //     textColor: mSaveButton,
+                          //     borderColor: mSaveButton,
+                          //     onTap: (){
+                          //
+                          //       setState(() {
+                          //
+                          //       });
+                          //     },
+                          //
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(width: 20),
@@ -188,8 +181,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                         searchWarehouse=false;
                                       }
                                       if(indexNumber==0){
-                                        // print('-------if condition------');
-                                        // print(indexNumber);
+
                                         tableLineDataBool=true;
                                       }
                                     });
@@ -235,16 +227,15 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
                                       ]
                                     };
-                                    // print('-------------------salesInvoiceDate------------------');
-                                    // print(salesInvoiceDate.text);
+
                                     for (int i = 0; i < selectedVehicles.length; i++) {
                                       postDetails['items'].add(
                                           {
                                             "amount": lineAmount[i].text,
                                             "discount": approvedPercentage[i].text,
                                             "estVehicleId": "string",
-                                            "itemsService": selectedVehicles[i]['model_name']??"",
-                                            "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                            "itemsService": "${selectedVehicles[i]['name']??""} - ${selectedVehicles[i]['description']??""}",
+                                            "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                             "quantity": units[i].text,
                                             "tax": tax[i].text,
                                           }
@@ -755,21 +746,19 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: selectedVehicles.length,
             itemBuilder: (context, index) {
-              //print('----inside list view builder--------');
-              //print(selectedVehicles);
               indexNumber = index+1;
               double tempTax =0;
               double tempLineData=0;
               double tempDiscount=0;
               try{
-                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toStringAsFixed(1);
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['selling_price'].toString())* (double.parse(units[index].text))).toStringAsFixed(1);
               }
               catch(e){
                 log(e.toString());
               }
               if(approvedPercentage[index].text.isNotEmpty) {
                 try{
-                    tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['onroad_price']));
+                    tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['selling_price'].toString()));
                     tempLineData =(tempDiscount);
                     //  tempLineData =(double.parse(lineAmount[index].text)+tempDiscount);
                     lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
@@ -781,8 +770,8 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                 }
                 } else if (lineApprovedAmount[index].text.isNotEmpty) {
                 try {
-                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['onroad_price'])*100;
-                    approvedPercentage[index].text = tempTax.toStringAsFixed(1);
+                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['selling_price'].toString())*100;
+                    approvedPercentage[index].text = tempTax.toStringAsFixed(2);
                     //lineAmount[index].text =(double.parse(approvedPercentage[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
                     lineAmount[index].text=(double.parse(lineApprovedAmount[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
                     if(double.parse(approvedPercentage[index].text)>100){
@@ -819,7 +808,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['name']} - ${selectedVehicles[index]['description']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -849,7 +838,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 2,child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
+                          Expanded(flex: 2,child: Center(child: Text(selectedVehicles[index]['selling_price'].toString()))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
 
                           Expanded(flex: 2,child:  Padding(
@@ -1213,11 +1202,11 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                 padding: EdgeInsets.only(left: 18.0),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Text("Brand")),
-                                    Expanded(child: Text("Model")),
-                                    Expanded(child: Text("Variant")),
-                                    Expanded(child: Text("On road price")),
-                                    Expanded(child: Text("Color")),
+                                    Expanded(child: Text("Name")),
+                                    Expanded(child: Text("Description")),
+                                    Expanded(child: Text("Unit")),
+                                    Expanded(child: Text("Price")),
+                                    Expanded(child: Text("Type")),
                                   ],
                                 ),
                               ),
@@ -1231,7 +1220,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-                                            Navigator.pop(context,displayList[i]);
+                                             Navigator.pop(context,displayList[i]);
                                           });
 
                                         },
@@ -1243,32 +1232,32 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['make']),
+                                                    child: Text(displayList[i]['name']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
                                                     child: Text(
-                                                        displayList[i]['model_name']),
+                                                        displayList[i]['description']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['varient_name']),
+                                                    child: Text(displayList[i]['unit']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['onroad_price'].toString()),
+                                                    child: Text(displayList[i]['selling_price'].toString()),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['varient_color1']),
+                                                    child: Text(displayList[i]['type']),
                                                   ),
                                                 ),
                                               ],
@@ -1564,7 +1553,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
   getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
+    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/get_all_newitem";
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {
@@ -1572,8 +1561,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
             response = value;
             vehicleList = value;
             displayList=vehicleList;
-            // print('------------check proper--------------');
-            // print(displayList);
+
           }
           loading = false;
         });
@@ -1587,8 +1575,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   }
   postEstimate(Map estimate)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/add_parts_warranty';
-    // print('----------inside post api-------');
-    // print(estimate);
+
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {
         if(value!=null){

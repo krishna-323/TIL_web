@@ -28,10 +28,6 @@ class WarrantyDetails extends StatefulWidget {
 class _WarrantyDetailsState extends State<WarrantyDetails> {
 
   bool loading = false;
-  bool showVendorDetails = false;
-  bool showWareHouseDetails = false;
-  bool isVehicleSelected = false;
-
   late double width ;
   var wareHouseController=TextEditingController();
   var vendorSearchController = TextEditingController();
@@ -48,34 +44,37 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   Map estimateItems={};
   List lineItems=[];
   Map updateEstimate={};
-  bool warrantyLineDataBool=false;
+  bool warrantyLineDataError=false;
   final commentController=TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     estimateItems=widget.estimateItem;
-    // print('--------estimateItems--------');
-    // print(estimateItems);
+
     userId=estimateItems['userid'];
     commentController.text=estimateItems['comment']??"";
-    billToName=estimateItems['billAddressName']??'';
-    billToCity=estimateItems['billAddressCity']??"";
-    billToStreet=estimateItems['billAddressStreet']??"";
-    billToState=estimateItems['billAddressState']??"";
-    billToZipcode=estimateItems['billAddressZipcode']??"";
-    shipToName=estimateItems['shipAddressName']??"";
-    shipToCity=estimateItems['shipAddressCity']??"";
-    shipToStreet=estimateItems['shipAddressStreet']??"";
-    shipToState=estimateItems['shipAddressState']??"";
-    shipZipcode=estimateItems['shipAddressZipcode']??"";
+
+
+    wareHouse['Name']=estimateItems['shipAddressName']??"";
+    wareHouse['city']=estimateItems['shipAddressCity']??"";
+    wareHouse['state']=estimateItems['shipAddressState']??"";
+    wareHouse['street']=estimateItems['shipAddressStreet']??"";
+    wareHouse['zipcode']=estimateItems['shipAddressZipcode']??"";
+
+    vendorData['Name']=estimateItems['billAddressName']??"";
+    vendorData['city']=estimateItems['billAddressCity']??"";
+    vendorData['state']=estimateItems['billAddressState']??"";
+    vendorData['street']=estimateItems['billAddressStreet']??"";
+    vendorData['zipcode']=estimateItems['billAddressZipcode']??"";
+
     additionalCharges.text=estimateItems['additionalCharges'].toString();
     salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??"";
     for(int i=0;i<estimateItems['items'].length;i++){
       selectedVehicles.add(
         {
-          "model_name":estimateItems['items'][i]['itemsService'],
-          "onroad_price":estimateItems["items"][i]["priceItem"],
+          "name":estimateItems['items'][i]['itemsService'],
+          "selling_price":estimateItems["items"][i]["priceItem"],
 
         }
 
@@ -141,17 +140,9 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   Map selectedItems={};
   String ?authToken;
 
-  String billToName='';
-  String billToCity='';
-  String billToStreet='';
-  String billToState='';
-  int billToZipcode=0;
 
-  String shipToName='';
-  String shipToCity='';
-  String shipToStreet='';
-  String shipToState='';
-  int shipZipcode=0;
+
+
   String role ='';
   String userId ='';
   String managerId ='';
@@ -203,8 +194,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 borderColor: Colors.green,
                                 onTap: (){
                                   setState(() {
-                                    if(estimateItems['items'].isEmpty){
-                                      warrantyLineDataBool=true;
+                                    if(selectedVehicles.isEmpty){
+                                      warrantyLineDataError=true;
                                     }
                                     else{
                                       double tempTotal=0;
@@ -217,20 +208,20 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                       updateEstimate =    {
                                         "additionalCharges": additionalCharges.text,
                                         "address": "string",
-                                        "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                        "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                        "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                        "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                        "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                        "billAddressCity": vendorData['city']??"",
+                                        "billAddressName":vendorData['Name']??"",
+                                        "billAddressState": vendorData['state']??"",
+                                        "billAddressStreet":vendorData['street']??"",
+                                        "billAddressZipcode": vendorData['zipcode']??"",
                                         "serviceDueDate": "",
                                         "estVehicleId": estimateItems['estVehicleId']??"",
                                         "serviceInvoice": salesInvoice.text,
                                         "serviceInvoiceDate": salesInvoiceDate.text,
-                                        "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                        "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                        "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                        "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                        "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                        "shipAddressCity":wareHouse['city']??"",
+                                        "shipAddressName": wareHouse['Name']??"",
+                                        "shipAddressState": wareHouse['state']??"",
+                                        "shipAddressStreet": wareHouse['street']??"",
+                                        "shipAddressZipcode": wareHouse['zipcode']??"",
                                         "subTotalAmount": subAmountTotal.text,
                                         "subTotalDiscount": subDiscountTotal.text,
                                         "subTotalTax": subTaxTotal.text,
@@ -250,15 +241,14 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                               "amount": lineAmount[i].text,
                                               "discount":  approvedPercentage[i].text,
                                               "estVehicleId": estimateItems['estVehicleId'],
-                                              "itemsService": selectedVehicles[i]['model_name'],
-                                              "priceItem": selectedVehicles[i]['onroad_price'].toString(),
+                                              "itemsService":selectedVehicles[i]['name']+" - "+selectedVehicles[i]['description'],
+                                              "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                               "quantity": units[i].text,
                                               "tax": lineApprovedAmount[i].text,
                                             }
                                         );
                                       }
-                                      // print('-------Post details --------');
-                                      // print(updateEstimate);
+
                                       putUpdatedEstimated(updateEstimate);
                                     }
                                   });
@@ -350,7 +340,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                                           MaterialButton(
                                                             color: Colors.red,
                                                             onPressed: () {
-                                                              // print(userId);
+
                                                               deleteEstimateItemData(estimateItems['estVehicleId']);
                                                             },
                                                             child: const Text(
@@ -425,9 +415,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
+
                                 setState(() {
-                                  if(estimateItems['items'].isEmpty){
-                                    warrantyLineDataBool=true;
+
+                                  if(selectedVehicles.isEmpty){
+                                    warrantyLineDataError=true;
                                   }
                                   else{
                                     double tempTotal=0;
@@ -440,20 +432,20 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     updateEstimate =    {
                                       "additionalCharges": additionalCharges.text,
                                       "address": "string",
-                                      "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                      "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                      "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                      "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                      "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                      "billAddressCity": vendorData['city']??"",
+                                      "billAddressName":vendorData['Name']??"",
+                                      "billAddressState": vendorData['state']??"",
+                                      "billAddressStreet":vendorData['street']??"",
+                                      "billAddressZipcode": vendorData['zipcode']??"",
                                       "serviceDueDate": "",
                                       "estVehicleId": estimateItems['estVehicleId']??"",
                                       "serviceInvoice": salesInvoice.text,
                                       "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                      "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                      "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                      "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                      "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                      "shipAddressCity": wareHouse['city']??"",
+                                      "shipAddressName": wareHouse['Name']??"",
+                                      "shipAddressState": wareHouse['state']??"",
+                                      "shipAddressStreet": wareHouse['street']??"",
+                                      "shipAddressZipcode": wareHouse['zipcode']??"",
                                       "subTotalAmount": subAmountTotal.text,
                                       "subTotalDiscount": subDiscountTotal.text,
                                       "subTotalTax": subTaxTotal.text,
@@ -473,15 +465,13 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                             "amount": lineAmount[i].text,
                                             "discount":  approvedPercentage[i].text,
                                             "estVehicleId": estimateItems['estVehicleId'],
-                                            "itemsService": selectedVehicles[i]['model_name'],
-                                            "priceItem": selectedVehicles[i]['onroad_price'].toString(),
+                                            "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                            "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                             "quantity": units[i].text,
                                             "tax": lineApprovedAmount[i].text,
                                           }
                                       );
                                     }
-                                    // print('-------Post details --------');
-                                    // print(updateEstimate);
                                     putUpdatedEstimated(updateEstimate);
                                   }
                                 });
@@ -627,7 +617,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
                                 onTap: (){
                                   setState(() {
-                                    showVendorDetails=false;
+                                   // showVendorDetails=false;
                                     newAddress=true;
                                   });
                                 },
@@ -650,7 +640,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               future: fetchData,
                               getSelectedValue: (VendorModelAddress value) {
                                 setState(() {
-                                  showVendorDetails=true;
+                                  //showVendorDetails=true;
                                   vendorData ={
                                     'Name':value.label,
                                     'city': value.city,
@@ -668,13 +658,13 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                       padding: const EdgeInsets.all(18.0),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(vendorData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
 
                           Row(crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(width: 70,child:  Text("Street")),
                               const Text(": "),
-                              Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${vendorData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -682,7 +672,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("City")),
                               const Text(": "),
-                              Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${vendorData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -690,7 +680,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("State")),
                               const Text(": "),
-                              Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${vendorData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -698,7 +688,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("ZipCode :")),
                               const Text(": "),
-                              Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${vendorData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
                         ],
@@ -730,7 +720,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
                                 onTap: (){
                                   setState(() {
-                                    showWareHouseDetails=false;
+
                                     newShipping=true;
                                   });
                                 },
@@ -752,7 +742,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                               future: fetchData,
                               getSelectedValue: (VendorModelAddress value) {
                                 setState(() {
-                                  showWareHouseDetails=true;
+
                                   wareHouse ={
                                     'Name':value.label,
                                     'city': value.city,
@@ -761,11 +751,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     'zipcode': value.zipcode,
                                   };
                                 });
-
-
-                                // print(value.value);
-                                // print(value.city);
-                                // print(value.street);// this prints the selected option which could be an object
                               },
                             ),
                           ),
@@ -775,12 +760,12 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                       padding: const EdgeInsets.all(18.0),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
                           Row(crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(width: 70,child:  Text("Street")),
                               const Text(": "),
-                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -788,7 +773,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("City")),
                               const Text(": "),
-                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -796,7 +781,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("State")),
                               const Text(": "),
-                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
 
@@ -804,7 +789,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                             children: [
                               const SizedBox(width: 70,child: Text("ZipCode :")),
                               const Text(": "),
-                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                             ],
                           ),
                         ],
@@ -964,8 +949,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: selectedVehicles.length,
             itemBuilder: (context, index) {
-              //print('----inside list view builder--------');
-              //print(selectedVehicles);
+
 
               double tempTax =0;
               double tempLineData=0;
@@ -974,7 +958,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
 
               if(approvedPercentage[index].text.isNotEmpty) {
                 try{
-                  tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['onroad_price'].toString()));
+                  tempDiscount = ((double.parse(approvedPercentage[index].text)/100) *  double.parse(selectedVehicles[index]['selling_price'].toString()));
                   tempLineData =(tempDiscount);
                   lineApprovedAmount[index].text =tempDiscount.toStringAsFixed(1);
                   tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
@@ -986,8 +970,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
               }
               else if (lineApprovedAmount[index].text.isNotEmpty) {
                 try {
-                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['onroad_price'].toString())*100;
-                  approvedPercentage[index].text = tempTax.toStringAsFixed(1);
+                  tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['selling_price'].toString())*100;
+                  approvedPercentage[index].text = tempTax.toStringAsFixed(2);
                   lineAmount[index].text=(double.parse(lineApprovedAmount[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
                   if(double.parse(approvedPercentage[index].text)>100){
                     approvedPercentage[index].text ="0.0";
@@ -1023,7 +1007,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1053,7 +1037,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 2,child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
+                          Expanded(flex: 2,child: Center(child: Text("${selectedVehicles[index]['selling_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
 
                           Expanded(flex: 2,child:  Padding(
@@ -1199,11 +1183,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor: warrantyLineDataBool==true? Colors.red: mSaveButton,
+                                borderColor: warrantyLineDataError==true? Colors.red: mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
-                                  if(displayList.isNotEmpty){
-                                    warrantyLineDataBool=false;
+                                  if(selectedVehicles.isNotEmpty){
+                                    warrantyLineDataError=false;
                                   }
                                   brandNameController.clear();
                                   modelNameController.clear();
@@ -1214,7 +1198,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                       builder: (context) => showDialogBox()).then((value) {
                                     if(value!=null){
                                       setState(() {
-                                        isVehicleSelected=true;
                                         units.add(TextEditingController(text: '1'));
                                         approvedPercentage.add(TextEditingController(text:'0'));
                                         tax.add(TextEditingController(text:"0"));
@@ -1222,8 +1205,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         lineApprovedAmount.add(TextEditingController());
                                         subAmountTotal.text="0";
                                         selectedVehicles.add(value);
-                                        // print('---------------');
-                                        // print( value);
                                       });
                                     }
                                   });
@@ -1236,7 +1217,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 ),
               ),
               const SizedBox(height: 5,),
-              if(warrantyLineDataBool==true)
+              if(warrantyLineDataError==true)
                 const Padding(
                   padding: EdgeInsets.only(left:200),
                   child: Text("Please Add Warranty Line Data",style: TextStyle(color: Colors.red),),
@@ -1389,11 +1370,11 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                 padding: EdgeInsets.only(left: 18.0),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Text("Brand")),
-                                    Expanded(child: Text("Model")),
-                                    Expanded(child: Text("Variant")),
-                                    Expanded(child: Text("On road price")),
-                                    Expanded(child: Text("Color")),
+                                    Expanded(child: Text("Name")),
+                                    Expanded(child: Text("Description")),
+                                    Expanded(child: Text("Unit")),
+                                    Expanded(child: Text("Price")),
+                                    Expanded(child: Text("Type")),
                                   ],
                                 ),
                               ),
@@ -1407,15 +1388,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-                                            selectedItems={
-                                              "model_name":displayList[i]['model_name']??"",
-                                              "onroad_price":displayList[i]['onroad_price'].toString(),
-                                              "quantity":1,
-                                              "discount":0,
-                                              "tax":0,
-                                              "amount":displayList[i]['onroad_price'].toString(),
-                                            };
-                                            Navigator.pop(context,selectedItems,);
+                                            Navigator.pop(context,displayList[i]);
                                           });
 
                                         },
@@ -1427,32 +1400,32 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['make']),
+                                                    child: Text(displayList[i]['name']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
                                                     child: Text(
-                                                        displayList[i]['model_name']),
+                                                        displayList[i]['description']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['varient_name']),
+                                                    child: Text(displayList[i]['unit']),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['onroad_price'].toString()),
+                                                    child: Text(displayList[i]['selling_price'].toString()),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: SizedBox(
                                                     height: 20,
-                                                    child: Text(displayList[i]['varient_color1']),
+                                                    child: Text(displayList[i]['type']),
                                                   ),
                                                 ),
                                               ],
@@ -1781,7 +1754,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
 
   getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
+    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/get_all_newitem";
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {
@@ -1810,8 +1783,6 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           body: jsonEncode(updatedEstimated)
       );
       if(response.statusCode==200){
-        // print('-------response----------');
-        // print(response.body);
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
@@ -1841,14 +1812,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           tax.removeAt(index);
           lineApprovedAmount.removeAt(index);
           lineAmount.removeAt(index);
-          // print('----------estimatedItemId--------');
-          // print(estimateItemId);
-          // print('------inside delete api---');
-          // print(response.statusCode);
-          // print(response.body);
-          // print(estimateItems['items']);
-          // estimateItems['items']=[];
-          // print(estimateItems['items']);
+         // estimateItems['items']=[];
           // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           //   content:  Text('Data Deleted'),)
           // );
@@ -1869,7 +1833,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
           }
       );
       if(response.statusCode ==200){
-       // print(response.body);
+
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
@@ -1969,8 +1933,8 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                   borderColor: Colors.red,
                                   onTap: (){
                                     setState(() {
-                                      if(estimateItems['items'].isEmpty){
-                                        warrantyLineDataBool=true;
+                                      if(selectedVehicles.isEmpty){
+                                        warrantyLineDataError=true;
                                       }
                                       else{
                                         double tempTotal=0;
@@ -1983,20 +1947,20 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         updateEstimate =    {
                                           "additionalCharges": additionalCharges.text,
                                           "address": "string",
-                                          "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                          "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                          "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                          "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                          "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                          "billAddressCity": vendorData['city']??"",
+                                          "billAddressName":vendorData['Name']??"",
+                                          "billAddressState": vendorData['state']??"",
+                                          "billAddressStreet":vendorData['street']??"",
+                                          "billAddressZipcode": vendorData['zipcode']??"",
                                           "serviceDueDate": "",
                                           "estVehicleId": estimateItems['estVehicleId']??"",
                                           "serviceInvoice": salesInvoice.text,
                                           "serviceInvoiceDate": salesInvoiceDate.text,
-                                          "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                          "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                          "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                          "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                          "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                          "shipAddressCity": wareHouse['city']??"",
+                                          "shipAddressName": wareHouse['Name']??"",
+                                          "shipAddressState": wareHouse['state']??"",
+                                          "shipAddressStreet":wareHouse['street']??"",
+                                          "shipAddressZipcode": wareHouse['zipcode']??"",
                                           "subTotalAmount": subAmountTotal.text,
                                           "subTotalDiscount": subDiscountTotal.text,
                                           "subTotalTax": subTaxTotal.text,
@@ -2016,15 +1980,14 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                                 "amount": lineAmount[i].text,
                                                 "discount":  approvedPercentage[i].text,
                                                 "estVehicleId": estimateItems['estVehicleId'],
-                                                "itemsService": selectedVehicles[i]['model_name'],
-                                                "priceItem": selectedVehicles[i]['onroad_price'].toString(),
+                                                "itemsService": selectedVehicles[i]['name'] +" - "+selectedVehicles[i]['description'],
+                                                "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                                 "quantity": units[i].text,
                                                 "tax": lineApprovedAmount[i].text,
                                               }
                                           );
                                         }
-                                        // print('-------Post details --------');
-                                        // print(updateEstimate);
+
                                         putUpdatedEstimated(updateEstimate);
                                       }
                                     });
