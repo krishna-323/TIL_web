@@ -210,7 +210,13 @@ class _LoginPageState extends State<LoginPage> {
         })
     );
     if (response.statusCode == 200) {
-      Map responseData = jsonDecode(response.body);
+      Map responseData ={};
+      try{
+        responseData= jsonDecode(response.body);
+      }
+      catch(e){
+        log(response.body);
+      }
       if(responseData.containsKey("token")){
         if(responseData['role'].toString()=="Manager"){
           prefs.setString("authToken", responseData['token'].toString());
