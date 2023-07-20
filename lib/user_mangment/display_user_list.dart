@@ -14,7 +14,7 @@ import '../utils/custom_loader.dart';
 import '../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/alertDialogWidget.dart';
-import '../widgets/input_decoration_text_field.dart';
+import '../widgets/motows_buttons/outlined_mbutton.dart';
 
 class UserManagement extends StatefulWidget {
   final UserManagementArguments args;
@@ -212,6 +212,7 @@ class _UserManagementState extends State<UserManagement> {
 
           else{
             Navigator.of(context).pushNamed(MotowsRoutes.userManagement);
+            getUserData();
             //get all user api()
 
 
@@ -305,9 +306,9 @@ class _UserManagementState extends State<UserManagement> {
       height: 35,
       value: 'Edit',
       child: Center(child: SizedBox(width: 150,child: Row(
-        children: [ Icon(Icons.edit,size: 18,color: Colors.grey[800],),
+        children: [ Icon(Icons.edit,size: 15,color: Colors.grey[800],),
           const SizedBox(width: 5,),
-          Text('Edit',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),),
+          Text('Edit',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,),),
         ],
       ))),
 
@@ -315,9 +316,9 @@ class _UserManagementState extends State<UserManagement> {
      CustomPopupMenuItem(height: 35,
       value: 'Delete',
       child: Center(child: SizedBox(width: 150,child: Row(
-        children: [ Icon(Icons.delete_sharp,size: 18,color: Colors.grey[800],),
+        children: [ Icon(Icons.delete_sharp,size: 15,color: Colors.grey[800],),
           const SizedBox(width: 5,),
-          Text('Delete',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),),
+          Text('Delete',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,),),
         ],
       ))),
 
@@ -325,9 +326,9 @@ class _UserManagementState extends State<UserManagement> {
      CustomPopupMenuItem(height: 35,
       value: 'Change Password',
       child: Center(child: SizedBox(width: 150,child: Row(
-        children: [ Icon(Icons.change_circle_sharp,color: Colors.grey[800],size: 18,),
+        children: [ Icon(Icons.change_circle_sharp,color: Colors.grey[800],size: 15,),
           const SizedBox(width: 5,),
-          Text('Change password',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,fontWeight: FontWeight.bold),),
+          Text('Change password',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.grey[800],fontSize: 15,),),
         ],
       ))),
 
@@ -535,16 +536,20 @@ class _UserManagementState extends State<UserManagement> {
                                       //Post new User dialog box.
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20.0),
-                                        child: MaterialButton(
-                                          color: Colors.blue,
-                                          onPressed: () {
-                                            customerType='Select User Role';
-                                            companyName="Select Company Name";
-                                            createNewUser(context,companyNamesList);
-                                          },
-                                          child: const Text(
-                                            "+ Create user",
-                                            style: TextStyle(color: Colors.white),
+                                        child:  SizedBox(
+
+                                          width: 150,
+                                          height:30,
+                                          child: OutlinedMButton(
+                                            text: '+ Create user',
+                                            buttonColor:mSaveButton ,
+                                            textColor: Colors.white,
+                                            borderColor: mSaveButton,
+                                            onTap:(){
+                                              customerType='Select User Role';
+                                              companyName="Select Company Name";
+                                              createNewUser(context,companyNamesList);
+                                            },
                                           ),
                                         ),
                                       ),
@@ -650,14 +655,14 @@ class _UserManagementState extends State<UserManagement> {
                                                   child: Text(displayUserData[i]['role']??"")
                                               ),
                                             )),
-                                        Align(
-                                          alignment: Alignment.bottomRight,
+                                        Padding(
+                                          padding: const EdgeInsets.only(right:10.0),
                                           child: Center(
                                             child: SizedBox(width: 25,
                                                 height: 28,
                                                 child:CustomPopupMenuButton<String>(
                                                   childWidth: 200,position: CustomPopupMenuPosition.under,
-                                                  decoration: customPopupDecoration(hintText: 'Create New Service'),
+                                                  decoration: customPopupDecoration(hintText: 'Create New Service',),
                                                   hintText: "",
                                                   shape: const RoundedRectangleBorder(
                                                     side: BorderSide(color:Color(0xFFE0E0E0)),
@@ -747,7 +752,7 @@ class _UserManagementState extends State<UserManagement> {
                                                                     width: 500,
                                                                     child: Stack(children: [
                                                                       Container(
-                                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
                                                                         margin:const EdgeInsets.only(top: 13.0,right: 8.0),
                                                                         child: SingleChildScrollView(
                                                                           child: Form(
@@ -805,10 +810,9 @@ class _UserManagementState extends State<UserManagement> {
                                                                                               );
                                                                                             },
                                                                                             controller: editUserName,
-                                                                                            decoration: decorationInput5(
+                                                                                            decoration: decorationInput5(hintString:
                                                                                                 'Enter User Name',
-                                                                                                editUserName
-                                                                                                    .text.isNotEmpty),
+                                                                                               error: editUserNameError),
                                                                                           ),
                                                                                         ),
                                                                                       )
@@ -955,9 +959,9 @@ class _UserManagementState extends State<UserManagement> {
                                                                                               setState(() {});
                                                                                             },
                                                                                             controller: editEmail,
-                                                                                            decoration: decorationInput5(
+                                                                                            decoration: decorationInput5(hintString:
                                                                                                 'Enter User Email',
-                                                                                                editEmail.text.isNotEmpty),
+                                                                                              error:  editUserEmailError),
                                                                                           ),
                                                                                         ),
                                                                                       )
@@ -968,33 +972,37 @@ class _UserManagementState extends State<UserManagement> {
                                                                                   ),
                                                                                   Align(
                                                                                     alignment: Alignment.center,
-                                                                                    child: MaterialButton(
-                                                                                      color: Colors.blue,
-                                                                                      onPressed: () {
-                                                                                        if (editDetails.currentState!.validate()) {
-                                                                                          Map editUserManagement = {
-                                                                                            'userid':displayUserData[i]['userid'],
-                                                                                            'username': editUserName.text,
-                                                                                            'password':displayUserData[i]['password'],
-                                                                                            'active':true,
-                                                                                            'role': roleInitial,
-                                                                                            'email': editEmail.text,
-                                                                                            'token':'',
-                                                                                            'token_creation_date':'',
-                                                                                            'company_name': selectedCompanyName,
-                                                                                            "manager_id" : managerId ,
-                                                                                            "org_id": orgId
-                                                                                            //editCompanyName.text,
-                                                                                          };
-                                                                                          updateUserDetails(editUserManagement);
-                                                                                        }
+                                                                                    child:  SizedBox(
 
-                                                                                      },
-                                                                                      child: const Text(
-                                                                                        'Update',
-                                                                                        style: TextStyle(color: Colors.white),
+                                                                                      width: 100,
+                                                                                      height:30,
+                                                                                      child: OutlinedMButton(
+                                                                                        text: 'Update',
+                                                                                        buttonColor:mSaveButton ,
+                                                                                        textColor: Colors.white,
+                                                                                        borderColor: mSaveButton,
+                                                                                        onTap:(){
+                                                                                          if (editDetails.currentState!.validate()) {
+                                                                                            Map editUserManagement = {
+                                                                                              'userid':displayUserData[i]['userid'],
+                                                                                              'username': editUserName.text,
+                                                                                              'password':displayUserData[i]['password'],
+                                                                                              'active':true,
+                                                                                              'role': roleInitial,
+                                                                                              'email': editEmail.text,
+                                                                                              'token':'',
+                                                                                              'token_creation_date':'',
+                                                                                              'company_name': selectedCompanyName,
+                                                                                              "manager_id" : managerId ,
+                                                                                              "org_id": orgId
+                                                                                              //editCompanyName.text,
+                                                                                            };
+                                                                                            updateUserDetails(editUserManagement);
+                                                                                          }
+                                                                                        },
                                                                                       ),
                                                                                     ),
+
                                                                                   ),
                                                                                   const SizedBox(
                                                                                     height: 35,
@@ -1148,7 +1156,7 @@ class _UserManagementState extends State<UserManagement> {
                                                                       width: 300,
                                                                       child: Stack(children: [
                                                                         Container(
-                                                                          decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                                          decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
                                                                           margin:const EdgeInsets.only(top: 13.0,right: 8.0),
                                                                           child: Padding(
                                                                             padding: const EdgeInsets.only(left: 20.0,right: 25),
@@ -1178,32 +1186,36 @@ class _UserManagementState extends State<UserManagement> {
                                                                                 ),
                                                                                 Row(
                                                                                   mainAxisAlignment:
-                                                                                  MainAxisAlignment.spaceBetween,
+                                                                                  MainAxisAlignment.spaceEvenly,
                                                                                   children: [
-                                                                                    MaterialButton(
-                                                                                      color: Colors.red,
-                                                                                      onPressed: () {
-                                                                                        // print(userId);
+                                                                                    SizedBox(
+                                                                                    width: 50,
+                                                                                    height:30,
+                                                                                    child: OutlinedMButton(
+                                                                                      text: 'Ok',
+                                                                                      buttonColor:Colors.red ,
+                                                                                      textColor: Colors.white,
+                                                                                      borderColor: Colors.red,
+                                                                                      onTap:(){
                                                                                         assignUserId = displayUserData[i]['userid'];
                                                                                         deleteUserData();
                                                                                       },
-                                                                                      child: const Text(
-                                                                                        'Ok',
-                                                                                        style: TextStyle(color: Colors.white),
-                                                                                      ),
                                                                                     ),
-                                                                                    MaterialButton(
-                                                                                      color: Colors.blue,
-                                                                                      onPressed: () {
-                                                                                        setState(() {
+                                                                                  ),
+                                                                                    SizedBox(
+                                                                                      width: 100,
+                                                                                      height:30,
+                                                                                      child: OutlinedMButton(
+                                                                                        text: 'Cancel',
+                                                                                        buttonColor:mSaveButton ,
+                                                                                        textColor: Colors.white,
+                                                                                        borderColor: mSaveButton,
+                                                                                        onTap:(){
                                                                                           Navigator.of(context).pop();
-                                                                                        });
-                                                                                      },
-                                                                                      child: const Text(
-                                                                                        'Cancel',
-                                                                                        style: TextStyle(color: Colors.white),
+                                                                                        },
                                                                                       ),
                                                                                     )
+
                                                                                   ],
                                                                                 )
                                                                               ],
@@ -1295,7 +1307,7 @@ class _UserManagementState extends State<UserManagement> {
                                                                     width: 500,
                                                                     child: Stack(children: [
                                                                       Container(
-                                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
                                                                         margin:const EdgeInsets.only(top: 13.0,right: 8.0),
                                                                         child: SingleChildScrollView(
                                                                           child: Form(
@@ -1341,9 +1353,9 @@ class _UserManagementState extends State<UserManagement> {
                                                                                             return null;
                                                                                           },
                                                                                           controller: emailBased,
-                                                                                          decoration: decorationInput5(
+                                                                                          decoration: decorationInput5(hintString:
                                                                                               'User Email',
-                                                                                              emailBased.text.isNotEmpty),
+                                                                                             error: editEmailError),
                                                                                         ),
                                                                                       ),
                                                                                     )
@@ -1470,40 +1482,44 @@ class _UserManagementState extends State<UserManagement> {
                                                                                 ),
                                                                                 Align(
                                                                                   alignment: Alignment.center,
-                                                                                  child: MaterialButton(
-                                                                                    color: Colors.blue,
-                                                                                    onPressed: () {
-                                                                                      //Password change.
-                                                                                      Future changePasswordFunc(
-                                                                                          String storeEmail,
-                                                                                          String storePassword) async {
-                                                                                        String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
-                                                                                        final response = await http.get(Uri.parse(url),
-                                                                                            headers: {
-                                                                                              "Content-Type": "application/json",
-                                                                                              'Authorization': 'Bearer $authToken'
-                                                                                            });
-                                                                                        if (response.statusCode == 200) {
-                                                                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
-                                                                                          if(mounted) {
-                                                                                            Navigator.of(context).pop();
-                                                                                          }
-                                                                                        } else {
-                                                                                          log(response.statusCode.toString());
-                                                                                        }
-                                                                                      }
+                                                                                  child:  SizedBox(
+                                                                                    width: 100,
+                                                                                    height:30,
+                                                                                    child: OutlinedMButton(
+                                                                                      text: 'Save',
+                                                                                      buttonColor:mSaveButton ,
+                                                                                      textColor: Colors.white,
+                                                                                      borderColor: mSaveButton,
+                                                                                      onTap:() {
+                                                                                        //Password change.
+                                                                                        Future changePasswordFunc(
+                                                                                            String storeEmail,
+                                                                                            String storePassword) async {
+                                                                                          String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
+                                                                                          final response = await http.get(Uri.parse(url),
+                                                                                              headers: {
+                                                                                                "Content-Type": "application/json",
+                                                                                                'Authorization': 'Bearer $authToken'
+                                                                                              });
+                                                                                          if (response.statusCode == 200) {
 
-                                                                                      setState(() {
-                                                                                        if (changeKey.currentState!.validate()) {
-                                                                                          changePasswordFunc(storeEmail, storePassword);
+                                                                                            if(mounted) {
+                                                                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
+                                                                                              Navigator.of(context).pop();
+                                                                                            }
+                                                                                          } else {
+                                                                                            log(response.statusCode.toString());
+                                                                                          }
                                                                                         }
-                                                                                      });
-                                                                                    },
-                                                                                    child: const Text(
-                                                                                      'Save',
-                                                                                      style: TextStyle(color: Colors.white),
+
+                                                                                        setState(() {
+                                                                                          if (changeKey.currentState!.validate()) {
+                                                                                            changePasswordFunc(storeEmail, storePassword);
+                                                                                          }
+                                                                                        });
+                                                                                      },
                                                                                     ),
-                                                                                  ),
+                                                                                  )
                                                                                 ),
                                                                                 const SizedBox(height: 35,),
                                                                               ]),
@@ -1547,18 +1563,19 @@ class _UserManagementState extends State<UserManagement> {
                                                       }
                                                     });
                                                   },
-                                                  child: Container(height: 30,width: 285,
-                                                    decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.grey)),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(right: 4),
-                                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          SizedBox(width: 150,child: Center(child: Text(customerType,style: TextStyle(color: Colors.grey[700],fontSize: 14,),maxLines: 1))),
-                                                          const Icon(Icons.more_vert,color: Colors.grey,size: 14,)
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  child:Container()
+                                                  // Container(height: 30,width: 285,
+                                                  //   decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.grey)),
+                                                  //   child: Padding(
+                                                  //     padding: const EdgeInsets.only(right: 4),
+                                                  //     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  //       children: [
+                                                  //         SizedBox(width: 150,child: Center(child: Text(customerType,style: TextStyle(color: Colors.grey[700],fontSize: 14,),maxLines: 1))),
+                                                  //         const Icon(Icons.more_vert,color: Colors.grey,size: 14,)
+                                                  //       ],
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
                                                 ),
                                                // child: Center(
                                                //      child: _popMenu(displayUserData[i],))
@@ -1720,6 +1737,12 @@ class _UserManagementState extends State<UserManagement> {
               );
             }).toList();
           Map userData = {};
+          bool userError =false;
+          bool isFocusedUser=false;
+          bool isFocusedCompany=false;
+          bool companyError=false;
+          final createCompanyCon=TextEditingController();
+          final createUserController=TextEditingController();
           String capitalizeFirstWord(String value) {
             if(value.isNotEmpty){
               var result = value[0].toUpperCase();
@@ -1750,369 +1773,497 @@ class _UserManagementState extends State<UserManagement> {
                 }
 
                 return SizedBox(
-                  width: 500,
+                  width: 600,
                   child: Stack(children: [
                     Container(
-                      decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                      width: 600,
+                      height: 450,
+                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5)),
                       margin:const EdgeInsets.only(top: 13.0,right: 8.0),
                       child: SingleChildScrollView(
                         child: Form(
                           key: newUser,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 35.0,right: 35),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20,),
-                                // Top container.
-                                const Align(alignment: Alignment.center,
-                                  child: Text(
-                                    'Create New User',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.indigo,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                //User Name.
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140, child: Text('User Name')),
-                                    const SizedBox(height: 10),
-                                    Expanded(
+                            padding: const EdgeInsets.all(30),
+                            child: Container(
+                              decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder)),
+                              child: Column(
+                                children: [
+                                  // Top container.
+                                   Container(color: Colors.grey[100],
+                                     child: IgnorePointer(ignoring: true,
+                                       child: MaterialButton(
+                                         hoverColor: Colors.transparent,
+                                         onPressed: () {
 
-                                      child: AnimatedContainer(
-                                        duration: const Duration(seconds: 0),
-                                        height: newUserNameError ? 55 : 30,
-                                        child: TextFormField(
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              setState(() {
-                                                newUserNameError = true;
-                                              });
-                                              return "Enter User Name";
-                                            } else {
-                                              setState(() {
-                                                newUserNameError = false;
-                                              });
-                                            }
-                                            return null;
-                                          },
-                                          onChanged: (value) {
-                                            newUserName.value=TextEditingValue(
-                                              text:capitalizeFirstWord(value),
-                                              selection: newUserName.selection,
-                                            );
-                                          },
-                                          controller: newUserName,
-                                          decoration: decorationInput5(
-                                              'Enter User Name',
-                                              newUserName.text.isNotEmpty),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                               // User Role
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140,
-                                        child: Text(
-                                          "User Role",
-                                        )),
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                           width: 282,
-                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(4),
-                                          ),),
-                                        child: CustomPopupMenuButton<String>( childWidth: 282,position: CustomPopupMenuPosition.under,
-                                          decoration: customPopupCreateUserRole(hintText: customerType),
-                                          hintText: "",
-                                          shape: const RoundedRectangleBorder(
-                                            side: BorderSide(color:Color(0xFFE0E0E0)),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          offset: const Offset(1, 12),
-                                          tooltip: '',
-                                          itemBuilder: (context) {
-                                            return customerTypes;
-                                          },
-                                          onSelected: (String value)  {
-                                            setState(() {
-                                              customerType= value;
-                                            });
-                                          },
-                                          onCanceled: () {
+                                         },
+                                         child: const Row(
+                                           children: [
+                                             Expanded(
+                                               child: Padding(
+                                                 padding: EdgeInsets.all(8.0),
+                                                 child: Text(
+                                                   'Create New User',
+                                                   style: TextStyle(fontWeight: FontWeight.bold,
+                                                       fontSize: 16,),
+                                                 ),
+                                               ),
+                                             ),
+                                           ],
+                                         ),
+                                       ),
+                                     ),
+                                   ),
 
-                                          },
-                                          child: Container(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                //Company Name.
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140,
-                                        child: Text('Company Name',)),
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                        width: 282,
-                                        decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(4),
-                                          ),),
-                                        child: CustomPopupMenuButton<String>(
-                                          childHeight: 200,
-                                          childWidth: 282,position: CustomPopupMenuPosition.under,
-                                          decoration: customPopupCreateCompanyName(hintText: companyName),
-                                          hintText: "",
-                                          shape: const RoundedRectangleBorder(
-                                            side: BorderSide(color:Color(0xFFE0E0E0)),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          offset: const Offset(1, 12),
-                                          tooltip: '',
-                                          itemBuilder: (context) {
-                                            return companyNames;
-                                          },
-                                          onSelected: (String value)  {
-                                            setState(() {
-                                              companyName= value;
+                                  const Divider(height: 1,color:mTextFieldBorder),
+                                 Padding(
+                                   padding: const EdgeInsets.all(10.0),
+                                   child: Column(children: [
+                                     const SizedBox(height: 10,),
+                                     //User Name.
+                                     Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text('User Name')),
+                                               const SizedBox(height: 5),
+                                               AnimatedContainer(
+                                                 duration: const Duration(seconds: 0),
+                                                 height: newUserNameError ? 60 : 35,
+                                                 child:
+                                                 TextFormField(
+                                                   validator: (value) {
+                                                     if (value == null || value.isEmpty) {
+                                                       setState(() {
+                                                         newUserNameError = true;
+                                                       });
+                                                       return "Enter User Name";
+                                                     } else {
+                                                       setState(() {
+                                                         newUserNameError = false;
+                                                       });
+                                                     }
+                                                     return null;
+                                                   },
+                                                   onChanged: (value) {
+                                                     newUserName.value=TextEditingValue(
+                                                       text:capitalizeFirstWord(value),
+                                                       selection: newUserName.selection,
+                                                     );
+                                                   },
+                                                   controller: newUserName,
+                                                   decoration: decorationInput5(hintString:'Enter User Name', error:newUserNameError),
+                                                 ),
+                                               )
+                                             ],
+                                           ),
+                                         ),
+                                         const SizedBox(width: 35,),
+                                         // User Role
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text(
+                                                     "User Role",
+                                                   )),
+                                               const SizedBox(height: 5),
+                                               Focus(
+                                                 onFocusChange: (value) {
+                                                   setState(() {
+                                                     isFocusedUser = value;
+                                                   });
+                                                 },
+                                                 skipTraversal: true,
+                                                 descendantsAreFocusable: true,
+                                                 child: LayoutBuilder(
+                                                     builder: (BuildContext context, BoxConstraints constraints) {
+                                                       return CustomPopupMenuButton(elevation: 4,
+                                                         validator: (value) {
+                                                           if(value==null||value.isEmpty){
+                                                             setState(() {
+                                                               userError =true;
+                                                             });
+                                                             return null;
+                                                           }
+                                                           return null;
+                                                         },
+                                                         decoration: customPopupDecoration(hintText:customerType,error: userError,isFocused: isFocusedUser),
+                                                         hintText: '',
+                                                         textController: createUserController,
+                                                         childWidth: constraints.maxWidth,
+                                                         shape:  RoundedRectangleBorder(
+                                                           side: BorderSide(color:userError ? Colors.redAccent :mTextFieldBorder),
+                                                           borderRadius: const BorderRadius.all(
+                                                             Radius.circular(5),
+                                                           ),
+                                                         ),
+                                                         offset: const Offset(1, 40),
+                                                         tooltip: '',
+                                                         itemBuilder:  (BuildContext context) {
+                                                           return customerTypes;
+                                                         },
 
-                                            });
-                                          },
-                                          onCanceled: () {
+                                                         onSelected: (String value)  {
+                                                           setState(() {
+                                                             createUserController.text=value;
+                                                             customerType= value;
+                                                             userError=false;
+                                                           });
 
-                                          },
-                                          child: Container(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140, child: Text('User Email')),
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: AnimatedContainer(
-                                        duration: const Duration(seconds: 0),
-                                        height: newUserEmailError ? 55 : 30,
-                                        child: TextFormField(
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              setState(() {
-                                                newUserEmailError = true;
-                                              });
-                                              return "Enter User Email";
-                                            }
-                                            else if(!EmailValidator.validate(value)){
-                                              setState((){
-                                                newUserEmailError=true;
-                                              });
-                                              return 'Please enter a valid email address';
-                                            }
-                                            else {
-                                              setState(() {
-                                                newUserEmailError = false;
-                                              });
-                                            }
-                                            return null;
-                                          },
-                                          onChanged: (text) {
-                                            setState(() {});
-                                          },
-                                          controller: newUserEmail,
-                                          decoration: decorationInput5(
-                                              'Enter User Email',
-                                              newUserEmail.text.isNotEmpty),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                //User Password.
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140, child: Text('User Password')),
-                                    const SizedBox(height: 10),
-                                    Expanded(
+                                                         },
+                                                         onCanceled: () {
 
-                                      child: AnimatedContainer(
-                                        duration: const Duration(seconds: 0),
-                                        height: newPasswordError ? 55 : 30,
-                                        child: TextFormField(onTap: () {
-                                          setState((){
-                                            conformPasswordInitialValue=true;
-                                          });
+                                                         },
+                                                         child: Container(),
+                                                       );
+                                                     }
+                                                 ),
+                                               ),
+                                               // Container(
+                                               //   height: 30,
+                                               //   width: 282,
+                                               //   decoration: BoxDecoration(border: Border.all(color: Colors.black54,),
+                                               //     borderRadius: const BorderRadius.all(
+                                               //       Radius.circular(4),
+                                               //     ),),
+                                               //   child: CustomPopupMenuButton<String>(
+                                               //     childHeight: 150,
+                                               //     elevation: 4,
+                                               //     childWidth: 230,position: CustomPopupMenuPosition.under,
+                                               //     decoration: customPopupCreateUserRole(hintText: customerType),
+                                               //     hintText: "",
+                                               //     shape: const RoundedRectangleBorder(
+                                               //       side: BorderSide(color:Color(0xFFE0E0E0)),
+                                               //       borderRadius: BorderRadius.all(
+                                               //         Radius.circular(5),
+                                               //       ),
+                                               //     ),
+                                               //     offset: const Offset(1, 12),
+                                               //     tooltip: '',
+                                               //     itemBuilder: (context) {
+                                               //       return customerTypes;
+                                               //     },
+                                               //     onSelected: (String value)  {
+                                               //       setState(() {
+                                               //         customerType= value;
+                                               //       });
+                                               //     },
+                                               //     onCanceled: () {
+                                               //
+                                               //     },
+                                               //     child: Container(),
+                                               //   ),
+                                               // ),
+                                             ],
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+                                     const SizedBox(height: 20),
+                                     Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text('Company Name',)),
+                                               const SizedBox(height: 5,),
+                                               Focus(
+                                                 onFocusChange: (value) {
+                                                   setState(() {
+                                                     isFocusedCompany = value;
+                                                   });
+                                                 },
+                                                 skipTraversal: true,
+                                                 descendantsAreFocusable: true,
+                                                 child: LayoutBuilder(
+                                                     builder: (BuildContext context, BoxConstraints constraints) {
+                                                       return CustomPopupMenuButton(childHeight: 200,
+                                                         elevation: 4,
+                                                         validator: (value) {
+                                                           if(value==null||value.isEmpty){
+                                                             setState(() {
+                                                               companyError =true;
+                                                             });
+                                                             return null;
+                                                           }
+                                                           return null;
+                                                         },
+                                                         decoration: customPopupDecoration(hintText:companyName,error: companyError,isFocused: isFocusedCompany),
+                                                         hintText: '',
+                                                         textController: createCompanyCon,
+                                                         childWidth: constraints.maxWidth,
+                                                         shape:  RoundedRectangleBorder(
+                                                           side: BorderSide(color:userError ? Colors.redAccent :mTextFieldBorder),
+                                                           borderRadius: const BorderRadius.all(
+                                                             Radius.circular(5),
+                                                           ),
+                                                         ),
+                                                         offset: const Offset(1, 40),
+                                                         tooltip: '',
+                                                         itemBuilder:  (BuildContext context) {
+                                                           return companyNames;
+                                                         },
 
-                                        },
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                setState(() {
-                                                  newPasswordError = true;
-                                                });
-                                                return 'Enter Password';
-                                              } else {
-                                                // call function to check password
-                                                bool result = validatePassword(value);
-                                                if (result) {
-                                                  setState(() {
-                                                    newPasswordError = false;
-                                                  });
-                                                  // create account event
-                                                  return null;
-                                                } else {
-                                                  setState(() {
-                                                    newPasswordError = true;
-                                                  });
-                                                  return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
-                                                }
-                                              }
-                                            },
-                                            controller: newPassword,
-                                            obscureText: passwordInitialValue,
-                                            decoration: decorationInputPassword(
-                                                'Enter Password',
-                                                newPassword.text.isNotEmpty,
-                                                passwordInitialValue,
-                                                textHideFunc)),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                //Conform Password.
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                        width: 140, child: Text('Confirm Password')),
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: AnimatedContainer(
-                                        duration: const Duration(seconds: 0),
-                                        height: newConformPasswordError ? 55 : 30,
-                                        child: TextFormField(onTap: (){
-                                          setState((){
-                                            passwordInitialValue=true;
-                                          });
-                                        },
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty &&
-                                                    newConformPassword.text == '') {
-                                              setState(() {
-                                                newConformPasswordError = true;
-                                              });
-                                              return "Conform Password";
-                                            } else if (newConformPassword.text !=
-                                                newPassword.text) {
-                                              setState(() {
-                                                newConformPasswordError = true;
-                                              });
-                                              return 'Password does`t match';
-                                            } else {
-                                              setState(() {
-                                                newConformPasswordError = false;
-                                              });
-                                            }
-                                            return null;
-                                          },
+                                                         onSelected: (String value)  {
+                                                           setState(() {
+                                                             createCompanyCon.text=value;
+                                                             companyName= value;
+                                                             companyError=false;
+                                                           });
 
-                                          onChanged: (text) {
-                                            setState(() {});
-                                          },
-                                          controller: newConformPassword,
-                                          // decoration: decorationInput5(
-                                          //     'Conform Password',
-                                          //     newConformPassword.text.isNotEmpty),
-                                          decoration:
-                                          decorationInputConformPassword(
-                                              'Confirm Password',
-                                              newPassword.text.isNotEmpty,
-                                              conformPasswordInitialValue,
-                                              textHideConformPassword),
-                                          obscureText: conformPasswordInitialValue,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 35,
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: MaterialButton(
-                                    color: Colors.blue,
-                                    onPressed: () {
-                                      setState(() {
-                                        loading= true;
-                                        if (newUser.currentState!.validate()) {
-                                          userData = {
-                                            "active": true,
-                                            "company_name": companyName,
-                                            "email": newUserEmail.text,
-                                            "password": newPassword.text,
-                                            "role": customerType,
-                                            "username": newUserName.text,
-                                            "manager_id" : managerId ,
-                                            "org_id": orgId
-                                          };
-                                          // print('---check----');
-                                          // print(userData);
-                                          userDetails(userData).whenComplete(() {
-                                            getUserData();
-                                          });
+                                                         },
+                                                         onCanceled: () {
 
-                                        }
-                                      });
-                                    },
-                                    child: const Text(
-                                      'Save',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 35,),
-                              ],
+                                                         },
+                                                         child: Container(),
+                                                       );
+                                                     }
+                                                 ),
+                                               ),
+                                               // Container(
+                                               //   height: 30,
+                                               //   width: 282,
+                                               //   decoration: BoxDecoration(border: Border.all(color: Colors.black38,),
+                                               //     borderRadius: const BorderRadius.all(
+                                               //       Radius.circular(4),
+                                               //     ),),
+                                               //   child: CustomPopupMenuButton<String>(
+                                               //     childHeight: 200,
+                                               //     childWidth: 230,position: CustomPopupMenuPosition.under,
+                                               //     decoration: customPopupCreateCompanyName(hintText: companyName),
+                                               //     hintText: "",
+                                               //     shape: const RoundedRectangleBorder(
+                                               //       side: BorderSide(color:Color(0xFFE0E0E0)),
+                                               //       borderRadius: BorderRadius.all(
+                                               //         Radius.circular(5),
+                                               //       ),
+                                               //     ),
+                                               //     offset: const Offset(1, 12),
+                                               //     tooltip: '',
+                                               //     itemBuilder: (context) {
+                                               //       return companyNames;
+                                               //     },
+                                               //     onSelected: (String value)  {
+                                               //       setState(() {
+                                               //         companyName= value;
+                                               //
+                                               //       });
+                                               //     },
+                                               //     onCanceled: () {
+                                               //
+                                               //     },
+                                               //     child: Container(),
+                                               //   ),
+                                               // ),
+                                             ],
+                                           ),
+                                         ),
+                                         const SizedBox(width: 35,),
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text('User Email')),
+                                               const SizedBox(height: 5),
+                                               AnimatedContainer(
+                                                 duration: const Duration(seconds: 0),
+                                                 height: newUserEmailError ? 60 : 35,
+                                                 child: TextFormField(
+                                                   validator: (value) {
+                                                     if (value == null || value.isEmpty) {
+                                                       setState(() {
+                                                         newUserEmailError = true;
+                                                       });
+                                                       return "Enter User Email";
+                                                     }
+                                                     else if(!EmailValidator.validate(value)){
+                                                       setState((){
+                                                         newUserEmailError=true;
+                                                       });
+                                                       return 'Please enter a valid email address';
+                                                     }
+                                                     else {
+                                                       setState(() {
+                                                         newUserEmailError = false;
+                                                       });
+                                                     }
+                                                     return null;
+                                                   },
+                                                   onChanged: (text) {
+                                                     setState(() {});
+                                                   },
+                                                   controller: newUserEmail,
+                                                   decoration: decorationInput5(hintString:
+                                                       'Enter User Email',
+                                                       error:newUserEmailError),
+                                                 ),
+                                               )
+                                             ],
+                                           ),
+                                         ),
+                                       ],),
+                                     const SizedBox(height: 20,),
+                                     //User Password.
+                                     Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         //User Password
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text('User Password')),
+                                               const SizedBox(height: 5),
+                                               AnimatedContainer(
+                                                 duration: const Duration(seconds: 0),
+                                                 height: newPasswordError ? 60 : 35,
+                                                 child: TextFormField(onTap: () {
+                                                   setState((){
+                                                     conformPasswordInitialValue=true;
+                                                   });
+
+                                                 },
+                                                     validator: (value) {
+                                                       if (value == null || value.isEmpty) {
+                                                         setState(() {
+                                                           newPasswordError = true;
+                                                         });
+                                                         return 'Enter Password';
+                                                       } else {
+                                                         // call function to check password
+                                                         bool result = validatePassword(value);
+                                                         if (result) {
+                                                           setState(() {
+                                                             newPasswordError = false;
+                                                           });
+                                                           // create account event
+                                                           return null;
+                                                         } else {
+                                                           setState(() {
+                                                             newPasswordError = true;
+                                                           });
+                                                           return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
+                                                         }
+                                                       }
+                                                     },
+                                                     controller: newPassword,
+                                                     obscureText: passwordInitialValue,
+                                                     decoration: decorationInputPassword(
+                                                         'Enter Password',
+                                                         newPassword.text.isNotEmpty,
+                                                         passwordInitialValue,
+                                                         textHideFunc)),
+                                               )
+                                             ],
+                                           ),
+                                         ),
+                                         const SizedBox(width: 35,),
+                                         //Conform Password.
+                                         Expanded(
+                                           child: Column(
+                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                             children: [
+                                               const SizedBox(
+                                                   child: Text('Confirm Password')),
+                                               const SizedBox(height: 5),
+                                               AnimatedContainer(
+                                                 duration: const Duration(seconds: 0),
+                                                 height: newConformPasswordError ? 60 : 35,
+                                                 child: TextFormField(onTap: (){
+                                                   setState((){
+                                                     passwordInitialValue=true;
+                                                   });
+                                                 },
+                                                   validator: (value) {
+                                                     if (value == null ||
+                                                         value.isEmpty &&
+                                                             newConformPassword.text == '') {
+                                                       setState(() {
+                                                         newConformPasswordError = true;
+                                                       });
+                                                       return "Conform Password";
+                                                     } else if (newConformPassword.text !=
+                                                         newPassword.text) {
+                                                       setState(() {
+                                                         newConformPasswordError = true;
+                                                       });
+                                                       return 'Password does`t match';
+                                                     } else {
+                                                       setState(() {
+                                                         newConformPasswordError = false;
+                                                       });
+                                                     }
+                                                     return null;
+                                                   },
+
+                                                   onChanged: (text) {
+                                                     setState(() {});
+                                                   },
+                                                   controller: newConformPassword,
+                                                   // decoration: decorationInput5(
+                                                   //     'Conform Password',
+                                                   //     newConformPassword.text.isNotEmpty),
+                                                   decoration:
+                                                   decorationInputConformPassword(
+                                                       'Confirm Password',
+                                                       newPassword.text.isNotEmpty,
+                                                       conformPasswordInitialValue,
+                                                       textHideConformPassword),
+                                                   obscureText: conformPasswordInitialValue,
+                                                 ),
+                                               )
+                                             ],
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+                                     const SizedBox(height: 20,),
+                                     Align(
+                                       alignment: Alignment.center,
+                                       child:  SizedBox(
+                                         width: 100,
+                                         height:30,
+                                         child: OutlinedMButton(
+                                           text: 'Save',
+                                           buttonColor:mSaveButton ,
+                                           textColor: Colors.white,
+                                           borderColor: mSaveButton,
+                                           onTap:(){
+                                             loading= true;
+                                             if (newUser.currentState!.validate()) {
+                                               userData = {
+                                                 "active": true,
+                                                 "company_name": companyName,
+                                                 "email": newUserEmail.text,
+                                                 "password": newPassword.text,
+                                                 "role": customerType,
+                                                 "username": newUserName.text,
+                                                 "manager_id" : managerId ,
+                                                 "org_id": orgId
+                                               };
+                                               // print('---check----');
+                                               // print(userData);
+                                               userDetails(userData);
+
+                                             }
+                                           },
+                                         ),
+                                       ),
+                                     ),
+                                     const SizedBox(height: 30,)
+                                   ],),
+                                 )
+
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -2155,49 +2306,24 @@ class _UserManagementState extends State<UserManagement> {
   decorationInputPassword(String hintString, bool val, bool newObscureText, textHideFunc,) {
     return InputDecoration(
       suffixIcon: IconButton(
-        icon: Icon(
+        icon: Icon(color: mTextFieldBorder,
           newObscureText ? Icons.visibility : Icons.visibility_off,size: 20,
         ),
         onPressed: textHideFunc,
       ),
+      //suffixIconColor: Colors.grey[100],
+
       filled: true,
       fillColor: Colors.white,
       counterText: "",
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       hintText: hintString,
+      hintStyle: const TextStyle(fontSize: 14),
       focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue, width: 0.5)),
       border: OutlineInputBorder(
           borderSide: BorderSide(color: val ? Colors.blue : Colors.blue)),
-    );
-  }
-  // Create New User Decoration Function.
-  customPopupCreateUserRole ({required String hintText, bool? error}){
-    return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  const BoxConstraints(maxHeight:35),
-      hintText: hintText,
-      hintStyle: hintText=="Select User Role"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
-      counterText: '',
-      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
-    );
-  }
-  customPopupCreateCompanyName ({required String hintText, bool? error}){
-    return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.arrow_drop_down,color: Colors.grey,),
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  const BoxConstraints(maxHeight:35),
-      hintText: hintText,
-      hintStyle: hintText=="Select Company Name"? const TextStyle(color: Colors.black54):const TextStyle(color: Colors.black,),
-      counterText: '',
-      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
     );
   }
   // Edit User Decoration Function.
@@ -2232,7 +2358,7 @@ class _UserManagementState extends State<UserManagement> {
   decorationInputConformPassword(String hintString, bool val, bool conformObscureText, textHideConformPassword,) {
     return InputDecoration(hintText: hintString,
       suffixIcon: IconButton(
-        icon: Icon(
+        icon: Icon(color: mTextFieldBorder,
           conformObscureText ? Icons.visibility : Icons.visibility_off,size: 20,
         ),
         onPressed: textHideConformPassword,
@@ -2240,28 +2366,50 @@ class _UserManagementState extends State<UserManagement> {
       filled: true,
       fillColor: Colors.white,
       counterText: "",
+      hintStyle: const TextStyle(fontSize: 14),
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue, width: 0.5)),
       border: OutlineInputBorder(
           borderSide: BorderSide(color: val ? Colors.blue : Colors.blue)),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
     );
   }
-  customPopupDecoration ({required String hintText, bool? error}){
-    return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.more_vert,color: mSaveButton,size: 14),
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color:  Colors.blue)),
-      constraints:  const BoxConstraints(maxHeight:35),
+  customPopupDecoration({required String hintText, bool? error, bool ? isFocused}) {
+    return InputDecoration(
+      hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
+      border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14),
+      hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: isFocused == true ? Colors.blue : error == true ? mErrorColor : mTextFieldBorder)),
+      enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: error == true ? mErrorColor : mTextFieldBorder)),
+      focusedBorder: OutlineInputBorder(
+          borderSide:
+          BorderSide(color: error == true ? mErrorColor : Colors.blue)),
     );
   }
 
+  decorationInput5({required String hintString, bool? error,}) {
+    return InputDecoration( border: const OutlineInputBorder(
+        borderSide: BorderSide(color:  Colors.blue)),
+      counterText: "",
+      contentPadding:  const EdgeInsets.fromLTRB(12, 00, 0, 0),
+      hintText: hintString,
+      hintStyle: const TextStyle(fontSize: 14),
+      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      focusedBorder:   const OutlineInputBorder(
+          borderSide:  BorderSide(color:Colors.blue )),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+    );
+  }
 }
 
 

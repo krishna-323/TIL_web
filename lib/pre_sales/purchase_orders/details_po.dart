@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:js_interop';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -106,6 +107,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     salesInvoiceDate.text=estimateItems['serviceInvoiceDate']??'';
     additionalCharges.text=estimateItems['additionalCharges'].toString();
     for(int i=0;i<estimateItems['items'].length;i++){
+      selectedVehicles.add(estimateItems["items"][i]);
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
 
@@ -192,6 +194,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     // print('---------role----------');
     // print(role);
   }
+  int indexNumber=0;
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
@@ -454,7 +457,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  if(estimateItems['items'].isEmpty){
+                                  if(estimateItems['items'].isEmpty || indexNumber==0){
                                     vehicleLineTableData=true;
                                   }
                                   else{
@@ -997,13 +1000,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: estimateItems['items'].length,
+           // itemCount: estimateItems['items'].length,
+            itemCount: selectedVehicles.length,
             itemBuilder: (BuildContext context, int index) {
               double tempDiscount=0;
               double tempLineData=0;
               double tempTax=0;
-              try{
-                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
+              try{indexNumber = index+1;
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
@@ -1011,6 +1015,8 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                   tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
 
                   lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                  // print('------------------------TotalLineAmount-------');
+                  // print(lineAmount[index].text);
                   // subDiscountTotal.text=tempDiscount.toString();
                 }
               }
@@ -1039,7 +1045,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex:4,child: Center(child: Text( selectedVehicles[index]['itemsService']))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1069,7 +1075,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
+                          Expanded(child: Center(child: Text( estimateItems['items'][index]['priceItem'].toString()))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1090,23 +1096,20 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                         borderSide: BorderSide(color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
+                                  double tempValue=0.0;
                                   setState(() {
 
                                   });
-
-                                  //discountRupees[index].clear();
-                                  if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
+                                  if(v.isNotEmpty || v!=""){
+                                    try{
+                                      tempValue=double.parse(v.toString());
+                                      if(tempValue>100){
+                                        discountPercentage[index].clear();
+                                      }
+                                    }
+                                    catch(e){
+                                      discountPercentage[index].clear();
+                                    }
                                   }
                                 },
                               ),
@@ -1198,25 +1201,27 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             ),
                           ),)),
                           InkWell(onTap: (){
+                            String temp=estimateItems['items'][index]['estItemId']??"";
                             setState(() {
-                              if(estimateItems['items'][index]['estItemId']!=null){
-                                deleteLineItem(estimateItems['items'][index]['estItemId']);
+                                if(temp==estimateItems['items'][index]['estItemId']){
+                                  print('--------Check Herer----');
+                                  print(estimateItems['items'][index]['estItemId']==temp);
+                                  deleteLineItem(estimateItems['items'][index]['estItemId']);
                               }
                               else{
-                                 try{
-                                   estimateItems['items'].removeAt(index);
-                                   units.removeAt(index);
-                                   discountRupees.removeAt(index);
-                                   discountPercentage.removeAt(index);
-                                   tax.removeAt(index);
-                                   lineAmount.removeAt(index);
-                                 }
-                                 catch(e){
-                                   log(e.toString());
-                                 }
-                              }
+                                    try{
+                                        estimateItems['items'].removeAt(index);
+                                        units.removeAt(index);
+                                        discountPercentage.removeAt(index);
+                                        tax.removeAt(index);
+                                        lineAmount.removeAt(index);
+                                        }
+                                    catch(e){
+                                      print('Type Of Exception $e');
+                                    }
 
-                            });
+
+                            }});
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                         ],
@@ -1254,6 +1259,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 borderColor: vehicleLineTableData==true?Colors.red:mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
+                                  if(displayList.isEmpty){
+                                    vehicleLineTableData=true;
+                                  }
                                   brandNameController.clear();
                                   modelNameController.clear();
                                   variantController.clear();
@@ -1267,11 +1275,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           vehicleLineTableData=false;
                                         }
                                         isVehicleSelected=true;
-                                        lineAmount.add(TextEditingController());
                                         units.add(TextEditingController(text: '1'));
                                         discountPercentage.add(TextEditingController(text:'0'));
-                                        tax.add(TextEditingController());
+                                        tax.add(TextEditingController(text:"0"));
+                                        lineAmount.add(TextEditingController());
                                         estimateItems['items'].add(value);
+                                        //selectedVehicles.add(value);
+                                        // print('--------------------Selected Line Item------------');
+                                        // print(selectedVehicles);
                                       });
                                     }
                                   });
