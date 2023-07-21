@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:js_interop';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -1000,14 +999,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-           // itemCount: estimateItems['items'].length,
-            itemCount: selectedVehicles.length,
+            itemCount: estimateItems['items'].length,
             itemBuilder: (BuildContext context, int index) {
               double tempDiscount=0;
               double tempLineData=0;
               double tempTax=0;
               try{indexNumber = index+1;
-                lineAmount[index].text=(double.parse(selectedVehicles[index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
+                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
@@ -1045,7 +1043,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text( selectedVehicles[index]['itemsService']))),
+                          Expanded(flex:4,child: Center(child: Text( estimateItems['items'][index]['itemsService']))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1201,12 +1199,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             ),
                           ),)),
                           InkWell(onTap: (){
-                            String temp=estimateItems['items'][index]['estItemId']??"";
                             setState(() {
-                                if(temp==estimateItems['items'][index]['estItemId']){
-                                  print('--------Check Herer----');
-                                  print(estimateItems['items'][index]['estItemId']==temp);
-                                  deleteLineItem(estimateItems['items'][index]['estItemId']);
+                                if(estimateItems['items'][index]['estItemId']!=null){
+                                  deleteLineItem(estimateItems['items'][index]['estItemId'],index);
                               }
                               else{
                                     try{
@@ -1914,7 +1909,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       })
     });
   }
-  deleteLineItem(estimateItemId)async{
+  deleteLineItem(estimateItemId, int index)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/delete_estimate_item_by_id/$estimateItemId';
     try{
       final response=await http.delete(Uri.parse(url),
@@ -1925,6 +1920,10 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       );
       if(response.statusCode==200){
         setState(() {
+          units.removeAt(index);
+          discountPercentage.removeAt(index);
+          tax.removeAt(index);
+          lineAmount.removeAt(index);
           estimateItems['items'].removeWhere((map)=>map['estItemId']==estimateItemId);
         });
       }
