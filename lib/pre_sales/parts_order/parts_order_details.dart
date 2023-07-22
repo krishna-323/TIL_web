@@ -157,7 +157,6 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
   List displayList=[];
   List selectedVehicles=[];
   var units = <TextEditingController>[];
-  var discountRupees = <TextEditingController>[];
   var discountPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
@@ -1187,22 +1186,69 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                           ),)),
                           InkWell(onTap: (){
                             setState(() {
-                              if(estimateItems['items'][index]['estItemId']!=null){
-                                deleteLineItem(estimateItems['items'][index]['estItemId']);
-                              }
-                              else{
                                 try{
                                   estimateItems['items'].removeAt(index);
                                   units.removeAt(index);
-                                  discountRupees.removeAt(index);
                                   discountPercentage.removeAt(index);
                                   tax.removeAt(index);
                                   lineAmount.removeAt(index);
+
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text) + double.parse(additionalCharges.text));
+                                  }
+                                  catch (e){
+                                    tempTotal = double.parse(subAmountTotal.text);
+                                  }
+                                  updateEstimate =    {
+                                    "additionalCharges": additionalCharges.text,
+                                    "address": "string",
+                                    "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                    "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                    "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                    "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                    "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                    "serviceDueDate": "",
+                                    "estVehicleId": estimateItems['estVehicleId']??"",
+                                    "serviceInvoice": salesInvoice.text,
+                                    "serviceInvoiceDate": salesInvoiceDate.text,
+                                    "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                    "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                    "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                    "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                    "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                    "subTotalAmount": subAmountTotal.text,
+                                    "subTotalDiscount": subDiscountTotal.text,
+                                    "subTotalTax": subTaxTotal.text,
+                                    "termsConditions": termsAndConditions.text,
+                                    "total": tempTotal.toString(),
+                                    "totalTaxableAmount": 0,
+                                    "status": widget.estimateItem['status']??"In-review",
+                                    "comment":widget.estimateItem['comment']??"",
+                                    "freight_amount": additionalCharges.text,
+                                    "manager_id": managerId,
+                                    "userid": userId,
+                                    "org_id": orgId,
+                                    "items": [],
+                                  };
+                                  for(int i=0;i<estimateItems['items'].length;i++){
+                                    updateEstimate['items'].add(
+                                        {
+                                          "amount": lineAmount[i].text,
+                                          "discount":  discountPercentage[i].text,
+                                          "estVehicleId": estimateItems['estVehicleId'],
+                                          "itemsService": estimateItems['items'][i]['itemsService'],
+                                          "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                          "quantity": units[i].text,
+                                          "tax": tax[i].text,
+                                        }
+                                    );
+                                  }
+                                  updatingInLine(updateEstimate);
                                 }
                                 catch(e){
-                                  log(e.toString());
+                                  log("-------Exception Type $e------");
                                 }
-                              }
 
                             });
                           },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
@@ -1857,6 +1903,26 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
           Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
         }
+
+      }
+      else{
+        log(response.statusCode.toString());
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+  }
+  updatingInLine(updatedEstimated)async{
+    try{
+      final response=await http.put(Uri.parse('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/update_parts_purchase_order'),
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer $authToken',
+          },
+          body: jsonEncode(updatedEstimated)
+      );
+      if(response.statusCode==200){
 
       }
       else{
