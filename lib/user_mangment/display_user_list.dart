@@ -628,7 +628,7 @@ class _UserManagementState extends State<UserManagement> {
                               return    Column(
                                 children: [
                                   AnimatedContainer(
-                                    height:displayUserData[index]['isExpanded'] ?90:40,
+                                    height:displayUserData[index]['isExpanded'] ?90:36,
                                     duration: const Duration(milliseconds: 500),
                                     child: MaterialButton(
                                       hoverColor: Colors.blue[50],
@@ -1721,7 +1721,7 @@ class _UserManagementState extends State<UserManagement> {
                                                     }
                                                     return Column(
                                                       children: [
-                                                        const SizedBox(height: 13,),
+                                                        const SizedBox(height: 12,),
                                                         Row(mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
                                                             SizedBox(
@@ -2726,7 +2726,7 @@ class _UserManagementState extends State<UserManagement> {
                                                             ),
                                                           ],
                                                         ),
-                                                        const SizedBox(height: 13,),
+                                                        const SizedBox(height: 8,),
                                                       ],
                                                     );
 
