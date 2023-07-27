@@ -258,176 +258,183 @@ class _UploadPOState extends State<UploadPO> {
                             ),
                           ),
                            const SizedBox(height: 4,),
-                          for(int i=0;i<=displayList.length;i++)
-                            Column(
-                              children: [
-                                if(i!=displayList.length)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4,left: 8,top:4,bottom: 3),
-                                    child: Row(
-                                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: SizedBox(width: 30,height: 30,
-                                            child: Transform.scale(
-                                              scale: 0.8,
-                                              child: Checkbox(
-                                                value: selectedFields.contains(displayList[i]['excel_id']),
-                                                onChanged: ( value) {
-                                                  setState(() {
-                                                   //fieldValues[i] = value;
+                          ListView.builder(
+                            shrinkWrap: true,
+                              itemCount: displayList.length +1,
+                              itemBuilder: (context,i){
+                            if(i<displayList.length){
+                              return Column(children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4,left: 8,top:4,bottom: 3),
+                                  child: Row(
+                                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: SizedBox(width: 30,height: 30,
+                                          child: Transform.scale(
+                                            scale: 0.8,
+                                            child: Checkbox(
+                                              value: selectedFields.contains(displayList[i]['excel_id']),
+                                              onChanged: ( value) {
+                                                setState(() {
+                                                  //fieldValues[i] = value;
 
-                                                    if(value==true){
-                                                      selectedFields.add(displayList[i]['excel_id']);
-                                                    }
-                                                    else
-                                                    {
-                                                      checkAll=false;
-                                                      selectedFields.remove(displayList[i]['excel_id']);
-                                                    }
-                                                    if(selectedFields.isEmpty) {
-                                                      visibleDelete =false;
-                                                    } else{
-                                                      visibleDelete = true;
-                                                    }
-                                                  });
-                                                },
+                                                  if(value==true){
+                                                    selectedFields.add(displayList[i]['excel_id']);
+                                                  }
+                                                  else
+                                                  {
+                                                    checkAll=false;
+                                                    selectedFields.remove(displayList[i]['excel_id']);
+                                                  }
+                                                  if(selectedFields.isEmpty) {
+                                                    visibleDelete =false;
+                                                  } else{
+                                                    visibleDelete = true;
+                                                  }
+                                                });
+                                              },
 
-                                              ),
                                             ),
                                           ),
                                         ),
-                                        //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
-                                              ),
-                                            )),
-
-                                      ],
-                                    ),
-                                  ),
-                                if(i!=displayList.length)
-                                  Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                if(i==displayList.length)
-                                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-
-                                      Text("${startVal+15>poList.length?poList.length:startVal+1}-${startVal+15>poList.length?poList.length:startVal+15} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal>14){
-                                              displayList=[];
-                                              startVal = startVal-15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  displayList.add(poList[i]);
-                                                });
-                                              }
-                                            }
-                                            else{
-                                              log('else');
-                                            }
-
-                                          },
-                                        ),
                                       ),
-                                      const SizedBox(width: 10,),
-                                      Material(color: Colors.transparent,
-                                        child: InkWell(
-                                          hoverColor: mHoverColor,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(18.0),
-                                            child: Icon(Icons.arrow_forward_ios,size: 12),
-                                          ),
-                                          onTap: (){
-                                            if(startVal+1+15>poList.length){
-                                              log("Block");
-                                            }
-                                            else
-                                            if(poList.length>startVal+15){
-                                              displayList=[];
-                                              startVal=startVal+15;
-                                              for(int i=startVal;i<startVal+15;i++){
-                                                setState(() {
-                                                  try{
-                                                    displayList.add(poList[i]);
-                                                  }
-                                                  catch(e){
-                                                    log(e.toString());
-                                                  }
-
-                                                });
-                                              }
-                                            }
-
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20,),
+                                      //Expanded(child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayList[i]['make'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayList[i]['model'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child: Text(displayList[i]['varient'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 4.0),
+                                            child: SizedBox(height: 25,
+                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
+                                            ),
+                                          )),
 
                                     ],
-                                  )
-                              ],
-                            ),
+                                  ),
+                                ),
+                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                              ],);
+                            }
+                            else{
+                              return Column(children: [
+                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                Row(mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+
+                                    Text("${startVal+15>poList.length?poList.length:startVal+1}-${startVal+15>poList.length?poList.length:startVal+15} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(startVal>14){
+                                            displayList=[];
+                                            startVal = startVal-15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              setState(() {
+                                                displayList.add(poList[i]);
+                                              });
+                                            }
+                                          }
+                                          else{
+                                            log('else');
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_forward_ios,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(startVal+1+15>poList.length){
+                                            log("Block");
+                                          }
+                                          else
+                                          if(poList.length>startVal+15){
+                                            displayList=[];
+                                            startVal=startVal+15;
+                                            for(int i=startVal;i<startVal+15;i++){
+                                              setState(() {
+                                                try{
+                                                  displayList.add(poList[i]);
+                                                }
+                                                catch(e){
+                                                  log(e.toString());
+                                                }
+
+                                              });
+                                            }
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20,),
+
+                                  ],
+                                ),
+                              ],);
+                            }
+                          })
+
                         ],
                       ),
                     ),
