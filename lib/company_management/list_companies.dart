@@ -45,6 +45,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
   int startVal=0;
   bool color=false;
   //get Api().
+
   Future getCompanyList() async {
     dynamic response;
     String url =
