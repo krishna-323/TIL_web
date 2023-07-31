@@ -2170,6 +2170,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
       },
     );
   }
+
   // Pop Up Decoration.
   customPopupDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
