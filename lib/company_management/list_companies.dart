@@ -222,7 +222,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           const Text(
-                                            "Company Management Checking Date",
+                                            "Company Management",
                                             style: TextStyle(
                                                 color: Colors.indigo,
                                                 fontSize: 18,
