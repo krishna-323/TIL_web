@@ -971,7 +971,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
               else if (lineApprovedAmount[index].text.isNotEmpty) {
                 try {
                   tempTax=double.parse(lineApprovedAmount[index].text)/double.parse(selectedVehicles[index]['selling_price'].toString())*100;
-                  approvedPercentage[index].text = tempTax.toStringAsFixed(2);
+                  approvedPercentage[index].text = tempTax.toStringAsFixed(4);
                   lineAmount[index].text=(double.parse(lineApprovedAmount[index].text)*double.parse(units[index].text)).toStringAsFixed(1);
                   if(double.parse(approvedPercentage[index].text)>100){
                     approvedPercentage[index].text ="0.0";
