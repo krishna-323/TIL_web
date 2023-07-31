@@ -2791,7 +2791,7 @@ class _UserManagementState extends State<UserManagement> {
                                             if(userdata.length>startVal+15){
                                               displayUserData=[];
                                               startVal=startVal+15;
-                                              for(int i=startVal;i<startVal+15;i++){
+                                              for(int i=startVal;i<startVal+15 && i< userdata.length;i++){
                                                 try{
                                                   setState(() {
                                                     userdata[i]['isExpanded']=false;

@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   List customersList=[];
   List displayList=[];
-  List grnList=[];
+  List poList=[];
   Future fetchListCustomerData() async {
     dynamic response;
     String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/get_all_newcustomer';
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
 
               else{
-                for(int i=0;i<customersList.length;i++){
+                for(int i=endVal;i<customersList.length;i++){
                   displayList.add(customersList[i]);
                 }
               }
@@ -142,17 +142,17 @@ class _HomeScreenState extends State<HomeScreen> {
             response = value;
 
 
-            grnList = value;
+            poList = value;
 
             if(displayPoList.isEmpty){
-              if(grnList.length>5){
+              if(poList.length>5){
                 for(int i=second;i<5;i++){
-                  displayPoList.add(grnList[i]);
+                  displayPoList.add(poList[i]);
                 }
               }
               else{
-                for(int i=second;i<grnList.length;i++){
-                  displayPoList.add(grnList[i]);
+                for(int i=second;i<poList.length;i++){
+                  displayPoList.add(poList[i]);
                 }
               }
             }
@@ -1478,10 +1478,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   hoverColor:mHoverColor,
                                   hoverElevation: 0,
                                   onPressed: () {  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:15.0),
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(left:15.0),
                                     child: Row(
-                                      children: const [
+                                      children: [
                                         Expanded(
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 4.0),
@@ -1505,10 +1505,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               )
                           ),
-                          SizedBox(height: 4,),
-                          for(int i=0;i<=displayList.length;i++)
-                            Column(children: [
-                              if(i!=displayList.length)
+                          const SizedBox(height: 4,),
+                          ListView.builder(
+                              shrinkWrap:true,
+                              itemCount: displayList.length+1,
+                              itemBuilder: (context,int i){
+                            if(i<displayList.length){
+                              return Column(children: [
                                 MaterialButton(
                                   hoverColor: Colors.blue[50],
                                   onPressed: () {  },
@@ -1540,9 +1543,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                              if(i!=displayList.length)
                                 Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                              if(i==displayList.length)
+                              ],);
+                            }
+                            else{
+                              return Column(children: [
+                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
                                 Row(mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
 
@@ -1572,10 +1578,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               }
                                             }
                                           }
-                                          else{
-                                            log('else');
-                                          }
-
                                         },
                                       ),
                                     ),
@@ -1589,7 +1591,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Icon(Icons.arrow_forward_ios,size: 12),
                                         ),
                                         onTap: (){
-                                          if(customersList.length>endVal+5){
+                                          if(endVal+1+15>customersList.length){
+                                            log("Block");
+                                          }
+                                          else  if(customersList.length>endVal+5){
                                             displayList=[];
                                             endVal=endVal+5;
                                             for(int i=endVal;i<endVal+5;i++){
@@ -1601,36 +1606,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                               catch(e){
                                                 log(e.toString());
                                               }
-
                                             }
                                           }
-                                          // if(startVal+1+5>customersList.length){
-                                          //   // print("Block");
-                                          // }
-                                          // else if(customersList.length>startVal+5){
-                                          //   displayList=[];
-                                          //   startVal=startVal+5;
-                                          //   for(int i=startVal;i<startVal+5;i++){
-                                          //     setState(() {
-                                          //       try{
-                                          //         displayList.add(customersList[i]);
-                                          //       }
-                                          //       catch(e){
-                                          //         print(e);
-                                          //       }
-                                          //
-                                          //     });
-                                          //   }
-                                          // }
 
                                         },
                                       ),
                                     ),
                                     const SizedBox(width: 20,)
                                   ],
-                                )
-                            ],)
-
+                                ),
+                              ],);
+                            }
+                          })
                         ]),
                       )
                     ]),
@@ -1658,10 +1645,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   hoverColor:mHoverColor,
                                   hoverElevation: 0,
                                   onPressed: () {  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:15.0),
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(left:15.0),
                                     child: Row(
-                                      children: const [
+                                      children: [
                                         Expanded(
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 4.0),
@@ -1692,10 +1679,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               )
                           ),
-                          SizedBox(height: 4,),
-                          for(int i=0;i<=displayPoList.length;i++)
-                            Column(children: [
-                              if(i!=displayPoList.length)
+                          const SizedBox(height: 4,),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: displayPoList.length+1,
+                            itemBuilder: (BuildContext context, int i) {
+                            if(i<displayPoList.length){
+                              return Column(children: [
                                 MaterialButton(
                                   hoverColor: Colors.blue[50],
                                   onPressed: () {  },
@@ -1738,70 +1728,81 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-
-                              if(i!=displayPoList.length)
-                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                              if(i==displayPoList.length)
+                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                              ],);
+                            }
+                            else{
+                              return Column(children: [
+                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
                                 Row(mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
 
-                                    Text("${second+5>grnList.length?grnList.length:second+1}-${second+5>grnList.length?grnList.length:second+5} of ${grnList.length}",style: const TextStyle(color: Colors.grey)),
+                                    Text("${second+15>poList.length?poList.length:second+1}-${second+15>poList.length?poList.length:second+15} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
                                     const SizedBox(width: 10,),
-                                    //First backward arrow.
-                                    InkWell(
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(18.0),
-                                        child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                      ),
-                                      onTap: (){
-                                        //endval initial 0.
-                                        if(second>4){
-                                          displayPoList=[];
-                                          second = second-5;
-                                          for(int i=second;i<second+5;i++){
-                                            setState(() {
-                                              displayPoList.add(grnList[i]);
-                                            });
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(second>4){
+                                            displayPoList=[];
+                                            second = second-5;
+                                            for(int i=second;i<second+5;i++){
+                                              setState(() {
+                                                displayPoList.add(poList[i]);
+                                              });
+                                            }
                                           }
-                                        }
-                                        else{
-                                          print('else');
-                                        }
+                                          else{
+                                            log('else');
+                                          }
 
-                                      },
+                                        },
+                                      ),
                                     ),
                                     const SizedBox(width: 10,),
-                                    //second forward arrow
-                                    InkWell(
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(18.0),
-                                        child: Icon(Icons.arrow_forward_ios,size: 12),
+                                    Material(color: Colors.transparent,
+                                      child: InkWell(
+                                        hoverColor: mHoverColor,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Icon(Icons.arrow_forward_ios,size: 12),
+                                        ),
+                                        onTap: (){
+                                          if(second+1+5>poList.length){
+                                            log("Block");
+                                          }
+                                          else
+                                          if(poList.length>second+5){
+                                            displayPoList=[];
+                                            second=second+5;
+                                            for(int i=second;i<second+5;i++){
+                                              setState(() {
+                                                try{
+                                                  displayPoList.add(poList[i]);
+                                                }
+                                                catch(e){
+                                                  log(e.toString());
+                                                }
+
+                                              });
+                                            }
+                                          }
+
+                                        },
                                       ),
-                                      onTap: (){
-                                        if(grnList.length>second+6){
-                                          displayPoList=[];
-                                          second=second+i;
-                                          for(int i=second;i<second+5;i++){
-                                            setState(() {
-                                              displayPoList.add(grnList[i]);
-                                            });
-                                          }
-                                        }
-                                        else{
-                                          displayPoList=[];
-                                          second=second+i;
-                                          for(int i=second;i<grnList.length;i++){
-                                            setState(() {
-                                              displayPoList.add(grnList[i]);
-                                            });
-                                          }
-                                        }
-                                      },
                                     ),
-                                    const SizedBox(width: 20,)
+                                    const SizedBox(width: 20,),
                                   ],
-                                )
-                            ],)
+                                ),
+
+                              ],);
+                            }
+                          },)
+
 
                         ]),
                       )
@@ -1812,7 +1813,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 30,),
 
 
-              Column(
+              const Column(
                 children: [
 
                   // Padding(
@@ -1974,7 +1975,7 @@ class _BarChartDataState extends State<BarChartData> {
       isTransposed: true,
       primaryXAxis: CategoryAxis(),
       series: <ChartSeries>[
-        BarSeries<ChartData, String>(color: Color(0xff747AF2),
+        BarSeries<ChartData, String>(color: const Color(0xff747AF2),
           dataSource: chartData,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
