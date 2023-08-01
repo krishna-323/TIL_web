@@ -222,7 +222,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           const Text(
-                                            "Company Management",
+                                            "Company Management Checking Date",
                                             style: TextStyle(
                                                 color: Colors.indigo,
                                                 fontSize: 18,
@@ -331,6 +331,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                       child: Column(
                                         children: [
                                           Row(
+                                            //mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Expanded(
                                                   child: Padding(
@@ -971,9 +972,9 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                               //     ),
                                               //   ),
                                               // ),
-
-                                             SizedBox(width: 35,height: 25,
-                                               child: MaterialButton(color: Colors.green[50],
+                                             Container(width: 35,height: 25,
+                                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                                               child: MaterialButton(color: Colors.blue[50],
                                                    onPressed: () {
                                                      setState(() {
                                                        if(expandedId==""){
@@ -1003,8 +1004,8 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                                      });
 
                                                    },
-                                                   child: displayListCompanies[i]['isExpanded']? const Icon(Icons.arrow_drop_down_outlined,color: Colors.blue):
-                                                   const Icon(Icons.arrow_right_outlined,color: Colors.grey)),
+                                                   child: displayListCompanies[i]['isExpanded']? const Center(child: Icon(Icons.arrow_drop_down_outlined,color: Colors.green)):
+                                                   const Center(child: Icon(Icons.arrow_right_outlined,color: Colors.grey))),
                                              )
                                             ],
                                           ),
