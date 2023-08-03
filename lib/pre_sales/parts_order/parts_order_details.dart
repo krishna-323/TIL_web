@@ -107,6 +107,12 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
     // print('salesInvoice Date');
     // print(salesInvoiceDate.text);
     for(int i=0;i<estimateItems['items'].length;i++){
+      selectedVehicles.add({
+      "name":estimateItems["items"][i]['itemsService']??"",
+        "selling_price":estimateItems["items"][i]["priceItem"]??"",
+      }
+      );
+
       units.add(TextEditingController());
       units[i].text=estimateItems['items'][i]['quantity'].toString();
 
@@ -229,7 +235,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                 borderColor: Colors.green,
                                 onTap: (){
                                   setState(() {
-                                    if(estimateItems['items'].isEmpty){
+                                    if(selectedVehicles.isEmpty){
                                       editVehicleOrderBool=true;
                                     }
                                     else{
@@ -271,14 +277,14 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         "org_id": orgId,
                                         "items": [],
                                       };
-                                      for(int i=0;i<estimateItems['items'].length;i++){
+                                      for(int i=0;i<selectedVehicles.length;i++){
                                         updateEstimate['items'].add(
                                             {
                                               "amount": lineAmount[i].text,
                                               "discount":  discountPercentage[i].text,
                                               "estVehicleId": estimateItems['estVehicleId'],
-                                              "itemsService": estimateItems['items'][i]['itemsService'],
-                                              "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                              "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                              "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                               "quantity": units[i].text,
                                               "tax": tax[i].text,
                                             }
@@ -452,7 +458,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                               borderColor: mSaveButton,
                               onTap: (){
                                setState(() {
-                                 if(estimateItems['items'].isEmpty){
+                                 if(selectedVehicles.isEmpty){
                                    editVehicleOrderBool=true;
                                  }
                                  else{
@@ -494,14 +500,14 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                      "org_id": orgId,
                                      "items": [],
                                    };
-                                   for(int i=0;i<estimateItems['items'].length;i++){
+                                   for(int i=0;i<selectedVehicles.length;i++){
                                      updateEstimate['items'].add(
                                          {
                                            "amount": lineAmount[i].text,
                                            "discount":  discountPercentage[i].text,
                                            "estVehicleId": estimateItems['estVehicleId'],
-                                           "itemsService": estimateItems['items'][i]['itemsService'],
-                                           "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                           "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                           "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                            "quantity": units[i].text,
                                            "tax": tax[i].text,
                                          }
@@ -984,13 +990,13 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: estimateItems['items'].length,
+            itemCount: selectedVehicles.length,
             itemBuilder: (BuildContext context, int index) {
               double tempDiscount=0;
               double tempLineData=0;
               double tempTax=0;
               try{
-                lineAmount[index].text=(double.parse(estimateItems['items'][index]['priceItem'].toString())* (double.parse(units[index].text))).toString();
+                lineAmount[index].text=(double.parse(selectedVehicles[index]['selling_price'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
                   tempDiscount =((double.parse(discountPercentage[index].text)/100 * double.parse(lineAmount[index].text)));
@@ -1026,7 +1032,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex:4,child: Center(child: Text(estimateItems['items'][index]['itemsService']))),
+                          Expanded(flex:4,child: Center(child: Text("${selectedVehicles[index]['name']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1056,7 +1062,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text(estimateItems['items'][index]['priceItem'].toString()))),
+                          Expanded(child: Center(child: Text("${selectedVehicles[index]['selling_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -1187,7 +1193,8 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                           InkWell(onTap: (){
                             setState(() {
                                 try{
-                                  estimateItems['items'].removeAt(index);
+                                  selectedVehicles.removeAt(index);
+                                  // estimateItems['items'].removeAt(index);
                                   units.removeAt(index);
                                   discountPercentage.removeAt(index);
                                   tax.removeAt(index);
@@ -1305,7 +1312,8 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         units.add(TextEditingController(text: '1'));
                                         discountPercentage.add(TextEditingController(text:'0'));
                                         tax.add(TextEditingController(text: '0'));
-                                        estimateItems['items'].add(value);
+                                        selectedVehicles.add(value);
+                                       // estimateItems['items'].add(value);
                                       });
                                     }
                                   });
@@ -1495,10 +1503,9 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-
                                             selectedItems={
-                                              "itemsService":displayList[i]['name']??"",
-                                              "priceItem":displayList[i]['selling_price'].toString(),
+                                              "name":"${displayList[i]['name']??""} - ${displayList[i]['description']??""}",
+                                              "selling_price":displayList[i]['selling_price'].toString(),
                                               "quantity":1,
                                               "discount":0,
                                               "tax":0,
@@ -1631,7 +1638,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10,),
-                    const Text("Comments"),
+                    const Text("Reject Reason"),
                     const SizedBox(height: 10,),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -2082,7 +2089,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                   borderColor: Colors.red,
                                   onTap: (){
                                     setState(() {
-                                      if(estimateItems['items'].isEmpty){
+                                      if(selectedVehicles.isEmpty){
                                         editVehicleOrderBool=true;
                                       }
                                       else{
@@ -2124,14 +2131,14 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                           "org_id": orgId,
                                           "items": [],
                                         };
-                                        for(int i=0;i<estimateItems['items'].length;i++){
+                                        for(int i=0;i<selectedVehicles.length;i++){
                                           updateEstimate['items'].add(
                                               {
                                                 "amount": lineAmount[i].text,
                                                 "discount":  discountPercentage[i].text,
                                                 "estVehicleId": estimateItems['estVehicleId'],
-                                                "itemsService": estimateItems['items'][i]['itemsService'],
-                                                "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                                "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                                "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                                 "quantity": units[i].text,
                                                 "tax": tax[i].text,
                                               }

@@ -1212,7 +1212,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                         lineAmount.removeAt(index);
                                         }
                                     catch(e){
-                                      print('Type Of Exception $e');
+                                      log('Type Of Exception $e');
                                     }
 
 
@@ -1689,7 +1689,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                   Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10,),
-                      const Text("Comments"),
+                      const Text("Reject Reason"),
                       const SizedBox(height: 10,),
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 2.0),
