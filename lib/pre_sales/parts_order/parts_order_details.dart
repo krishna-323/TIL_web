@@ -566,9 +566,15 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                 const SizedBox(height: 5,),
                 SizedBox(
                   width: width/2.8,
-                  child: const Text("Ikyam Solutions Private Limited #742, RJ Villa, Cross, 8th A Main Rd, Koramangala 4th Block, Koramangala, Bengaluru, Karnataka 560034",maxLines: 3,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  child: const SelectableText("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
-                const Text("9087877767",style: TextStyle(fontSize: 14,color: Colors.grey))
+                const Row(
+                  children: [
+                    Icon(Icons.call,size: 16),
+                    SizedBox(width: 5,),
+                    SelectableText("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  ],
+                )
 
               ],
             ),
@@ -1992,6 +1998,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
       if(response.statusCode ==200){
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          Navigator.of(context).pop();
           Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
         }
       }

@@ -565,7 +565,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                 const SizedBox(height: 5,),
                 SizedBox(
                   width: width/2.8,
-                  child: const SelectableText("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  child: const SelectableText("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
                 const Row(
                   children: [
