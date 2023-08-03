@@ -152,7 +152,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     'zipcode': '',
 
   };
-
+  int startVal=0;
   List vehicleList = [];
   List displayList=[];
   List selectedVehicles=[];
@@ -1260,7 +1260,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   brandNameController.clear();
                                   modelNameController.clear();
                                   variantController.clear();
-                                  displayList=vehicleList;
+                                 // displayList=vehicleList;
                                   showDialog(
                                       context: context,
                                       builder: (context) => showDialogBox()).then((value) {
@@ -1371,7 +1371,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                         color: Colors.white, borderRadius: BorderRadius.circular(8)),
                     margin: const EdgeInsets.only(top: 13.0, right: 8.0),
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.only(left:20.0,right:20,bottom: 11,top:10),
                       child: Card(surfaceTintColor: Colors.white,
                         child: Column(
                           children: [
@@ -1465,14 +1465,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 4,),
                             Expanded(
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    for (int i = 0; i < displayList.length; i++)
-                                      InkWell(
+                                child: ListView.builder(
+                                    itemCount: displayList.length+1,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,int i){
+                                  if(i<displayList.length){
+                                    return Column(children: [
+                                      MaterialButton(
                                         hoverColor: mHoverColor,
-                                        onTap: () {
+                                        onPressed: () {
                                           setState(() {
                                             // print('---------Table Line T------');
                                             // print(displayList[i]);
@@ -1529,9 +1533,84 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           ),
                                         ),
                                       ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                  else{
+                                    return Column(children: [
 
-                                  ],
-                                ),
+                                      Row(mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text("${startVal+15>vehicleList.length?vehicleList.length:startVal+1}-${startVal+15>vehicleList.length?vehicleList.length:startVal+15} of ${vehicleList.length}",style: const TextStyle(color: Colors.grey)),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                              ),
+                                              onTap: (){
+                                                if(startVal>14){
+                                                  displayList=[];
+                                                  startVal = startVal-15;
+                                                  for(int i=startVal;i<startVal+15;i++){
+                                                    try{
+                                                      setState(() {
+                                                        displayList.add(vehicleList[i]);
+                                                      });
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                  }
+                                                }
+                                                else{
+                                                  log('else');
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_forward_ios,size: 12),
+                                              ),
+                                              onTap: (){
+                                                setState(() {
+                                                  if(vehicleList.length>startVal+15){
+                                                    displayList=[];
+                                                    startVal=startVal+15;
+                                                    for(int i=startVal;i<startVal+15 && i< vehicleList.length;i++){
+                                                      try{
+                                                        setState(() {
+                                                          displayList.add(vehicleList[i]);
+                                                        });
+                                                      }
+                                                      catch(e){
+                                                        log("Expected Type Error $e ");
+                                                        log(e.toString());
+                                                      }
+
+                                                    }
+                                                  }
+                                                });
+
+
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20,),
+
+                                        ],
+                                      ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                })
                               ),
                             )
                           ],
@@ -1858,8 +1937,24 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if (value != null) {
             response = value;
-            vehicleList = value;
-            displayList=vehicleList;
+            vehicleList = response;
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
           loading = false;
         });

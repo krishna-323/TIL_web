@@ -127,6 +127,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
   List partsList = [];
   List displayList=[];
+  int startVal=0;
   List selectedPart=[];
 
   var units = <TextEditingController>[];
@@ -1033,7 +1034,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   brandNameController.clear();
                                   modelNameController.clear();
                                   variantController.clear();
-                                  displayList=partsList;
+                                 // displayList=partsList;
                                   showDialog(
                                     context: context,
                                     builder: (context) => showDialogBox(),
@@ -1228,14 +1229,18 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 4,),
                             Expanded(
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    for (int i = 0; i < displayList.length; i++)
-                                      InkWell(
+                                child:ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: displayList.length+1,
+                                    itemBuilder: (context,int i){
+                                  if(i<displayList.length){
+                                    return Column(children: [
+                                      MaterialButton(
                                         hoverColor: mHoverColor,
-                                        onTap: () {
+                                        onPressed: () {
                                           setState(() {
                                             Navigator.pop(context,displayList[i]);
                                           });
@@ -1282,9 +1287,139 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                           ),
                                         ),
                                       ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                  else{
+                                    return Column(children: [
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                      Row(mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text("${startVal+15>partsList.length?partsList.length:startVal+1}-${startVal+15>partsList.length?partsList.length:startVal+15} of ${partsList.length}",style: const TextStyle(color: Colors.grey)),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                              ),
+                                              onTap: (){
+                                                if(startVal>14){
+                                                  displayList=[];
+                                                  startVal = startVal-15;
+                                                  for(int i=startVal;i<startVal+15;i++){
+                                                    try{
+                                                      setState(() {
+                                                        displayList.add(partsList[i]);
+                                                      });
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                  }
+                                                }
+                                                else{
+                                                  log('else');
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_forward_ios,size: 12),
+                                              ),
+                                              onTap: (){
+                                                setState(() {
+                                                  if(partsList.length>startVal+15){
+                                                    displayList=[];
+                                                    startVal=startVal+15;
+                                                    for(int i=startVal;i<startVal+15 && i< partsList.length;i++){
+                                                      try{
+                                                        setState(() {
+                                                          displayList.add(partsList[i]);
+                                                        });
+                                                      }
+                                                      catch(e){
+                                                        log("Expected Type Error $e ");
+                                                        log(e.toString());
+                                                      }
 
-                                  ],
-                                ),
+                                                    }
+                                                  }
+                                                });
+
+
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20,),
+
+                                        ],
+                                      ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                }),
+                                // Column(
+                                //   children: [
+                                //     for (int i = 0; i < displayList.length; i++)
+                                //       InkWell(
+                                //         hoverColor: mHoverColor,
+                                //         onTap: () {
+                                //           setState(() {
+                                //             Navigator.pop(context,displayList[i]);
+                                //           });
+                                //
+                                //         },
+                                //         child: Padding(
+                                //           padding: const EdgeInsets.only(left: 18.0),
+                                //           child: SizedBox(height: 30,
+                                //             child: Row(
+                                //               children: [
+                                //                 Expanded(
+                                //                   child: SizedBox(
+                                //                     height: 20,
+                                //                     child: Text(displayList[i]['name']),
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: SizedBox(
+                                //                     height: 20,
+                                //                     child: Text(
+                                //                         displayList[i]['description']),
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: SizedBox(
+                                //                     height: 20,
+                                //                     child: Text(displayList[i]['unit']),
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: SizedBox(
+                                //                     height: 20,
+                                //                     child: Text(displayList[i]['selling_price'].toString()),
+                                //                   ),
+                                //                 ),
+                                //                 Expanded(
+                                //                   child: SizedBox(
+                                //                     height: 20,
+                                //                     child: Text(displayList[i]['type']),
+                                //                   ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //
+                                //   ],
+                                // ),
                               ),
                             )
                           ],
@@ -1534,6 +1669,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
   fetchBrandName(String brandName)async{
     dynamic response;
+
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
       await getData(context: context,url: url).then((value) {
@@ -1541,6 +1677,8 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
           if(value!=null){
             response=value;
             displayList=response;
+            print('----------Check here-----------');
+            print(displayList);
           }
         });
       });
@@ -1578,7 +1716,24 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
           if (value != null) {
             response = value;
             partsList = value;
-            displayList=partsList;
+           try{
+             if(displayList.isEmpty){
+               if(partsList.length>15){
+                 for(int i=startVal;i<startVal+15;i++){
+                   displayList.add(partsList[i]);
+                 }
+               }
+               else{
+                 for(int i=0;i<partsList.length;i++){
+                   displayList.add(partsList[i]);
+                 }
+               }
+             }
+           }
+           catch(e){
+             log(e.toString());
+           }
+           // displayList=partsList;
           }
           loading = false;
         });
