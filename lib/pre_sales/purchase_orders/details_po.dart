@@ -1383,20 +1383,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: brandNameController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          variantController.clear();
-                                        }
-                                        else{
-                                          fetchBrandName(brandNameController.text);
-                                        }
-                                      });
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand',onTap:()async{
+                                      if(brandNameController.text.isEmpty || brandNameController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
+                                    onChanged: (value) async{
+                                      if(value.isNotEmpty || value!=""){
+                                        await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
+                                      }
+                                      else if(value.isEmpty || value==""){
+                                        await getAllVehicleVariant().whenComplete(()=>setState((){}));
+                                      }
                                     },
                                   ),
                                 ),
@@ -1404,23 +1402,19 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(
                                   width: 250,
                                   child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                    decoration:  textFieldModelNameField(hintText: 'Search Model',onTap: ()async{
+                                      if(modelNameController.text.isEmpty || modelNameController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
                                     controller: modelNameController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          brandNameController.clear();
-                                          variantController.clear();
-
-                                        }
-                                        else{
-                                          fetchModelName(modelNameController.text);
-                                        }
-
-                                      });
+                                    onChanged: (value) async{
+                                    if(value.isNotEmpty || value!=""){
+                                      await fetchModelName(modelNameController.text).whenComplete(()=>setState((){}));
+                                    }
+                                    else if(value.isEmpty || value==""){
+                                      await getAllVehicleVariant().whenComplete(()=>setState((){}));
+                                    }
                                     },
                                   ),
                                 ),
@@ -1428,20 +1422,16 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          brandNameController.clear();
-                                        }
-                                        else{
-                                          fetchVariantName(variantController.text);
-                                        }
-                                      });
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
+                                      await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                    }),
+                                    onChanged: (value) async{
+                                      if(value.isNotEmpty || value!=""){
+                                        await fetchVariantName(variantController.text).whenComplete(()=>setState((){}));
+                                      }
+                                      else if(value.isEmpty || value==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
                                     },
                                   ),
                                 ),
@@ -1813,11 +1803,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldBrandNameField({required String hintText, bool? error}) {
+  textFieldBrandNameField({required String hintText, bool? error,Function? onTap}) {
     return  InputDecoration(
       suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
           brandNameController.clear();
+          onTap!();
         });
 
       },
@@ -1834,11 +1825,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldModelNameField({required String hintText, bool? error}) {
+  textFieldModelNameField({required String hintText, bool? error, Function? onTap}) {
     return  InputDecoration(
       suffixIcon:  modelNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        modelNameController.clear();
-        displayList=vehicleList;
+         setState(() {
+         modelNameController.clear();
+         onTap!();
+       });
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1853,10 +1846,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldVariantNameField({required String hintText, bool? error}) {
+  textFieldVariantNameField({required String hintText, bool? error,Function ? onTap}) {
     return  InputDecoration(
       suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        variantController.clear();
+        setState((){
+          variantController.clear();
+          onTap!();
+        });
+
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1872,7 +1869,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
 
-  fetchModelName(String modelName)async{
+  Future fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1880,7 +1877,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       }
@@ -1892,7 +1907,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  fetchBrandName(String brandName)async{
+  Future fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1900,7 +1915,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       });
@@ -1910,7 +1943,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  fetchVariantName(String variantName)async{
+  Future fetchVariantName(String variantName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
@@ -1918,8 +1951,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState((){
           if(value!=null){
             response=value;
-            displayList=response;
-
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       });
@@ -1929,7 +1979,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  getAllVehicleVariant() async {
+  Future getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1938,6 +1988,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           if (value != null) {
             response = value;
             vehicleList = response;
+            displayList=[];
             try{
               if(displayList.isEmpty){
                 if(vehicleList.length>15){

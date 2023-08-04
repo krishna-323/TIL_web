@@ -1535,10 +1535,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: Text(displayList[i]['email_id']??"")
                                               ),
                                             )),
-
-
-
-
                                       ],
                                     ),
                                   ),
@@ -1591,7 +1587,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Icon(Icons.arrow_forward_ios,size: 12),
                                         ),
                                         onTap: (){
-                                          if(endVal+1+15>customersList.length){
+                                          if(endVal+1+5>customersList.length){
                                             log("Block");
                                           }
                                           else  if(customersList.length>endVal+5){
@@ -1737,7 +1733,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
 
-                                    Text("${second+15>poList.length?poList.length:second+1}-${second+15>poList.length?poList.length:second+15} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
+                                    Text("${second+5>poList.length?poList.length:second+1}-${second+5>poList.length?poList.length:second+5} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
                                     const SizedBox(width: 10,),
                                     Material(color: Colors.transparent,
                                       child: InkWell(
