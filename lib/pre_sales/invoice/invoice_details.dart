@@ -8,9 +8,8 @@ import '../../utils/api/get_api.dart';
 
 
 class InvoiceDetails extends StatefulWidget {
-  final Map<dynamic, dynamic> invoiceData;
-  final Map<dynamic, dynamic> docketDetails;
-  const InvoiceDetails(this.invoiceData,this.docketDetails, {Key? key}) : super(key: key);
+  Map<dynamic, dynamic> invoiceData;
+   InvoiceDetails( this.invoiceData, {Key? key}) : super(key: key);
 
   @override
   State<InvoiceDetails> createState() => _InvoiceDetailsState();
@@ -19,33 +18,36 @@ class InvoiceDetails extends StatefulWidget {
 class _InvoiceDetailsState extends State<InvoiceDetails> {
   Map docketData ={};
   bool loading = false;
-  double total = 0.0;
+  String total = "0.0";
   String address = "";
   Future fetchAllDocketDetails() async{
     dynamic response;
-    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/docket_customer/get_docket_wrapper_by_id/${widget.docketDetails["dock_customer_id"]}";
+    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/salesdocket/get_all_sales_dockets_wrapper";
     try {
       await getData(context: context, url: url).then((value) {
-        // print("https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/docket_customer/get_docket_wrapper_by_id/${widget.docketDetails["general_id"]}");
-        // print(value);
+        print('------ invoice list --------');
+        print("https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/salesdocket/get_all_sales_dockets_wrapper");
+        print(value);
         setState(() {
           if(value!=null){
             response = value;
+            print('------ invoice details response ----------');
+            // print(response);
+            print(response['customer_name']);
             docketData = value;
-            // print('------new get all docket data ----------');
-            // print(docketData);
-            total = docketData['onroad_price'] + docketData['ex_showroom_price'] + docketData['accessories_actual']-docketData['ex_showroom_discounted'];
-            if(docketData['address_1'].isNotEmpty){
-              address += docketData['address_1'];
-            }
-            if(docketData['address_2'].isNotEmpty){
-              address +=", "  "${docketData['address_2']}";
+            // total = docketData['onroad_price'] + docketData['ex_showroom_price'] + docketData['accessories_actual']-docketData['ex_showroom_discounted'];
+            total = docketData['onroad_price'] + docketData['ex_showroom_price'];
+            if(docketData['street_address'].isNotEmpty){
+              address += docketData['street_address'];
             }
             if(docketData['city'].isNotEmpty){
-              address += ", "  "${docketData['city']}";
+              address +=", "  "${docketData['city']}";
             }
-            if(docketData['state'].isNotEmpty){
-              address += ", " "${docketData['state']}";
+            if(docketData['location'].isNotEmpty){
+              address += ", "  "${docketData['location']}";
+            }
+            if(docketData['pin_code'].isNotEmpty){
+              address += ", " "${docketData['pin_code']}";
             }
             // print(total);
           }
@@ -62,13 +64,11 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
   }
   @override
   void initState() {
-    fetchAllDocketDetails();
-    // print('------new get all docket data ----------');
-    // print(docketData);
-    // print("_______________________________________________________________");
-    // print(widget.docketDetails);
-    // print('------- invoice ---------');
-    // print(widget.invoiceData);
+    // fetchAllDocketDetails();
+    double onroadPrice = double.parse(widget.invoiceData['onroad_price']);
+    double exShowroomPrice = widget.invoiceData['ex_showroom_price'];
+    double totalPrice = onroadPrice + exShowroomPrice;
+    total = totalPrice.toStringAsFixed(2);
     super.initState();
   }
 
@@ -83,66 +83,78 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
           child: Card(
             child: Column(
               children: [
-                const SizedBox(height: 20,),
                 Row(
                   children: [
-                    Expanded(flex: 1,child: Container(height: 70,color: Colors.black,child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(child: Image(alignment: Alignment.topLeft,image: AssetImage("assets/logo/IkyamWhite.png"))),
-                    ))),
-                    Expanded(flex:2,child: Container()),
-                    const Expanded(flex: 1,child: SizedBox(height: 70,child: Padding(
-                      padding: EdgeInsets.only(right: 28,left: 8),
-                      child: Image(alignment: Alignment.topLeft,image: AssetImage("assets/cars/maruthi_suzuki_logo.png")),
-                    ))),
+                    Expanded(
+                        // flex: 1,
+                        child: Container(
+                            height: 120,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(14),
+                                topRight: Radius.circular(14)
+                              ),
+                              color: Color(0xFF4C6971),
+                            ),
+                            child: const Center(
+                                child: Image(
+                                    alignment: Alignment.center,
+                                    height: 70,
+                                    image: AssetImage("assets/logo/img_1.png")
+                                )
+                            )
+                        )
+                    ),
                   ],
                 ),
-                const SizedBox(height: 20,),
-                const Divider(thickness: 2,color: Colors.black),
-
+                // const Divider(thickness: 2,color: Colors.black),
                 Padding(
                   padding: const EdgeInsets.only(left: 50,top: 18,right: 50,bottom: 20),
                   child: Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         flex: 2,
                         child: Column(
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const   Expanded(flex: 1,child: Text("Sold To")),
-                                Expanded(flex: 2,child: Text(": ${docketData['customer_name']}"))
+                                Expanded(flex: 2,child: Text(": ${widget.invoiceData['customer_name']}"))
                               ],
                             ),
                             const SizedBox(height: 10,),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const  Expanded(flex: 1,child: Text("Mobile Number")),
-                                Expanded(flex: 2,child: Text(": ${docketData['mobile']} "))
+                                Expanded(flex: 2,child: Text(": ${widget.invoiceData['mobile']} "))
                               ],
                             ),
                             const SizedBox(height: 10,),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Expanded(flex: 1,child: Text("Address")),
-                                Expanded(flex: 2,child: Text(": $address"))
+                                Expanded(flex: 2,child: Text(": ${[widget.invoiceData['street_address'], widget.invoiceData['city'] ,widget.invoiceData['location'] ,widget.invoiceData['pin_code']].join(', ')}"))
                               ],
                             ),
-                            const SizedBox(height: 10,),
-                            Row(
-                              children:  [
-                                const Expanded(flex: 1,child: Text("Financed by sales Executive")),
-                                Expanded(flex: 2,child: Text(": ${docketData['finance_company']}"))
-                              ],
-                            ),
-                            const SizedBox(height: 10,),
-                            Row(
-                              children:  [
-                                const Expanded(flex: 1,child: Text("Vehicle ID")),
-                                Expanded(flex: 2,child: Text(": ${docketData['preg_no']}"))
-                              ],
-                            ),
+                            // const SizedBox(height: 10,),
+                            // Row(
+                            //   children:  [
+                            //     const Expanded(flex: 1,child: Text("Financed by sales Executive")),
+                            //     Expanded(flex: 2,child: Text(": ${widget.invoiceData['finance_company']}"))
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 10,),
+                            // Row(
+                            //   children:  [
+                            //     const Expanded(flex: 1,child: Text("Vehicle ID")),
+                            //     Expanded(flex: 2,child: Text(": ${widget.invoiceData['new_vehicle_id']}"))
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
@@ -188,21 +200,37 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                       const Expanded(child: SizedBox(width: 10,)),
                       Expanded(flex: 2,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                children: [
-                                  const Expanded(flex: 1,child: Text("Invoice No.")),
-                                  Expanded(flex: 2,child: Text(": ${docketData['invoice_no']}"))
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:  [
+                                  const Expanded(flex: 1,child: Text("Financed by sales Executive")),
+                                  Expanded(flex: 2,child: Text(": ${widget.invoiceData['finance_company']}"))
                                 ],
                               ),
                               const SizedBox(height: 10,),
                               Row(
-                                children: [
-                                  const Expanded(flex: 1,child: Text("Invoice Date")),
-                                  Expanded(flex: 2,child: Text(": ${docketData['invoice_date']}"))
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:  [
+                                  const Expanded(flex: 1,child: Text("Vehicle ID")),
+                                  Expanded(flex: 2,child: Text(": ${widget.invoiceData['new_vehicle_id']}"))
                                 ],
                               ),
-                              const SizedBox(height: 140,),
+                              // Row(
+                              //   children: [
+                              //     const Expanded(flex: 1,child: Text("Invoice No.")),
+                              //     Expanded(flex: 2,child: Text(": ${docketData['invoice_no']??""}"))
+                              //   ],
+                              // ),
+                              // const SizedBox(height: 10,),
+                              // Row(
+                              //   children: [
+                              //     const Expanded(flex: 1,child: Text("Invoice Date")),
+                              //     Expanded(flex: 2,child: Text(": ${docketData['invoice_date']??""}"))
+                              //   ],
+                              // ),
+                              // const SizedBox(height: 140,),
                             ],
                           )),
                     ],
@@ -220,7 +248,7 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                         child: Row(
                           children: [
                             const SizedBox(width:120,child: Text("Name")),
-                            Expanded(child: Text(": ${docketData['make']}(${docketData['varient_name']})")),
+                            Expanded(child: Text(": ${widget.invoiceData['make']}(${widget.invoiceData['model']})")),
                           ],
                         ),
                       )),
@@ -247,24 +275,24 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 // const SizedBox(height: 10,),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 120,child: Text("CHASSIS NO")),
-                                    Expanded(flex: 2,child: Text(": ${docketData['chassis_no']}"))
-                                  ],
-                                ),
-                                const SizedBox(height: 10,),
-                                Row(
-                                  children:  [
-                                    const SizedBox(width: 120,child: Text("ENGINE NO")),
-                                    Expanded(flex: 2,child: Text(": ${docketData['engine_no']}"))
-                                  ],
-                                ),
-                                const SizedBox(height: 10,),
+                                // Row(
+                                //   children: [
+                                //     const SizedBox(width: 120,child: Text("CHASSIS NO")),
+                                //     Expanded(flex: 2,child: Text(": ${docketData['chassis_no']??""}"))
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 10,),
+                                // Row(
+                                //   children:  [
+                                //     const SizedBox(width: 120,child: Text("ENGINE NO")),
+                                //     Expanded(flex: 2,child: Text(": ${docketData['engine_no']??""}"))
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 10,),
                                 Row(
                                   children:  [
                                     const SizedBox(width: 120,child: Text("COLOR")),
-                                    Expanded(flex: 2,child: Text(": ${docketData['color']}"))
+                                    Expanded(flex: 2,child: Text(": ${widget.invoiceData['color']}"))
                                   ],
                                 ),
                                 // const SizedBox(height: 10,),
@@ -288,18 +316,18 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                                     ],
                                   ),
                                   SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      Expanded(flex: 1,child: Text("Discount")),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      Expanded(flex: 1,child: Text("Accessory Value")),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10,),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(flex: 1,child: Text("Discount")),
+                                  //   ],
+                                  // ),
+                                  // SizedBox(height: 10,),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(flex: 1,child: Text("Accessory Value")),
+                                  //   ],
+                                  // ),
+                                  // SizedBox(height: 10,),
                                 ],
                               )),
                           Expanded(flex: 1,child:
@@ -308,27 +336,27 @@ class _InvoiceDetailsState extends State<InvoiceDetails> {
                               const SizedBox(height: 10,),
                               Row(
                                 children: [
-                                  Expanded(flex: 1,child: Text("Rs ${docketData['ex_showroom_price']}")),
+                                  Expanded(flex: 1,child: Text("Rs ${widget.invoiceData['ex_showroom_price']}")),
                                 ],
                               ),
                               const SizedBox(height: 10,),
                               Row(
                                 children: [
-                                  Expanded(flex: 1,child: Text("Rs ${docketData['onroad_price']}")),
+                                  Expanded(flex: 1,child: Text("Rs ${widget.invoiceData['onroad_price']}")),
                                 ],
                               ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  Expanded(flex: 1,child: Text("Rs ${docketData['ex_showroom_discounted']}")),
-                                ],
-                              ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  Expanded(flex: 1,child: Text("Rs ${docketData['accessories_actual']}")),
-                                ],
-                              ),
+                              // const SizedBox(height: 10,),
+                              // Row(
+                              //   children: [
+                              //     Expanded(flex: 1,child: Text("Rs ${docketData['ex_showroom_discounted']??""}")),
+                              //   ],
+                              // ),
+                              // const SizedBox(height: 10,),
+                              // Row(
+                              //   children: [
+                              //     Expanded(flex: 1,child: Text("Rs ${docketData['accessories_actual']??""}")),
+                              //   ],
+                              // ),
                               const SizedBox(height: 10,),
                             ],
                           )
