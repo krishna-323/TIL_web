@@ -292,7 +292,6 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   bool _invalidMobile = false;
   bool _invalidGST = false;
   bool _invalidType = false;
-  bool _invalidStatusType = false;
   bool _invalidPin = false;
   bool _invalidAddress = false;
   bool _isTypeFocused = false;
@@ -306,8 +305,8 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
   bool stateError=false;
   bool distError=false;
 
-  bool _invalidFinanceCompany = false;
-  bool _invalidFinanceAmount = false;
+  // bool _invalidFinanceCompany = false;
+  // bool _invalidFinanceAmount = false;
 
   final List<Widget> myTabs=[
     const Tab(text:'Customer Details'),
@@ -537,20 +536,15 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
           // print('-----------addNew Vehicle New Post api----------------');
           // print(value);
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved'),));
-          if(statusTypeController.text == "Create New Docket"){
-            vehicleID = value["id"];
-            Map docketData = {
-              "cust_vehi_id": vehicleID,
-              "customer_id": customerId,
-              'general_id':generalId,
-              "status": "Created"
-            };
-            addDocket(docketData);
-          }
-          else{
-            Navigator.of(context).pushNamed(MotowsRoutes.customerListRoute);
-          }
-
+          vehicleID = value["id"];
+          Map docketData = {
+            "cust_vehi_id": vehicleID,
+            "customer_id": customerId,
+            'general_id':generalId,
+            "status": "Created"
+          };
+          addDocket(docketData);
+          Navigator.of(context).pushNamed(MotowsRoutes.customerListRoute);
         }
       });
     });
@@ -567,7 +561,7 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
           }
           else if(value.containsKey("status")){
             if(value["status"] == "success"){
-
+              Navigator.of(context).pushNamed(MotowsRoutes.docketList);
             //  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Customer Data Saved'),));
             }
           }
@@ -837,71 +831,67 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                               decoration: textFieldDecoration(hintText: 'Enter Email',error: _invalidEmail),
                             ),
                             const SizedBox(height: 20,),
-
-
-                            const Text("Status Type"),
-                            const SizedBox(height: 6,),
-                            Focus(
-                              onFocusChange: (value) {
-                                setState(() {
-                                  _isTypeFocused = value;
-                                });
-                              },
-                              skipTraversal: true,
-                              descendantsAreFocusable: true,
-                              child: LayoutBuilder(
-                                  builder: (BuildContext context, BoxConstraints constraints) {
-                                    return CustomPopupMenuButton(elevation: 4,
-                                      validator: (value) {
-                                        if(value==null||value.isEmpty){
-                                          setState(() {
-                                            _invalidStatusType=true;
-                                          });
-                                          return null;
-                                        }
-                                        return null;
-                                      },
-                                      decoration: customPopupDecoration(hintText: 'Select type',error: _invalidStatusType,isFocused: _isTypeFocused),
-                                      hintText: selectedStatusType,
-                                      textController: statusTypeController,
-                                      childWidth: constraints.maxWidth,
-                                      shape:  RoundedRectangleBorder(
-                                        side: BorderSide(color:_invalidStatusType? Colors.redAccent :mTextFieldBorder),
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(5),
-                                        ),
-                                      ),
-                                      offset: const Offset(1, 40),
-                                      tooltip: '',
-                                      itemBuilder:  (BuildContext context) {
-                                        return selectStatusType.map((value) {
-                                          return CustomPopupMenuItem(
-                                            value: value,
-                                            text:value,
-                                            child: Container(),
-                                          );
-                                        }).toList();
-                                      },
-
-                                      onSelected: (String value)  {
-                                        setState(() {
-                                          statusTypeController.text=value;
-                                          selectedStatusType= value;
-                                          _invalidStatusType=false;
-                                        });
-
-                                      },
-                                      onCanceled: () {
-
-                                      },
-                                      child: Container(),
-                                    );
-                                  }
-                              ),
-                            ),
-                            const SizedBox(height: 20,),
-
-
+                            // const Text("Status Type"),
+                            // const SizedBox(height: 6,),
+                            // Focus(
+                            //   onFocusChange: (value) {
+                            //     setState(() {
+                            //       _isTypeFocused = value;
+                            //     });
+                            //   },
+                            //   skipTraversal: true,
+                            //   descendantsAreFocusable: true,
+                            //   child: LayoutBuilder(
+                            //       builder: (BuildContext context, BoxConstraints constraints) {
+                            //         return CustomPopupMenuButton(elevation: 4,
+                            //           validator: (value) {
+                            //             if(value==null||value.isEmpty){
+                            //               setState(() {
+                            //                 _invalidStatusType=true;
+                            //               });
+                            //               return null;
+                            //             }
+                            //             return null;
+                            //           },
+                            //           decoration: customPopupDecoration(hintText: 'Select type',error: _invalidStatusType,isFocused: _isTypeFocused),
+                            //           hintText: selectedStatusType,
+                            //           textController: statusTypeController,
+                            //           childWidth: constraints.maxWidth,
+                            //           shape:  RoundedRectangleBorder(
+                            //             side: BorderSide(color:_invalidStatusType? Colors.redAccent :mTextFieldBorder),
+                            //             borderRadius: const BorderRadius.all(
+                            //               Radius.circular(5),
+                            //             ),
+                            //           ),
+                            //           offset: const Offset(1, 40),
+                            //           tooltip: '',
+                            //           itemBuilder:  (BuildContext context) {
+                            //             return selectStatusType.map((value) {
+                            //               return CustomPopupMenuItem(
+                            //                 value: value,
+                            //                 text:value,
+                            //                 child: Container(),
+                            //               );
+                            //             }).toList();
+                            //           },
+                            //
+                            //           onSelected: (String value)  {
+                            //             setState(() {
+                            //               statusTypeController.text=value;
+                            //               selectedStatusType= value;
+                            //               _invalidStatusType=false;
+                            //             });
+                            //
+                            //           },
+                            //           onCanceled: () {
+                            //
+                            //           },
+                            //           child: Container(),
+                            //         );
+                            //       }
+                            //   ),
+                            // ),
+                            // const SizedBox(height: 20,),
                             const Text("PAN"),
                             const SizedBox(height: 6,),
                             TextFormField(
@@ -1735,31 +1725,31 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
     return null;
   }
 
-  String? checkFinanceCompany(String? value){
-    if(value == null || value.isEmpty){
-      setState(() {
-        _invalidFinanceCompany = true;
-      });
-      return "Enter Finance Company";
-    }
-    setState(() {
-      _invalidFinanceCompany = false;
-    });
-    return null;
-  }
-
-  String? checkFinanceAmount(String? value){
-    if(value == null || value.isEmpty){
-      setState(() {
-        _invalidFinanceAmount = true;
-      });
-      return "Enter Finance Amount";
-    }
-    setState(() {
-      _invalidFinanceAmount = false;
-    });
-    return null;
-  }
+  // String? checkFinanceCompany(String? value){
+  //   if(value == null || value.isEmpty){
+  //     setState(() {
+  //       _invalidFinanceCompany = true;
+  //     });
+  //     return "Enter Finance Company";
+  //   }
+  //   setState(() {
+  //     _invalidFinanceCompany = false;
+  //   });
+  //   return null;
+  // }
+  //
+  // String? checkFinanceAmount(String? value){
+  //   if(value == null || value.isEmpty){
+  //     setState(() {
+  //       _invalidFinanceAmount = true;
+  //     });
+  //     return "Enter Finance Amount";
+  //   }
+  //   setState(() {
+  //     _invalidFinanceAmount = false;
+  //   });
+  //   return null;
+  // }
 }
 
 //   class Choice {

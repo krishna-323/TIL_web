@@ -49,6 +49,11 @@ dependencies:
   scroll_to_index: ^3.0.1
   syncfusion_flutter_charts: ^21.2.8
   rxdart: ^0.27.7
+  universal_html: ^2.2.3
+  firebase_core: ^2.15.0
+  cloud_firestore: ^4.8.4
+  pdf: ^3.10.4
+  path_provider: ^2.0.15
 
 
 
