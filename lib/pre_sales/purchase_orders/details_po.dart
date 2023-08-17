@@ -565,13 +565,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                 const SizedBox(height: 5,),
                 SizedBox(
                   width: width/2.8,
-                  child: const SelectableText("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  child: const Text("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
                 const Row(
                   children: [
                     Icon(Icons.call,size: 16),
                     SizedBox(width: 5,),
-                    SelectableText("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                    Text("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
                   ],
                 )
 
@@ -703,44 +703,42 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: SelectionArea(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -812,43 +810,41 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: SelectionArea(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],

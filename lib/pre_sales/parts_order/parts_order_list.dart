@@ -123,339 +123,354 @@ class _PartsOrderListState extends State<PartsOrderList> {
                           border: Border.all(color: const Color(0xFFE0E0E0),)
 
                       ),
-                      child: SelectionArea(
-                        child: Column(
-                          children: [
-                            Container(
-                              // height:100,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
-                              ),
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 18,),
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 18.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children:   [
-                                        Text("Parts Order List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
-                                        ),
-                                        // Padding(
-                                        //   padding: const EdgeInsets.only(right: 50.0),
-                                        //   child: MaterialButton(onPressed: (){
-                                        //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                        //         CreatePartOrder(selectedDestination: widget.args.selectedDestination,
-                                        //           drawerWidth: widget.args.drawerWidth,)
-                                        //     )).then((value) => fetchEstimate());
-                                        //   },
-                                        //     color: Colors.blue,
-                                        //     child: const Text('+ Create Part Order',style: TextStyle(color: Colors.white),),
-                                        //   ),
-                                        // )
-                                      ],
-                                    ),
+                      child: Column(
+                        children: [
+                          Container(
+                            // height:100,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
+                            ),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 18,),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 18.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children:   [
+                                      Text("Parts Order List", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      // Padding(
+                                      //   padding: const EdgeInsets.only(right: 50.0),
+                                      //   child: MaterialButton(onPressed: (){
+                                      //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                      //         CreatePartOrder(selectedDestination: widget.args.selectedDestination,
+                                      //           drawerWidth: widget.args.drawerWidth,)
+                                      //     )).then((value) => fetchEstimate());
+                                      //   },
+                                      //     color: Colors.blue,
+                                      //     child: const Text('+ Create Part Order',style: TextStyle(color: Colors.white),),
+                                      //   ),
+                                      // )
+                                    ],
                                   ),
-                                  const SizedBox(height: 18,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:18.0),
-                                    child: SizedBox(height: 100,
-                                      child: Row(
-                                        children: [
-                                          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                controller:salesInvoiceDataController,
-                                                onTap: ()async{
-                                                  DateTime? pickedDate=await showDatePicker(context: context,
-                                                      initialDate: DateTime.now(),
-                                                      firstDate: DateTime(1999),
-                                                      lastDate: DateTime.now()
+                                ),
+                                const SizedBox(height: 18,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:18.0),
+                                  child: SizedBox(height: 100,
+                                    child: Row(
+                                      children: [
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            SizedBox(  width: 190,height: 30, child: TextFormField(
+                                              controller:salesInvoiceDataController,
+                                              onTap: ()async{
+                                                DateTime? pickedDate=await showDatePicker(context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1999),
+                                                    lastDate: DateTime.now()
 
-                                                  );
-                                                  if(pickedDate!=null){
-                                                    String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
-                                                    setState(() {
-                                                      salesInvoiceDataController.text = formattedDate;
-                                                      // print('----------date---');
-                                                      // print(salesInvoiceDataController.text);
-                                                      displayListItems=[];
-                                                      fetchInvoiceDate(salesInvoiceDataController.text);
-                                                    });
-                                                  }
-                                                  else{
-                                                    log('Date not selected');
-                                                  }
-                                                },
-
-                                                onChanged: (value){
-                                                  if(value.isEmpty || value==""){
-                                                    startVal=0;
+                                                );
+                                                if(pickedDate!=null){
+                                                  String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                  setState(() {
+                                                    salesInvoiceDataController.text = formattedDate;
+                                                    // print('----------date---');
+                                                    // print(salesInvoiceDataController.text);
                                                     displayListItems=[];
-                                                    fetchEstimate();
-                                                  }
-                                                  else if(searchByOrderId.text.isNotEmpty || searchByStatusController.text.isNotEmpty){
-                                                    searchByOrderId.clear();
-                                                    searchByStatusController.clear();
-                                                  }
-                                                  else{
+                                                    fetchInvoiceDate(salesInvoiceDataController.text);
+                                                  });
+                                                }
+                                                else{
+                                                  log('Date not selected');
+                                                }
+                                              },
+
+                                              onChanged: (value){
+                                                if(value.isEmpty || value==""){
+                                                  startVal=0;
+                                                  displayListItems=[];
+                                                  fetchEstimate();
+                                                }
+                                                else if(searchByOrderId.text.isNotEmpty || searchByStatusController.text.isNotEmpty){
+                                                  searchByOrderId.clear();
+                                                  searchByStatusController.clear();
+                                                }
+                                                else{
+                                                    try{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      // print('-==========else condition========');
+                                                      // print(salesInvoiceDataController.text);
+                                                      fetchInvoiceDate(salesInvoiceDataController.text);
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                }
+                                              },
+                                              style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchInvoiceDate(hintText: 'Search By Date'),  ),),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:searchByOrderId,
+                                                  onChanged: (value){
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByStatusController.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
+                                                      searchByStatusController.clear();
+                                                      salesInvoiceDataController.clear();
+                                                    }
+                                                    else{
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      if(searchByOrderId.text.length>6){
+                                                        fetchByOrderId(searchByOrderId.text);
+                                                      }
+
+                                                    }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order #'),  ),),
+                                                const SizedBox(width: 10,),
+
+                                                SizedBox(  width: 190,height: 30, child: TextFormField(
+                                                  controller:searchByStatusController,
+                                                  onChanged: (value){
+                                                    if(value.isEmpty || value==""){
+                                                      startVal=0;
+                                                      displayListItems=[];
+                                                      fetchEstimate();
+                                                    }
+                                                    else if(searchByOrderId.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
+                                                      searchByOrderId.clear();
+                                                      salesInvoiceDataController.clear();
+                                                    }
+                                                    else{
                                                       try{
                                                         startVal=0;
                                                         displayListItems=[];
-                                                        // print('-==========else condition========');
-                                                        // print(salesInvoiceDataController.text);
-                                                        fetchInvoiceDate(salesInvoiceDataController.text);
+                                                          fetchByStatusItems(searchByStatusController.text);
                                                       }
                                                       catch(e){
                                                         log(e.toString());
                                                       }
-                                                  }
-                                                },
-                                                style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchInvoiceDate(hintText: 'Search By Date'),  ),),
-                                              const SizedBox(height: 20),
-                                              Row(
-                                                children: [
+                                                    }
+                                                  },
+                                                  style: const TextStyle(fontSize: 14),
+                                                  //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                  maxLength: 10,
+                                                  decoration: searchByStatusDecoration(hintText: 'Search By Status'),  ),),
+                                                const SizedBox(width: 10,),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 44),
+                                            Row(mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child:SizedBox(
 
-                                                  SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                    controller:searchByOrderId,
-                                                    onChanged: (value){
-                                                      if(value.isEmpty || value==""){
-                                                        startVal=0;
-                                                        displayListItems=[];
-                                                        fetchEstimate();
-                                                      }
-                                                      else if(searchByStatusController.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
-                                                        searchByStatusController.clear();
-                                                        salesInvoiceDataController.clear();
-                                                      }
-                                                      else{
-                                                        startVal=0;
-                                                        displayListItems=[];
-                                                        if(searchByOrderId.text.length>6){
-                                                          fetchByOrderId(searchByOrderId.text);
-                                                        }
-
-                                                      }
-                                                    },
-                                                    style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order #'),  ),),
-                                                  const SizedBox(width: 10,),
-
-                                                  SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                    controller:searchByStatusController,
-                                                    onChanged: (value){
-                                                      if(value.isEmpty || value==""){
-                                                        startVal=0;
-                                                        displayListItems=[];
-                                                        fetchEstimate();
-                                                      }
-                                                      else if(searchByOrderId.text.isNotEmpty || salesInvoiceDataController.text.isNotEmpty){
-                                                        searchByOrderId.clear();
-                                                        salesInvoiceDataController.clear();
-                                                      }
-                                                      else{
-                                                        try{
-                                                          startVal=0;
-                                                          displayListItems=[];
-                                                            fetchByStatusItems(searchByStatusController.text);
-                                                        }
-                                                        catch(e){
-                                                          log(e.toString());
-                                                        }
-                                                      }
-                                                    },
-                                                    style: const TextStyle(fontSize: 14),
-                                                    //  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                    maxLength: 10,
-                                                    decoration: searchByStatusDecoration(hintText: 'Search By Status'),  ),),
-                                                  const SizedBox(width: 10,),
-                                                ],
-                                              ),
-                                            ],
-                                          )),
-                                          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(height: 44),
-                                              Row(mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child:SizedBox(
-
-                                                        width: 150,
-                                                        height:30,
-                                                        child: OutlinedMButton(
-                                                          text: '+ Create Part Order',
-                                                          buttonColor:mSaveButton ,
-                                                          textColor: Colors.white,
-                                                          borderColor: mSaveButton,
-                                                          onTap:(){
-                                                            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                                CreatePartOrder(selectedDestination: widget.args.selectedDestination,
-                                                                  drawerWidth: widget.args.drawerWidth,)
-                                                            )).then((value) => fetchEstimate());
-                                                          },
-                                                        ),
+                                                      width: 150,
+                                                      height:30,
+                                                      child: OutlinedMButton(
+                                                        text: '+ Create Part Order',
+                                                        buttonColor:mSaveButton ,
+                                                        textColor: Colors.white,
+                                                        borderColor: mSaveButton,
+                                                        onTap:(){
+                                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                              CreatePartOrder(selectedDestination: widget.args.selectedDestination,
+                                                                drawerWidth: widget.args.drawerWidth,)
+                                                          )).then((value) => fetchEstimate());
+                                                        },
                                                       ),
-                                                  ),
-                                                  const SizedBox(width: 20,),
+                                                    ),
+                                                ),
+                                                const SizedBox(width: 20,),
 
-                                                ],
-                                              ),
-                                            ],
-                                          )),
-                                        ],
-                                      ),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                      ],
                                     ),
                                   ),
-                                  Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
-                                  Container(color: Colors.grey[100],
-                                    //height: 32,
-                                    child:  IgnorePointer(
-                                      ignoring: true,
-                                      child: MaterialButton(
-                                        onPressed: (){},
-                                        hoverColor: Colors.transparent,
-                                        hoverElevation: 0,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(left: 18.0),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4.0),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text("Order ID")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4.0),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text("Vendor Name")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4),
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text('Ship To Name')
-                                                    ),
-                                                  )
-                                              ),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4),
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text('Date')
-                                                    ),
-                                                  )
-                                              ),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text("Total Amount")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(top: 4),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text("Status")
-                                                    ),
-                                                  )),
-                                            ],
-                                          ),
+                                ),
+                                Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                                Container(color: Colors.grey[100],
+                                  //height: 32,
+                                  child:  IgnorePointer(
+                                    ignoring: true,
+                                    child: MaterialButton(
+                                      onPressed: (){},
+                                      hoverColor: Colors.transparent,
+                                      hoverElevation: 0,
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 18.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4.0),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Order ID")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4.0),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Vendor Name")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text('Ship To Name')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text('Date')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Total Amount")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(top: 4),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text("Status")
+                                                  ),
+                                                )),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
-                                  const SizedBox(height: 4,)
-                                ],
-                              ),
+                                ),
+                                Divider(height: 0.5,color: Colors.grey[500],thickness: 0.5,),
+                                const SizedBox(height: 4,)
+                              ],
                             ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: displayListItems.length + 1,
-                                itemBuilder: ( context, index) {
-                                if(index < displayListItems.length){
-                                 return Column(
-                                    children: [
-                                      MaterialButton(
-                                        hoverColor: Colors.blue[50],
-                                        onPressed: (){
-                                          // print('-Item Line Data');
-                                          // print(displayListItems[i]);
-                                          Navigator.of(context).push(PageRouteBuilder(
-                                              pageBuilder: (context,animation1,animation2) => PartOrderDetails(
-                                                //customerList: displayList[i],
-                                                drawerWidth: widget.args.drawerWidth,
-                                                selectedDestination: widget.args.selectedDestination,
-                                                estimateItem: estimateItems[index],
-                                                transitionDuration: Duration.zero,
-                                                reverseTransitionDuration: Duration.zero,
-                                              )
-                                          ));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 18.0,top: 4,bottom: 3),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4.0),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListItems[index]['estVehicleId']??"")
+                          ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: displayListItems.length + 1,
+                              itemBuilder: ( context, index) {
+                              if(index < displayListItems.length){
+                               return Column(
+                                  children: [
+                                    MaterialButton(
+                                      hoverColor: Colors.blue[50],
+                                      onPressed: (){
+                                        // print('-Item Line Data');
+                                        // print(displayListItems[i]);
+                                        Navigator.of(context).push(PageRouteBuilder(
+                                            pageBuilder: (context,animation1,animation2) => PartOrderDetails(
+                                              //customerList: displayList[i],
+                                              drawerWidth: widget.args.drawerWidth,
+                                              selectedDestination: widget.args.selectedDestination,
+                                              estimateItem: estimateItems[index],
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration: Duration.zero,
+                                            )
+                                        ));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 18.0,top: 4,bottom: 3),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 4.0),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text(displayListItems[index]['estVehicleId']??"")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 4.0),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text(displayListItems[index]['billAddressName']??"")
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text(displayListItems[index]['shipAddressName']?? '')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 4),
+                                                  child: SizedBox(
+                                                      height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text(displayListItems[index]['serviceInvoiceDate']?? '')
+                                                  ),
+                                                )
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(top: 4),
+                                                  child: SizedBox(height: 25,
+                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                      child: Text(double.parse(displayListItems[index]['total'].toString()).toStringAsFixed(2))
+                                                  ),
+                                                )),
+                                            if(displayListItems[index]['status'] == "Approved")
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 25,
+                                                    width: 100,
+                                                    child: OutlinedMButton(
+                                                      text: displayListItems[index]['status'],
+                                                      borderColor: Colors.green,
+                                                      textColor:Colors.green,
                                                     ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4.0),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListItems[index]['billAddressName']??"")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListItems[index]['shipAddressName']?? '')
-                                                    ),
-                                                  )
+                                                  ),
+                                                ],
                                               ),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListItems[index]['serviceInvoiceDate']?? '')
-                                                    ),
-                                                  )
-                                              ),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(double.parse(displayListItems[index]['total'].toString()).toStringAsFixed(2))
-                                                    ),
-                                                  )),
-                                              if(displayListItems[index]['status'] == "Approved")
+                                            ),
+                                            if(displayListItems[index]['status']=="In-review")
                                               Expanded(
                                                 child: Row(
                                                   children: [
@@ -464,129 +479,112 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                                       width: 100,
                                                       child: OutlinedMButton(
                                                         text: displayListItems[index]['status'],
-                                                        borderColor: Colors.green,
-                                                        textColor:Colors.green,
+                                                        borderColor: Colors.blue,
+                                                        textColor: Colors.blue,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              if(displayListItems[index]['status']=="In-review")
-                                                Expanded(
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 25,
-                                                        width: 100,
-                                                        child: OutlinedMButton(
-                                                          text: displayListItems[index]['status'],
-                                                          borderColor: Colors.blue,
-                                                          textColor: Colors.blue,
-                                                        ),
+                                            if(displayListItems[index]['status'] == "Rejected")
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 25,
+                                                      width: 100,
+                                                      child: OutlinedMButton(
+                                                        text: displayListItems[index]['status'],
+                                                        borderColor: Colors.red,
+                                                        textColor:Colors.red,
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              if(displayListItems[index]['status'] == "Rejected")
-                                                Expanded(
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 25,
-                                                        width: 100,
-                                                        child: OutlinedMButton(
-                                                          text: displayListItems[index]['status'],
-                                                          borderColor: Colors.red,
-                                                          textColor:Colors.red,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
+                                              ),
+                                          ],
                                         ),
                                       ),
-                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                    ],
-                                  );
-                                }
-                                else{
-                                 return Column(
-                                    children: [
-                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                      Row(mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
+                                    ),
+                                    Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                  ],
+                                );
+                              }
+                              else{
+                               return Column(
+                                  children: [
+                                    Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    Row(mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
 
-                                          Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: const TextStyle(color: Colors.grey)),
-                                          const SizedBox(width: 10,),
-                                          Material(color: Colors.transparent,
-                                            child: InkWell(
-                                              hoverColor: mHoverColor,
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(18.0),
-                                                child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                              ),
-                                              onTap: (){
-                                                if(startVal>14){
-                                                  displayListItems=[];
-                                                  startVal = startVal-15;
-                                                  for(int i=startVal;i<startVal+15;i++){
-                                                    setState(() {
+                                        Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: const TextStyle(color: Colors.grey)),
+                                        const SizedBox(width: 10,),
+                                        Material(color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                            ),
+                                            onTap: (){
+                                              if(startVal>14){
+                                                displayListItems=[];
+                                                startVal = startVal-15;
+                                                for(int i=startVal;i<startVal+15;i++){
+                                                  setState(() {
+                                                    displayListItems.add(estimateItems[i]);
+                                                  });
+                                                }
+                                              }
+                                              else{
+                                                log('else');
+                                              }
+
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        Material(color: Colors.transparent,
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(18.0),
+                                              child: Icon(Icons.arrow_forward_ios,size: 12),
+                                            ),
+                                            onTap: (){
+                                              if(startVal+1+5>estimateItems.length){
+                                                // print("Block");
+                                              }
+                                              else
+                                              if(estimateItems.length>startVal+15){
+                                                displayListItems=[];
+                                                startVal=startVal+15;
+                                                for(int i=startVal;i<startVal+15;i++){
+                                                  setState(() {
+                                                    try{
                                                       displayListItems.add(estimateItems[i]);
-                                                    });
-                                                  }
-                                                }
-                                                else{
-                                                  log('else');
-                                                }
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
 
-                                              },
-                                            ),
+                                                  });
+                                                }
+                                              }
+
+                                            },
                                           ),
-                                          const SizedBox(width: 10,),
-                                          Material(color: Colors.transparent,
-                                            child: InkWell(
-                                              hoverColor: mHoverColor,
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(18.0),
-                                                child: Icon(Icons.arrow_forward_ios,size: 12),
-                                              ),
-                                              onTap: (){
-                                                if(startVal+1+5>estimateItems.length){
-                                                  // print("Block");
-                                                }
-                                                else
-                                                if(estimateItems.length>startVal+15){
-                                                  displayListItems=[];
-                                                  startVal=startVal+15;
-                                                  for(int i=startVal;i<startVal+15;i++){
-                                                    setState(() {
-                                                      try{
-                                                        displayListItems.add(estimateItems[i]);
-                                                      }
-                                                      catch(e){
-                                                        log(e.toString());
-                                                      }
+                                        ),
+                                        const SizedBox(width: 20,),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }
+                              },
 
-                                                    });
-                                                  }
-                                                }
-
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(width: 20,),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                }
-                                },
-
-                              ),
-                          ],
-                        ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
