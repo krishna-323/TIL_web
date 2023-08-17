@@ -664,2074 +664,2115 @@ class _UserManagementState extends State<UserManagement> {
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 18.0,bottom: 3,top:4),
-                                        child: Column(
+                                        child: Row(
                                           children: [
-                                              Row(
-                                              children: [
-                                                Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(left:10,top: 4.0),
-                                                      child: SizedBox(height: 25,
-                                                          //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                          child: Text(displayUserData[index]['username']??"")
+                                            Expanded(
+                                              child: Column(
+                                                children: [
+                                                    Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:10,top: 4.0),
+                                                            child: SizedBox(height: 25,
+                                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                                child: Text(displayUserData[index]['username']??"")
+                                                            ),
+                                                          )),
+                                                      Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:10,top: 4),
+                                                            child: SizedBox(
+                                                                height: 25,
+                                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                                child: Text(displayUserData[index]['company_name']?? '')
+                                                            ),
+                                                          )
                                                       ),
-                                                    )),
-                                                Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(left:10,top: 4),
-                                                      child: SizedBox(
-                                                          height: 25,
-                                                          //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                          child: Text(displayUserData[index]['company_name']?? '')
-                                                      ),
-                                                    )
-                                                ),
-                                                Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(left:10,top: 4),
-                                                      child: SizedBox(height: 25,
-                                                          //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                          child: Text(displayUserData[index]['userid']??"")
-                                                      ),
-                                                    )),
-                                                Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(left:10,top: 4),
-                                                      child: SizedBox(height: 25,
-                                                          //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                          child: Text(displayUserData[index]['role']??"")
-                                                      ),
-                                                    )),
-                                                displayUserData[index]['isExpanded']?  const Padding(
+                                                      Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:10,top: 4),
+                                                            child: SizedBox(height: 25,
+                                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                                child: Text(displayUserData[index]['userid']??"")
+                                                            ),
+                                                          )),
+                                                      Expanded(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(left:10,top: 4),
+                                                            child: SizedBox(height: 25,
+                                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                                child: Text(displayUserData[index]['role']??"")
+                                                            ),
+                                                          )),
+
+
+                                                      // Padding(
+                                                      //   padding: const EdgeInsets.only(right:10.0),
+                                                      //   child: Center(
+                                                      //     child: SizedBox(width: 25,
+                                                      //       height: 28,
+                                                      //       child:CustomPopupMenuButton<String>(
+                                                      //           childWidth: 0,position: CustomPopupMenuPosition.under,
+                                                      //           decoration: customPopupDecoration(hintText: 'Create New Service',),
+                                                      //           hintText: "",
+                                                      //           shape: const RoundedRectangleBorder(
+                                                      //             side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                      //             borderRadius: BorderRadius.all(
+                                                      //               Radius.circular(5),
+                                                      //             ),
+                                                      //           ),
+                                                      //           offset: const Offset(1, 12),
+                                                      //           tooltip: '',
+                                                      //           itemBuilder: (context,) {
+                                                      //             return optionTypes;
+                                                      //           },
+                                                      //           onSelected: (String value,)  {
+                                                      //             setState(() {
+                                                      //               optionInitialType = value;
+                                                      //               if(optionInitialType=="Edit"){
+                                                      //                 showDialog(
+                                                      //                   context: context,
+                                                      //                   builder: (context) {
+                                                      //                     bool editFocusedCompany=false;
+                                                      //                     bool editCompanyError=false;
+                                                      //                     final editCreateCompanyCon=TextEditingController();
+                                                      //                     bool editFocusedUser=false;
+                                                      //                     bool editUserError=false;
+                                                      //                     final editUserRoleController=TextEditingController();
+                                                      //                     //Declaration Is Here.
+                                                      //                     final editUserName = TextEditingController();
+                                                      //                     bool editUserNameError = false;
+                                                      //                     bool editUserEmailError = false;
+                                                      //                     final editEmail = TextEditingController();
+                                                      //                     editUserName.text = displayUserData[index]['username'];
+                                                      //                     editEmail.text = displayUserData[index]['email'];
+                                                      //
+                                                      //                     // Dropdown Values.
+                                                      //                     List <CustomPopupMenuEntry<String>> editRoleTypes =<CustomPopupMenuEntry<String>>[
+                                                      //
+                                                      //                       const CustomPopupMenuItem(height: 40,
+                                                      //                         value: 'Admin',
+                                                      //                         child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+                                                      //
+                                                      //                       ),
+                                                      //                       const CustomPopupMenuItem(height: 40,
+                                                      //                         value: 'User',
+                                                      //                         child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+                                                      //
+                                                      //                       ),
+                                                      //
+                                                      //                     ];
+                                                      //                     //var selectedCompanyName =  displayUserData[i]['company_name'];
+                                                      //                     var selectedCompanyName="Selected Company Name";
+                                                      //                     editCreateCompanyCon.text=displayUserData[index]['company_name'];
+                                                      //                     // Initial Value.
+                                                      //                     //String  roleInitial = displayUserData[i]['role'];
+                                                      //                     String roleInitial="Selected User Role";
+                                                      //                     editUserRoleController.text=displayUserData[index]['role'];
+                                                      //                     final List<String> editCountryNames = [...companyNamesList];
+                                                      //                     // Creating CustomPopupMenuEntry Empty List.
+                                                      //                     List<CustomPopupMenuEntry<String>> editCompanyNames = [];
+                                                      //                     //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+                                                      //                     editCompanyNames = editCountryNames.map((value) {
+                                                      //                       return CustomPopupMenuItem(
+                                                      //                         height: 40,
+                                                      //                         value: value,
+                                                      //                         child: Center(
+                                                      //                           child: SizedBox(
+                                                      //                             width: 350,
+                                                      //                             child: Text(
+                                                      //                               value,
+                                                      //                               maxLines: 1,
+                                                      //                               overflow: TextOverflow.ellipsis,
+                                                      //                               style: const TextStyle(fontSize: 14),
+                                                      //                             ),
+                                                      //                           ),
+                                                      //                         ),
+                                                      //                       );
+                                                      //                     }).toList();
+                                                      //                     final editDetails = GlobalKey<FormState>();
+                                                      //                     String capitalizeFirst(String value) {
+                                                      //                       if(value.isNotEmpty){
+                                                      //                         var result = value[0].toUpperCase();
+                                                      //                         for (int i = 1; i < value.length; i++) {
+                                                      //                           if (value[i - 1] == "1") {
+                                                      //                             result = result + value[i].toUpperCase();
+                                                      //                           } else {
+                                                      //                             result = result + value[i];
+                                                      //                           }
+                                                      //                         }
+                                                      //                         return result;
+                                                      //                       }
+                                                      //                       return '';
+                                                      //                     }
+                                                      //                     return Dialog(
+                                                      //                       backgroundColor: Colors.transparent,
+                                                      //                       child: StatefulBuilder(
+                                                      //                         builder: (context, setState) {
+                                                      //                           // Assigning variables.
+                                                      //                           return SizedBox(
+                                                      //                             width: 500,
+                                                      //                             child: Stack(children: [
+                                                      //                               Container(
+                                                      //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                      //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                      //                                 child: SingleChildScrollView(
+                                                      //                                   child: Form(
+                                                      //                                     key: editDetails,
+                                                      //                                     child: Padding(
+                                                      //                                       padding: const EdgeInsets.all(30),
+                                                      //                                       child: Container(
+                                                      //                                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                      //                                         child: Column(
+                                                      //                                           children: [
+                                                      //                                             // Top container.
+                                                      //                                             Container(color: Colors.grey[100],
+                                                      //                                               child: IgnorePointer(ignoring: true,
+                                                      //                                                 child: MaterialButton(
+                                                      //                                                   hoverColor: Colors.transparent,
+                                                      //                                                   onPressed: () {
+                                                      //
+                                                      //                                                   },
+                                                      //                                                   child: const Row(
+                                                      //                                                     children: [
+                                                      //                                                       Expanded(
+                                                      //                                                         child: Padding(
+                                                      //                                                           padding: EdgeInsets.all(8.0),
+                                                      //                                                           child: Text(
+                                                      //                                                             'Edit User Details',
+                                                      //                                                             style: TextStyle(fontWeight: FontWeight.bold,
+                                                      //                                                               fontSize: 16,),
+                                                      //                                                           ),
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     ],
+                                                      //                                                   ),
+                                                      //                                                 ),
+                                                      //                                               ),
+                                                      //                                             ),
+                                                      //                                             const Divider(height: 1,color:mTextFieldBorder),
+                                                      //                                             Padding(
+                                                      //                                               padding: const EdgeInsets.all(30),
+                                                      //                                               child: Column(children: [
+                                                      //                                                 //user Name.
+                                                      //                                                 Row(
+                                                      //                                                   crossAxisAlignment:
+                                                      //                                                   CrossAxisAlignment.start,
+                                                      //                                                   children: [
+                                                      //                                                     const SizedBox(
+                                                      //                                                         width: 130, child: Text('User Name')),
+                                                      //                                                     const SizedBox(height: 10),
+                                                      //                                                     Expanded(
+                                                      //                                                       child: AnimatedContainer(
+                                                      //                                                         duration:
+                                                      //                                                         const Duration(seconds: 0),
+                                                      //                                                         height:
+                                                      //                                                         editUserNameError ? 55 : 30,
+                                                      //                                                         child: TextFormField(
+                                                      //                                                           validator: (value) {
+                                                      //                                                             if (value == null ||
+                                                      //                                                                 value.isEmpty) {
+                                                      //                                                               setState(() {
+                                                      //                                                                 editUserNameError = true;
+                                                      //                                                               });
+                                                      //                                                               return "Enter User Name";
+                                                      //                                                             } else {
+                                                      //                                                               setState(() {
+                                                      //                                                                 editUserNameError = false;
+                                                      //                                                               });
+                                                      //                                                             }
+                                                      //                                                             return null;
+                                                      //                                                           },
+                                                      //                                                           onChanged: (value) {
+                                                      //                                                             editUserName.value=TextEditingValue(
+                                                      //                                                               text:capitalizeFirst(value),
+                                                      //                                                               selection: editUserName.selection,
+                                                      //                                                             );
+                                                      //                                                           },
+                                                      //                                                           controller: editUserName,
+                                                      //                                                           decoration: decorationInput5(hintString:
+                                                      //                                                           'Enter User Name',
+                                                      //                                                               error: editUserNameError),
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     )
+                                                      //                                                   ],
+                                                      //                                                 ),
+                                                      //                                                 const SizedBox(
+                                                      //                                                   height: 10,
+                                                      //                                                 ),
+                                                      //                                                 //Company Name
+                                                      //                                                 Row(
+                                                      //                                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                                      //                                                   children: [
+                                                      //                                                     const SizedBox(
+                                                      //                                                         width: 130,
+                                                      //                                                         child: Text('Company Name',)),
+                                                      //                                                     Expanded(
+                                                      //                                                       child: Focus(
+                                                      //                                                         onFocusChange: (value) {
+                                                      //                                                           setState(() {
+                                                      //                                                             editFocusedCompany = value;
+                                                      //                                                           });
+                                                      //                                                         },
+                                                      //                                                         skipTraversal: true,
+                                                      //                                                         descendantsAreFocusable: true,
+                                                      //                                                         child: LayoutBuilder(
+                                                      //                                                             builder: (BuildContext context, BoxConstraints constraints) {
+                                                      //                                                               return CustomPopupMenuButton(childHeight: 200,
+                                                      //                                                                 elevation: 4,
+                                                      //                                                                 validator: (value) {
+                                                      //                                                                   if(value==null||value.isEmpty){
+                                                      //                                                                     setState(() {
+                                                      //                                                                       editCompanyError =true;
+                                                      //                                                                     });
+                                                      //                                                                     return null;
+                                                      //                                                                   }
+                                                      //                                                                   return null;
+                                                      //                                                                 },
+                                                      //                                                                 decoration: customPopupDecoration(hintText:selectedCompanyName,error: editCompanyError,isFocused: editFocusedCompany),
+                                                      //                                                                 hintText: '',
+                                                      //                                                                 textController: editCreateCompanyCon,
+                                                      //                                                                 childWidth: constraints.maxWidth,
+                                                      //                                                                 shape:  RoundedRectangleBorder(
+                                                      //                                                                   side: BorderSide(color:editCompanyError ? Colors.redAccent :mTextFieldBorder),
+                                                      //                                                                   borderRadius: const BorderRadius.all(
+                                                      //                                                                     Radius.circular(5),
+                                                      //                                                                   ),
+                                                      //                                                                 ),
+                                                      //                                                                 offset: const Offset(1, 40),
+                                                      //                                                                 tooltip: '',
+                                                      //                                                                 itemBuilder:  (BuildContext context) {
+                                                      //                                                                   return editCompanyNames;
+                                                      //                                                                 },
+                                                      //
+                                                      //                                                                 onSelected: (String value)  {
+                                                      //                                                                   setState(() {
+                                                      //                                                                     editCreateCompanyCon.text=value;
+                                                      //                                                                     editCompanyError=false;
+                                                      //                                                                   });
+                                                      //
+                                                      //                                                                 },
+                                                      //                                                                 onCanceled: () {
+                                                      //
+                                                      //                                                                 },
+                                                      //                                                                 child: Container(),
+                                                      //                                                               );
+                                                      //                                                             }
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     ),
+                                                      //                                                   ],
+                                                      //                                                 ),
+                                                      //                                                 const SizedBox(
+                                                      //                                                   height: 10,
+                                                      //                                                 ),
+                                                      //                                                 //user Role.
+                                                      //                                                 Row(
+                                                      //                                                   crossAxisAlignment:
+                                                      //                                                   CrossAxisAlignment.start,
+                                                      //                                                   children: [
+                                                      //                                                     const SizedBox(
+                                                      //                                                         width: 130,
+                                                      //                                                         child: Text(
+                                                      //                                                           "User Role",
+                                                      //                                                         )),
+                                                      //                                                     Expanded(
+                                                      //                                                       child: Focus(
+                                                      //                                                         onFocusChange: (value) {
+                                                      //                                                           setState(() {
+                                                      //                                                             editFocusedUser = value;
+                                                      //                                                           });
+                                                      //                                                         },
+                                                      //                                                         skipTraversal: true,
+                                                      //                                                         descendantsAreFocusable: true,
+                                                      //                                                         child: LayoutBuilder(
+                                                      //                                                             builder: (BuildContext context, BoxConstraints constraints) {
+                                                      //                                                               return CustomPopupMenuButton(elevation: 4,
+                                                      //                                                                 validator: (value) {
+                                                      //                                                                   if(value==null||value.isEmpty){
+                                                      //                                                                     setState(() {
+                                                      //                                                                       editUserError =true;
+                                                      //                                                                     });
+                                                      //                                                                     return null;
+                                                      //                                                                   }
+                                                      //                                                                   return null;
+                                                      //                                                                 },
+                                                      //                                                                 decoration: customPopupDecoration(hintText:roleInitial,error: editUserError,isFocused: editFocusedUser),
+                                                      //                                                                 hintText: '',
+                                                      //                                                                 textController: editUserRoleController,
+                                                      //                                                                 childWidth: constraints.maxWidth,
+                                                      //                                                                 shape:  RoundedRectangleBorder(
+                                                      //                                                                   side: BorderSide(color:editUserError ? Colors.redAccent :mTextFieldBorder),
+                                                      //                                                                   borderRadius: const BorderRadius.all(
+                                                      //                                                                     Radius.circular(5),
+                                                      //                                                                   ),
+                                                      //                                                                 ),
+                                                      //                                                                 offset: const Offset(1, 40),
+                                                      //                                                                 tooltip: '',
+                                                      //                                                                 itemBuilder:  (BuildContext context) {
+                                                      //                                                                   return editRoleTypes;
+                                                      //                                                                 },
+                                                      //
+                                                      //                                                                 onSelected: (String value)  {
+                                                      //                                                                   setState(() {
+                                                      //                                                                     editUserRoleController.text=value;
+                                                      //                                                                     editUserError=false;
+                                                      //                                                                   });
+                                                      //
+                                                      //                                                                 },
+                                                      //                                                                 onCanceled: () {
+                                                      //
+                                                      //                                                                 },
+                                                      //                                                                 child: Container(),
+                                                      //                                                               );
+                                                      //                                                             }
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     ),
+                                                      //                                                   ],
+                                                      //                                                 ),
+                                                      //                                                 const SizedBox(
+                                                      //                                                   height: 10,
+                                                      //                                                 ),
+                                                      //                                                 //User Email.
+                                                      //                                                 Row(
+                                                      //                                                   crossAxisAlignment:
+                                                      //                                                   CrossAxisAlignment.start,
+                                                      //                                                   children: [
+                                                      //                                                     const SizedBox(
+                                                      //                                                         width: 130,
+                                                      //                                                         child: Text('User Email')),
+                                                      //                                                     const SizedBox(height: 10),
+                                                      //                                                     Expanded(
+                                                      //                                                       child: AnimatedContainer(
+                                                      //                                                         duration:
+                                                      //                                                         const Duration(seconds: 0),
+                                                      //                                                         height:
+                                                      //                                                         editUserEmailError ? 55 : 30,
+                                                      //                                                         child: TextFormField(
+                                                      //                                                           validator: (value) {
+                                                      //                                                             if (value == null || value.isEmpty) {
+                                                      //                                                               setState(() {
+                                                      //                                                                 editUserEmailError = true;
+                                                      //                                                               });
+                                                      //                                                               return "Enter User Email";
+                                                      //                                                             }
+                                                      //                                                             else if(!EmailValidator.validate(value)){
+                                                      //                                                               setState((){
+                                                      //                                                                 editUserEmailError=true;
+                                                      //                                                               });
+                                                      //                                                               return 'Please enter valued email address';
+                                                      //                                                             }
+                                                      //                                                             else {
+                                                      //                                                               setState(() {
+                                                      //                                                                 editUserEmailError = false;
+                                                      //                                                               });
+                                                      //                                                             }
+                                                      //                                                             return null;
+                                                      //                                                           },
+                                                      //                                                           onChanged: (text) {
+                                                      //                                                             setState(() {});
+                                                      //                                                           },
+                                                      //                                                           controller: editEmail,
+                                                      //                                                           decoration: decorationInput5(hintString:
+                                                      //                                                           'Enter User Email',
+                                                      //                                                               error:  editUserEmailError),
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     )
+                                                      //                                                   ],
+                                                      //                                                 ),
+                                                      //                                                 const SizedBox(
+                                                      //                                                   height: 35,
+                                                      //                                                 ),
+                                                      //                                                 Align(
+                                                      //                                                   alignment: Alignment.center,
+                                                      //                                                   child:  SizedBox(
+                                                      //
+                                                      //                                                     width: 100,
+                                                      //                                                     height:30,
+                                                      //                                                     child: OutlinedMButton(
+                                                      //                                                       text: 'Update',
+                                                      //                                                       buttonColor:mSaveButton ,
+                                                      //                                                       textColor: Colors.white,
+                                                      //                                                       borderColor: mSaveButton,
+                                                      //                                                       onTap:(){
+                                                      //                                                         if (editDetails.currentState!.validate()) {
+                                                      //                                                           Map editUserManagement = {
+                                                      //                                                             'userid':displayUserData[index]['userid'],
+                                                      //                                                             'username': editUserName.text,
+                                                      //                                                             'password':displayUserData[index]['password'],
+                                                      //                                                             'active':true,
+                                                      //                                                             'role': editUserRoleController.text,
+                                                      //                                                             'email': editEmail.text,
+                                                      //                                                             'token':'',
+                                                      //                                                             'token_creation_date':'',
+                                                      //                                                             'company_name': editCreateCompanyCon.text,
+                                                      //                                                             "manager_id" : managerId ,
+                                                      //                                                             "org_id": orgId
+                                                      //                                                             //editCompanyName.text,
+                                                      //                                                           };
+                                                      //                                                           updateUserDetails(editUserManagement);
+                                                      //                                                         }
+                                                      //                                                       },
+                                                      //                                                     ),
+                                                      //                                                   ),
+                                                      //
+                                                      //                                                 ),
+                                                      //                                               ],),
+                                                      //                                             )
+                                                      //                                           ],
+                                                      //                                         ),
+                                                      //                                       ),
+                                                      //                                     ),
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                               Positioned(right: 0.0,
+                                                      //
+                                                      //                                 child: InkWell(
+                                                      //                                   child: Container(
+                                                      //                                       width: 30,
+                                                      //                                       height: 30,
+                                                      //                                       decoration: BoxDecoration(
+                                                      //                                           borderRadius: BorderRadius.circular(15),
+                                                      //                                           border: Border.all(
+                                                      //                                             color:
+                                                      //                                             const Color.fromRGBO(204, 204, 204, 1),
+                                                      //                                           ),
+                                                      //                                           color: Colors.blue),
+                                                      //                                       child: const Icon(
+                                                      //                                         Icons.close_sharp,
+                                                      //                                         color: Colors.white,
+                                                      //                                       )),
+                                                      //                                   onTap: () {
+                                                      //                                     setState(() {
+                                                      //                                       Navigator.of(context).pop();
+                                                      //                                     });
+                                                      //                                   },
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                             ],
+                                                      //
+                                                      //                             ),
+                                                      //                           );
+                                                      //                         },
+                                                      //                       ),
+                                                      //                     );
+                                                      //                   },
+                                                      //                 );
+                                                      //               }
+                                                      //               else if(optionInitialType=="Delete"){
+                                                      //                 if(userID==displayUserData[index]['userid']){
+                                                      //                   showDialog(
+                                                      //                     context: context,
+                                                      //                     builder: (context) {
+                                                      //                       return Dialog(
+                                                      //                         backgroundColor: Colors.transparent,
+                                                      //                         child: StatefulBuilder(
+                                                      //                           builder: (context, setState) {
+                                                      //                             return SizedBox(
+                                                      //                               height: 200,
+                                                      //                               width: 300,
+                                                      //                               child: Stack(children: [
+                                                      //                                 Container(
+                                                      //                                   decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                      //                                   margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                      //                                   child: Padding(
+                                                      //                                     padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                      //                                     child: Column(
+                                                      //                                       children: [
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 20,
+                                                      //                                         ),
+                                                      //                                         const Icon(
+                                                      //                                           Icons.warning_rounded,
+                                                      //                                           color: Colors.red,
+                                                      //                                           size: 50,
+                                                      //                                         ),
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 10,
+                                                      //                                         ),
+                                                      //                                         const Center(
+                                                      //                                             child: Text(
+                                                      //                                               'You Can Not Delete LoggedIn User',
+                                                      //                                               style: TextStyle(
+                                                      //                                                   color: Colors.indigo,
+                                                      //                                                   fontWeight: FontWeight.bold,
+                                                      //                                                   fontSize: 15),
+                                                      //                                             )),
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 35,
+                                                      //                                         ),
+                                                      //                                         Row(
+                                                      //                                           mainAxisAlignment: MainAxisAlignment.center,
+                                                      //                                           children: [
+                                                      //                                             MaterialButton(
+                                                      //                                               color: Colors.blue,
+                                                      //                                               onPressed: () {
+                                                      //                                                 setState(() {
+                                                      //                                                   Navigator.of(context).pop();
+                                                      //                                                 });
+                                                      //                                               },
+                                                      //                                               child: const Text(
+                                                      //                                                 'OK',
+                                                      //                                                 style: TextStyle(color: Colors.white),
+                                                      //                                               ),
+                                                      //                                             )
+                                                      //                                           ],
+                                                      //                                         )
+                                                      //                                       ],
+                                                      //                                     ),
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                                 Positioned(right: 0.0,
+                                                      //
+                                                      //                                   child: InkWell(
+                                                      //                                     child: Container(
+                                                      //                                         width: 30,
+                                                      //                                         height: 30,
+                                                      //                                         decoration: BoxDecoration(
+                                                      //                                             borderRadius: BorderRadius.circular(15),
+                                                      //                                             border: Border.all(
+                                                      //                                               color:
+                                                      //                                               const Color.fromRGBO(204, 204, 204, 1),
+                                                      //                                             ),
+                                                      //                                             color: Colors.blue),
+                                                      //                                         child: const Icon(
+                                                      //                                           Icons.close_sharp,
+                                                      //                                           color: Colors.white,
+                                                      //                                         )),
+                                                      //                                     onTap: () {
+                                                      //                                       setState(() {
+                                                      //                                         Navigator.of(context).pop();
+                                                      //                                       });
+                                                      //                                     },
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                               ],
+                                                      //                               ),
+                                                      //                             );
+                                                      //                           },
+                                                      //                         ),
+                                                      //                       );
+                                                      //                     },
+                                                      //                   );
+                                                      //                 }
+                                                      //                 else{
+                                                      //                   showDialog(
+                                                      //                     context: context,
+                                                      //                     builder: (context) {
+                                                      //                       return Dialog(
+                                                      //                         backgroundColor: Colors.transparent,
+                                                      //                         child: StatefulBuilder(
+                                                      //                           builder: (context, setState) {
+                                                      //                             return SizedBox(
+                                                      //                               height: 200,
+                                                      //                               width: 300,
+                                                      //                               child: Stack(children: [
+                                                      //                                 Container(
+                                                      //                                   decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                      //                                   margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                      //                                   child: Padding(
+                                                      //                                     padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                      //                                     child: Column(
+                                                      //                                       children: [
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 20,
+                                                      //                                         ),
+                                                      //                                         const Icon(
+                                                      //                                           Icons.warning_rounded,
+                                                      //                                           color: Colors.red,
+                                                      //                                           size: 50,
+                                                      //                                         ),
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 10,
+                                                      //                                         ),
+                                                      //                                         const Center(
+                                                      //                                             child: Text(
+                                                      //                                               'Are You Sure, You  Want To Delete ?',
+                                                      //                                               style: TextStyle(
+                                                      //                                                   color: Colors.indigo,
+                                                      //                                                   fontWeight: FontWeight.bold,
+                                                      //                                                   fontSize: 15),
+                                                      //                                             )),
+                                                      //                                         const SizedBox(
+                                                      //                                           height: 35,
+                                                      //                                         ),
+                                                      //                                         Row(
+                                                      //                                           mainAxisAlignment:
+                                                      //                                           MainAxisAlignment.spaceEvenly,
+                                                      //                                           children: [
+                                                      //                                             SizedBox(
+                                                      //                                               width: 50,
+                                                      //                                               height:30,
+                                                      //                                               child: OutlinedMButton(
+                                                      //                                                 text: 'Ok',
+                                                      //                                                 buttonColor:Colors.red ,
+                                                      //                                                 textColor: Colors.white,
+                                                      //                                                 borderColor: Colors.red,
+                                                      //                                                 onTap:(){
+                                                      //                                                   assignUserId = displayUserData[index]['userid'];
+                                                      //                                                   deleteUserData();
+                                                      //                                                 },
+                                                      //                                               ),
+                                                      //                                             ),
+                                                      //                                             SizedBox(
+                                                      //                                               width: 100,
+                                                      //                                               height:30,
+                                                      //                                               child: OutlinedMButton(
+                                                      //                                                 text: 'Cancel',
+                                                      //                                                 buttonColor:mSaveButton ,
+                                                      //                                                 textColor: Colors.white,
+                                                      //                                                 borderColor: mSaveButton,
+                                                      //                                                 onTap:(){
+                                                      //                                                   Navigator.of(context).pop();
+                                                      //                                                 },
+                                                      //                                               ),
+                                                      //                                             )
+                                                      //
+                                                      //                                           ],
+                                                      //                                         )
+                                                      //                                       ],
+                                                      //                                     ),
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                                 Positioned(right: 0.0,
+                                                      //
+                                                      //                                   child: InkWell(
+                                                      //                                     child: Container(
+                                                      //                                         width: 30,
+                                                      //                                         height: 30,
+                                                      //                                         decoration: BoxDecoration(
+                                                      //                                             borderRadius: BorderRadius.circular(15),
+                                                      //                                             border: Border.all(
+                                                      //                                               color:
+                                                      //                                               const Color.fromRGBO(204, 204, 204, 1),
+                                                      //                                             ),
+                                                      //                                             color: Colors.blue),
+                                                      //                                         child: const Icon(
+                                                      //                                           Icons.close_sharp,
+                                                      //                                           color: Colors.white,
+                                                      //                                         )),
+                                                      //                                     onTap: () {
+                                                      //                                       setState(() {
+                                                      //                                         Navigator.of(context).pop();
+                                                      //                                       });
+                                                      //                                     },
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                               ],
+                                                      //                               ),
+                                                      //                             );
+                                                      //                           },
+                                                      //                         ),
+                                                      //                       );
+                                                      //                     },
+                                                      //                   );
+                                                      //                 }
+                                                      //               }
+                                                      //               else if (optionInitialType=="Change Password"){
+                                                      //                 showDialog(
+                                                      //                   context: context,
+                                                      //                   builder: (context) {
+                                                      //                     bool passwordInitial = true;
+                                                      //                     final emailBased = TextEditingController();
+                                                      //                     final editPassword = TextEditingController();
+                                                      //                     final conformPassword = TextEditingController();
+                                                      //                     bool editEmailError = false;
+                                                      //                     bool editPasswordError = false;
+                                                      //                     bool conformPasswordInitial = true;
+                                                      //                     String storeEmail = '';
+                                                      //                     String storePassword = '';
+                                                      //                     //regular expression to check if string.
+                                                      //                     RegExp passValid = RegExp(
+                                                      //                         r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+                                                      //                     // a function that validate user enter password.
+                                                      //                     bool validatePassword(String pass) {
+                                                      //                       String password = pass.trim();
+                                                      //                       if (passValid.hasMatch(password)) {
+                                                      //                         return true;
+                                                      //                       } else {
+                                                      //                         return false;
+                                                      //                       }
+                                                      //                     }
+                                                      //
+                                                      //
+                                                      //                     final changeKey = GlobalKey<FormState>();
+                                                      //                     return Dialog(
+                                                      //                       backgroundColor: Colors.transparent,
+                                                      //                       child: StatefulBuilder(
+                                                      //                         builder: (context, setState) {
+                                                      //                           void textHideFunc() {
+                                                      //                             setState(() {
+                                                      //                               passwordInitial = !passwordInitial;
+                                                      //                             });
+                                                      //                           }
+                                                      //
+                                                      //                           void textHideConformPassword() {
+                                                      //                             setState(() {
+                                                      //                               conformPasswordInitial = !conformPasswordInitial;
+                                                      //                             });
+                                                      //                           }
+                                                      //
+                                                      //                           emailBased.text = displayUserData[index]['email'];
+                                                      //                           storeEmail = displayUserData[index]['email'];
+                                                      //                           storePassword = editPassword.text;
+                                                      //                           return SizedBox(
+                                                      //                             width: 500,
+                                                      //                             child: Stack(children: [
+                                                      //                               Container(
+                                                      //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                      //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                      //                                 child: SingleChildScrollView(
+                                                      //                                   child: Form(
+                                                      //                                     key: changeKey,
+                                                      //                                     child: Padding(
+                                                      //                                       padding: const EdgeInsets.all(30),
+                                                      //                                       child: Container(
+                                                      //                                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                      //                                         child: Column(children: [
+                                                      //                                           // Top container.
+                                                      //                                           Container(color: Colors.grey[100],
+                                                      //                                             child: IgnorePointer(ignoring: true,
+                                                      //                                               child: MaterialButton(
+                                                      //                                                 hoverColor: Colors.transparent,
+                                                      //                                                 onPressed: () {
+                                                      //
+                                                      //                                                 },
+                                                      //                                                 child: const Row(
+                                                      //                                                   children: [
+                                                      //                                                     Expanded(
+                                                      //                                                       child: Padding(
+                                                      //                                                         padding: EdgeInsets.all(8.0),
+                                                      //                                                         child: Text(
+                                                      //                                                           'Change Password',
+                                                      //                                                           style: TextStyle(fontWeight: FontWeight.bold,
+                                                      //                                                             fontSize: 16,),
+                                                      //                                                         ),
+                                                      //                                                       ),
+                                                      //                                                     ),
+                                                      //                                                   ],
+                                                      //                                                 ),
+                                                      //                                               ),
+                                                      //                                             ),
+                                                      //                                           ),
+                                                      //                                           const Divider(height: 1,color:mTextFieldBorder),
+                                                      //                                           Padding(
+                                                      //                                             padding: const EdgeInsets.all(30),
+                                                      //                                             child: Column(children: [
+                                                      //                                               //User Email
+                                                      //                                               Row(
+                                                      //                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                      //                                                 children: [
+                                                      //                                                   const SizedBox(
+                                                      //                                                       width: 140, child: Text('User Email')),
+                                                      //                                                   const SizedBox(height: 10),
+                                                      //                                                   Expanded(
+                                                      //                                                     child: AnimatedContainer(
+                                                      //                                                       duration:
+                                                      //                                                       const Duration(seconds: 0),
+                                                      //                                                       height: editEmailError ? 55 : 30,
+                                                      //                                                       child: TextFormField(
+                                                      //                                                         readOnly: true,
+                                                      //                                                         validator: (value) {
+                                                      //                                                           if (value == null ||
+                                                      //                                                               value.isEmpty) {
+                                                      //                                                             setState(() {
+                                                      //                                                               editEmailError = true;
+                                                      //                                                             });
+                                                      //                                                             return "Enter User Name";
+                                                      //                                                           } else {
+                                                      //                                                             setState(() {
+                                                      //                                                               editEmailError = false;
+                                                      //                                                             });
+                                                      //                                                           }
+                                                      //                                                           return null;
+                                                      //                                                         },
+                                                      //                                                         controller: emailBased,
+                                                      //                                                         decoration: decorationInput5(hintString:
+                                                      //                                                         'User Email',
+                                                      //                                                             error: editEmailError),
+                                                      //                                                       ),
+                                                      //                                                     ),
+                                                      //                                                   )
+                                                      //                                                 ],
+                                                      //                                               ),
+                                                      //                                               const SizedBox(
+                                                      //                                                 height: 15,
+                                                      //                                               ),
+                                                      //                                               Row(
+                                                      //                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                      //                                                 children: [
+                                                      //                                                   const SizedBox(
+                                                      //                                                       width: 140, child: Text('User Password')),
+                                                      //                                                   const SizedBox(height: 10),
+                                                      //                                                   Expanded(
+                                                      //
+                                                      //                                                     child: AnimatedContainer(
+                                                      //                                                       duration: const Duration(seconds: 0),
+                                                      //                                                       height: editPasswordError ? 55 : 30,
+                                                      //                                                       child: TextFormField(onTap: () {
+                                                      //                                                         setState((){
+                                                      //                                                           conformPasswordInitial=true;
+                                                      //                                                         });
+                                                      //                                                       },
+                                                      //                                                           validator: (value) {
+                                                      //                                                             if (value == null || value.isEmpty) {
+                                                      //                                                               setState(() {
+                                                      //                                                                 editPasswordError = true;
+                                                      //                                                               });
+                                                      //                                                               return 'Enter Password';
+                                                      //                                                             } else {
+                                                      //                                                               // call function to check password
+                                                      //                                                               bool result = validatePassword(value);
+                                                      //                                                               if (result) {
+                                                      //                                                                 setState(() {
+                                                      //                                                                   editPasswordError = false;
+                                                      //                                                                 });
+                                                      //                                                                 // create account event
+                                                      //                                                                 return null;
+                                                      //                                                               } else {
+                                                      //                                                                 setState(() {
+                                                      //                                                                   editPasswordError = true;
+                                                      //                                                                 });
+                                                      //                                                                 return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
+                                                      //                                                               }
+                                                      //                                                             }
+                                                      //                                                           },
+                                                      //                                                           controller: editPassword,
+                                                      //                                                           obscureText: passwordInitial,
+                                                      //                                                           decoration: decorationInputPassword('Enter Password', editPassword.text.isNotEmpty, passwordInitial, textHideFunc)),
+                                                      //                                                     ),
+                                                      //                                                   )
+                                                      //                                                 ],
+                                                      //                                               ),
+                                                      //                                               const SizedBox(
+                                                      //                                                 height: 15,
+                                                      //                                               ),
+                                                      //                                               //conform password.
+                                                      //                                               Row(
+                                                      //                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                      //                                                 children: [
+                                                      //                                                   const SizedBox(
+                                                      //                                                       width: 140,
+                                                      //                                                       child: Text('Conform Password')),
+                                                      //                                                   const SizedBox(height: 10),
+                                                      //                                                   Expanded(
+                                                      //                                                     child: AnimatedContainer(
+                                                      //                                                       duration:
+                                                      //                                                       const Duration(seconds: 0),
+                                                      //                                                       height: editPasswordError ? 55 : 30,
+                                                      //                                                       child: TextFormField(onTap: (){
+                                                      //                                                         setState((){
+                                                      //                                                           passwordInitial=true;
+                                                      //                                                         });
+                                                      //                                                       },
+                                                      //                                                         validator: (value) {
+                                                      //                                                           if (value == null ||
+                                                      //                                                               value.isEmpty &&
+                                                      //                                                                   conformPassword.text ==
+                                                      //                                                                       '') {
+                                                      //                                                             setState(() {
+                                                      //                                                               editPasswordError = true;
+                                                      //                                                             });
+                                                      //                                                             return "Conform Password";
+                                                      //                                                           } else if (conformPassword
+                                                      //                                                               .text !=
+                                                      //                                                               editPassword.text) {
+                                                      //                                                             setState(() {
+                                                      //                                                               editPasswordError = true;
+                                                      //                                                             });
+                                                      //                                                             return 'Password does`t match';
+                                                      //                                                           } else {
+                                                      //                                                             setState(() {
+                                                      //                                                               editPasswordError = false;
+                                                      //                                                             });
+                                                      //                                                           }
+                                                      //                                                           return null;
+                                                      //                                                         },
+                                                      //                                                         onChanged: (text) {
+                                                      //                                                           setState(() {});
+                                                      //                                                         },
+                                                      //                                                         controller: conformPassword,
+                                                      //                                                         decoration:
+                                                      //                                                         decorationInputConformPassword(
+                                                      //                                                             'Enter Password',
+                                                      //                                                             conformPassword
+                                                      //                                                                 .text.isNotEmpty,
+                                                      //                                                             conformPasswordInitial,
+                                                      //                                                             textHideConformPassword),
+                                                      //                                                         // decorationInput5(
+                                                      //                                                         //     'Conform Password',
+                                                      //                                                         //     conformPassword
+                                                      //                                                         //         .text.isNotEmpty),
+                                                      //                                                         obscureText: conformPasswordInitial,
+                                                      //                                                       ),
+                                                      //                                                     ),
+                                                      //                                                   )
+                                                      //                                                 ],
+                                                      //                                               ),
+                                                      //                                               const SizedBox(
+                                                      //                                                 height: 35,
+                                                      //                                               ),
+                                                      //                                               Align(
+                                                      //                                                   alignment: Alignment.center,
+                                                      //                                                   child:  SizedBox(
+                                                      //                                                     width: 100,
+                                                      //                                                     height:30,
+                                                      //                                                     child: OutlinedMButton(
+                                                      //                                                       text: 'Save',
+                                                      //                                                       buttonColor:mSaveButton ,
+                                                      //                                                       textColor: Colors.white,
+                                                      //                                                       borderColor: mSaveButton,
+                                                      //                                                       onTap:() {
+                                                      //                                                         //Password change.
+                                                      //                                                         Future changePasswordFunc(
+                                                      //                                                             String storeEmail,
+                                                      //                                                             String storePassword) async {
+                                                      //                                                           String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
+                                                      //                                                           final response = await http.get(Uri.parse(url),
+                                                      //                                                               headers: {
+                                                      //                                                                 "Content-Type": "application/json",
+                                                      //                                                                 'Authorization': 'Bearer $authToken'
+                                                      //                                                               });
+                                                      //                                                           if (response.statusCode == 200) {
+                                                      //
+                                                      //                                                             if(mounted) {
+                                                      //                                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
+                                                      //                                                               Navigator.of(context).pop();
+                                                      //                                                             }
+                                                      //                                                           } else {
+                                                      //                                                             log(response.statusCode.toString());
+                                                      //                                                           }
+                                                      //                                                         }
+                                                      //
+                                                      //                                                         setState(() {
+                                                      //                                                           if (changeKey.currentState!.validate()) {
+                                                      //                                                             changePasswordFunc(storeEmail, storePassword);
+                                                      //                                                           }
+                                                      //                                                         });
+                                                      //                                                       },
+                                                      //                                                     ),
+                                                      //                                                   )
+                                                      //                                               ),
+                                                      //                                             ],),
+                                                      //                                           )
+                                                      //                                         ]),
+                                                      //                                       ),
+                                                      //                                     ),
+                                                      //                                   ),
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                               Positioned(right: 0.0,
+                                                      //
+                                                      //                                 child: InkWell(
+                                                      //                                   child: Container(
+                                                      //                                       width: 30,
+                                                      //                                       height: 30,
+                                                      //                                       decoration: BoxDecoration(
+                                                      //                                           borderRadius: BorderRadius.circular(15),
+                                                      //                                           border: Border.all(
+                                                      //                                             color:
+                                                      //                                             const Color.fromRGBO(204, 204, 204, 1),
+                                                      //                                           ),
+                                                      //                                           color: Colors.blue),
+                                                      //                                       child: const Icon(
+                                                      //                                         Icons.close_sharp,
+                                                      //                                         color: Colors.white,
+                                                      //                                       )),
+                                                      //                                   onTap: () {
+                                                      //                                     setState(() {
+                                                      //                                       Navigator.of(context).pop();
+                                                      //                                     });
+                                                      //                                   },
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                             ],
+                                                      //
+                                                      //                             ),
+                                                      //                           );
+                                                      //                         },
+                                                      //                       ),
+                                                      //                     );
+                                                      //                   },
+                                                      //                 );
+                                                      //               }
+                                                      //             });
+                                                      //           },
+                                                      //           child:Container()
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+
+                                                    displayUserData[index]['isExpanded']?
+                                                    FutureBuilder (
+                                                        future: _show(),
+                                                      builder: (context,snapchat) {
+                                                          if(!snapchat.hasData){
+                                                            return const SizedBox();
+                                                          }
+                                                          return Column(
+                                                            children: [
+                                                              const SizedBox(height: 12,),
+                                                              Row(mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: 28,
+                                                                    width:80,
+                                                                    child: OutlinedBorderWithIcon(
+                                                                      buttonText: 'Edit', iconData: Icons.edit,
+                                                                      onTap: (){
+                                                                       setState(() {
+                                                                         showDialog(
+                                                                           context: context,
+                                                                           builder: (context) {
+                                                                             bool editFocusedCompany=false;
+                                                                             bool editCompanyError=false;
+                                                                             final editCreateCompanyCon=TextEditingController();
+                                                                             bool editFocusedUser=false;
+                                                                             bool editUserError=false;
+                                                                             final editUserRoleController=TextEditingController();
+                                                                             //Declaration Is Here.
+                                                                             final editUserName = TextEditingController();
+                                                                             bool editUserNameError = false;
+                                                                             bool editUserEmailError = false;
+                                                                             final editEmail = TextEditingController();
+                                                                             editUserName.text = displayUserData[index]['username'];
+                                                                             editEmail.text = displayUserData[index]['email'];
+
+                                                                             // Dropdown Values.
+                                                                             List <CustomPopupMenuEntry<String>> editRoleTypes =<CustomPopupMenuEntry<String>>[
+
+                                                                               const CustomPopupMenuItem(height: 40,
+                                                                                 value: 'Admin',
+                                                                                 child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                                                                               ),
+                                                                               const CustomPopupMenuItem(height: 40,
+                                                                                 value: 'User',
+                                                                                 child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+
+                                                                               ),
+
+                                                                             ];
+                                                                             //var selectedCompanyName =  displayUserData[i]['company_name'];
+                                                                             var selectedCompanyName="Selected Company Name";
+                                                                             editCreateCompanyCon.text=displayUserData[index]['company_name'];
+                                                                             // Initial Value.
+                                                                             //String  roleInitial = displayUserData[i]['role'];
+                                                                             String roleInitial="Selected User Role";
+                                                                             editUserRoleController.text=displayUserData[index]['role'];
+                                                                             final List<String> editCountryNames = [...companyNamesList];
+                                                                             // Creating CustomPopupMenuEntry Empty List.
+                                                                             List<CustomPopupMenuEntry<String>> editCompanyNames = [];
+                                                                             //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
+                                                                             editCompanyNames = editCountryNames.map((value) {
+                                                                               return CustomPopupMenuItem(
+                                                                                 height: 40,
+                                                                                 value: value,
+                                                                                 child: Center(
+                                                                                   child: SizedBox(
+                                                                                     width: 350,
+                                                                                     child: Text(
+                                                                                       value,
+                                                                                       maxLines: 1,
+                                                                                       overflow: TextOverflow.ellipsis,
+                                                                                       style: const TextStyle(fontSize: 14),
+                                                                                     ),
+                                                                                   ),
+                                                                                 ),
+                                                                               );
+                                                                             }).toList();
+                                                                             final editDetails = GlobalKey<FormState>();
+                                                                             String capitalizeFirst(String value) {
+                                                                               if(value.isNotEmpty){
+                                                                                 var result = value[0].toUpperCase();
+                                                                                 for (int i = 1; i < value.length; i++) {
+                                                                                   if (value[i - 1] == "1") {
+                                                                                     result = result + value[i].toUpperCase();
+                                                                                   } else {
+                                                                                     result = result + value[i];
+                                                                                   }
+                                                                                 }
+                                                                                 return result;
+                                                                               }
+                                                                               return '';
+                                                                             }
+                                                                             return Dialog(
+                                                                               backgroundColor: Colors.transparent,
+                                                                               child: StatefulBuilder(
+                                                                                 builder: (context, setState) {
+                                                                                   // Assigning variables.
+                                                                                   return SizedBox(
+                                                                                     width: 500,
+                                                                                     child: Stack(children: [
+                                                                                       Container(
+                                                                                         decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                                                         margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                         child: SingleChildScrollView(
+                                                                                           child: Form(
+                                                                                             key: editDetails,
+                                                                                             child: Padding(
+                                                                                               padding: const EdgeInsets.all(30),
+                                                                                               child: Container(
+                                                                                                 decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                                                                 child: Column(
+                                                                                                   children: [
+                                                                                                     // Top container.
+                                                                                                     Container(color: Colors.grey[100],
+                                                                                                       child: IgnorePointer(ignoring: true,
+                                                                                                         child: MaterialButton(
+                                                                                                           hoverColor: Colors.transparent,
+                                                                                                           onPressed: () {
+
+                                                                                                           },
+                                                                                                           child: const Row(
+                                                                                                             children: [
+                                                                                                               Expanded(
+                                                                                                                 child: Padding(
+                                                                                                                   padding: EdgeInsets.all(8.0),
+                                                                                                                   child: Text(
+                                                                                                                     'Edit User Details',
+                                                                                                                     style: TextStyle(fontWeight: FontWeight.bold,
+                                                                                                                       fontSize: 16,),
+                                                                                                                   ),
+                                                                                                                 ),
+                                                                                                               ),
+                                                                                                             ],
+                                                                                                           ),
+                                                                                                         ),
+                                                                                                       ),
+                                                                                                     ),
+                                                                                                     const Divider(height: 1,color:mTextFieldBorder),
+                                                                                                     Padding(
+                                                                                                       padding: const EdgeInsets.all(30),
+                                                                                                       child: Column(children: [
+                                                                                                         //user Name.
+                                                                                                         Row(
+                                                                                                           crossAxisAlignment:
+                                                                                                           CrossAxisAlignment.start,
+                                                                                                           children: [
+                                                                                                             const SizedBox(
+                                                                                                                 width: 130, child: Text('User Name')),
+                                                                                                             const SizedBox(height: 10),
+                                                                                                             Expanded(
+                                                                                                               child: AnimatedContainer(
+                                                                                                                 duration:
+                                                                                                                 const Duration(seconds: 0),
+                                                                                                                 height:
+                                                                                                                 editUserNameError ? 55 : 30,
+                                                                                                                 child: TextFormField(
+                                                                                                                   validator: (value) {
+                                                                                                                     if (value == null ||
+                                                                                                                         value.isEmpty) {
+                                                                                                                       setState(() {
+                                                                                                                         editUserNameError = true;
+                                                                                                                       });
+                                                                                                                       return "Enter User Name";
+                                                                                                                     } else {
+                                                                                                                       setState(() {
+                                                                                                                         editUserNameError = false;
+                                                                                                                       });
+                                                                                                                     }
+                                                                                                                     return null;
+                                                                                                                   },
+                                                                                                                   onChanged: (value) {
+                                                                                                                     editUserName.value=TextEditingValue(
+                                                                                                                       text:capitalizeFirst(value),
+                                                                                                                       selection: editUserName.selection,
+                                                                                                                     );
+                                                                                                                   },
+                                                                                                                   controller: editUserName,
+                                                                                                                   decoration: decorationInput5(hintString:
+                                                                                                                   'Enter User Name',
+                                                                                                                       error: editUserNameError),
+                                                                                                                 ),
+                                                                                                               ),
+                                                                                                             )
+                                                                                                           ],
+                                                                                                         ),
+                                                                                                         const SizedBox(
+                                                                                                           height: 10,
+                                                                                                         ),
+                                                                                                         //Company Name
+                                                                                                         Row(
+                                                                                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                           children: [
+                                                                                                             const SizedBox(
+                                                                                                                 width: 130,
+                                                                                                                 child: Text('Company Name',)),
+                                                                                                             Expanded(
+                                                                                                               child: Focus(
+                                                                                                                 onFocusChange: (value) {
+                                                                                                                   setState(() {
+                                                                                                                     editFocusedCompany = value;
+                                                                                                                   });
+                                                                                                                 },
+                                                                                                                 skipTraversal: true,
+                                                                                                                 descendantsAreFocusable: true,
+                                                                                                                 child: LayoutBuilder(
+                                                                                                                     builder: (BuildContext context, BoxConstraints constraints) {
+                                                                                                                       return CustomPopupMenuButton(childHeight: 200,
+                                                                                                                         elevation: 4,
+                                                                                                                         validator: (value) {
+                                                                                                                           if(value==null||value.isEmpty){
+                                                                                                                             setState(() {
+                                                                                                                               editCompanyError =true;
+                                                                                                                             });
+                                                                                                                             return null;
+                                                                                                                           }
+                                                                                                                           return null;
+                                                                                                                         },
+                                                                                                                         decoration: customPopupDecoration(hintText:selectedCompanyName,error: editCompanyError,isFocused: editFocusedCompany),
+                                                                                                                         hintText: '',
+                                                                                                                         textController: editCreateCompanyCon,
+                                                                                                                         childWidth: constraints.maxWidth,
+                                                                                                                         shape:  RoundedRectangleBorder(
+                                                                                                                           side: BorderSide(color:editCompanyError ? Colors.redAccent :mTextFieldBorder),
+                                                                                                                           borderRadius: const BorderRadius.all(
+                                                                                                                             Radius.circular(5),
+                                                                                                                           ),
+                                                                                                                         ),
+                                                                                                                         offset: const Offset(1, 40),
+                                                                                                                         tooltip: '',
+                                                                                                                         itemBuilder:  (BuildContext context) {
+                                                                                                                           return editCompanyNames;
+                                                                                                                         },
+
+                                                                                                                         onSelected: (String value)  {
+                                                                                                                           setState(() {
+                                                                                                                             editCreateCompanyCon.text=value;
+                                                                                                                             editCompanyError=false;
+                                                                                                                           });
+
+                                                                                                                         },
+                                                                                                                         onCanceled: () {
+
+                                                                                                                         },
+                                                                                                                         child: Container(),
+                                                                                                                       );
+                                                                                                                     }
+                                                                                                                 ),
+                                                                                                               ),
+                                                                                                             ),
+                                                                                                           ],
+                                                                                                         ),
+                                                                                                         const SizedBox(
+                                                                                                           height: 10,
+                                                                                                         ),
+                                                                                                         //user Role.
+                                                                                                         Row(
+                                                                                                           crossAxisAlignment:
+                                                                                                           CrossAxisAlignment.start,
+                                                                                                           children: [
+                                                                                                             const SizedBox(
+                                                                                                                 width: 130,
+                                                                                                                 child: Text(
+                                                                                                                   "User Role",
+                                                                                                                 )),
+                                                                                                             Expanded(
+                                                                                                               child: Focus(
+                                                                                                                 onFocusChange: (value) {
+                                                                                                                   setState(() {
+                                                                                                                     editFocusedUser = value;
+                                                                                                                   });
+                                                                                                                 },
+                                                                                                                 skipTraversal: true,
+                                                                                                                 descendantsAreFocusable: true,
+                                                                                                                 child: LayoutBuilder(
+                                                                                                                     builder: (BuildContext context, BoxConstraints constraints) {
+                                                                                                                       return CustomPopupMenuButton(elevation: 4,
+                                                                                                                         validator: (value) {
+                                                                                                                           if(value==null||value.isEmpty){
+                                                                                                                             setState(() {
+                                                                                                                               editUserError =true;
+                                                                                                                             });
+                                                                                                                             return null;
+                                                                                                                           }
+                                                                                                                           return null;
+                                                                                                                         },
+                                                                                                                         decoration: customPopupDecoration(hintText:roleInitial,error: editUserError,isFocused: editFocusedUser),
+                                                                                                                         hintText: '',
+                                                                                                                         textController: editUserRoleController,
+                                                                                                                         childWidth: constraints.maxWidth,
+                                                                                                                         shape:  RoundedRectangleBorder(
+                                                                                                                           side: BorderSide(color:editUserError ? Colors.redAccent :mTextFieldBorder),
+                                                                                                                           borderRadius: const BorderRadius.all(
+                                                                                                                             Radius.circular(5),
+                                                                                                                           ),
+                                                                                                                         ),
+                                                                                                                         offset: const Offset(1, 40),
+                                                                                                                         tooltip: '',
+                                                                                                                         itemBuilder:  (BuildContext context) {
+                                                                                                                           return editRoleTypes;
+                                                                                                                         },
+
+                                                                                                                         onSelected: (String value)  {
+                                                                                                                           setState(() {
+                                                                                                                             editUserRoleController.text=value;
+                                                                                                                             editUserError=false;
+                                                                                                                           });
+
+                                                                                                                         },
+                                                                                                                         onCanceled: () {
+
+                                                                                                                         },
+                                                                                                                         child: Container(),
+                                                                                                                       );
+                                                                                                                     }
+                                                                                                                 ),
+                                                                                                               ),
+                                                                                                             ),
+                                                                                                           ],
+                                                                                                         ),
+                                                                                                         const SizedBox(
+                                                                                                           height: 10,
+                                                                                                         ),
+                                                                                                         //User Email.
+                                                                                                         Row(
+                                                                                                           crossAxisAlignment:
+                                                                                                           CrossAxisAlignment.start,
+                                                                                                           children: [
+                                                                                                             const SizedBox(
+                                                                                                                 width: 130,
+                                                                                                                 child: Text('User Email')),
+                                                                                                             const SizedBox(height: 10),
+                                                                                                             Expanded(
+                                                                                                               child: AnimatedContainer(
+                                                                                                                 duration:
+                                                                                                                 const Duration(seconds: 0),
+                                                                                                                 height:
+                                                                                                                 editUserEmailError ? 55 : 30,
+                                                                                                                 child: TextFormField(
+                                                                                                                   validator: (value) {
+                                                                                                                     if (value == null || value.isEmpty) {
+                                                                                                                       setState(() {
+                                                                                                                         editUserEmailError = true;
+                                                                                                                       });
+                                                                                                                       return "Enter User Email";
+                                                                                                                     }
+                                                                                                                     else if(!EmailValidator.validate(value)){
+                                                                                                                       setState((){
+                                                                                                                         editUserEmailError=true;
+                                                                                                                       });
+                                                                                                                       return 'Please enter valued email address';
+                                                                                                                     }
+                                                                                                                     else {
+                                                                                                                       setState(() {
+                                                                                                                         editUserEmailError = false;
+                                                                                                                       });
+                                                                                                                     }
+                                                                                                                     return null;
+                                                                                                                   },
+                                                                                                                   onChanged: (text) {
+                                                                                                                     setState(() {});
+                                                                                                                   },
+                                                                                                                   controller: editEmail,
+                                                                                                                   decoration: decorationInput5(hintString:
+                                                                                                                   'Enter User Email',
+                                                                                                                       error:  editUserEmailError),
+                                                                                                                 ),
+                                                                                                               ),
+                                                                                                             )
+                                                                                                           ],
+                                                                                                         ),
+                                                                                                         const SizedBox(
+                                                                                                           height: 35,
+                                                                                                         ),
+                                                                                                         Align(
+                                                                                                           alignment: Alignment.center,
+                                                                                                           child:  SizedBox(
+
+                                                                                                             width: 100,
+                                                                                                             height:30,
+                                                                                                             child: OutlinedMButton(
+                                                                                                               text: 'Update',
+                                                                                                               buttonColor:mSaveButton ,
+                                                                                                               textColor: Colors.white,
+                                                                                                               borderColor: mSaveButton,
+                                                                                                               onTap:(){
+                                                                                                                 if (editDetails.currentState!.validate()) {
+                                                                                                                   Map editUserManagement = {
+                                                                                                                     'userid':displayUserData[index]['userid'],
+                                                                                                                     'username': editUserName.text,
+                                                                                                                     'password':displayUserData[index]['password'],
+                                                                                                                     'active':true,
+                                                                                                                     'role': editUserRoleController.text,
+                                                                                                                     'email': editEmail.text,
+                                                                                                                     'token':'',
+                                                                                                                     'token_creation_date':'',
+                                                                                                                     'company_name': editCreateCompanyCon.text,
+                                                                                                                     "manager_id" : managerId ,
+                                                                                                                     "org_id": orgId
+                                                                                                                     //editCompanyName.text,
+                                                                                                                   };
+                                                                                                                   updateUserDetails(editUserManagement);
+                                                                                                                 }
+                                                                                                               },
+                                                                                                             ),
+                                                                                                           ),
+
+                                                                                                         ),
+                                                                                                       ],),
+                                                                                                     )
+                                                                                                   ],
+                                                                                                 ),
+                                                                                               ),
+                                                                                             ),
+                                                                                           ),
+                                                                                         ),
+                                                                                       ),
+                                                                                       Positioned(right: 0.0,
+
+                                                                                         child: InkWell(
+                                                                                           child: Container(
+                                                                                               width: 30,
+                                                                                               height: 30,
+                                                                                               decoration: BoxDecoration(
+                                                                                                   borderRadius: BorderRadius.circular(15),
+                                                                                                   border: Border.all(
+                                                                                                     color:
+                                                                                                     const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                   ),
+                                                                                                   color: Colors.blue),
+                                                                                               child: const Icon(
+                                                                                                 Icons.close_sharp,
+                                                                                                 color: Colors.white,
+                                                                                               )),
+                                                                                           onTap: () {
+                                                                                             setState(() {
+                                                                                               Navigator.of(context).pop();
+                                                                                             });
+                                                                                           },
+                                                                                         ),
+                                                                                       ),
+                                                                                     ],
+
+                                                                                     ),
+                                                                                   );
+                                                                                 },
+                                                                               ),
+                                                                             );
+                                                                           },
+                                                                         );
+                                                                       });
+                                                                      },
+
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 20,),
+                                                                  SizedBox(   height: 28,
+                                                                    width:100,
+                                                                    child: OutlinedBorderColorForDelete(
+                                                                      buttonText: 'Delete', iconData: Icons.delete,
+                                                                      onTap: (){
+                                                                        setState(() {
+                                                                          if(userID==displayUserData[index]['userid']){
+                                                                            showDialog(
+                                                                              context: context,
+                                                                              builder: (context) {
+                                                                                return Dialog(
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  child: StatefulBuilder(
+                                                                                    builder: (context, setState) {
+                                                                                      return SizedBox(
+                                                                                        height: 200,
+                                                                                        width: 300,
+                                                                                        child: Stack(children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                                                            margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                                                              child: Column(
+                                                                                                children: [
+                                                                                                  const SizedBox(
+                                                                                                    height: 20,
+                                                                                                  ),
+                                                                                                  const Icon(
+                                                                                                    Icons.warning_rounded,
+                                                                                                    color: Colors.red,
+                                                                                                    size: 50,
+                                                                                                  ),
+                                                                                                  const SizedBox(
+                                                                                                    height: 10,
+                                                                                                  ),
+                                                                                                  const Center(
+                                                                                                      child: Text(
+                                                                                                        'You Can Not Delete LoggedIn User',
+                                                                                                        style: TextStyle(
+                                                                                                            color: Colors.indigo,
+                                                                                                            fontWeight: FontWeight.bold,
+                                                                                                            fontSize: 15),
+                                                                                                      )),
+                                                                                                  const SizedBox(
+                                                                                                    height: 35,
+                                                                                                  ),
+                                                                                                  Row(
+                                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                    children: [
+                                                                                                      MaterialButton(
+                                                                                                        color: Colors.blue,
+                                                                                                        onPressed: () {
+                                                                                                          setState(() {
+                                                                                                            Navigator.of(context).pop();
+                                                                                                          });
+                                                                                                        },
+                                                                                                        child: const Text(
+                                                                                                          'OK',
+                                                                                                          style: TextStyle(color: Colors.white),
+                                                                                                        ),
+                                                                                                      )
+                                                                                                    ],
+                                                                                                  )
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          Positioned(right: 0.0,
+
+                                                                                            child: InkWell(
+                                                                                              child: Container(
+                                                                                                  width: 30,
+                                                                                                  height: 30,
+                                                                                                  decoration: BoxDecoration(
+                                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                                      border: Border.all(
+                                                                                                        color:
+                                                                                                        const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                      ),
+                                                                                                      color: Colors.blue),
+                                                                                                  child: const Icon(
+                                                                                                    Icons.close_sharp,
+                                                                                                    color: Colors.white,
+                                                                                                  )),
+                                                                                              onTap: () {
+                                                                                                setState(() {
+                                                                                                  Navigator.of(context).pop();
+                                                                                                });
+                                                                                              },
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            );
+                                                                          }
+                                                                          else{
+                                                                            showDialog(
+                                                                              context: context,
+                                                                              builder: (context) {
+                                                                                return Dialog(
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  child: StatefulBuilder(
+                                                                                    builder: (context, setState) {
+                                                                                      return SizedBox(
+                                                                                        height: 200,
+                                                                                        width: 300,
+                                                                                        child: Stack(children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                                                            margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                                                              child: Column(
+                                                                                                children: [
+                                                                                                  const SizedBox(
+                                                                                                    height: 20,
+                                                                                                  ),
+                                                                                                  const Icon(
+                                                                                                    Icons.warning_rounded,
+                                                                                                    color: Colors.red,
+                                                                                                    size: 50,
+                                                                                                  ),
+                                                                                                  const SizedBox(
+                                                                                                    height: 10,
+                                                                                                  ),
+                                                                                                  const Center(
+                                                                                                      child: Text(
+                                                                                                        'Are You Sure, You  Want To Delete ?',
+                                                                                                        style: TextStyle(
+                                                                                                            color: Colors.indigo,
+                                                                                                            fontWeight: FontWeight.bold,
+                                                                                                            fontSize: 15),
+                                                                                                      )),
+                                                                                                  const SizedBox(
+                                                                                                    height: 35,
+                                                                                                  ),
+                                                                                                  Row(
+                                                                                                    mainAxisAlignment:
+                                                                                                    MainAxisAlignment.spaceEvenly,
+                                                                                                    children: [
+                                                                                                      SizedBox(
+                                                                                                        width: 50,
+                                                                                                        height:30,
+                                                                                                        child: OutlinedMButton(
+                                                                                                          text: 'Ok',
+                                                                                                          buttonColor:Colors.red ,
+                                                                                                          textColor: Colors.white,
+                                                                                                          borderColor: Colors.red,
+                                                                                                          onTap:(){
+                                                                                                            assignUserId = displayUserData[index]['userid'];
+                                                                                                            deleteUserData();
+                                                                                                          },
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      SizedBox(
+                                                                                                        width: 100,
+                                                                                                        height:30,
+                                                                                                        child: OutlinedMButton(
+                                                                                                          text: 'Cancel',
+                                                                                                          buttonColor:mSaveButton ,
+                                                                                                          textColor: Colors.white,
+                                                                                                          borderColor: mSaveButton,
+                                                                                                          onTap:(){
+                                                                                                            Navigator.of(context).pop();
+                                                                                                          },
+                                                                                                        ),
+                                                                                                      )
+
+                                                                                                    ],
+                                                                                                  )
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          Positioned(right: 0.0,
+
+                                                                                            child: InkWell(
+                                                                                              child: Container(
+                                                                                                  width: 30,
+                                                                                                  height: 30,
+                                                                                                  decoration: BoxDecoration(
+                                                                                                      borderRadius: BorderRadius.circular(15),
+                                                                                                      border: Border.all(
+                                                                                                        color:
+                                                                                                        const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                      ),
+                                                                                                      color: Colors.blue),
+                                                                                                  child: const Icon(
+                                                                                                    Icons.close_sharp,
+                                                                                                    color: Colors.white,
+                                                                                                  )),
+                                                                                              onTap: () {
+                                                                                                setState(() {
+                                                                                                  Navigator.of(context).pop();
+                                                                                                });
+                                                                                              },
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            );
+                                                                          }
+                                                                        });
+                                                                      },
+
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(width: 20,),
+                                                                  SizedBox(  height: 28,
+                                                                    width:160,
+                                                                    child: OutlinedBorderWithIcon(
+                                                                      buttonText: 'Change Password', iconData: Icons.change_circle_sharp,
+                                                                      onTap: (){
+                                                                     setState(() {
+                                                                       showDialog(
+                                                                         context: context,
+                                                                         builder: (context) {
+                                                                           bool passwordInitial = true;
+                                                                           final emailBased = TextEditingController();
+                                                                           final editPassword = TextEditingController();
+                                                                           final conformPassword = TextEditingController();
+                                                                           bool editEmailError = false;
+                                                                           bool editPasswordError = false;
+                                                                           bool conformPasswordInitial = true;
+                                                                           String storeEmail = '';
+                                                                           String storePassword = '';
+                                                                           //regular expression to check if string.
+                                                                           RegExp passValid = RegExp(
+                                                                               r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+                                                                           // a function that validate user enter password.
+                                                                           bool validatePassword(String pass) {
+                                                                             String password = pass.trim();
+                                                                             if (passValid.hasMatch(password)) {
+                                                                               return true;
+                                                                             } else {
+                                                                               return false;
+                                                                             }
+                                                                           }
+
+
+                                                                           final changeKey = GlobalKey<FormState>();
+                                                                           return Dialog(
+                                                                             backgroundColor: Colors.transparent,
+                                                                             child: StatefulBuilder(
+                                                                               builder: (context, setState) {
+                                                                                 void textHideFunc() {
+                                                                                   setState(() {
+                                                                                     passwordInitial = !passwordInitial;
+                                                                                   });
+                                                                                 }
+
+                                                                                 void textHideConformPassword() {
+                                                                                   setState(() {
+                                                                                     conformPasswordInitial = !conformPasswordInitial;
+                                                                                   });
+                                                                                 }
+
+                                                                                 emailBased.text = displayUserData[index]['email'];
+                                                                                 storeEmail = displayUserData[index]['email'];
+                                                                                 storePassword = editPassword.text;
+                                                                                 return SizedBox(
+                                                                                   width: 500,
+                                                                                   child: Stack(children: [
+                                                                                     Container(
+                                                                                       decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                                                       margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                       child: SingleChildScrollView(
+                                                                                         child: Form(
+                                                                                           key: changeKey,
+                                                                                           child: Padding(
+                                                                                             padding: const EdgeInsets.all(30),
+                                                                                             child: Container(
+                                                                                               decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                                                               child: Column(children: [
+                                                                                                 // Top container.
+                                                                                                 Container(color: Colors.grey[100],
+                                                                                                   child: IgnorePointer(ignoring: true,
+                                                                                                     child: MaterialButton(
+                                                                                                       hoverColor: Colors.transparent,
+                                                                                                       onPressed: () {
+
+                                                                                                       },
+                                                                                                       child: const Row(
+                                                                                                         children: [
+                                                                                                           Expanded(
+                                                                                                             child: Padding(
+                                                                                                               padding: EdgeInsets.all(8.0),
+                                                                                                               child: Text(
+                                                                                                                 'Change Password',
+                                                                                                                 style: TextStyle(fontWeight: FontWeight.bold,
+                                                                                                                   fontSize: 16,),
+                                                                                                               ),
+                                                                                                             ),
+                                                                                                           ),
+                                                                                                         ],
+                                                                                                       ),
+                                                                                                     ),
+                                                                                                   ),
+                                                                                                 ),
+                                                                                                 const Divider(height: 1,color:mTextFieldBorder),
+                                                                                                 Padding(
+                                                                                                   padding: const EdgeInsets.all(30),
+                                                                                                   child: Column(children: [
+                                                                                                     //User Email
+                                                                                                     Row(
+                                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                       children: [
+                                                                                                         const SizedBox(
+                                                                                                             width: 140, child: Text('User Email')),
+                                                                                                         const SizedBox(height: 10),
+                                                                                                         Expanded(
+                                                                                                           child: AnimatedContainer(
+                                                                                                             duration:
+                                                                                                             const Duration(seconds: 0),
+                                                                                                             height: editEmailError ? 55 : 30,
+                                                                                                             child: TextFormField(
+                                                                                                               readOnly: true,
+                                                                                                               validator: (value) {
+                                                                                                                 if (value == null ||
+                                                                                                                     value.isEmpty) {
+                                                                                                                   setState(() {
+                                                                                                                     editEmailError = true;
+                                                                                                                   });
+                                                                                                                   return "Enter User Name";
+                                                                                                                 } else {
+                                                                                                                   setState(() {
+                                                                                                                     editEmailError = false;
+                                                                                                                   });
+                                                                                                                 }
+                                                                                                                 return null;
+                                                                                                               },
+                                                                                                               controller: emailBased,
+                                                                                                               decoration: decorationInput5(hintString:
+                                                                                                               'User Email',
+                                                                                                                   error: editEmailError),
+                                                                                                             ),
+                                                                                                           ),
+                                                                                                         )
+                                                                                                       ],
+                                                                                                     ),
+                                                                                                     const SizedBox(
+                                                                                                       height: 15,
+                                                                                                     ),
+                                                                                                     Row(
+                                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                       children: [
+                                                                                                         const SizedBox(
+                                                                                                             width: 140, child: Text('User Password')),
+                                                                                                         const SizedBox(height: 10),
+                                                                                                         Expanded(
+
+                                                                                                           child: AnimatedContainer(
+                                                                                                             duration: const Duration(seconds: 0),
+                                                                                                             height: editPasswordError ? 55 : 30,
+                                                                                                             child: TextFormField(onTap: () {
+                                                                                                               setState((){
+                                                                                                                 conformPasswordInitial=true;
+                                                                                                               });
+                                                                                                             },
+                                                                                                                 validator: (value) {
+                                                                                                                   if (value == null || value.isEmpty) {
+                                                                                                                     setState(() {
+                                                                                                                       editPasswordError = true;
+                                                                                                                     });
+                                                                                                                     return 'Enter Password';
+                                                                                                                   } else {
+                                                                                                                     // call function to check password
+                                                                                                                     bool result = validatePassword(value);
+                                                                                                                     if (result) {
+                                                                                                                       setState(() {
+                                                                                                                         editPasswordError = false;
+                                                                                                                       });
+                                                                                                                       // create account event
+                                                                                                                       return null;
+                                                                                                                     } else {
+                                                                                                                       setState(() {
+                                                                                                                         editPasswordError = true;
+                                                                                                                       });
+                                                                                                                       return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
+                                                                                                                     }
+                                                                                                                   }
+                                                                                                                 },
+                                                                                                                 controller: editPassword,
+                                                                                                                 obscureText: passwordInitial,
+                                                                                                                 decoration: decorationInputPassword('Enter Password', editPassword.text.isNotEmpty, passwordInitial, textHideFunc)),
+                                                                                                           ),
+                                                                                                         )
+                                                                                                       ],
+                                                                                                     ),
+                                                                                                     const SizedBox(
+                                                                                                       height: 15,
+                                                                                                     ),
+                                                                                                     //conform password.
+                                                                                                     Row(
+                                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                       children: [
+                                                                                                         const SizedBox(
+                                                                                                             width: 140,
+                                                                                                             child: Text('Conform Password')),
+                                                                                                         const SizedBox(height: 10),
+                                                                                                         Expanded(
+                                                                                                           child: AnimatedContainer(
+                                                                                                             duration:
+                                                                                                             const Duration(seconds: 0),
+                                                                                                             height: editPasswordError ? 55 : 30,
+                                                                                                             child: TextFormField(onTap: (){
+                                                                                                               setState((){
+                                                                                                                 passwordInitial=true;
+                                                                                                               });
+                                                                                                             },
+                                                                                                               validator: (value) {
+                                                                                                                 if (value == null ||
+                                                                                                                     value.isEmpty &&
+                                                                                                                         conformPassword.text ==
+                                                                                                                             '') {
+                                                                                                                   setState(() {
+                                                                                                                     editPasswordError = true;
+                                                                                                                   });
+                                                                                                                   return "Conform Password";
+                                                                                                                 } else if (conformPassword
+                                                                                                                     .text !=
+                                                                                                                     editPassword.text) {
+                                                                                                                   setState(() {
+                                                                                                                     editPasswordError = true;
+                                                                                                                   });
+                                                                                                                   return 'Password does`t match';
+                                                                                                                 } else {
+                                                                                                                   setState(() {
+                                                                                                                     editPasswordError = false;
+                                                                                                                   });
+                                                                                                                 }
+                                                                                                                 return null;
+                                                                                                               },
+                                                                                                               onChanged: (text) {
+                                                                                                                 setState(() {});
+                                                                                                               },
+                                                                                                               controller: conformPassword,
+                                                                                                               decoration:
+                                                                                                               decorationInputConformPassword(
+                                                                                                                   'Enter Password',
+                                                                                                                   conformPassword
+                                                                                                                       .text.isNotEmpty,
+                                                                                                                   conformPasswordInitial,
+                                                                                                                   textHideConformPassword),
+                                                                                                               // decorationInput5(
+                                                                                                               //     'Conform Password',
+                                                                                                               //     conformPassword
+                                                                                                               //         .text.isNotEmpty),
+                                                                                                               obscureText: conformPasswordInitial,
+                                                                                                             ),
+                                                                                                           ),
+                                                                                                         )
+                                                                                                       ],
+                                                                                                     ),
+                                                                                                     const SizedBox(
+                                                                                                       height: 35,
+                                                                                                     ),
+                                                                                                     Align(
+                                                                                                         alignment: Alignment.center,
+                                                                                                         child:  SizedBox(
+                                                                                                           width: 100,
+                                                                                                           height:30,
+                                                                                                           child: OutlinedMButton(
+                                                                                                             text: 'Save',
+                                                                                                             buttonColor:mSaveButton ,
+                                                                                                             textColor: Colors.white,
+                                                                                                             borderColor: mSaveButton,
+                                                                                                             onTap:() {
+                                                                                                               //Password change.
+                                                                                                               Future changePasswordFunc(
+                                                                                                                   String storeEmail,
+                                                                                                                   String storePassword) async {
+                                                                                                                 String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
+                                                                                                                 final response = await http.get(Uri.parse(url),
+                                                                                                                     headers: {
+                                                                                                                       "Content-Type": "application/json",
+                                                                                                                       'Authorization': 'Bearer $authToken'
+                                                                                                                     });
+                                                                                                                 if (response.statusCode == 200) {
+
+                                                                                                                   if(mounted) {
+                                                                                                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
+                                                                                                                     Navigator.of(context).pop();
+                                                                                                                   }
+                                                                                                                 } else {
+                                                                                                                   log(response.statusCode.toString());
+                                                                                                                 }
+                                                                                                               }
+
+                                                                                                               setState(() {
+                                                                                                                 if (changeKey.currentState!.validate()) {
+                                                                                                                   changePasswordFunc(storeEmail, storePassword);
+                                                                                                                 }
+                                                                                                               });
+                                                                                                             },
+                                                                                                           ),
+                                                                                                         )
+                                                                                                     ),
+                                                                                                   ],),
+                                                                                                 )
+                                                                                               ]),
+                                                                                             ),
+                                                                                           ),
+                                                                                         ),
+                                                                                       ),
+                                                                                     ),
+                                                                                     Positioned(right: 0.0,
+
+                                                                                       child: InkWell(
+                                                                                         child: Container(
+                                                                                             width: 30,
+                                                                                             height: 30,
+                                                                                             decoration: BoxDecoration(
+                                                                                                 borderRadius: BorderRadius.circular(15),
+                                                                                                 border: Border.all(
+                                                                                                   color:
+                                                                                                   const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                 ),
+                                                                                                 color: Colors.blue),
+                                                                                             child: const Icon(
+                                                                                               Icons.close_sharp,
+                                                                                               color: Colors.white,
+                                                                                             )),
+                                                                                         onTap: () {
+                                                                                           setState(() {
+                                                                                             Navigator.of(context).pop();
+                                                                                           });
+                                                                                         },
+                                                                                       ),
+                                                                                     ),
+                                                                                   ],
+
+                                                                                   ),
+                                                                                 );
+                                                                               },
+                                                                             ),
+                                                                           );
+                                                                         },
+                                                                       );
+                                                                     });
+                                                                      },
+
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(height: 8,),
+                                                            ],
+                                                          );
+
+                                                      }
+                                                    ):const SizedBox(),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(width: 35,height: 25,decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                              child: MaterialButton(color: Colors.blue[50],animationDuration: Duration(milliseconds: 200),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if(expandedId==""){
+                                                      setState(() {
+                                                        expandedId=displayUserData[index]['userid'];
+                                                        displayUserData[index]['isExpanded']=true;
+                                                      });
+                                                    }
+                                                    else if(expandedId == displayUserData[index]['userid']){
+                                                      setState(() {
+                                                        displayUserData[index]['isExpanded']=false;
+                                                        expandedId="";
+                                                      });
+
+                                                    }
+                                                    else if(expandedId.isNotEmpty || expandedId!=""){
+                                                      setState(() {
+                                                        for (var userData in displayUserData) {
+                                                          if (userData['userid'] == expandedId) {
+                                                            userData['isExpanded']=false;
+                                                            expandedId=displayUserData[index]['userid'];
+                                                            displayUserData[index]['isExpanded']=true;
+                                                          }
+                                                        }
+                                                      });
+                                                    }
+
+                                                  });
+                                                },
+                                                child:      displayUserData[index]['isExpanded']?  const Padding(
                                                   padding: EdgeInsets.only(right:10.0),
                                                   child: Icon(Icons.arrow_drop_down_outlined,color: Colors.blue),
                                                 ):const Padding(
                                                   padding: EdgeInsets.only(right:10.0),
                                                   child: Icon(Icons.arrow_right_outlined,color: Colors.grey),
                                                 ),
-                                                // Padding(
-                                                //   padding: const EdgeInsets.only(right:10.0),
-                                                //   child: Center(
-                                                //     child: SizedBox(width: 25,
-                                                //       height: 28,
-                                                //       child:CustomPopupMenuButton<String>(
-                                                //           childWidth: 0,position: CustomPopupMenuPosition.under,
-                                                //           decoration: customPopupDecoration(hintText: 'Create New Service',),
-                                                //           hintText: "",
-                                                //           shape: const RoundedRectangleBorder(
-                                                //             side: BorderSide(color:Color(0xFFE0E0E0)),
-                                                //             borderRadius: BorderRadius.all(
-                                                //               Radius.circular(5),
-                                                //             ),
-                                                //           ),
-                                                //           offset: const Offset(1, 12),
-                                                //           tooltip: '',
-                                                //           itemBuilder: (context,) {
-                                                //             return optionTypes;
-                                                //           },
-                                                //           onSelected: (String value,)  {
-                                                //             setState(() {
-                                                //               optionInitialType = value;
-                                                //               if(optionInitialType=="Edit"){
-                                                //                 showDialog(
-                                                //                   context: context,
-                                                //                   builder: (context) {
-                                                //                     bool editFocusedCompany=false;
-                                                //                     bool editCompanyError=false;
-                                                //                     final editCreateCompanyCon=TextEditingController();
-                                                //                     bool editFocusedUser=false;
-                                                //                     bool editUserError=false;
-                                                //                     final editUserRoleController=TextEditingController();
-                                                //                     //Declaration Is Here.
-                                                //                     final editUserName = TextEditingController();
-                                                //                     bool editUserNameError = false;
-                                                //                     bool editUserEmailError = false;
-                                                //                     final editEmail = TextEditingController();
-                                                //                     editUserName.text = displayUserData[index]['username'];
-                                                //                     editEmail.text = displayUserData[index]['email'];
-                                                //
-                                                //                     // Dropdown Values.
-                                                //                     List <CustomPopupMenuEntry<String>> editRoleTypes =<CustomPopupMenuEntry<String>>[
-                                                //
-                                                //                       const CustomPopupMenuItem(height: 40,
-                                                //                         value: 'Admin',
-                                                //                         child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
-                                                //
-                                                //                       ),
-                                                //                       const CustomPopupMenuItem(height: 40,
-                                                //                         value: 'User',
-                                                //                         child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
-                                                //
-                                                //                       ),
-                                                //
-                                                //                     ];
-                                                //                     //var selectedCompanyName =  displayUserData[i]['company_name'];
-                                                //                     var selectedCompanyName="Selected Company Name";
-                                                //                     editCreateCompanyCon.text=displayUserData[index]['company_name'];
-                                                //                     // Initial Value.
-                                                //                     //String  roleInitial = displayUserData[i]['role'];
-                                                //                     String roleInitial="Selected User Role";
-                                                //                     editUserRoleController.text=displayUserData[index]['role'];
-                                                //                     final List<String> editCountryNames = [...companyNamesList];
-                                                //                     // Creating CustomPopupMenuEntry Empty List.
-                                                //                     List<CustomPopupMenuEntry<String>> editCompanyNames = [];
-                                                //                     //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
-                                                //                     editCompanyNames = editCountryNames.map((value) {
-                                                //                       return CustomPopupMenuItem(
-                                                //                         height: 40,
-                                                //                         value: value,
-                                                //                         child: Center(
-                                                //                           child: SizedBox(
-                                                //                             width: 350,
-                                                //                             child: Text(
-                                                //                               value,
-                                                //                               maxLines: 1,
-                                                //                               overflow: TextOverflow.ellipsis,
-                                                //                               style: const TextStyle(fontSize: 14),
-                                                //                             ),
-                                                //                           ),
-                                                //                         ),
-                                                //                       );
-                                                //                     }).toList();
-                                                //                     final editDetails = GlobalKey<FormState>();
-                                                //                     String capitalizeFirst(String value) {
-                                                //                       if(value.isNotEmpty){
-                                                //                         var result = value[0].toUpperCase();
-                                                //                         for (int i = 1; i < value.length; i++) {
-                                                //                           if (value[i - 1] == "1") {
-                                                //                             result = result + value[i].toUpperCase();
-                                                //                           } else {
-                                                //                             result = result + value[i];
-                                                //                           }
-                                                //                         }
-                                                //                         return result;
-                                                //                       }
-                                                //                       return '';
-                                                //                     }
-                                                //                     return Dialog(
-                                                //                       backgroundColor: Colors.transparent,
-                                                //                       child: StatefulBuilder(
-                                                //                         builder: (context, setState) {
-                                                //                           // Assigning variables.
-                                                //                           return SizedBox(
-                                                //                             width: 500,
-                                                //                             child: Stack(children: [
-                                                //                               Container(
-                                                //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                //                                 child: SingleChildScrollView(
-                                                //                                   child: Form(
-                                                //                                     key: editDetails,
-                                                //                                     child: Padding(
-                                                //                                       padding: const EdgeInsets.all(30),
-                                                //                                       child: Container(
-                                                //                                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                                //                                         child: Column(
-                                                //                                           children: [
-                                                //                                             // Top container.
-                                                //                                             Container(color: Colors.grey[100],
-                                                //                                               child: IgnorePointer(ignoring: true,
-                                                //                                                 child: MaterialButton(
-                                                //                                                   hoverColor: Colors.transparent,
-                                                //                                                   onPressed: () {
-                                                //
-                                                //                                                   },
-                                                //                                                   child: const Row(
-                                                //                                                     children: [
-                                                //                                                       Expanded(
-                                                //                                                         child: Padding(
-                                                //                                                           padding: EdgeInsets.all(8.0),
-                                                //                                                           child: Text(
-                                                //                                                             'Edit User Details',
-                                                //                                                             style: TextStyle(fontWeight: FontWeight.bold,
-                                                //                                                               fontSize: 16,),
-                                                //                                                           ),
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     ],
-                                                //                                                   ),
-                                                //                                                 ),
-                                                //                                               ),
-                                                //                                             ),
-                                                //                                             const Divider(height: 1,color:mTextFieldBorder),
-                                                //                                             Padding(
-                                                //                                               padding: const EdgeInsets.all(30),
-                                                //                                               child: Column(children: [
-                                                //                                                 //user Name.
-                                                //                                                 Row(
-                                                //                                                   crossAxisAlignment:
-                                                //                                                   CrossAxisAlignment.start,
-                                                //                                                   children: [
-                                                //                                                     const SizedBox(
-                                                //                                                         width: 130, child: Text('User Name')),
-                                                //                                                     const SizedBox(height: 10),
-                                                //                                                     Expanded(
-                                                //                                                       child: AnimatedContainer(
-                                                //                                                         duration:
-                                                //                                                         const Duration(seconds: 0),
-                                                //                                                         height:
-                                                //                                                         editUserNameError ? 55 : 30,
-                                                //                                                         child: TextFormField(
-                                                //                                                           validator: (value) {
-                                                //                                                             if (value == null ||
-                                                //                                                                 value.isEmpty) {
-                                                //                                                               setState(() {
-                                                //                                                                 editUserNameError = true;
-                                                //                                                               });
-                                                //                                                               return "Enter User Name";
-                                                //                                                             } else {
-                                                //                                                               setState(() {
-                                                //                                                                 editUserNameError = false;
-                                                //                                                               });
-                                                //                                                             }
-                                                //                                                             return null;
-                                                //                                                           },
-                                                //                                                           onChanged: (value) {
-                                                //                                                             editUserName.value=TextEditingValue(
-                                                //                                                               text:capitalizeFirst(value),
-                                                //                                                               selection: editUserName.selection,
-                                                //                                                             );
-                                                //                                                           },
-                                                //                                                           controller: editUserName,
-                                                //                                                           decoration: decorationInput5(hintString:
-                                                //                                                           'Enter User Name',
-                                                //                                                               error: editUserNameError),
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     )
-                                                //                                                   ],
-                                                //                                                 ),
-                                                //                                                 const SizedBox(
-                                                //                                                   height: 10,
-                                                //                                                 ),
-                                                //                                                 //Company Name
-                                                //                                                 Row(
-                                                //                                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                                //                                                   children: [
-                                                //                                                     const SizedBox(
-                                                //                                                         width: 130,
-                                                //                                                         child: Text('Company Name',)),
-                                                //                                                     Expanded(
-                                                //                                                       child: Focus(
-                                                //                                                         onFocusChange: (value) {
-                                                //                                                           setState(() {
-                                                //                                                             editFocusedCompany = value;
-                                                //                                                           });
-                                                //                                                         },
-                                                //                                                         skipTraversal: true,
-                                                //                                                         descendantsAreFocusable: true,
-                                                //                                                         child: LayoutBuilder(
-                                                //                                                             builder: (BuildContext context, BoxConstraints constraints) {
-                                                //                                                               return CustomPopupMenuButton(childHeight: 200,
-                                                //                                                                 elevation: 4,
-                                                //                                                                 validator: (value) {
-                                                //                                                                   if(value==null||value.isEmpty){
-                                                //                                                                     setState(() {
-                                                //                                                                       editCompanyError =true;
-                                                //                                                                     });
-                                                //                                                                     return null;
-                                                //                                                                   }
-                                                //                                                                   return null;
-                                                //                                                                 },
-                                                //                                                                 decoration: customPopupDecoration(hintText:selectedCompanyName,error: editCompanyError,isFocused: editFocusedCompany),
-                                                //                                                                 hintText: '',
-                                                //                                                                 textController: editCreateCompanyCon,
-                                                //                                                                 childWidth: constraints.maxWidth,
-                                                //                                                                 shape:  RoundedRectangleBorder(
-                                                //                                                                   side: BorderSide(color:editCompanyError ? Colors.redAccent :mTextFieldBorder),
-                                                //                                                                   borderRadius: const BorderRadius.all(
-                                                //                                                                     Radius.circular(5),
-                                                //                                                                   ),
-                                                //                                                                 ),
-                                                //                                                                 offset: const Offset(1, 40),
-                                                //                                                                 tooltip: '',
-                                                //                                                                 itemBuilder:  (BuildContext context) {
-                                                //                                                                   return editCompanyNames;
-                                                //                                                                 },
-                                                //
-                                                //                                                                 onSelected: (String value)  {
-                                                //                                                                   setState(() {
-                                                //                                                                     editCreateCompanyCon.text=value;
-                                                //                                                                     editCompanyError=false;
-                                                //                                                                   });
-                                                //
-                                                //                                                                 },
-                                                //                                                                 onCanceled: () {
-                                                //
-                                                //                                                                 },
-                                                //                                                                 child: Container(),
-                                                //                                                               );
-                                                //                                                             }
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     ),
-                                                //                                                   ],
-                                                //                                                 ),
-                                                //                                                 const SizedBox(
-                                                //                                                   height: 10,
-                                                //                                                 ),
-                                                //                                                 //user Role.
-                                                //                                                 Row(
-                                                //                                                   crossAxisAlignment:
-                                                //                                                   CrossAxisAlignment.start,
-                                                //                                                   children: [
-                                                //                                                     const SizedBox(
-                                                //                                                         width: 130,
-                                                //                                                         child: Text(
-                                                //                                                           "User Role",
-                                                //                                                         )),
-                                                //                                                     Expanded(
-                                                //                                                       child: Focus(
-                                                //                                                         onFocusChange: (value) {
-                                                //                                                           setState(() {
-                                                //                                                             editFocusedUser = value;
-                                                //                                                           });
-                                                //                                                         },
-                                                //                                                         skipTraversal: true,
-                                                //                                                         descendantsAreFocusable: true,
-                                                //                                                         child: LayoutBuilder(
-                                                //                                                             builder: (BuildContext context, BoxConstraints constraints) {
-                                                //                                                               return CustomPopupMenuButton(elevation: 4,
-                                                //                                                                 validator: (value) {
-                                                //                                                                   if(value==null||value.isEmpty){
-                                                //                                                                     setState(() {
-                                                //                                                                       editUserError =true;
-                                                //                                                                     });
-                                                //                                                                     return null;
-                                                //                                                                   }
-                                                //                                                                   return null;
-                                                //                                                                 },
-                                                //                                                                 decoration: customPopupDecoration(hintText:roleInitial,error: editUserError,isFocused: editFocusedUser),
-                                                //                                                                 hintText: '',
-                                                //                                                                 textController: editUserRoleController,
-                                                //                                                                 childWidth: constraints.maxWidth,
-                                                //                                                                 shape:  RoundedRectangleBorder(
-                                                //                                                                   side: BorderSide(color:editUserError ? Colors.redAccent :mTextFieldBorder),
-                                                //                                                                   borderRadius: const BorderRadius.all(
-                                                //                                                                     Radius.circular(5),
-                                                //                                                                   ),
-                                                //                                                                 ),
-                                                //                                                                 offset: const Offset(1, 40),
-                                                //                                                                 tooltip: '',
-                                                //                                                                 itemBuilder:  (BuildContext context) {
-                                                //                                                                   return editRoleTypes;
-                                                //                                                                 },
-                                                //
-                                                //                                                                 onSelected: (String value)  {
-                                                //                                                                   setState(() {
-                                                //                                                                     editUserRoleController.text=value;
-                                                //                                                                     editUserError=false;
-                                                //                                                                   });
-                                                //
-                                                //                                                                 },
-                                                //                                                                 onCanceled: () {
-                                                //
-                                                //                                                                 },
-                                                //                                                                 child: Container(),
-                                                //                                                               );
-                                                //                                                             }
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     ),
-                                                //                                                   ],
-                                                //                                                 ),
-                                                //                                                 const SizedBox(
-                                                //                                                   height: 10,
-                                                //                                                 ),
-                                                //                                                 //User Email.
-                                                //                                                 Row(
-                                                //                                                   crossAxisAlignment:
-                                                //                                                   CrossAxisAlignment.start,
-                                                //                                                   children: [
-                                                //                                                     const SizedBox(
-                                                //                                                         width: 130,
-                                                //                                                         child: Text('User Email')),
-                                                //                                                     const SizedBox(height: 10),
-                                                //                                                     Expanded(
-                                                //                                                       child: AnimatedContainer(
-                                                //                                                         duration:
-                                                //                                                         const Duration(seconds: 0),
-                                                //                                                         height:
-                                                //                                                         editUserEmailError ? 55 : 30,
-                                                //                                                         child: TextFormField(
-                                                //                                                           validator: (value) {
-                                                //                                                             if (value == null || value.isEmpty) {
-                                                //                                                               setState(() {
-                                                //                                                                 editUserEmailError = true;
-                                                //                                                               });
-                                                //                                                               return "Enter User Email";
-                                                //                                                             }
-                                                //                                                             else if(!EmailValidator.validate(value)){
-                                                //                                                               setState((){
-                                                //                                                                 editUserEmailError=true;
-                                                //                                                               });
-                                                //                                                               return 'Please enter valued email address';
-                                                //                                                             }
-                                                //                                                             else {
-                                                //                                                               setState(() {
-                                                //                                                                 editUserEmailError = false;
-                                                //                                                               });
-                                                //                                                             }
-                                                //                                                             return null;
-                                                //                                                           },
-                                                //                                                           onChanged: (text) {
-                                                //                                                             setState(() {});
-                                                //                                                           },
-                                                //                                                           controller: editEmail,
-                                                //                                                           decoration: decorationInput5(hintString:
-                                                //                                                           'Enter User Email',
-                                                //                                                               error:  editUserEmailError),
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     )
-                                                //                                                   ],
-                                                //                                                 ),
-                                                //                                                 const SizedBox(
-                                                //                                                   height: 35,
-                                                //                                                 ),
-                                                //                                                 Align(
-                                                //                                                   alignment: Alignment.center,
-                                                //                                                   child:  SizedBox(
-                                                //
-                                                //                                                     width: 100,
-                                                //                                                     height:30,
-                                                //                                                     child: OutlinedMButton(
-                                                //                                                       text: 'Update',
-                                                //                                                       buttonColor:mSaveButton ,
-                                                //                                                       textColor: Colors.white,
-                                                //                                                       borderColor: mSaveButton,
-                                                //                                                       onTap:(){
-                                                //                                                         if (editDetails.currentState!.validate()) {
-                                                //                                                           Map editUserManagement = {
-                                                //                                                             'userid':displayUserData[index]['userid'],
-                                                //                                                             'username': editUserName.text,
-                                                //                                                             'password':displayUserData[index]['password'],
-                                                //                                                             'active':true,
-                                                //                                                             'role': editUserRoleController.text,
-                                                //                                                             'email': editEmail.text,
-                                                //                                                             'token':'',
-                                                //                                                             'token_creation_date':'',
-                                                //                                                             'company_name': editCreateCompanyCon.text,
-                                                //                                                             "manager_id" : managerId ,
-                                                //                                                             "org_id": orgId
-                                                //                                                             //editCompanyName.text,
-                                                //                                                           };
-                                                //                                                           updateUserDetails(editUserManagement);
-                                                //                                                         }
-                                                //                                                       },
-                                                //                                                     ),
-                                                //                                                   ),
-                                                //
-                                                //                                                 ),
-                                                //                                               ],),
-                                                //                                             )
-                                                //                                           ],
-                                                //                                         ),
-                                                //                                       ),
-                                                //                                     ),
-                                                //                                   ),
-                                                //                                 ),
-                                                //                               ),
-                                                //                               Positioned(right: 0.0,
-                                                //
-                                                //                                 child: InkWell(
-                                                //                                   child: Container(
-                                                //                                       width: 30,
-                                                //                                       height: 30,
-                                                //                                       decoration: BoxDecoration(
-                                                //                                           borderRadius: BorderRadius.circular(15),
-                                                //                                           border: Border.all(
-                                                //                                             color:
-                                                //                                             const Color.fromRGBO(204, 204, 204, 1),
-                                                //                                           ),
-                                                //                                           color: Colors.blue),
-                                                //                                       child: const Icon(
-                                                //                                         Icons.close_sharp,
-                                                //                                         color: Colors.white,
-                                                //                                       )),
-                                                //                                   onTap: () {
-                                                //                                     setState(() {
-                                                //                                       Navigator.of(context).pop();
-                                                //                                     });
-                                                //                                   },
-                                                //                                 ),
-                                                //                               ),
-                                                //                             ],
-                                                //
-                                                //                             ),
-                                                //                           );
-                                                //                         },
-                                                //                       ),
-                                                //                     );
-                                                //                   },
-                                                //                 );
-                                                //               }
-                                                //               else if(optionInitialType=="Delete"){
-                                                //                 if(userID==displayUserData[index]['userid']){
-                                                //                   showDialog(
-                                                //                     context: context,
-                                                //                     builder: (context) {
-                                                //                       return Dialog(
-                                                //                         backgroundColor: Colors.transparent,
-                                                //                         child: StatefulBuilder(
-                                                //                           builder: (context, setState) {
-                                                //                             return SizedBox(
-                                                //                               height: 200,
-                                                //                               width: 300,
-                                                //                               child: Stack(children: [
-                                                //                                 Container(
-                                                //                                   decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                                //                                   margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                //                                   child: Padding(
-                                                //                                     padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                //                                     child: Column(
-                                                //                                       children: [
-                                                //                                         const SizedBox(
-                                                //                                           height: 20,
-                                                //                                         ),
-                                                //                                         const Icon(
-                                                //                                           Icons.warning_rounded,
-                                                //                                           color: Colors.red,
-                                                //                                           size: 50,
-                                                //                                         ),
-                                                //                                         const SizedBox(
-                                                //                                           height: 10,
-                                                //                                         ),
-                                                //                                         const Center(
-                                                //                                             child: Text(
-                                                //                                               'You Can Not Delete LoggedIn User',
-                                                //                                               style: TextStyle(
-                                                //                                                   color: Colors.indigo,
-                                                //                                                   fontWeight: FontWeight.bold,
-                                                //                                                   fontSize: 15),
-                                                //                                             )),
-                                                //                                         const SizedBox(
-                                                //                                           height: 35,
-                                                //                                         ),
-                                                //                                         Row(
-                                                //                                           mainAxisAlignment: MainAxisAlignment.center,
-                                                //                                           children: [
-                                                //                                             MaterialButton(
-                                                //                                               color: Colors.blue,
-                                                //                                               onPressed: () {
-                                                //                                                 setState(() {
-                                                //                                                   Navigator.of(context).pop();
-                                                //                                                 });
-                                                //                                               },
-                                                //                                               child: const Text(
-                                                //                                                 'OK',
-                                                //                                                 style: TextStyle(color: Colors.white),
-                                                //                                               ),
-                                                //                                             )
-                                                //                                           ],
-                                                //                                         )
-                                                //                                       ],
-                                                //                                     ),
-                                                //                                   ),
-                                                //                                 ),
-                                                //                                 Positioned(right: 0.0,
-                                                //
-                                                //                                   child: InkWell(
-                                                //                                     child: Container(
-                                                //                                         width: 30,
-                                                //                                         height: 30,
-                                                //                                         decoration: BoxDecoration(
-                                                //                                             borderRadius: BorderRadius.circular(15),
-                                                //                                             border: Border.all(
-                                                //                                               color:
-                                                //                                               const Color.fromRGBO(204, 204, 204, 1),
-                                                //                                             ),
-                                                //                                             color: Colors.blue),
-                                                //                                         child: const Icon(
-                                                //                                           Icons.close_sharp,
-                                                //                                           color: Colors.white,
-                                                //                                         )),
-                                                //                                     onTap: () {
-                                                //                                       setState(() {
-                                                //                                         Navigator.of(context).pop();
-                                                //                                       });
-                                                //                                     },
-                                                //                                   ),
-                                                //                                 ),
-                                                //                               ],
-                                                //                               ),
-                                                //                             );
-                                                //                           },
-                                                //                         ),
-                                                //                       );
-                                                //                     },
-                                                //                   );
-                                                //                 }
-                                                //                 else{
-                                                //                   showDialog(
-                                                //                     context: context,
-                                                //                     builder: (context) {
-                                                //                       return Dialog(
-                                                //                         backgroundColor: Colors.transparent,
-                                                //                         child: StatefulBuilder(
-                                                //                           builder: (context, setState) {
-                                                //                             return SizedBox(
-                                                //                               height: 200,
-                                                //                               width: 300,
-                                                //                               child: Stack(children: [
-                                                //                                 Container(
-                                                //                                   decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                //                                   margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                //                                   child: Padding(
-                                                //                                     padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                //                                     child: Column(
-                                                //                                       children: [
-                                                //                                         const SizedBox(
-                                                //                                           height: 20,
-                                                //                                         ),
-                                                //                                         const Icon(
-                                                //                                           Icons.warning_rounded,
-                                                //                                           color: Colors.red,
-                                                //                                           size: 50,
-                                                //                                         ),
-                                                //                                         const SizedBox(
-                                                //                                           height: 10,
-                                                //                                         ),
-                                                //                                         const Center(
-                                                //                                             child: Text(
-                                                //                                               'Are You Sure, You  Want To Delete ?',
-                                                //                                               style: TextStyle(
-                                                //                                                   color: Colors.indigo,
-                                                //                                                   fontWeight: FontWeight.bold,
-                                                //                                                   fontSize: 15),
-                                                //                                             )),
-                                                //                                         const SizedBox(
-                                                //                                           height: 35,
-                                                //                                         ),
-                                                //                                         Row(
-                                                //                                           mainAxisAlignment:
-                                                //                                           MainAxisAlignment.spaceEvenly,
-                                                //                                           children: [
-                                                //                                             SizedBox(
-                                                //                                               width: 50,
-                                                //                                               height:30,
-                                                //                                               child: OutlinedMButton(
-                                                //                                                 text: 'Ok',
-                                                //                                                 buttonColor:Colors.red ,
-                                                //                                                 textColor: Colors.white,
-                                                //                                                 borderColor: Colors.red,
-                                                //                                                 onTap:(){
-                                                //                                                   assignUserId = displayUserData[index]['userid'];
-                                                //                                                   deleteUserData();
-                                                //                                                 },
-                                                //                                               ),
-                                                //                                             ),
-                                                //                                             SizedBox(
-                                                //                                               width: 100,
-                                                //                                               height:30,
-                                                //                                               child: OutlinedMButton(
-                                                //                                                 text: 'Cancel',
-                                                //                                                 buttonColor:mSaveButton ,
-                                                //                                                 textColor: Colors.white,
-                                                //                                                 borderColor: mSaveButton,
-                                                //                                                 onTap:(){
-                                                //                                                   Navigator.of(context).pop();
-                                                //                                                 },
-                                                //                                               ),
-                                                //                                             )
-                                                //
-                                                //                                           ],
-                                                //                                         )
-                                                //                                       ],
-                                                //                                     ),
-                                                //                                   ),
-                                                //                                 ),
-                                                //                                 Positioned(right: 0.0,
-                                                //
-                                                //                                   child: InkWell(
-                                                //                                     child: Container(
-                                                //                                         width: 30,
-                                                //                                         height: 30,
-                                                //                                         decoration: BoxDecoration(
-                                                //                                             borderRadius: BorderRadius.circular(15),
-                                                //                                             border: Border.all(
-                                                //                                               color:
-                                                //                                               const Color.fromRGBO(204, 204, 204, 1),
-                                                //                                             ),
-                                                //                                             color: Colors.blue),
-                                                //                                         child: const Icon(
-                                                //                                           Icons.close_sharp,
-                                                //                                           color: Colors.white,
-                                                //                                         )),
-                                                //                                     onTap: () {
-                                                //                                       setState(() {
-                                                //                                         Navigator.of(context).pop();
-                                                //                                       });
-                                                //                                     },
-                                                //                                   ),
-                                                //                                 ),
-                                                //                               ],
-                                                //                               ),
-                                                //                             );
-                                                //                           },
-                                                //                         ),
-                                                //                       );
-                                                //                     },
-                                                //                   );
-                                                //                 }
-                                                //               }
-                                                //               else if (optionInitialType=="Change Password"){
-                                                //                 showDialog(
-                                                //                   context: context,
-                                                //                   builder: (context) {
-                                                //                     bool passwordInitial = true;
-                                                //                     final emailBased = TextEditingController();
-                                                //                     final editPassword = TextEditingController();
-                                                //                     final conformPassword = TextEditingController();
-                                                //                     bool editEmailError = false;
-                                                //                     bool editPasswordError = false;
-                                                //                     bool conformPasswordInitial = true;
-                                                //                     String storeEmail = '';
-                                                //                     String storePassword = '';
-                                                //                     //regular expression to check if string.
-                                                //                     RegExp passValid = RegExp(
-                                                //                         r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
-                                                //                     // a function that validate user enter password.
-                                                //                     bool validatePassword(String pass) {
-                                                //                       String password = pass.trim();
-                                                //                       if (passValid.hasMatch(password)) {
-                                                //                         return true;
-                                                //                       } else {
-                                                //                         return false;
-                                                //                       }
-                                                //                     }
-                                                //
-                                                //
-                                                //                     final changeKey = GlobalKey<FormState>();
-                                                //                     return Dialog(
-                                                //                       backgroundColor: Colors.transparent,
-                                                //                       child: StatefulBuilder(
-                                                //                         builder: (context, setState) {
-                                                //                           void textHideFunc() {
-                                                //                             setState(() {
-                                                //                               passwordInitial = !passwordInitial;
-                                                //                             });
-                                                //                           }
-                                                //
-                                                //                           void textHideConformPassword() {
-                                                //                             setState(() {
-                                                //                               conformPasswordInitial = !conformPasswordInitial;
-                                                //                             });
-                                                //                           }
-                                                //
-                                                //                           emailBased.text = displayUserData[index]['email'];
-                                                //                           storeEmail = displayUserData[index]['email'];
-                                                //                           storePassword = editPassword.text;
-                                                //                           return SizedBox(
-                                                //                             width: 500,
-                                                //                             child: Stack(children: [
-                                                //                               Container(
-                                                //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                //                                 child: SingleChildScrollView(
-                                                //                                   child: Form(
-                                                //                                     key: changeKey,
-                                                //                                     child: Padding(
-                                                //                                       padding: const EdgeInsets.all(30),
-                                                //                                       child: Container(
-                                                //                                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                                //                                         child: Column(children: [
-                                                //                                           // Top container.
-                                                //                                           Container(color: Colors.grey[100],
-                                                //                                             child: IgnorePointer(ignoring: true,
-                                                //                                               child: MaterialButton(
-                                                //                                                 hoverColor: Colors.transparent,
-                                                //                                                 onPressed: () {
-                                                //
-                                                //                                                 },
-                                                //                                                 child: const Row(
-                                                //                                                   children: [
-                                                //                                                     Expanded(
-                                                //                                                       child: Padding(
-                                                //                                                         padding: EdgeInsets.all(8.0),
-                                                //                                                         child: Text(
-                                                //                                                           'Change Password',
-                                                //                                                           style: TextStyle(fontWeight: FontWeight.bold,
-                                                //                                                             fontSize: 16,),
-                                                //                                                         ),
-                                                //                                                       ),
-                                                //                                                     ),
-                                                //                                                   ],
-                                                //                                                 ),
-                                                //                                               ),
-                                                //                                             ),
-                                                //                                           ),
-                                                //                                           const Divider(height: 1,color:mTextFieldBorder),
-                                                //                                           Padding(
-                                                //                                             padding: const EdgeInsets.all(30),
-                                                //                                             child: Column(children: [
-                                                //                                               //User Email
-                                                //                                               Row(
-                                                //                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                //                                                 children: [
-                                                //                                                   const SizedBox(
-                                                //                                                       width: 140, child: Text('User Email')),
-                                                //                                                   const SizedBox(height: 10),
-                                                //                                                   Expanded(
-                                                //                                                     child: AnimatedContainer(
-                                                //                                                       duration:
-                                                //                                                       const Duration(seconds: 0),
-                                                //                                                       height: editEmailError ? 55 : 30,
-                                                //                                                       child: TextFormField(
-                                                //                                                         readOnly: true,
-                                                //                                                         validator: (value) {
-                                                //                                                           if (value == null ||
-                                                //                                                               value.isEmpty) {
-                                                //                                                             setState(() {
-                                                //                                                               editEmailError = true;
-                                                //                                                             });
-                                                //                                                             return "Enter User Name";
-                                                //                                                           } else {
-                                                //                                                             setState(() {
-                                                //                                                               editEmailError = false;
-                                                //                                                             });
-                                                //                                                           }
-                                                //                                                           return null;
-                                                //                                                         },
-                                                //                                                         controller: emailBased,
-                                                //                                                         decoration: decorationInput5(hintString:
-                                                //                                                         'User Email',
-                                                //                                                             error: editEmailError),
-                                                //                                                       ),
-                                                //                                                     ),
-                                                //                                                   )
-                                                //                                                 ],
-                                                //                                               ),
-                                                //                                               const SizedBox(
-                                                //                                                 height: 15,
-                                                //                                               ),
-                                                //                                               Row(
-                                                //                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                //                                                 children: [
-                                                //                                                   const SizedBox(
-                                                //                                                       width: 140, child: Text('User Password')),
-                                                //                                                   const SizedBox(height: 10),
-                                                //                                                   Expanded(
-                                                //
-                                                //                                                     child: AnimatedContainer(
-                                                //                                                       duration: const Duration(seconds: 0),
-                                                //                                                       height: editPasswordError ? 55 : 30,
-                                                //                                                       child: TextFormField(onTap: () {
-                                                //                                                         setState((){
-                                                //                                                           conformPasswordInitial=true;
-                                                //                                                         });
-                                                //                                                       },
-                                                //                                                           validator: (value) {
-                                                //                                                             if (value == null || value.isEmpty) {
-                                                //                                                               setState(() {
-                                                //                                                                 editPasswordError = true;
-                                                //                                                               });
-                                                //                                                               return 'Enter Password';
-                                                //                                                             } else {
-                                                //                                                               // call function to check password
-                                                //                                                               bool result = validatePassword(value);
-                                                //                                                               if (result) {
-                                                //                                                                 setState(() {
-                                                //                                                                   editPasswordError = false;
-                                                //                                                                 });
-                                                //                                                                 // create account event
-                                                //                                                                 return null;
-                                                //                                                               } else {
-                                                //                                                                 setState(() {
-                                                //                                                                   editPasswordError = true;
-                                                //                                                                 });
-                                                //                                                                 return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
-                                                //                                                               }
-                                                //                                                             }
-                                                //                                                           },
-                                                //                                                           controller: editPassword,
-                                                //                                                           obscureText: passwordInitial,
-                                                //                                                           decoration: decorationInputPassword('Enter Password', editPassword.text.isNotEmpty, passwordInitial, textHideFunc)),
-                                                //                                                     ),
-                                                //                                                   )
-                                                //                                                 ],
-                                                //                                               ),
-                                                //                                               const SizedBox(
-                                                //                                                 height: 15,
-                                                //                                               ),
-                                                //                                               //conform password.
-                                                //                                               Row(
-                                                //                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                //                                                 children: [
-                                                //                                                   const SizedBox(
-                                                //                                                       width: 140,
-                                                //                                                       child: Text('Conform Password')),
-                                                //                                                   const SizedBox(height: 10),
-                                                //                                                   Expanded(
-                                                //                                                     child: AnimatedContainer(
-                                                //                                                       duration:
-                                                //                                                       const Duration(seconds: 0),
-                                                //                                                       height: editPasswordError ? 55 : 30,
-                                                //                                                       child: TextFormField(onTap: (){
-                                                //                                                         setState((){
-                                                //                                                           passwordInitial=true;
-                                                //                                                         });
-                                                //                                                       },
-                                                //                                                         validator: (value) {
-                                                //                                                           if (value == null ||
-                                                //                                                               value.isEmpty &&
-                                                //                                                                   conformPassword.text ==
-                                                //                                                                       '') {
-                                                //                                                             setState(() {
-                                                //                                                               editPasswordError = true;
-                                                //                                                             });
-                                                //                                                             return "Conform Password";
-                                                //                                                           } else if (conformPassword
-                                                //                                                               .text !=
-                                                //                                                               editPassword.text) {
-                                                //                                                             setState(() {
-                                                //                                                               editPasswordError = true;
-                                                //                                                             });
-                                                //                                                             return 'Password does`t match';
-                                                //                                                           } else {
-                                                //                                                             setState(() {
-                                                //                                                               editPasswordError = false;
-                                                //                                                             });
-                                                //                                                           }
-                                                //                                                           return null;
-                                                //                                                         },
-                                                //                                                         onChanged: (text) {
-                                                //                                                           setState(() {});
-                                                //                                                         },
-                                                //                                                         controller: conformPassword,
-                                                //                                                         decoration:
-                                                //                                                         decorationInputConformPassword(
-                                                //                                                             'Enter Password',
-                                                //                                                             conformPassword
-                                                //                                                                 .text.isNotEmpty,
-                                                //                                                             conformPasswordInitial,
-                                                //                                                             textHideConformPassword),
-                                                //                                                         // decorationInput5(
-                                                //                                                         //     'Conform Password',
-                                                //                                                         //     conformPassword
-                                                //                                                         //         .text.isNotEmpty),
-                                                //                                                         obscureText: conformPasswordInitial,
-                                                //                                                       ),
-                                                //                                                     ),
-                                                //                                                   )
-                                                //                                                 ],
-                                                //                                               ),
-                                                //                                               const SizedBox(
-                                                //                                                 height: 35,
-                                                //                                               ),
-                                                //                                               Align(
-                                                //                                                   alignment: Alignment.center,
-                                                //                                                   child:  SizedBox(
-                                                //                                                     width: 100,
-                                                //                                                     height:30,
-                                                //                                                     child: OutlinedMButton(
-                                                //                                                       text: 'Save',
-                                                //                                                       buttonColor:mSaveButton ,
-                                                //                                                       textColor: Colors.white,
-                                                //                                                       borderColor: mSaveButton,
-                                                //                                                       onTap:() {
-                                                //                                                         //Password change.
-                                                //                                                         Future changePasswordFunc(
-                                                //                                                             String storeEmail,
-                                                //                                                             String storePassword) async {
-                                                //                                                           String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
-                                                //                                                           final response = await http.get(Uri.parse(url),
-                                                //                                                               headers: {
-                                                //                                                                 "Content-Type": "application/json",
-                                                //                                                                 'Authorization': 'Bearer $authToken'
-                                                //                                                               });
-                                                //                                                           if (response.statusCode == 200) {
-                                                //
-                                                //                                                             if(mounted) {
-                                                //                                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
-                                                //                                                               Navigator.of(context).pop();
-                                                //                                                             }
-                                                //                                                           } else {
-                                                //                                                             log(response.statusCode.toString());
-                                                //                                                           }
-                                                //                                                         }
-                                                //
-                                                //                                                         setState(() {
-                                                //                                                           if (changeKey.currentState!.validate()) {
-                                                //                                                             changePasswordFunc(storeEmail, storePassword);
-                                                //                                                           }
-                                                //                                                         });
-                                                //                                                       },
-                                                //                                                     ),
-                                                //                                                   )
-                                                //                                               ),
-                                                //                                             ],),
-                                                //                                           )
-                                                //                                         ]),
-                                                //                                       ),
-                                                //                                     ),
-                                                //                                   ),
-                                                //                                 ),
-                                                //                               ),
-                                                //                               Positioned(right: 0.0,
-                                                //
-                                                //                                 child: InkWell(
-                                                //                                   child: Container(
-                                                //                                       width: 30,
-                                                //                                       height: 30,
-                                                //                                       decoration: BoxDecoration(
-                                                //                                           borderRadius: BorderRadius.circular(15),
-                                                //                                           border: Border.all(
-                                                //                                             color:
-                                                //                                             const Color.fromRGBO(204, 204, 204, 1),
-                                                //                                           ),
-                                                //                                           color: Colors.blue),
-                                                //                                       child: const Icon(
-                                                //                                         Icons.close_sharp,
-                                                //                                         color: Colors.white,
-                                                //                                       )),
-                                                //                                   onTap: () {
-                                                //                                     setState(() {
-                                                //                                       Navigator.of(context).pop();
-                                                //                                     });
-                                                //                                   },
-                                                //                                 ),
-                                                //                               ),
-                                                //                             ],
-                                                //
-                                                //                             ),
-                                                //                           );
-                                                //                         },
-                                                //                       ),
-                                                //                     );
-                                                //                   },
-                                                //                 );
-                                                //               }
-                                                //             });
-                                                //           },
-                                                //           child:Container()
-                                                //       ),
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ],
+                                              ),
                                             ),
-
-                                              displayUserData[index]['isExpanded']?
-                                              FutureBuilder (
-                                                  future: _show(),
-                                                builder: (context,snapchat) {
-                                                    if(!snapchat.hasData){
-                                                      return const SizedBox();
-                                                    }
-                                                    return Column(
-                                                      children: [
-                                                        const SizedBox(height: 12,),
-                                                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 28,
-                                                              width:80,
-                                                              child: OutlinedBorderWithIcon(
-                                                                buttonText: 'Edit', iconData: Icons.edit,
-                                                                onTap: (){
-                                                                 setState(() {
-                                                                   showDialog(
-                                                                     context: context,
-                                                                     builder: (context) {
-                                                                       bool editFocusedCompany=false;
-                                                                       bool editCompanyError=false;
-                                                                       final editCreateCompanyCon=TextEditingController();
-                                                                       bool editFocusedUser=false;
-                                                                       bool editUserError=false;
-                                                                       final editUserRoleController=TextEditingController();
-                                                                       //Declaration Is Here.
-                                                                       final editUserName = TextEditingController();
-                                                                       bool editUserNameError = false;
-                                                                       bool editUserEmailError = false;
-                                                                       final editEmail = TextEditingController();
-                                                                       editUserName.text = displayUserData[index]['username'];
-                                                                       editEmail.text = displayUserData[index]['email'];
-
-                                                                       // Dropdown Values.
-                                                                       List <CustomPopupMenuEntry<String>> editRoleTypes =<CustomPopupMenuEntry<String>>[
-
-                                                                         const CustomPopupMenuItem(height: 40,
-                                                                           value: 'Admin',
-                                                                           child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
-
-                                                                         ),
-                                                                         const CustomPopupMenuItem(height: 40,
-                                                                           value: 'User',
-                                                                           child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
-
-                                                                         ),
-
-                                                                       ];
-                                                                       //var selectedCompanyName =  displayUserData[i]['company_name'];
-                                                                       var selectedCompanyName="Selected Company Name";
-                                                                       editCreateCompanyCon.text=displayUserData[index]['company_name'];
-                                                                       // Initial Value.
-                                                                       //String  roleInitial = displayUserData[i]['role'];
-                                                                       String roleInitial="Selected User Role";
-                                                                       editUserRoleController.text=displayUserData[index]['role'];
-                                                                       final List<String> editCountryNames = [...companyNamesList];
-                                                                       // Creating CustomPopupMenuEntry Empty List.
-                                                                       List<CustomPopupMenuEntry<String>> editCompanyNames = [];
-                                                                       //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
-                                                                       editCompanyNames = editCountryNames.map((value) {
-                                                                         return CustomPopupMenuItem(
-                                                                           height: 40,
-                                                                           value: value,
-                                                                           child: Center(
-                                                                             child: SizedBox(
-                                                                               width: 350,
-                                                                               child: Text(
-                                                                                 value,
-                                                                                 maxLines: 1,
-                                                                                 overflow: TextOverflow.ellipsis,
-                                                                                 style: const TextStyle(fontSize: 14),
-                                                                               ),
-                                                                             ),
-                                                                           ),
-                                                                         );
-                                                                       }).toList();
-                                                                       final editDetails = GlobalKey<FormState>();
-                                                                       String capitalizeFirst(String value) {
-                                                                         if(value.isNotEmpty){
-                                                                           var result = value[0].toUpperCase();
-                                                                           for (int i = 1; i < value.length; i++) {
-                                                                             if (value[i - 1] == "1") {
-                                                                               result = result + value[i].toUpperCase();
-                                                                             } else {
-                                                                               result = result + value[i];
-                                                                             }
-                                                                           }
-                                                                           return result;
-                                                                         }
-                                                                         return '';
-                                                                       }
-                                                                       return Dialog(
-                                                                         backgroundColor: Colors.transparent,
-                                                                         child: StatefulBuilder(
-                                                                           builder: (context, setState) {
-                                                                             // Assigning variables.
-                                                                             return SizedBox(
-                                                                               width: 500,
-                                                                               child: Stack(children: [
-                                                                                 Container(
-                                                                                   decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                                                   margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                   child: SingleChildScrollView(
-                                                                                     child: Form(
-                                                                                       key: editDetails,
-                                                                                       child: Padding(
-                                                                                         padding: const EdgeInsets.all(30),
-                                                                                         child: Container(
-                                                                                           decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                                                                           child: Column(
-                                                                                             children: [
-                                                                                               // Top container.
-                                                                                               Container(color: Colors.grey[100],
-                                                                                                 child: IgnorePointer(ignoring: true,
-                                                                                                   child: MaterialButton(
-                                                                                                     hoverColor: Colors.transparent,
-                                                                                                     onPressed: () {
-
-                                                                                                     },
-                                                                                                     child: const Row(
-                                                                                                       children: [
-                                                                                                         Expanded(
-                                                                                                           child: Padding(
-                                                                                                             padding: EdgeInsets.all(8.0),
-                                                                                                             child: Text(
-                                                                                                               'Edit User Details',
-                                                                                                               style: TextStyle(fontWeight: FontWeight.bold,
-                                                                                                                 fontSize: 16,),
-                                                                                                             ),
-                                                                                                           ),
-                                                                                                         ),
-                                                                                                       ],
-                                                                                                     ),
-                                                                                                   ),
-                                                                                                 ),
-                                                                                               ),
-                                                                                               const Divider(height: 1,color:mTextFieldBorder),
-                                                                                               Padding(
-                                                                                                 padding: const EdgeInsets.all(30),
-                                                                                                 child: Column(children: [
-                                                                                                   //user Name.
-                                                                                                   Row(
-                                                                                                     crossAxisAlignment:
-                                                                                                     CrossAxisAlignment.start,
-                                                                                                     children: [
-                                                                                                       const SizedBox(
-                                                                                                           width: 130, child: Text('User Name')),
-                                                                                                       const SizedBox(height: 10),
-                                                                                                       Expanded(
-                                                                                                         child: AnimatedContainer(
-                                                                                                           duration:
-                                                                                                           const Duration(seconds: 0),
-                                                                                                           height:
-                                                                                                           editUserNameError ? 55 : 30,
-                                                                                                           child: TextFormField(
-                                                                                                             validator: (value) {
-                                                                                                               if (value == null ||
-                                                                                                                   value.isEmpty) {
-                                                                                                                 setState(() {
-                                                                                                                   editUserNameError = true;
-                                                                                                                 });
-                                                                                                                 return "Enter User Name";
-                                                                                                               } else {
-                                                                                                                 setState(() {
-                                                                                                                   editUserNameError = false;
-                                                                                                                 });
-                                                                                                               }
-                                                                                                               return null;
-                                                                                                             },
-                                                                                                             onChanged: (value) {
-                                                                                                               editUserName.value=TextEditingValue(
-                                                                                                                 text:capitalizeFirst(value),
-                                                                                                                 selection: editUserName.selection,
-                                                                                                               );
-                                                                                                             },
-                                                                                                             controller: editUserName,
-                                                                                                             decoration: decorationInput5(hintString:
-                                                                                                             'Enter User Name',
-                                                                                                                 error: editUserNameError),
-                                                                                                           ),
-                                                                                                         ),
-                                                                                                       )
-                                                                                                     ],
-                                                                                                   ),
-                                                                                                   const SizedBox(
-                                                                                                     height: 10,
-                                                                                                   ),
-                                                                                                   //Company Name
-                                                                                                   Row(
-                                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                     children: [
-                                                                                                       const SizedBox(
-                                                                                                           width: 130,
-                                                                                                           child: Text('Company Name',)),
-                                                                                                       Expanded(
-                                                                                                         child: Focus(
-                                                                                                           onFocusChange: (value) {
-                                                                                                             setState(() {
-                                                                                                               editFocusedCompany = value;
-                                                                                                             });
-                                                                                                           },
-                                                                                                           skipTraversal: true,
-                                                                                                           descendantsAreFocusable: true,
-                                                                                                           child: LayoutBuilder(
-                                                                                                               builder: (BuildContext context, BoxConstraints constraints) {
-                                                                                                                 return CustomPopupMenuButton(childHeight: 200,
-                                                                                                                   elevation: 4,
-                                                                                                                   validator: (value) {
-                                                                                                                     if(value==null||value.isEmpty){
-                                                                                                                       setState(() {
-                                                                                                                         editCompanyError =true;
-                                                                                                                       });
-                                                                                                                       return null;
-                                                                                                                     }
-                                                                                                                     return null;
-                                                                                                                   },
-                                                                                                                   decoration: customPopupDecoration(hintText:selectedCompanyName,error: editCompanyError,isFocused: editFocusedCompany),
-                                                                                                                   hintText: '',
-                                                                                                                   textController: editCreateCompanyCon,
-                                                                                                                   childWidth: constraints.maxWidth,
-                                                                                                                   shape:  RoundedRectangleBorder(
-                                                                                                                     side: BorderSide(color:editCompanyError ? Colors.redAccent :mTextFieldBorder),
-                                                                                                                     borderRadius: const BorderRadius.all(
-                                                                                                                       Radius.circular(5),
-                                                                                                                     ),
-                                                                                                                   ),
-                                                                                                                   offset: const Offset(1, 40),
-                                                                                                                   tooltip: '',
-                                                                                                                   itemBuilder:  (BuildContext context) {
-                                                                                                                     return editCompanyNames;
-                                                                                                                   },
-
-                                                                                                                   onSelected: (String value)  {
-                                                                                                                     setState(() {
-                                                                                                                       editCreateCompanyCon.text=value;
-                                                                                                                       editCompanyError=false;
-                                                                                                                     });
-
-                                                                                                                   },
-                                                                                                                   onCanceled: () {
-
-                                                                                                                   },
-                                                                                                                   child: Container(),
-                                                                                                                 );
-                                                                                                               }
-                                                                                                           ),
-                                                                                                         ),
-                                                                                                       ),
-                                                                                                     ],
-                                                                                                   ),
-                                                                                                   const SizedBox(
-                                                                                                     height: 10,
-                                                                                                   ),
-                                                                                                   //user Role.
-                                                                                                   Row(
-                                                                                                     crossAxisAlignment:
-                                                                                                     CrossAxisAlignment.start,
-                                                                                                     children: [
-                                                                                                       const SizedBox(
-                                                                                                           width: 130,
-                                                                                                           child: Text(
-                                                                                                             "User Role",
-                                                                                                           )),
-                                                                                                       Expanded(
-                                                                                                         child: Focus(
-                                                                                                           onFocusChange: (value) {
-                                                                                                             setState(() {
-                                                                                                               editFocusedUser = value;
-                                                                                                             });
-                                                                                                           },
-                                                                                                           skipTraversal: true,
-                                                                                                           descendantsAreFocusable: true,
-                                                                                                           child: LayoutBuilder(
-                                                                                                               builder: (BuildContext context, BoxConstraints constraints) {
-                                                                                                                 return CustomPopupMenuButton(elevation: 4,
-                                                                                                                   validator: (value) {
-                                                                                                                     if(value==null||value.isEmpty){
-                                                                                                                       setState(() {
-                                                                                                                         editUserError =true;
-                                                                                                                       });
-                                                                                                                       return null;
-                                                                                                                     }
-                                                                                                                     return null;
-                                                                                                                   },
-                                                                                                                   decoration: customPopupDecoration(hintText:roleInitial,error: editUserError,isFocused: editFocusedUser),
-                                                                                                                   hintText: '',
-                                                                                                                   textController: editUserRoleController,
-                                                                                                                   childWidth: constraints.maxWidth,
-                                                                                                                   shape:  RoundedRectangleBorder(
-                                                                                                                     side: BorderSide(color:editUserError ? Colors.redAccent :mTextFieldBorder),
-                                                                                                                     borderRadius: const BorderRadius.all(
-                                                                                                                       Radius.circular(5),
-                                                                                                                     ),
-                                                                                                                   ),
-                                                                                                                   offset: const Offset(1, 40),
-                                                                                                                   tooltip: '',
-                                                                                                                   itemBuilder:  (BuildContext context) {
-                                                                                                                     return editRoleTypes;
-                                                                                                                   },
-
-                                                                                                                   onSelected: (String value)  {
-                                                                                                                     setState(() {
-                                                                                                                       editUserRoleController.text=value;
-                                                                                                                       editUserError=false;
-                                                                                                                     });
-
-                                                                                                                   },
-                                                                                                                   onCanceled: () {
-
-                                                                                                                   },
-                                                                                                                   child: Container(),
-                                                                                                                 );
-                                                                                                               }
-                                                                                                           ),
-                                                                                                         ),
-                                                                                                       ),
-                                                                                                     ],
-                                                                                                   ),
-                                                                                                   const SizedBox(
-                                                                                                     height: 10,
-                                                                                                   ),
-                                                                                                   //User Email.
-                                                                                                   Row(
-                                                                                                     crossAxisAlignment:
-                                                                                                     CrossAxisAlignment.start,
-                                                                                                     children: [
-                                                                                                       const SizedBox(
-                                                                                                           width: 130,
-                                                                                                           child: Text('User Email')),
-                                                                                                       const SizedBox(height: 10),
-                                                                                                       Expanded(
-                                                                                                         child: AnimatedContainer(
-                                                                                                           duration:
-                                                                                                           const Duration(seconds: 0),
-                                                                                                           height:
-                                                                                                           editUserEmailError ? 55 : 30,
-                                                                                                           child: TextFormField(
-                                                                                                             validator: (value) {
-                                                                                                               if (value == null || value.isEmpty) {
-                                                                                                                 setState(() {
-                                                                                                                   editUserEmailError = true;
-                                                                                                                 });
-                                                                                                                 return "Enter User Email";
-                                                                                                               }
-                                                                                                               else if(!EmailValidator.validate(value)){
-                                                                                                                 setState((){
-                                                                                                                   editUserEmailError=true;
-                                                                                                                 });
-                                                                                                                 return 'Please enter valued email address';
-                                                                                                               }
-                                                                                                               else {
-                                                                                                                 setState(() {
-                                                                                                                   editUserEmailError = false;
-                                                                                                                 });
-                                                                                                               }
-                                                                                                               return null;
-                                                                                                             },
-                                                                                                             onChanged: (text) {
-                                                                                                               setState(() {});
-                                                                                                             },
-                                                                                                             controller: editEmail,
-                                                                                                             decoration: decorationInput5(hintString:
-                                                                                                             'Enter User Email',
-                                                                                                                 error:  editUserEmailError),
-                                                                                                           ),
-                                                                                                         ),
-                                                                                                       )
-                                                                                                     ],
-                                                                                                   ),
-                                                                                                   const SizedBox(
-                                                                                                     height: 35,
-                                                                                                   ),
-                                                                                                   Align(
-                                                                                                     alignment: Alignment.center,
-                                                                                                     child:  SizedBox(
-
-                                                                                                       width: 100,
-                                                                                                       height:30,
-                                                                                                       child: OutlinedMButton(
-                                                                                                         text: 'Update',
-                                                                                                         buttonColor:mSaveButton ,
-                                                                                                         textColor: Colors.white,
-                                                                                                         borderColor: mSaveButton,
-                                                                                                         onTap:(){
-                                                                                                           if (editDetails.currentState!.validate()) {
-                                                                                                             Map editUserManagement = {
-                                                                                                               'userid':displayUserData[index]['userid'],
-                                                                                                               'username': editUserName.text,
-                                                                                                               'password':displayUserData[index]['password'],
-                                                                                                               'active':true,
-                                                                                                               'role': editUserRoleController.text,
-                                                                                                               'email': editEmail.text,
-                                                                                                               'token':'',
-                                                                                                               'token_creation_date':'',
-                                                                                                               'company_name': editCreateCompanyCon.text,
-                                                                                                               "manager_id" : managerId ,
-                                                                                                               "org_id": orgId
-                                                                                                               //editCompanyName.text,
-                                                                                                             };
-                                                                                                             updateUserDetails(editUserManagement);
-                                                                                                           }
-                                                                                                         },
-                                                                                                       ),
-                                                                                                     ),
-
-                                                                                                   ),
-                                                                                                 ],),
-                                                                                               )
-                                                                                             ],
-                                                                                           ),
-                                                                                         ),
-                                                                                       ),
-                                                                                     ),
-                                                                                   ),
-                                                                                 ),
-                                                                                 Positioned(right: 0.0,
-
-                                                                                   child: InkWell(
-                                                                                     child: Container(
-                                                                                         width: 30,
-                                                                                         height: 30,
-                                                                                         decoration: BoxDecoration(
-                                                                                             borderRadius: BorderRadius.circular(15),
-                                                                                             border: Border.all(
-                                                                                               color:
-                                                                                               const Color.fromRGBO(204, 204, 204, 1),
-                                                                                             ),
-                                                                                             color: Colors.blue),
-                                                                                         child: const Icon(
-                                                                                           Icons.close_sharp,
-                                                                                           color: Colors.white,
-                                                                                         )),
-                                                                                     onTap: () {
-                                                                                       setState(() {
-                                                                                         Navigator.of(context).pop();
-                                                                                       });
-                                                                                     },
-                                                                                   ),
-                                                                                 ),
-                                                                               ],
-
-                                                                               ),
-                                                                             );
-                                                                           },
-                                                                         ),
-                                                                       );
-                                                                     },
-                                                                   );
-                                                                 });
-                                                                },
-
-                                                              ),
-                                                            ),
-                                                            const SizedBox(width: 20,),
-                                                            SizedBox(   height: 28,
-                                                              width:100,
-                                                              child: OutlinedBorderColorForDelete(
-                                                                buttonText: 'Delete', iconData: Icons.delete,
-                                                                onTap: (){
-                                                                  setState(() {
-                                                                    if(userID==displayUserData[index]['userid']){
-                                                                      showDialog(
-                                                                        context: context,
-                                                                        builder: (context) {
-                                                                          return Dialog(
-                                                                            backgroundColor: Colors.transparent,
-                                                                            child: StatefulBuilder(
-                                                                              builder: (context, setState) {
-                                                                                return SizedBox(
-                                                                                  height: 200,
-                                                                                  width: 300,
-                                                                                  child: Stack(children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                                                                      margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                                                        child: Column(
-                                                                                          children: [
-                                                                                            const SizedBox(
-                                                                                              height: 20,
-                                                                                            ),
-                                                                                            const Icon(
-                                                                                              Icons.warning_rounded,
-                                                                                              color: Colors.red,
-                                                                                              size: 50,
-                                                                                            ),
-                                                                                            const SizedBox(
-                                                                                              height: 10,
-                                                                                            ),
-                                                                                            const Center(
-                                                                                                child: Text(
-                                                                                                  'You Can Not Delete LoggedIn User',
-                                                                                                  style: TextStyle(
-                                                                                                      color: Colors.indigo,
-                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                      fontSize: 15),
-                                                                                                )),
-                                                                                            const SizedBox(
-                                                                                              height: 35,
-                                                                                            ),
-                                                                                            Row(
-                                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                                              children: [
-                                                                                                MaterialButton(
-                                                                                                  color: Colors.blue,
-                                                                                                  onPressed: () {
-                                                                                                    setState(() {
-                                                                                                      Navigator.of(context).pop();
-                                                                                                    });
-                                                                                                  },
-                                                                                                  child: const Text(
-                                                                                                    'OK',
-                                                                                                    style: TextStyle(color: Colors.white),
-                                                                                                  ),
-                                                                                                )
-                                                                                              ],
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    Positioned(right: 0.0,
-
-                                                                                      child: InkWell(
-                                                                                        child: Container(
-                                                                                            width: 30,
-                                                                                            height: 30,
-                                                                                            decoration: BoxDecoration(
-                                                                                                borderRadius: BorderRadius.circular(15),
-                                                                                                border: Border.all(
-                                                                                                  color:
-                                                                                                  const Color.fromRGBO(204, 204, 204, 1),
-                                                                                                ),
-                                                                                                color: Colors.blue),
-                                                                                            child: const Icon(
-                                                                                              Icons.close_sharp,
-                                                                                              color: Colors.white,
-                                                                                            )),
-                                                                                        onTap: () {
-                                                                                          setState(() {
-                                                                                            Navigator.of(context).pop();
-                                                                                          });
-                                                                                        },
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                      );
-                                                                    }
-                                                                    else{
-                                                                      showDialog(
-                                                                        context: context,
-                                                                        builder: (context) {
-                                                                          return Dialog(
-                                                                            backgroundColor: Colors.transparent,
-                                                                            child: StatefulBuilder(
-                                                                              builder: (context, setState) {
-                                                                                return SizedBox(
-                                                                                  height: 200,
-                                                                                  width: 300,
-                                                                                  child: Stack(children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                                                      margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                                                        child: Column(
-                                                                                          children: [
-                                                                                            const SizedBox(
-                                                                                              height: 20,
-                                                                                            ),
-                                                                                            const Icon(
-                                                                                              Icons.warning_rounded,
-                                                                                              color: Colors.red,
-                                                                                              size: 50,
-                                                                                            ),
-                                                                                            const SizedBox(
-                                                                                              height: 10,
-                                                                                            ),
-                                                                                            const Center(
-                                                                                                child: Text(
-                                                                                                  'Are You Sure, You  Want To Delete ?',
-                                                                                                  style: TextStyle(
-                                                                                                      color: Colors.indigo,
-                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                      fontSize: 15),
-                                                                                                )),
-                                                                                            const SizedBox(
-                                                                                              height: 35,
-                                                                                            ),
-                                                                                            Row(
-                                                                                              mainAxisAlignment:
-                                                                                              MainAxisAlignment.spaceEvenly,
-                                                                                              children: [
-                                                                                                SizedBox(
-                                                                                                  width: 50,
-                                                                                                  height:30,
-                                                                                                  child: OutlinedMButton(
-                                                                                                    text: 'Ok',
-                                                                                                    buttonColor:Colors.red ,
-                                                                                                    textColor: Colors.white,
-                                                                                                    borderColor: Colors.red,
-                                                                                                    onTap:(){
-                                                                                                      assignUserId = displayUserData[index]['userid'];
-                                                                                                      deleteUserData();
-                                                                                                    },
-                                                                                                  ),
-                                                                                                ),
-                                                                                                SizedBox(
-                                                                                                  width: 100,
-                                                                                                  height:30,
-                                                                                                  child: OutlinedMButton(
-                                                                                                    text: 'Cancel',
-                                                                                                    buttonColor:mSaveButton ,
-                                                                                                    textColor: Colors.white,
-                                                                                                    borderColor: mSaveButton,
-                                                                                                    onTap:(){
-                                                                                                      Navigator.of(context).pop();
-                                                                                                    },
-                                                                                                  ),
-                                                                                                )
-
-                                                                                              ],
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    Positioned(right: 0.0,
-
-                                                                                      child: InkWell(
-                                                                                        child: Container(
-                                                                                            width: 30,
-                                                                                            height: 30,
-                                                                                            decoration: BoxDecoration(
-                                                                                                borderRadius: BorderRadius.circular(15),
-                                                                                                border: Border.all(
-                                                                                                  color:
-                                                                                                  const Color.fromRGBO(204, 204, 204, 1),
-                                                                                                ),
-                                                                                                color: Colors.blue),
-                                                                                            child: const Icon(
-                                                                                              Icons.close_sharp,
-                                                                                              color: Colors.white,
-                                                                                            )),
-                                                                                        onTap: () {
-                                                                                          setState(() {
-                                                                                            Navigator.of(context).pop();
-                                                                                          });
-                                                                                        },
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                      );
-                                                                    }
-                                                                  });
-                                                                },
-
-                                                              ),
-                                                            ),
-                                                            const SizedBox(width: 20,),
-                                                            SizedBox(  height: 28,
-                                                              width:160,
-                                                              child: OutlinedBorderWithIcon(
-                                                                buttonText: 'Change Password', iconData: Icons.change_circle_sharp,
-                                                                onTap: (){
-                                                               setState(() {
-                                                                 showDialog(
-                                                                   context: context,
-                                                                   builder: (context) {
-                                                                     bool passwordInitial = true;
-                                                                     final emailBased = TextEditingController();
-                                                                     final editPassword = TextEditingController();
-                                                                     final conformPassword = TextEditingController();
-                                                                     bool editEmailError = false;
-                                                                     bool editPasswordError = false;
-                                                                     bool conformPasswordInitial = true;
-                                                                     String storeEmail = '';
-                                                                     String storePassword = '';
-                                                                     //regular expression to check if string.
-                                                                     RegExp passValid = RegExp(
-                                                                         r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
-                                                                     // a function that validate user enter password.
-                                                                     bool validatePassword(String pass) {
-                                                                       String password = pass.trim();
-                                                                       if (passValid.hasMatch(password)) {
-                                                                         return true;
-                                                                       } else {
-                                                                         return false;
-                                                                       }
-                                                                     }
-
-
-                                                                     final changeKey = GlobalKey<FormState>();
-                                                                     return Dialog(
-                                                                       backgroundColor: Colors.transparent,
-                                                                       child: StatefulBuilder(
-                                                                         builder: (context, setState) {
-                                                                           void textHideFunc() {
-                                                                             setState(() {
-                                                                               passwordInitial = !passwordInitial;
-                                                                             });
-                                                                           }
-
-                                                                           void textHideConformPassword() {
-                                                                             setState(() {
-                                                                               conformPasswordInitial = !conformPasswordInitial;
-                                                                             });
-                                                                           }
-
-                                                                           emailBased.text = displayUserData[index]['email'];
-                                                                           storeEmail = displayUserData[index]['email'];
-                                                                           storePassword = editPassword.text;
-                                                                           return SizedBox(
-                                                                             width: 500,
-                                                                             child: Stack(children: [
-                                                                               Container(
-                                                                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                 child: SingleChildScrollView(
-                                                                                   child: Form(
-                                                                                     key: changeKey,
-                                                                                     child: Padding(
-                                                                                       padding: const EdgeInsets.all(30),
-                                                                                       child: Container(
-                                                                                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                                                                         child: Column(children: [
-                                                                                           // Top container.
-                                                                                           Container(color: Colors.grey[100],
-                                                                                             child: IgnorePointer(ignoring: true,
-                                                                                               child: MaterialButton(
-                                                                                                 hoverColor: Colors.transparent,
-                                                                                                 onPressed: () {
-
-                                                                                                 },
-                                                                                                 child: const Row(
-                                                                                                   children: [
-                                                                                                     Expanded(
-                                                                                                       child: Padding(
-                                                                                                         padding: EdgeInsets.all(8.0),
-                                                                                                         child: Text(
-                                                                                                           'Change Password',
-                                                                                                           style: TextStyle(fontWeight: FontWeight.bold,
-                                                                                                             fontSize: 16,),
-                                                                                                         ),
-                                                                                                       ),
-                                                                                                     ),
-                                                                                                   ],
-                                                                                                 ),
-                                                                                               ),
-                                                                                             ),
-                                                                                           ),
-                                                                                           const Divider(height: 1,color:mTextFieldBorder),
-                                                                                           Padding(
-                                                                                             padding: const EdgeInsets.all(30),
-                                                                                             child: Column(children: [
-                                                                                               //User Email
-                                                                                               Row(
-                                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                 children: [
-                                                                                                   const SizedBox(
-                                                                                                       width: 140, child: Text('User Email')),
-                                                                                                   const SizedBox(height: 10),
-                                                                                                   Expanded(
-                                                                                                     child: AnimatedContainer(
-                                                                                                       duration:
-                                                                                                       const Duration(seconds: 0),
-                                                                                                       height: editEmailError ? 55 : 30,
-                                                                                                       child: TextFormField(
-                                                                                                         readOnly: true,
-                                                                                                         validator: (value) {
-                                                                                                           if (value == null ||
-                                                                                                               value.isEmpty) {
-                                                                                                             setState(() {
-                                                                                                               editEmailError = true;
-                                                                                                             });
-                                                                                                             return "Enter User Name";
-                                                                                                           } else {
-                                                                                                             setState(() {
-                                                                                                               editEmailError = false;
-                                                                                                             });
-                                                                                                           }
-                                                                                                           return null;
-                                                                                                         },
-                                                                                                         controller: emailBased,
-                                                                                                         decoration: decorationInput5(hintString:
-                                                                                                         'User Email',
-                                                                                                             error: editEmailError),
-                                                                                                       ),
-                                                                                                     ),
-                                                                                                   )
-                                                                                                 ],
-                                                                                               ),
-                                                                                               const SizedBox(
-                                                                                                 height: 15,
-                                                                                               ),
-                                                                                               Row(
-                                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                 children: [
-                                                                                                   const SizedBox(
-                                                                                                       width: 140, child: Text('User Password')),
-                                                                                                   const SizedBox(height: 10),
-                                                                                                   Expanded(
-
-                                                                                                     child: AnimatedContainer(
-                                                                                                       duration: const Duration(seconds: 0),
-                                                                                                       height: editPasswordError ? 55 : 30,
-                                                                                                       child: TextFormField(onTap: () {
-                                                                                                         setState((){
-                                                                                                           conformPasswordInitial=true;
-                                                                                                         });
-                                                                                                       },
-                                                                                                           validator: (value) {
-                                                                                                             if (value == null || value.isEmpty) {
-                                                                                                               setState(() {
-                                                                                                                 editPasswordError = true;
-                                                                                                               });
-                                                                                                               return 'Enter Password';
-                                                                                                             } else {
-                                                                                                               // call function to check password
-                                                                                                               bool result = validatePassword(value);
-                                                                                                               if (result) {
-                                                                                                                 setState(() {
-                                                                                                                   editPasswordError = false;
-                                                                                                                 });
-                                                                                                                 // create account event
-                                                                                                                 return null;
-                                                                                                               } else {
-                                                                                                                 setState(() {
-                                                                                                                   editPasswordError = true;
-                                                                                                                 });
-                                                                                                                 return "Password should contain:One Capital Letter & one Small letter & one Number one Special Char& 8 Characters length.";
-                                                                                                               }
-                                                                                                             }
-                                                                                                           },
-                                                                                                           controller: editPassword,
-                                                                                                           obscureText: passwordInitial,
-                                                                                                           decoration: decorationInputPassword('Enter Password', editPassword.text.isNotEmpty, passwordInitial, textHideFunc)),
-                                                                                                     ),
-                                                                                                   )
-                                                                                                 ],
-                                                                                               ),
-                                                                                               const SizedBox(
-                                                                                                 height: 15,
-                                                                                               ),
-                                                                                               //conform password.
-                                                                                               Row(
-                                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                 children: [
-                                                                                                   const SizedBox(
-                                                                                                       width: 140,
-                                                                                                       child: Text('Conform Password')),
-                                                                                                   const SizedBox(height: 10),
-                                                                                                   Expanded(
-                                                                                                     child: AnimatedContainer(
-                                                                                                       duration:
-                                                                                                       const Duration(seconds: 0),
-                                                                                                       height: editPasswordError ? 55 : 30,
-                                                                                                       child: TextFormField(onTap: (){
-                                                                                                         setState((){
-                                                                                                           passwordInitial=true;
-                                                                                                         });
-                                                                                                       },
-                                                                                                         validator: (value) {
-                                                                                                           if (value == null ||
-                                                                                                               value.isEmpty &&
-                                                                                                                   conformPassword.text ==
-                                                                                                                       '') {
-                                                                                                             setState(() {
-                                                                                                               editPasswordError = true;
-                                                                                                             });
-                                                                                                             return "Conform Password";
-                                                                                                           } else if (conformPassword
-                                                                                                               .text !=
-                                                                                                               editPassword.text) {
-                                                                                                             setState(() {
-                                                                                                               editPasswordError = true;
-                                                                                                             });
-                                                                                                             return 'Password does`t match';
-                                                                                                           } else {
-                                                                                                             setState(() {
-                                                                                                               editPasswordError = false;
-                                                                                                             });
-                                                                                                           }
-                                                                                                           return null;
-                                                                                                         },
-                                                                                                         onChanged: (text) {
-                                                                                                           setState(() {});
-                                                                                                         },
-                                                                                                         controller: conformPassword,
-                                                                                                         decoration:
-                                                                                                         decorationInputConformPassword(
-                                                                                                             'Enter Password',
-                                                                                                             conformPassword
-                                                                                                                 .text.isNotEmpty,
-                                                                                                             conformPasswordInitial,
-                                                                                                             textHideConformPassword),
-                                                                                                         // decorationInput5(
-                                                                                                         //     'Conform Password',
-                                                                                                         //     conformPassword
-                                                                                                         //         .text.isNotEmpty),
-                                                                                                         obscureText: conformPasswordInitial,
-                                                                                                       ),
-                                                                                                     ),
-                                                                                                   )
-                                                                                                 ],
-                                                                                               ),
-                                                                                               const SizedBox(
-                                                                                                 height: 35,
-                                                                                               ),
-                                                                                               Align(
-                                                                                                   alignment: Alignment.center,
-                                                                                                   child:  SizedBox(
-                                                                                                     width: 100,
-                                                                                                     height:30,
-                                                                                                     child: OutlinedMButton(
-                                                                                                       text: 'Save',
-                                                                                                       buttonColor:mSaveButton ,
-                                                                                                       textColor: Colors.white,
-                                                                                                       borderColor: mSaveButton,
-                                                                                                       onTap:() {
-                                                                                                         //Password change.
-                                                                                                         Future changePasswordFunc(
-                                                                                                             String storeEmail,
-                                                                                                             String storePassword) async {
-                                                                                                           String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
-                                                                                                           final response = await http.get(Uri.parse(url),
-                                                                                                               headers: {
-                                                                                                                 "Content-Type": "application/json",
-                                                                                                                 'Authorization': 'Bearer $authToken'
-                                                                                                               });
-                                                                                                           if (response.statusCode == 200) {
-
-                                                                                                             if(mounted) {
-                                                                                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed')));
-                                                                                                               Navigator.of(context).pop();
-                                                                                                             }
-                                                                                                           } else {
-                                                                                                             log(response.statusCode.toString());
-                                                                                                           }
-                                                                                                         }
-
-                                                                                                         setState(() {
-                                                                                                           if (changeKey.currentState!.validate()) {
-                                                                                                             changePasswordFunc(storeEmail, storePassword);
-                                                                                                           }
-                                                                                                         });
-                                                                                                       },
-                                                                                                     ),
-                                                                                                   )
-                                                                                               ),
-                                                                                             ],),
-                                                                                           )
-                                                                                         ]),
-                                                                                       ),
-                                                                                     ),
-                                                                                   ),
-                                                                                 ),
-                                                                               ),
-                                                                               Positioned(right: 0.0,
-
-                                                                                 child: InkWell(
-                                                                                   child: Container(
-                                                                                       width: 30,
-                                                                                       height: 30,
-                                                                                       decoration: BoxDecoration(
-                                                                                           borderRadius: BorderRadius.circular(15),
-                                                                                           border: Border.all(
-                                                                                             color:
-                                                                                             const Color.fromRGBO(204, 204, 204, 1),
-                                                                                           ),
-                                                                                           color: Colors.blue),
-                                                                                       child: const Icon(
-                                                                                         Icons.close_sharp,
-                                                                                         color: Colors.white,
-                                                                                       )),
-                                                                                   onTap: () {
-                                                                                     setState(() {
-                                                                                       Navigator.of(context).pop();
-                                                                                     });
-                                                                                   },
-                                                                                 ),
-                                                                               ),
-                                                                             ],
-
-                                                                             ),
-                                                                           );
-                                                                         },
-                                                                       ),
-                                                                     );
-                                                                   },
-                                                                 );
-                                                               });
-                                                                },
-
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(height: 8,),
-                                                      ],
-                                                    );
-
-                                                }
-                                              ):const SizedBox(),
                                           ],
                                         ),
                                       ),

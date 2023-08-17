@@ -329,1287 +329,1292 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 18.0,bottom: 3,top:4),
-                                      child: Column(
+                                      child: Row(
                                         children: [
-                                          Row(
-                                            //mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4.0),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListCompanies[i]['company_name']??"")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListCompanies[i]['state']?? '')
-                                                    ),
-                                                  )
-                                              ),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListCompanies[i]['country']??"")
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(top: 4),
-                                                    child: SizedBox(height: 25,
-                                                        //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                        child: Text(displayListCompanies[i]['zip_code'].toString())
-                                                    ),
-                                                  )),
-                                              // Padding(
-                                              //   padding: const EdgeInsets.only(right:10.0),
-                                              //   child: Center(
-                                              //     child: SizedBox(width: 25,
-                                              //       height: 28,
-                                              //       child:CustomPopupMenuButton<String>(
-                                              //         childWidth: 200,position: CustomPopupMenuPosition.under,
-                                              //         decoration: customPopupDecoration(hintText: 'Create New Service'),
-                                              //         hintText: "",
-                                              //         shape: const RoundedRectangleBorder(
-                                              //           side: BorderSide(color:Color(0xFFE0E0E0)),
-                                              //           borderRadius: BorderRadius.all(
-                                              //             Radius.circular(5),
-                                              //           ),
-                                              //         ),
-                                              //         offset: const Offset(1, 12),
-                                              //         tooltip: '',
-                                              //         itemBuilder: (context,) {
-                                              //           return optionTypes;
-                                              //         },
-                                              //         onSelected: (String value,)  {
-                                              //           setState(() {
-                                              //             //  print(value);
-                                              //             optionInitialType=value;
-                                              //             if(optionInitialType=="Edit"){
-                                              //               showDialog(
-                                              //                 context: context,
-                                              //                 builder: (context) {
-                                              //
-                                              //                   Map companyDetails = {};
-                                              //                   final editCompanyKey = GlobalKey<FormState>();
-                                              //                   bool editCompanyError = false;
-                                              //                   bool editCityNameError = false;
-                                              //                   bool editStateError = false;
-                                              //                   bool editCountryError = false;
-                                              //                   bool editAddress1Error = false;
-                                              //                   bool editAddress2Error = false;
-                                              //                   bool editZipcodeError = false;
-                                              //
-                                              //                   final editCompanyName = TextEditingController();
-                                              //                   editCompanyName.text=displayListCompanies[i]['company_name'];
-                                              //                   final editCityName = TextEditingController();
-                                              //                   editCityName.text=displayListCompanies[i]['city'];
-                                              //                   final editState = TextEditingController();
-                                              //                   editState.text=displayListCompanies[i]['state'];
-                                              //                   final editCountry = TextEditingController();
-                                              //                   editCountry.text=displayListCompanies[i]['country'];
-                                              //                   final editAddress1 = TextEditingController();
-                                              //                   editAddress1.text=displayListCompanies[i]['address_line1'];
-                                              //                   final editAddress2 = TextEditingController();
-                                              //                   editAddress2.text=displayListCompanies[i]['address_line2'];
-                                              //                   final editZipcode = TextEditingController();
-                                              //                   editZipcode.text=displayListCompanies[i]['zip_code'].toString();
-                                              //
-                                              //                   String capitalizeFirstWord(String value) {
-                                              //                     if(value.isNotEmpty){
-                                              //                       var result = value[0].toUpperCase();
-                                              //                       for (int i = 1; i < value.length; i++) {
-                                              //                         if (value[i - 1] == "1") {
-                                              //                           result = result + value[i].toUpperCase();
-                                              //                         } else {
-                                              //                           result = result + value[i];
-                                              //                         }
-                                              //                       }
-                                              //                       return result;
-                                              //                     }
-                                              //                     return '';
-                                              //                   }
-                                              //                   return Dialog(
-                                              //                     backgroundColor: Colors.transparent,
-                                              //                     child: StatefulBuilder(
-                                              //                       builder: (BuildContext context, setState) {
-                                              //
-                                              //                         return SizedBox(
-                                              //                           child: Stack(children: [
-                                              //                             Container(
-                                              //                               width: 600,
-                                              //                               decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
-                                              //                               margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                              //                               child: SingleChildScrollView(
-                                              //                                 child: Form(
-                                              //                                   key: editCompanyKey,
-                                              //                                   child: Padding(
-                                              //                                     padding: const EdgeInsets.all(30),
-                                              //                                     child: Container(
-                                              //                                       decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                              //                                       child: Column(children: [
-                                              //
-                                              //                                         // Top container.
-                                              //                                         Container(color: Colors.grey[100],
-                                              //                                           child: IgnorePointer(ignoring: true,
-                                              //                                             child: MaterialButton(
-                                              //                                               hoverColor: Colors.transparent,
-                                              //                                               onPressed: () {
-                                              //
-                                              //                                               },
-                                              //                                               child: const Row(
-                                              //                                                 children: [
-                                              //                                                   Expanded(
-                                              //                                                     child: Padding(
-                                              //                                                       padding: EdgeInsets.all(8.0),
-                                              //                                                       child: Text(
-                                              //                                                         'Edit Company Details',
-                                              //                                                         style: TextStyle(fontWeight: FontWeight.bold,
-                                              //                                                           fontSize: 16,),
-                                              //                                                       ),
-                                              //                                                     ),
-                                              //                                                   ),
-                                              //                                                 ],
-                                              //                                               ),
-                                              //                                             ),
-                                              //                                           ),
-                                              //                                         ),
-                                              //                                         const Divider(height: 1,color:mTextFieldBorder),
-                                              //                                         Padding(
-                                              //                                           padding: const EdgeInsets.all(30),
-                                              //                                           child: Column(children: [
-                                              //                                             //Company Name.
-                                              //                                             Row(
-                                              //                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                               children: [
-                                              //                                                 Expanded(
-                                              //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                     children: [
-                                              //                                                       const SizedBox( child: Text('Company Name')),
-                                              //                                                       const SizedBox(height: 5),
-                                              //                                                       AnimatedContainer(
-                                              //                                                         duration: const Duration(seconds: 0),
-                                              //                                                         height: editCompanyError ? 60 : 35,
-                                              //                                                         child: TextFormField(
-                                              //                                                           validator: (value) {
-                                              //                                                             if (value == null || value.isEmpty) {
-                                              //                                                               setState(() {
-                                              //                                                                 editCompanyError = true;
-                                              //                                                               });
-                                              //                                                               return "Enter User Name";
-                                              //                                                             } else {
-                                              //                                                               setState(() {
-                                              //                                                                 editCompanyError = false;
-                                              //                                                               });
-                                              //                                                             }
-                                              //                                                             return null;
-                                              //                                                           },
-                                              //                                                           style: const TextStyle(fontSize: 14),
-                                              //                                                           onChanged: (value) {
-                                              //                                                             editCompanyName.value=TextEditingValue(
-                                              //                                                               text: capitalizeFirstWord(value),
-                                              //                                                               selection: editCompanyName.selection,
-                                              //                                                             );
-                                              //                                                           },
-                                              //                                                           controller: editCompanyName,
-                                              //                                                           decoration: decorationInput5(
-                                              //                                                               'Edit Company Name',
-                                              //                                                               editCompanyName.text.isNotEmpty),
-                                              //                                                         ),
-                                              //                                                       ),
-                                              //                                                     ],),
-                                              //                                                 ),
-                                              //                                                 const SizedBox(width: 35,),
-                                              //                                                 Expanded(child: Column(
-                                              //                                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                   children: [
-                                              //                                                     const SizedBox(child: Text('City Name')),
-                                              //                                                     const SizedBox(height: 5),
-                                              //                                                     AnimatedContainer(
-                                              //                                                       duration: const Duration(seconds: 0),
-                                              //                                                       height: editCityNameError ? 60 : 35,
-                                              //                                                       child: TextFormField(
-                                              //                                                         validator: (value) {
-                                              //                                                           if (value == null || value.isEmpty) {
-                                              //                                                             setState(() {
-                                              //                                                               editCityNameError = true;
-                                              //                                                             });
-                                              //                                                             return "Enter City Name";
-                                              //                                                           } else {
-                                              //                                                             setState(() {
-                                              //                                                               editCityNameError = false;
-                                              //                                                             });
-                                              //                                                           }
-                                              //                                                           return null;
-                                              //                                                         },
-                                              //                                                         style: const TextStyle(fontSize: 14),
-                                              //                                                         onChanged: (value) {
-                                              //                                                           editCityName.value=TextEditingValue(
-                                              //                                                             text: capitalizeFirstWord(value),
-                                              //                                                             selection: editCityName.selection,
-                                              //                                                           );
-                                              //                                                         },
-                                              //                                                         controller: editCityName,
-                                              //                                                         decoration: decorationInput5('Edit City Name',
-                                              //                                                             editCityName.text.isNotEmpty),
-                                              //                                                       ),
-                                              //                                                     )
-                                              //                                                   ],))
-                                              //                                               ],
-                                              //                                             ),
-                                              //                                             const SizedBox(
-                                              //                                               height:25,
-                                              //                                             ),
-                                              //                                             //state.
-                                              //                                             Row(
-                                              //                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                               children: [
-                                              //                                                 Expanded(
-                                              //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                     children: [
-                                              //                                                       const SizedBox( child: Text('State Name')),
-                                              //                                                       const SizedBox(height: 5),
-                                              //                                                       AnimatedContainer(
-                                              //                                                         duration: const Duration(seconds: 0),
-                                              //                                                         height: editStateError ? 60 : 35,
-                                              //                                                         child: TextFormField(
-                                              //                                                           validator: (value) {
-                                              //                                                             if (value == null || value.isEmpty) {
-                                              //                                                               setState(() {
-                                              //                                                                 editStateError = true;
-                                              //                                                               });
-                                              //                                                               return "Enter State Name";
-                                              //                                                             } else {
-                                              //                                                               setState(() {
-                                              //                                                                 editStateError = false;
-                                              //                                                               });
-                                              //                                                             }
-                                              //                                                             return null;
-                                              //                                                           },
-                                              //                                                           style: const TextStyle(fontSize: 14),
-                                              //                                                           onChanged: (value) {
-                                              //                                                             editState.value=TextEditingValue(
-                                              //                                                               text: capitalizeFirstWord(value),
-                                              //                                                               selection: editState.selection,
-                                              //                                                             );
-                                              //                                                           },
-                                              //                                                           controller: editState,
-                                              //                                                           decoration: decorationInput5(
-                                              //                                                               'Edit State Name',
-                                              //                                                               editState.text.isNotEmpty),
-                                              //                                                         ),
-                                              //                                                       )
-                                              //                                                     ],),
-                                              //                                                 ),
-                                              //                                                 const SizedBox(width: 35,),
-                                              //                                                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                   children: [
-                                              //                                                     const SizedBox( child: Text('Country Name')),
-                                              //                                                     const SizedBox(height: 5),
-                                              //                                                     AnimatedContainer(
-                                              //                                                       duration: const Duration(seconds: 0),
-                                              //                                                       height: editCountryError ? 60 : 35,
-                                              //                                                       child: TextFormField(
-                                              //                                                         validator: (value) {
-                                              //                                                           if (value == null || value.isEmpty) {
-                                              //                                                             setState(() {
-                                              //                                                               editCountryError = true;
-                                              //                                                             });
-                                              //                                                             return "Enter Country Name";
-                                              //                                                           } else {
-                                              //                                                             setState(() {
-                                              //                                                               editCountryError = false;
-                                              //                                                             });
-                                              //                                                           }
-                                              //                                                           return null;
-                                              //                                                         },
-                                              //                                                         style: const TextStyle(fontSize: 14),
-                                              //                                                         onChanged: (value) {
-                                              //                                                           editCountry.value=TextEditingValue(
-                                              //                                                             text: capitalizeFirstWord(value),
-                                              //                                                             selection: editCountry.selection,
-                                              //                                                           );
-                                              //                                                         },
-                                              //                                                         controller: editCountry,
-                                              //                                                         decoration: decorationInput5(
-                                              //                                                             'Enter Country Name',
-                                              //                                                             editCountry.text.isNotEmpty),
-                                              //                                                       ),
-                                              //                                                     )
-                                              //                                                   ],))
-                                              //                                               ],
-                                              //                                             ),
-                                              //                                             const SizedBox(
-                                              //                                               height:25,
-                                              //                                             ),
-                                              //                                             //address 1.
-                                              //                                             Row(
-                                              //                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                               children: [
-                                              //                                                 Expanded(
-                                              //                                                   child: Column(  crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                     children: [
-                                              //                                                       const SizedBox(child: Text('Address Line1 ')),
-                                              //                                                       const SizedBox(height: 5),
-                                              //                                                       AnimatedContainer(
-                                              //                                                         duration: const Duration(seconds: 0),
-                                              //                                                         height: editAddress1Error ? 60 : 35,
-                                              //                                                         child: TextFormField(
-                                              //                                                           validator: (value) {
-                                              //                                                             if (value == null || value.isEmpty) {
-                                              //                                                               setState(() {
-                                              //                                                                 editAddress1Error = true;
-                                              //                                                               });
-                                              //                                                               return "Enter Address Line";
-                                              //                                                             } else {
-                                              //                                                               setState(() {
-                                              //                                                                 editAddress1Error = false;
-                                              //                                                               });
-                                              //                                                             }
-                                              //                                                             return null;
-                                              //                                                           },
-                                              //                                                           style: const TextStyle(fontSize: 14),
-                                              //                                                           onChanged: (value) {
-                                              //                                                             editAddress1.value=TextEditingValue(
-                                              //                                                               text: capitalizeFirstWord(value),
-                                              //                                                               selection: editAddress1.selection,
-                                              //                                                             );
-                                              //
-                                              //                                                           },
-                                              //                                                           controller: editAddress1,
-                                              //                                                           decoration: decorationInput5(
-                                              //                                                               'Enter Address Line1',
-                                              //                                                               editAddress1.text.isNotEmpty),
-                                              //                                                         ),
-                                              //                                                       )
-                                              //                                                     ],),
-                                              //                                                 ),
-                                              //                                                 const SizedBox(width: 35,),
-                                              //                                                 Expanded(
-                                              //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                     children: [
-                                              //                                                       const SizedBox(child: Text('Address Line2 ')),
-                                              //                                                       const SizedBox(height: 5),
-                                              //                                                       AnimatedContainer(
-                                              //                                                         duration: const Duration(seconds: 0),
-                                              //                                                         height: editAddress2Error ? 60 : 35,
-                                              //                                                         child: TextFormField(
-                                              //                                                           validator: (value) {
-                                              //                                                             if (value == null || value.isEmpty) {
-                                              //                                                               setState(() {
-                                              //                                                                 editAddress2Error = true;
-                                              //                                                               });
-                                              //                                                               return "Enter Address Line";
-                                              //                                                             } else {
-                                              //                                                               setState(() {
-                                              //                                                                 editAddress2Error = false;
-                                              //                                                               });
-                                              //                                                             }
-                                              //                                                             return null;
-                                              //                                                           },
-                                              //                                                           style: const TextStyle(fontSize: 14),
-                                              //                                                           onChanged: (value) {
-                                              //                                                             editAddress2.value=TextEditingValue(
-                                              //                                                               text: capitalizeFirstWord(value),
-                                              //                                                               selection: editAddress2.selection,
-                                              //                                                             );
-                                              //                                                           },
-                                              //                                                           controller: editAddress2,
-                                              //                                                           decoration: decorationInput5(
-                                              //                                                               'Enter Address Line2',
-                                              //                                                               editAddress2.text.isNotEmpty),
-                                              //                                                         ),
-                                              //                                                       )
-                                              //                                                     ],),
-                                              //                                                 )
-                                              //                                               ],
-                                              //                                             ),
-                                              //                                             const SizedBox(
-                                              //                                               height:25,
-                                              //                                             ),
-                                              //                                             //zip code.
-                                              //                                             Row(
-                                              //                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                               children: [
-                                              //                                                 Expanded(
-                                              //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                              //                                                     children: [
-                                              //                                                       const SizedBox(child: Text('Zip Code')),
-                                              //                                                       const SizedBox(height: 5),
-                                              //                                                       AnimatedContainer(
-                                              //                                                         duration: const Duration(seconds: 0),
-                                              //                                                         height: editZipcodeError ? 60 : 35,
-                                              //                                                         child: TextFormField(keyboardType: TextInputType.number,
-                                              //                                                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                              //                                                           maxLength: 6,
-                                              //                                                           validator: (value) {
-                                              //                                                             if (value == null || value.isEmpty) {
-                                              //                                                               setState(() {
-                                              //                                                                 editZipcodeError = true;
-                                              //                                                               });
-                                              //                                                               return "Enter Zipcode";
-                                              //                                                             } else {
-                                              //                                                               setState(() {
-                                              //                                                                 editZipcodeError = false;
-                                              //                                                               });
-                                              //                                                             }
-                                              //                                                             return null;
-                                              //                                                           },
-                                              //                                                           style: const TextStyle(fontSize: 14),
-                                              //                                                           onChanged: (text) {
-                                              //                                                             setState(() {});
-                                              //                                                           },
-                                              //                                                           controller: editZipcode,
-                                              //                                                           decoration: decorationInput5('Enter Zipcode',
-                                              //                                                               editZipcode.text.isNotEmpty),
-                                              //                                                         ),
-                                              //                                                       )
-                                              //                                                     ],),
-                                              //                                                 )
-                                              //                                               ],
-                                              //                                             ),
-                                              //                                             const SizedBox(
-                                              //                                               height:25,
-                                              //                                             ),
-                                              //                                             SizedBox(
-                                              //                                               width: 100,
-                                              //                                               height:30,
-                                              //                                               child: OutlinedMButton(
-                                              //                                                 text: 'Update',
-                                              //                                                 buttonColor:mSaveButton ,
-                                              //                                                 textColor: Colors.white,
-                                              //                                                 borderColor: mSaveButton,
-                                              //                                                 onTap:(){
-                                              //                                                   if (editCompanyKey.currentState!.validate()) {
-                                              //                                                     companyDetails = {
-                                              //                                                       "company_id": displayListCompanies[i]['company_id'],
-                                              //                                                       'company_name':editCompanyName.text,
-                                              //                                                       'city':editCityName.text,
-                                              //                                                       'state':editState.text,
-                                              //                                                       'country':editCountry.text,
-                                              //                                                       'address_line1':editAddress1.text,
-                                              //                                                       'address_line2':editAddress2.text,
-                                              //                                                       'zip_code':editZipcode.text.toString(),
-                                              //                                                       // 'userid':'',
-                                              //                                                     };
-                                              //                                                     editCompany(companyDetails);
-                                              //                                                   }
-                                              //                                                 },
-                                              //                                               ),
-                                              //                                             ),
-                                              //                                           ],),
-                                              //                                         )
-                                              //                                       ]),
-                                              //                                     ),
-                                              //                                   ),
-                                              //                                 ),
-                                              //                               ),
-                                              //                             ),
-                                              //                             Positioned(right: 0.0,
-                                              //
-                                              //                               child: InkWell(
-                                              //                                 child: Container(
-                                              //                                     width: 30,
-                                              //                                     height: 30,
-                                              //                                     decoration: BoxDecoration(
-                                              //                                         borderRadius: BorderRadius.circular(15),
-                                              //                                         border: Border.all(
-                                              //                                           color:
-                                              //                                           const Color.fromRGBO(204, 204, 204, 1),
-                                              //                                         ),
-                                              //                                         color: Colors.blue),
-                                              //                                     child: const Icon(
-                                              //                                       Icons.close_sharp,
-                                              //                                       color: Colors.white,
-                                              //                                     )),
-                                              //                                 onTap: () {
-                                              //                                   setState(() {
-                                              //                                     Navigator.of(context).pop();
-                                              //                                   });
-                                              //                                 },
-                                              //                               ),
-                                              //                             ),
-                                              //                           ],
-                                              //
-                                              //                           ),
-                                              //                         );
-                                              //                       },
-                                              //                     ),
-                                              //                   );
-                                              //                 },
-                                              //               );
-                                              //             }
-                                              //             else if(optionInitialType=="Delete"){
-                                              //               showDialog(
-                                              //                 context: context,
-                                              //                 builder: (context) {
-                                              //                   return Dialog(
-                                              //                     backgroundColor: Colors.transparent,
-                                              //                     child: StatefulBuilder(
-                                              //                       builder: (context, setState) {
-                                              //                         return SizedBox(
-                                              //                           height: 200,
-                                              //                           width: 300,
-                                              //                           child: Stack(
-                                              //                             children: [
-                                              //                               Container(
-                                              //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                              //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                              //                                 child: Column(
-                                              //                                   children: [
-                                              //                                     const SizedBox(height: 20,),
-                                              //                                     const Icon(
-                                              //                                       Icons.warning_rounded,
-                                              //                                       color: Colors.red,
-                                              //                                       size: 50,
-                                              //                                     ),
-                                              //                                     const SizedBox(
-                                              //                                       height: 10,
-                                              //                                     ),
-                                              //                                     const Center(
-                                              //                                         child: Text(
-                                              //                                           'Are You Sure, You Want To Delete ?',
-                                              //                                           style: TextStyle(
-                                              //                                               color: Colors.indigo,
-                                              //                                               fontWeight: FontWeight.bold,
-                                              //                                               fontSize: 16),
-                                              //                                         )),
-                                              //                                     const SizedBox(
-                                              //                                       height: 35,
-                                              //                                     ),
-                                              //                                     Row(
-                                              //                                       mainAxisAlignment:
-                                              //                                       MainAxisAlignment.spaceEvenly,
-                                              //                                       children: [
-                                              //                                         SizedBox(
-                                              //                                           width: 50,
-                                              //                                           height:30,
-                                              //                                           child: OutlinedMButton(
-                                              //                                             text: 'Ok',
-                                              //                                             buttonColor:Colors.red ,
-                                              //                                             textColor: Colors.white,
-                                              //                                             borderColor: Colors.red,
-                                              //                                             onTap:(){
-                                              //                                               deleteCompany(displayListCompanies[i]['company_id']);
-                                              //                                             },
-                                              //                                           ),
-                                              //                                         ),
-                                              //                                         SizedBox(
-                                              //                                           width: 100,
-                                              //                                           height:30,
-                                              //                                           child: OutlinedMButton(
-                                              //                                             text: 'Cancel',
-                                              //                                             buttonColor:mSaveButton ,
-                                              //                                             textColor: Colors.white,
-                                              //                                             borderColor: mSaveButton,
-                                              //                                             onTap:(){
-                                              //                                               Navigator.of(context).pop();
-                                              //                                             },
-                                              //                                           ),
-                                              //                                         ),
-                                              //                                       ],
-                                              //                                     )
-                                              //                                   ],
-                                              //                                 ),
-                                              //                               ),
-                                              //                               Positioned(right: 0.0,
-                                              //
-                                              //                                 child: InkWell(
-                                              //                                   child: Container(
-                                              //                                       width: 30,
-                                              //                                       height: 30,
-                                              //                                       decoration: BoxDecoration(
-                                              //                                           borderRadius: BorderRadius.circular(15),
-                                              //                                           border: Border.all(
-                                              //                                             color:
-                                              //                                             const Color.fromRGBO(204, 204, 204, 1),
-                                              //                                           ),
-                                              //                                           color: Colors.blue),
-                                              //                                       child: const Icon(
-                                              //                                         Icons.close_sharp,
-                                              //                                         color: Colors.white,
-                                              //                                       )),
-                                              //                                   onTap: () {
-                                              //                                     setState(() {
-                                              //                                       Navigator.of(context).pop();
-                                              //                                     });
-                                              //                                   },
-                                              //                                 ),
-                                              //                               ),
-                                              //                             ],
-                                              //                           ),
-                                              //                         );
-                                              //                       },
-                                              //                     ),
-                                              //                   );
-                                              //                 },
-                                              //               );
-                                              //             }
-                                              //           });
-                                              //         },
-                                              //         child: Container(),
-                                              //         // child: Container(height: 30,width: 285,
-                                              //         //   decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.grey)),
-                                              //         //   child: Padding(
-                                              //         //     padding: const EdgeInsets.only(right: 4),
-                                              //         //     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              //         //       children: [
-                                              //         //         SizedBox(width: 150,child: Center(child: Text(customerType,style: TextStyle(color: Colors.grey[700],fontSize: 14,),maxLines: 1))),
-                                              //         //         const Icon(Icons.more_vert,color: Colors.grey,size: 14,)
-                                              //         //       ],
-                                              //         //     ),
-                                              //         //   ),
-                                              //         // ),
-                                              //       ),
-                                              //       // child: Center(
-                                              //       //      child: _popMenu(displayListCompanies[i],))
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                             Container(width: 35,height: 25,
-                                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                                               child: MaterialButton(color: Colors.blue[50],
-                                                   onPressed: () {
-                                                     setState(() {
-                                                       if(expandedId==""){
-                                                         setState(() {
-                                                           expandedId=displayListCompanies[i]["company_id"];
-                                                           displayListCompanies[i]["isExpanded"]=true;
-                                                         });
-                                                       }
-                                                       else if(expandedId==displayListCompanies[i]["company_id"]){
-                                                         setState(() {
-                                                           displayListCompanies[i]["isExpanded"]=false;
-                                                           expandedId="";
-                                                         });
-                                                       }
-                                                       else if(expandedId.isNotEmpty || expandedId!=""){
-                                                         setState(() {
-                                                           for(var companyId in displayListCompanies){
-                                                             if(companyId["company_id"]==expandedId){
-                                                               companyId["isExpanded"]=false;
-                                                               expandedId=displayListCompanies[i]["company_id"];
-                                                               displayListCompanies[i]["isExpanded"]=true;
-                                                             }
-                                                           }
-                                                         });
-                                                       }
-
-                                                     });
-
-                                                   },
-                                                   child: displayListCompanies[i]['isExpanded']? const Center(child: Icon(Icons.arrow_drop_down_outlined,color: Colors.green)):
-                                                   const Center(child: Icon(Icons.arrow_right_outlined,color: Colors.grey))),
-                                             )
-                                            ],
-                                          ),
-                                          displayListCompanies[i]['isExpanded']?
-                                          FutureBuilder (
-                                              future: _show(),
-                                              builder: (context,snapchat) {
-                                                if(!snapchat.hasData){
-                                                  return const SizedBox();
-                                                }
-                                                return Column(
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  //mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    const SizedBox(height: 12,),
-                                                    Row(mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 28,
-                                                          width:80,
-                                                          child: OutlinedBorderWithIcon(
-                                                            buttonText: 'Edit', iconData: Icons.edit,
-                                                            onTap: (){
-                                                              setState(() {
-                                                                showDialog(
-                                                                  context: context,
-                                                                  builder: (context) {
+                                                    Expanded(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(top: 4.0),
+                                                          child: SizedBox(height: 25,
+                                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                              child: Text(displayListCompanies[i]['company_name']??"")
+                                                          ),
+                                                        )),
+                                                    Expanded(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(top: 4),
+                                                          child: SizedBox(
+                                                              height: 25,
+                                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                              child: Text(displayListCompanies[i]['state']?? '')
+                                                          ),
+                                                        )
+                                                    ),
+                                                    Expanded(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(top: 4),
+                                                          child: SizedBox(height: 25,
+                                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                              child: Text(displayListCompanies[i]['country']??"")
+                                                          ),
+                                                        )),
+                                                    Expanded(
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(top: 4),
+                                                          child: SizedBox(height: 25,
+                                                              //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
+                                                              child: Text(displayListCompanies[i]['zip_code'].toString())
+                                                          ),
+                                                        )),
+                                                    // Padding(
+                                                    //   padding: const EdgeInsets.only(right:10.0),
+                                                    //   child: Center(
+                                                    //     child: SizedBox(width: 25,
+                                                    //       height: 28,
+                                                    //       child:CustomPopupMenuButton<String>(
+                                                    //         childWidth: 200,position: CustomPopupMenuPosition.under,
+                                                    //         decoration: customPopupDecoration(hintText: 'Create New Service'),
+                                                    //         hintText: "",
+                                                    //         shape: const RoundedRectangleBorder(
+                                                    //           side: BorderSide(color:Color(0xFFE0E0E0)),
+                                                    //           borderRadius: BorderRadius.all(
+                                                    //             Radius.circular(5),
+                                                    //           ),
+                                                    //         ),
+                                                    //         offset: const Offset(1, 12),
+                                                    //         tooltip: '',
+                                                    //         itemBuilder: (context,) {
+                                                    //           return optionTypes;
+                                                    //         },
+                                                    //         onSelected: (String value,)  {
+                                                    //           setState(() {
+                                                    //             //  print(value);
+                                                    //             optionInitialType=value;
+                                                    //             if(optionInitialType=="Edit"){
+                                                    //               showDialog(
+                                                    //                 context: context,
+                                                    //                 builder: (context) {
+                                                    //
+                                                    //                   Map companyDetails = {};
+                                                    //                   final editCompanyKey = GlobalKey<FormState>();
+                                                    //                   bool editCompanyError = false;
+                                                    //                   bool editCityNameError = false;
+                                                    //                   bool editStateError = false;
+                                                    //                   bool editCountryError = false;
+                                                    //                   bool editAddress1Error = false;
+                                                    //                   bool editAddress2Error = false;
+                                                    //                   bool editZipcodeError = false;
+                                                    //
+                                                    //                   final editCompanyName = TextEditingController();
+                                                    //                   editCompanyName.text=displayListCompanies[i]['company_name'];
+                                                    //                   final editCityName = TextEditingController();
+                                                    //                   editCityName.text=displayListCompanies[i]['city'];
+                                                    //                   final editState = TextEditingController();
+                                                    //                   editState.text=displayListCompanies[i]['state'];
+                                                    //                   final editCountry = TextEditingController();
+                                                    //                   editCountry.text=displayListCompanies[i]['country'];
+                                                    //                   final editAddress1 = TextEditingController();
+                                                    //                   editAddress1.text=displayListCompanies[i]['address_line1'];
+                                                    //                   final editAddress2 = TextEditingController();
+                                                    //                   editAddress2.text=displayListCompanies[i]['address_line2'];
+                                                    //                   final editZipcode = TextEditingController();
+                                                    //                   editZipcode.text=displayListCompanies[i]['zip_code'].toString();
+                                                    //
+                                                    //                   String capitalizeFirstWord(String value) {
+                                                    //                     if(value.isNotEmpty){
+                                                    //                       var result = value[0].toUpperCase();
+                                                    //                       for (int i = 1; i < value.length; i++) {
+                                                    //                         if (value[i - 1] == "1") {
+                                                    //                           result = result + value[i].toUpperCase();
+                                                    //                         } else {
+                                                    //                           result = result + value[i];
+                                                    //                         }
+                                                    //                       }
+                                                    //                       return result;
+                                                    //                     }
+                                                    //                     return '';
+                                                    //                   }
+                                                    //                   return Dialog(
+                                                    //                     backgroundColor: Colors.transparent,
+                                                    //                     child: StatefulBuilder(
+                                                    //                       builder: (BuildContext context, setState) {
+                                                    //
+                                                    //                         return SizedBox(
+                                                    //                           child: Stack(children: [
+                                                    //                             Container(
+                                                    //                               width: 600,
+                                                    //                               decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                                    //                               margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                    //                               child: SingleChildScrollView(
+                                                    //                                 child: Form(
+                                                    //                                   key: editCompanyKey,
+                                                    //                                   child: Padding(
+                                                    //                                     padding: const EdgeInsets.all(30),
+                                                    //                                     child: Container(
+                                                    //                                       decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                    //                                       child: Column(children: [
+                                                    //
+                                                    //                                         // Top container.
+                                                    //                                         Container(color: Colors.grey[100],
+                                                    //                                           child: IgnorePointer(ignoring: true,
+                                                    //                                             child: MaterialButton(
+                                                    //                                               hoverColor: Colors.transparent,
+                                                    //                                               onPressed: () {
+                                                    //
+                                                    //                                               },
+                                                    //                                               child: const Row(
+                                                    //                                                 children: [
+                                                    //                                                   Expanded(
+                                                    //                                                     child: Padding(
+                                                    //                                                       padding: EdgeInsets.all(8.0),
+                                                    //                                                       child: Text(
+                                                    //                                                         'Edit Company Details',
+                                                    //                                                         style: TextStyle(fontWeight: FontWeight.bold,
+                                                    //                                                           fontSize: 16,),
+                                                    //                                                       ),
+                                                    //                                                     ),
+                                                    //                                                   ),
+                                                    //                                                 ],
+                                                    //                                               ),
+                                                    //                                             ),
+                                                    //                                           ),
+                                                    //                                         ),
+                                                    //                                         const Divider(height: 1,color:mTextFieldBorder),
+                                                    //                                         Padding(
+                                                    //                                           padding: const EdgeInsets.all(30),
+                                                    //                                           child: Column(children: [
+                                                    //                                             //Company Name.
+                                                    //                                             Row(
+                                                    //                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                               children: [
+                                                    //                                                 Expanded(
+                                                    //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                     children: [
+                                                    //                                                       const SizedBox( child: Text('Company Name')),
+                                                    //                                                       const SizedBox(height: 5),
+                                                    //                                                       AnimatedContainer(
+                                                    //                                                         duration: const Duration(seconds: 0),
+                                                    //                                                         height: editCompanyError ? 60 : 35,
+                                                    //                                                         child: TextFormField(
+                                                    //                                                           validator: (value) {
+                                                    //                                                             if (value == null || value.isEmpty) {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editCompanyError = true;
+                                                    //                                                               });
+                                                    //                                                               return "Enter User Name";
+                                                    //                                                             } else {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editCompanyError = false;
+                                                    //                                                               });
+                                                    //                                                             }
+                                                    //                                                             return null;
+                                                    //                                                           },
+                                                    //                                                           style: const TextStyle(fontSize: 14),
+                                                    //                                                           onChanged: (value) {
+                                                    //                                                             editCompanyName.value=TextEditingValue(
+                                                    //                                                               text: capitalizeFirstWord(value),
+                                                    //                                                               selection: editCompanyName.selection,
+                                                    //                                                             );
+                                                    //                                                           },
+                                                    //                                                           controller: editCompanyName,
+                                                    //                                                           decoration: decorationInput5(
+                                                    //                                                               'Edit Company Name',
+                                                    //                                                               editCompanyName.text.isNotEmpty),
+                                                    //                                                         ),
+                                                    //                                                       ),
+                                                    //                                                     ],),
+                                                    //                                                 ),
+                                                    //                                                 const SizedBox(width: 35,),
+                                                    //                                                 Expanded(child: Column(
+                                                    //                                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                   children: [
+                                                    //                                                     const SizedBox(child: Text('City Name')),
+                                                    //                                                     const SizedBox(height: 5),
+                                                    //                                                     AnimatedContainer(
+                                                    //                                                       duration: const Duration(seconds: 0),
+                                                    //                                                       height: editCityNameError ? 60 : 35,
+                                                    //                                                       child: TextFormField(
+                                                    //                                                         validator: (value) {
+                                                    //                                                           if (value == null || value.isEmpty) {
+                                                    //                                                             setState(() {
+                                                    //                                                               editCityNameError = true;
+                                                    //                                                             });
+                                                    //                                                             return "Enter City Name";
+                                                    //                                                           } else {
+                                                    //                                                             setState(() {
+                                                    //                                                               editCityNameError = false;
+                                                    //                                                             });
+                                                    //                                                           }
+                                                    //                                                           return null;
+                                                    //                                                         },
+                                                    //                                                         style: const TextStyle(fontSize: 14),
+                                                    //                                                         onChanged: (value) {
+                                                    //                                                           editCityName.value=TextEditingValue(
+                                                    //                                                             text: capitalizeFirstWord(value),
+                                                    //                                                             selection: editCityName.selection,
+                                                    //                                                           );
+                                                    //                                                         },
+                                                    //                                                         controller: editCityName,
+                                                    //                                                         decoration: decorationInput5('Edit City Name',
+                                                    //                                                             editCityName.text.isNotEmpty),
+                                                    //                                                       ),
+                                                    //                                                     )
+                                                    //                                                   ],))
+                                                    //                                               ],
+                                                    //                                             ),
+                                                    //                                             const SizedBox(
+                                                    //                                               height:25,
+                                                    //                                             ),
+                                                    //                                             //state.
+                                                    //                                             Row(
+                                                    //                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                               children: [
+                                                    //                                                 Expanded(
+                                                    //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                     children: [
+                                                    //                                                       const SizedBox( child: Text('State Name')),
+                                                    //                                                       const SizedBox(height: 5),
+                                                    //                                                       AnimatedContainer(
+                                                    //                                                         duration: const Duration(seconds: 0),
+                                                    //                                                         height: editStateError ? 60 : 35,
+                                                    //                                                         child: TextFormField(
+                                                    //                                                           validator: (value) {
+                                                    //                                                             if (value == null || value.isEmpty) {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editStateError = true;
+                                                    //                                                               });
+                                                    //                                                               return "Enter State Name";
+                                                    //                                                             } else {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editStateError = false;
+                                                    //                                                               });
+                                                    //                                                             }
+                                                    //                                                             return null;
+                                                    //                                                           },
+                                                    //                                                           style: const TextStyle(fontSize: 14),
+                                                    //                                                           onChanged: (value) {
+                                                    //                                                             editState.value=TextEditingValue(
+                                                    //                                                               text: capitalizeFirstWord(value),
+                                                    //                                                               selection: editState.selection,
+                                                    //                                                             );
+                                                    //                                                           },
+                                                    //                                                           controller: editState,
+                                                    //                                                           decoration: decorationInput5(
+                                                    //                                                               'Edit State Name',
+                                                    //                                                               editState.text.isNotEmpty),
+                                                    //                                                         ),
+                                                    //                                                       )
+                                                    //                                                     ],),
+                                                    //                                                 ),
+                                                    //                                                 const SizedBox(width: 35,),
+                                                    //                                                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                   children: [
+                                                    //                                                     const SizedBox( child: Text('Country Name')),
+                                                    //                                                     const SizedBox(height: 5),
+                                                    //                                                     AnimatedContainer(
+                                                    //                                                       duration: const Duration(seconds: 0),
+                                                    //                                                       height: editCountryError ? 60 : 35,
+                                                    //                                                       child: TextFormField(
+                                                    //                                                         validator: (value) {
+                                                    //                                                           if (value == null || value.isEmpty) {
+                                                    //                                                             setState(() {
+                                                    //                                                               editCountryError = true;
+                                                    //                                                             });
+                                                    //                                                             return "Enter Country Name";
+                                                    //                                                           } else {
+                                                    //                                                             setState(() {
+                                                    //                                                               editCountryError = false;
+                                                    //                                                             });
+                                                    //                                                           }
+                                                    //                                                           return null;
+                                                    //                                                         },
+                                                    //                                                         style: const TextStyle(fontSize: 14),
+                                                    //                                                         onChanged: (value) {
+                                                    //                                                           editCountry.value=TextEditingValue(
+                                                    //                                                             text: capitalizeFirstWord(value),
+                                                    //                                                             selection: editCountry.selection,
+                                                    //                                                           );
+                                                    //                                                         },
+                                                    //                                                         controller: editCountry,
+                                                    //                                                         decoration: decorationInput5(
+                                                    //                                                             'Enter Country Name',
+                                                    //                                                             editCountry.text.isNotEmpty),
+                                                    //                                                       ),
+                                                    //                                                     )
+                                                    //                                                   ],))
+                                                    //                                               ],
+                                                    //                                             ),
+                                                    //                                             const SizedBox(
+                                                    //                                               height:25,
+                                                    //                                             ),
+                                                    //                                             //address 1.
+                                                    //                                             Row(
+                                                    //                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                               children: [
+                                                    //                                                 Expanded(
+                                                    //                                                   child: Column(  crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                     children: [
+                                                    //                                                       const SizedBox(child: Text('Address Line1 ')),
+                                                    //                                                       const SizedBox(height: 5),
+                                                    //                                                       AnimatedContainer(
+                                                    //                                                         duration: const Duration(seconds: 0),
+                                                    //                                                         height: editAddress1Error ? 60 : 35,
+                                                    //                                                         child: TextFormField(
+                                                    //                                                           validator: (value) {
+                                                    //                                                             if (value == null || value.isEmpty) {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editAddress1Error = true;
+                                                    //                                                               });
+                                                    //                                                               return "Enter Address Line";
+                                                    //                                                             } else {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editAddress1Error = false;
+                                                    //                                                               });
+                                                    //                                                             }
+                                                    //                                                             return null;
+                                                    //                                                           },
+                                                    //                                                           style: const TextStyle(fontSize: 14),
+                                                    //                                                           onChanged: (value) {
+                                                    //                                                             editAddress1.value=TextEditingValue(
+                                                    //                                                               text: capitalizeFirstWord(value),
+                                                    //                                                               selection: editAddress1.selection,
+                                                    //                                                             );
+                                                    //
+                                                    //                                                           },
+                                                    //                                                           controller: editAddress1,
+                                                    //                                                           decoration: decorationInput5(
+                                                    //                                                               'Enter Address Line1',
+                                                    //                                                               editAddress1.text.isNotEmpty),
+                                                    //                                                         ),
+                                                    //                                                       )
+                                                    //                                                     ],),
+                                                    //                                                 ),
+                                                    //                                                 const SizedBox(width: 35,),
+                                                    //                                                 Expanded(
+                                                    //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                     children: [
+                                                    //                                                       const SizedBox(child: Text('Address Line2 ')),
+                                                    //                                                       const SizedBox(height: 5),
+                                                    //                                                       AnimatedContainer(
+                                                    //                                                         duration: const Duration(seconds: 0),
+                                                    //                                                         height: editAddress2Error ? 60 : 35,
+                                                    //                                                         child: TextFormField(
+                                                    //                                                           validator: (value) {
+                                                    //                                                             if (value == null || value.isEmpty) {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editAddress2Error = true;
+                                                    //                                                               });
+                                                    //                                                               return "Enter Address Line";
+                                                    //                                                             } else {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editAddress2Error = false;
+                                                    //                                                               });
+                                                    //                                                             }
+                                                    //                                                             return null;
+                                                    //                                                           },
+                                                    //                                                           style: const TextStyle(fontSize: 14),
+                                                    //                                                           onChanged: (value) {
+                                                    //                                                             editAddress2.value=TextEditingValue(
+                                                    //                                                               text: capitalizeFirstWord(value),
+                                                    //                                                               selection: editAddress2.selection,
+                                                    //                                                             );
+                                                    //                                                           },
+                                                    //                                                           controller: editAddress2,
+                                                    //                                                           decoration: decorationInput5(
+                                                    //                                                               'Enter Address Line2',
+                                                    //                                                               editAddress2.text.isNotEmpty),
+                                                    //                                                         ),
+                                                    //                                                       )
+                                                    //                                                     ],),
+                                                    //                                                 )
+                                                    //                                               ],
+                                                    //                                             ),
+                                                    //                                             const SizedBox(
+                                                    //                                               height:25,
+                                                    //                                             ),
+                                                    //                                             //zip code.
+                                                    //                                             Row(
+                                                    //                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                               children: [
+                                                    //                                                 Expanded(
+                                                    //                                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    //                                                     children: [
+                                                    //                                                       const SizedBox(child: Text('Zip Code')),
+                                                    //                                                       const SizedBox(height: 5),
+                                                    //                                                       AnimatedContainer(
+                                                    //                                                         duration: const Duration(seconds: 0),
+                                                    //                                                         height: editZipcodeError ? 60 : 35,
+                                                    //                                                         child: TextFormField(keyboardType: TextInputType.number,
+                                                    //                                                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                    //                                                           maxLength: 6,
+                                                    //                                                           validator: (value) {
+                                                    //                                                             if (value == null || value.isEmpty) {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editZipcodeError = true;
+                                                    //                                                               });
+                                                    //                                                               return "Enter Zipcode";
+                                                    //                                                             } else {
+                                                    //                                                               setState(() {
+                                                    //                                                                 editZipcodeError = false;
+                                                    //                                                               });
+                                                    //                                                             }
+                                                    //                                                             return null;
+                                                    //                                                           },
+                                                    //                                                           style: const TextStyle(fontSize: 14),
+                                                    //                                                           onChanged: (text) {
+                                                    //                                                             setState(() {});
+                                                    //                                                           },
+                                                    //                                                           controller: editZipcode,
+                                                    //                                                           decoration: decorationInput5('Enter Zipcode',
+                                                    //                                                               editZipcode.text.isNotEmpty),
+                                                    //                                                         ),
+                                                    //                                                       )
+                                                    //                                                     ],),
+                                                    //                                                 )
+                                                    //                                               ],
+                                                    //                                             ),
+                                                    //                                             const SizedBox(
+                                                    //                                               height:25,
+                                                    //                                             ),
+                                                    //                                             SizedBox(
+                                                    //                                               width: 100,
+                                                    //                                               height:30,
+                                                    //                                               child: OutlinedMButton(
+                                                    //                                                 text: 'Update',
+                                                    //                                                 buttonColor:mSaveButton ,
+                                                    //                                                 textColor: Colors.white,
+                                                    //                                                 borderColor: mSaveButton,
+                                                    //                                                 onTap:(){
+                                                    //                                                   if (editCompanyKey.currentState!.validate()) {
+                                                    //                                                     companyDetails = {
+                                                    //                                                       "company_id": displayListCompanies[i]['company_id'],
+                                                    //                                                       'company_name':editCompanyName.text,
+                                                    //                                                       'city':editCityName.text,
+                                                    //                                                       'state':editState.text,
+                                                    //                                                       'country':editCountry.text,
+                                                    //                                                       'address_line1':editAddress1.text,
+                                                    //                                                       'address_line2':editAddress2.text,
+                                                    //                                                       'zip_code':editZipcode.text.toString(),
+                                                    //                                                       // 'userid':'',
+                                                    //                                                     };
+                                                    //                                                     editCompany(companyDetails);
+                                                    //                                                   }
+                                                    //                                                 },
+                                                    //                                               ),
+                                                    //                                             ),
+                                                    //                                           ],),
+                                                    //                                         )
+                                                    //                                       ]),
+                                                    //                                     ),
+                                                    //                                   ),
+                                                    //                                 ),
+                                                    //                               ),
+                                                    //                             ),
+                                                    //                             Positioned(right: 0.0,
+                                                    //
+                                                    //                               child: InkWell(
+                                                    //                                 child: Container(
+                                                    //                                     width: 30,
+                                                    //                                     height: 30,
+                                                    //                                     decoration: BoxDecoration(
+                                                    //                                         borderRadius: BorderRadius.circular(15),
+                                                    //                                         border: Border.all(
+                                                    //                                           color:
+                                                    //                                           const Color.fromRGBO(204, 204, 204, 1),
+                                                    //                                         ),
+                                                    //                                         color: Colors.blue),
+                                                    //                                     child: const Icon(
+                                                    //                                       Icons.close_sharp,
+                                                    //                                       color: Colors.white,
+                                                    //                                     )),
+                                                    //                                 onTap: () {
+                                                    //                                   setState(() {
+                                                    //                                     Navigator.of(context).pop();
+                                                    //                                   });
+                                                    //                                 },
+                                                    //                               ),
+                                                    //                             ),
+                                                    //                           ],
+                                                    //
+                                                    //                           ),
+                                                    //                         );
+                                                    //                       },
+                                                    //                     ),
+                                                    //                   );
+                                                    //                 },
+                                                    //               );
+                                                    //             }
+                                                    //             else if(optionInitialType=="Delete"){
+                                                    //               showDialog(
+                                                    //                 context: context,
+                                                    //                 builder: (context) {
+                                                    //                   return Dialog(
+                                                    //                     backgroundColor: Colors.transparent,
+                                                    //                     child: StatefulBuilder(
+                                                    //                       builder: (context, setState) {
+                                                    //                         return SizedBox(
+                                                    //                           height: 200,
+                                                    //                           width: 300,
+                                                    //                           child: Stack(
+                                                    //                             children: [
+                                                    //                               Container(
+                                                    //                                 decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                    //                                 margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                    //                                 child: Column(
+                                                    //                                   children: [
+                                                    //                                     const SizedBox(height: 20,),
+                                                    //                                     const Icon(
+                                                    //                                       Icons.warning_rounded,
+                                                    //                                       color: Colors.red,
+                                                    //                                       size: 50,
+                                                    //                                     ),
+                                                    //                                     const SizedBox(
+                                                    //                                       height: 10,
+                                                    //                                     ),
+                                                    //                                     const Center(
+                                                    //                                         child: Text(
+                                                    //                                           'Are You Sure, You Want To Delete ?',
+                                                    //                                           style: TextStyle(
+                                                    //                                               color: Colors.indigo,
+                                                    //                                               fontWeight: FontWeight.bold,
+                                                    //                                               fontSize: 16),
+                                                    //                                         )),
+                                                    //                                     const SizedBox(
+                                                    //                                       height: 35,
+                                                    //                                     ),
+                                                    //                                     Row(
+                                                    //                                       mainAxisAlignment:
+                                                    //                                       MainAxisAlignment.spaceEvenly,
+                                                    //                                       children: [
+                                                    //                                         SizedBox(
+                                                    //                                           width: 50,
+                                                    //                                           height:30,
+                                                    //                                           child: OutlinedMButton(
+                                                    //                                             text: 'Ok',
+                                                    //                                             buttonColor:Colors.red ,
+                                                    //                                             textColor: Colors.white,
+                                                    //                                             borderColor: Colors.red,
+                                                    //                                             onTap:(){
+                                                    //                                               deleteCompany(displayListCompanies[i]['company_id']);
+                                                    //                                             },
+                                                    //                                           ),
+                                                    //                                         ),
+                                                    //                                         SizedBox(
+                                                    //                                           width: 100,
+                                                    //                                           height:30,
+                                                    //                                           child: OutlinedMButton(
+                                                    //                                             text: 'Cancel',
+                                                    //                                             buttonColor:mSaveButton ,
+                                                    //                                             textColor: Colors.white,
+                                                    //                                             borderColor: mSaveButton,
+                                                    //                                             onTap:(){
+                                                    //                                               Navigator.of(context).pop();
+                                                    //                                             },
+                                                    //                                           ),
+                                                    //                                         ),
+                                                    //                                       ],
+                                                    //                                     )
+                                                    //                                   ],
+                                                    //                                 ),
+                                                    //                               ),
+                                                    //                               Positioned(right: 0.0,
+                                                    //
+                                                    //                                 child: InkWell(
+                                                    //                                   child: Container(
+                                                    //                                       width: 30,
+                                                    //                                       height: 30,
+                                                    //                                       decoration: BoxDecoration(
+                                                    //                                           borderRadius: BorderRadius.circular(15),
+                                                    //                                           border: Border.all(
+                                                    //                                             color:
+                                                    //                                             const Color.fromRGBO(204, 204, 204, 1),
+                                                    //                                           ),
+                                                    //                                           color: Colors.blue),
+                                                    //                                       child: const Icon(
+                                                    //                                         Icons.close_sharp,
+                                                    //                                         color: Colors.white,
+                                                    //                                       )),
+                                                    //                                   onTap: () {
+                                                    //                                     setState(() {
+                                                    //                                       Navigator.of(context).pop();
+                                                    //                                     });
+                                                    //                                   },
+                                                    //                                 ),
+                                                    //                               ),
+                                                    //                             ],
+                                                    //                           ),
+                                                    //                         );
+                                                    //                       },
+                                                    //                     ),
+                                                    //                   );
+                                                    //                 },
+                                                    //               );
+                                                    //             }
+                                                    //           });
+                                                    //         },
+                                                    //         child: Container(),
+                                                    //         // child: Container(height: 30,width: 285,
+                                                    //         //   decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.grey)),
+                                                    //         //   child: Padding(
+                                                    //         //     padding: const EdgeInsets.only(right: 4),
+                                                    //         //     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    //         //       children: [
+                                                    //         //         SizedBox(width: 150,child: Center(child: Text(customerType,style: TextStyle(color: Colors.grey[700],fontSize: 14,),maxLines: 1))),
+                                                    //         //         const Icon(Icons.more_vert,color: Colors.grey,size: 14,)
+                                                    //         //       ],
+                                                    //         //     ),
+                                                    //         //   ),
+                                                    //         // ),
+                                                    //       ),
+                                                    //       // child: Center(
+                                                    //       //      child: _popMenu(displayListCompanies[i],))
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
 
-                                                                    Map companyDetails = {};
-                                                                    final editCompanyKey = GlobalKey<FormState>();
-                                                                    bool editCompanyError = false;
-                                                                    bool editCityNameError = false;
-                                                                    bool editStateError = false;
-                                                                    bool editCountryError = false;
-                                                                    bool editAddress1Error = false;
-                                                                    bool editAddress2Error = false;
-                                                                    bool editZipcodeError = false;
+                                                  ],
+                                                ),
+                                                displayListCompanies[i]['isExpanded']?
+                                                FutureBuilder (
+                                                    future: _show(),
+                                                    builder: (context,snapchat) {
+                                                      if(!snapchat.hasData){
+                                                        return const SizedBox();
+                                                      }
+                                                      return Column(
+                                                        children: [
+                                                          const SizedBox(height: 12,),
+                                                          Row(mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 28,
+                                                                width:80,
+                                                                child: OutlinedBorderWithIcon(
+                                                                  buttonText: 'Edit', iconData: Icons.edit,
+                                                                  onTap: (){
+                                                                    setState(() {
+                                                                      showDialog(
+                                                                        context: context,
+                                                                        builder: (context) {
 
-                                                                    final editCompanyName = TextEditingController();
-                                                                    editCompanyName.text=displayListCompanies[i]['company_name'];
-                                                                    final editCityName = TextEditingController();
-                                                                    editCityName.text=displayListCompanies[i]['city'];
-                                                                    final editState = TextEditingController();
-                                                                    editState.text=displayListCompanies[i]['state'];
-                                                                    final editCountry = TextEditingController();
-                                                                    editCountry.text=displayListCompanies[i]['country'];
-                                                                    final editAddress1 = TextEditingController();
-                                                                    editAddress1.text=displayListCompanies[i]['address_line1'];
-                                                                    final editAddress2 = TextEditingController();
-                                                                    editAddress2.text=displayListCompanies[i]['address_line2'];
-                                                                    final editZipcode = TextEditingController();
-                                                                    editZipcode.text=displayListCompanies[i]['zip_code'].toString();
+                                                                          Map companyDetails = {};
+                                                                          final editCompanyKey = GlobalKey<FormState>();
+                                                                          bool editCompanyError = false;
+                                                                          bool editCityNameError = false;
+                                                                          bool editStateError = false;
+                                                                          bool editCountryError = false;
+                                                                          bool editAddress1Error = false;
+                                                                          bool editAddress2Error = false;
+                                                                          bool editZipcodeError = false;
 
-                                                                    String capitalizeFirstWord(String value) {
-                                                                      if(value.isNotEmpty){
-                                                                        var result = value[0].toUpperCase();
-                                                                        for (int i = 1; i < value.length; i++) {
-                                                                          if (value[i - 1] == "1") {
-                                                                            result = result + value[i].toUpperCase();
-                                                                          } else {
-                                                                            result = result + value[i];
+                                                                          final editCompanyName = TextEditingController();
+                                                                          editCompanyName.text=displayListCompanies[i]['company_name'];
+                                                                          final editCityName = TextEditingController();
+                                                                          editCityName.text=displayListCompanies[i]['city'];
+                                                                          final editState = TextEditingController();
+                                                                          editState.text=displayListCompanies[i]['state'];
+                                                                          final editCountry = TextEditingController();
+                                                                          editCountry.text=displayListCompanies[i]['country'];
+                                                                          final editAddress1 = TextEditingController();
+                                                                          editAddress1.text=displayListCompanies[i]['address_line1'];
+                                                                          final editAddress2 = TextEditingController();
+                                                                          editAddress2.text=displayListCompanies[i]['address_line2'];
+                                                                          final editZipcode = TextEditingController();
+                                                                          editZipcode.text=displayListCompanies[i]['zip_code'].toString();
+
+                                                                          String capitalizeFirstWord(String value) {
+                                                                            if(value.isNotEmpty){
+                                                                              var result = value[0].toUpperCase();
+                                                                              for (int i = 1; i < value.length; i++) {
+                                                                                if (value[i - 1] == "1") {
+                                                                                  result = result + value[i].toUpperCase();
+                                                                                } else {
+                                                                                  result = result + value[i];
+                                                                                }
+                                                                              }
+                                                                              return result;
+                                                                            }
+                                                                            return '';
                                                                           }
-                                                                        }
-                                                                        return result;
-                                                                      }
-                                                                      return '';
-                                                                    }
-                                                                    return Dialog(
-                                                                      backgroundColor: Colors.transparent,
-                                                                      child: StatefulBuilder(
-                                                                        builder: (BuildContext context, setState) {
+                                                                          return Dialog(
+                                                                            backgroundColor: Colors.transparent,
+                                                                            child: StatefulBuilder(
+                                                                              builder: (BuildContext context, setState) {
 
-                                                                          return SizedBox(
-                                                                            child: Stack(children: [
-                                                                              Container(
-                                                                                width: 600,
-                                                                                decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
-                                                                                margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                child: SingleChildScrollView(
-                                                                                  child: Form(
-                                                                                    key: editCompanyKey,
-                                                                                    child: Padding(
-                                                                                      padding: const EdgeInsets.all(30),
-                                                                                      child: Container(
-                                                                                        decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
-                                                                                        child: Column(children: [
+                                                                                return SizedBox(
+                                                                                  child: Stack(children: [
+                                                                                    Container(
+                                                                                      width: 600,
+                                                                                      decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                                                                      margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                      child: SingleChildScrollView(
+                                                                                        child: Form(
+                                                                                          key: editCompanyKey,
+                                                                                          child: Padding(
+                                                                                            padding: const EdgeInsets.all(30),
+                                                                                            child: Container(
+                                                                                              decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(5)),
+                                                                                              child: Column(children: [
 
-                                                                                          // Top container.
-                                                                                          Container(color: Colors.grey[100],
-                                                                                            child: IgnorePointer(ignoring: true,
-                                                                                              child: MaterialButton(
-                                                                                                hoverColor: Colors.transparent,
-                                                                                                onPressed: () {
+                                                                                                // Top container.
+                                                                                                Container(color: Colors.grey[100],
+                                                                                                  child: IgnorePointer(ignoring: true,
+                                                                                                    child: MaterialButton(
+                                                                                                      hoverColor: Colors.transparent,
+                                                                                                      onPressed: () {
 
-                                                                                                },
-                                                                                                child: const Row(
-                                                                                                  children: [
-                                                                                                    Expanded(
-                                                                                                      child: Padding(
-                                                                                                        padding: EdgeInsets.all(8.0),
-                                                                                                        child: Text(
-                                                                                                          'Edit Company Details',
-                                                                                                          style: TextStyle(fontWeight: FontWeight.bold,
-                                                                                                            fontSize: 16,),
-                                                                                                        ),
+                                                                                                      },
+                                                                                                      child: const Row(
+                                                                                                        children: [
+                                                                                                          Expanded(
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsets.all(8.0),
+                                                                                                              child: Text(
+                                                                                                                'Edit Company Details',
+                                                                                                                style: TextStyle(fontWeight: FontWeight.bold,
+                                                                                                                  fontSize: 16,),
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ],
                                                                                                       ),
                                                                                                     ),
-                                                                                                  ],
+                                                                                                  ),
                                                                                                 ),
-                                                                                              ),
+                                                                                                const Divider(height: 1,color:mTextFieldBorder),
+                                                                                                Padding(
+                                                                                                  padding: const EdgeInsets.all(30),
+                                                                                                  child: Column(children: [
+                                                                                                    //Company Name.
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              const SizedBox( child: Text('Company Name')),
+                                                                                                              const SizedBox(height: 5),
+                                                                                                              AnimatedContainer(
+                                                                                                                duration: const Duration(seconds: 0),
+                                                                                                                height: editCompanyError ? 60 : 35,
+                                                                                                                child: TextFormField(
+                                                                                                                  validator: (value) {
+                                                                                                                    if (value == null || value.isEmpty) {
+                                                                                                                      setState(() {
+                                                                                                                        editCompanyError = true;
+                                                                                                                      });
+                                                                                                                      return "Enter User Name";
+                                                                                                                    } else {
+                                                                                                                      setState(() {
+                                                                                                                        editCompanyError = false;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                  },
+                                                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                                                  onChanged: (value) {
+                                                                                                                    editCompanyName.value=TextEditingValue(
+                                                                                                                      text: capitalizeFirstWord(value),
+                                                                                                                      selection: editCompanyName.selection,
+                                                                                                                    );
+                                                                                                                  },
+                                                                                                                  controller: editCompanyName,
+                                                                                                                  decoration: decorationInput5(
+                                                                                                                      'Edit Company Name',
+                                                                                                                      editCompanyName.text.isNotEmpty),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],),
+                                                                                                        ),
+                                                                                                        const SizedBox(width: 35,),
+                                                                                                        Expanded(child: Column(
+                                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                          children: [
+                                                                                                            const SizedBox(child: Text('City Name')),
+                                                                                                            const SizedBox(height: 5),
+                                                                                                            AnimatedContainer(
+                                                                                                              duration: const Duration(seconds: 0),
+                                                                                                              height: editCityNameError ? 60 : 35,
+                                                                                                              child: TextFormField(
+                                                                                                                validator: (value) {
+                                                                                                                  if (value == null || value.isEmpty) {
+                                                                                                                    setState(() {
+                                                                                                                      editCityNameError = true;
+                                                                                                                    });
+                                                                                                                    return "Enter City Name";
+                                                                                                                  } else {
+                                                                                                                    setState(() {
+                                                                                                                      editCityNameError = false;
+                                                                                                                    });
+                                                                                                                  }
+                                                                                                                  return null;
+                                                                                                                },
+                                                                                                                style: const TextStyle(fontSize: 14),
+                                                                                                                onChanged: (value) {
+                                                                                                                  editCityName.value=TextEditingValue(
+                                                                                                                    text: capitalizeFirstWord(value),
+                                                                                                                    selection: editCityName.selection,
+                                                                                                                  );
+                                                                                                                },
+                                                                                                                controller: editCityName,
+                                                                                                                decoration: decorationInput5('Edit City Name',
+                                                                                                                    editCityName.text.isNotEmpty),
+                                                                                                              ),
+                                                                                                            )
+                                                                                                          ],))
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      height:25,
+                                                                                                    ),
+                                                                                                    //state.
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              const SizedBox( child: Text('State Name')),
+                                                                                                              const SizedBox(height: 5),
+                                                                                                              AnimatedContainer(
+                                                                                                                duration: const Duration(seconds: 0),
+                                                                                                                height: editStateError ? 60 : 35,
+                                                                                                                child: TextFormField(
+                                                                                                                  validator: (value) {
+                                                                                                                    if (value == null || value.isEmpty) {
+                                                                                                                      setState(() {
+                                                                                                                        editStateError = true;
+                                                                                                                      });
+                                                                                                                      return "Enter State Name";
+                                                                                                                    } else {
+                                                                                                                      setState(() {
+                                                                                                                        editStateError = false;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                  },
+                                                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                                                  onChanged: (value) {
+                                                                                                                    editState.value=TextEditingValue(
+                                                                                                                      text: capitalizeFirstWord(value),
+                                                                                                                      selection: editState.selection,
+                                                                                                                    );
+                                                                                                                  },
+                                                                                                                  controller: editState,
+                                                                                                                  decoration: decorationInput5(
+                                                                                                                      'Edit State Name',
+                                                                                                                      editState.text.isNotEmpty),
+                                                                                                                ),
+                                                                                                              )
+                                                                                                            ],),
+                                                                                                        ),
+                                                                                                        const SizedBox(width: 35,),
+                                                                                                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                          children: [
+                                                                                                            const SizedBox( child: Text('Country Name')),
+                                                                                                            const SizedBox(height: 5),
+                                                                                                            AnimatedContainer(
+                                                                                                              duration: const Duration(seconds: 0),
+                                                                                                              height: editCountryError ? 60 : 35,
+                                                                                                              child: TextFormField(
+                                                                                                                validator: (value) {
+                                                                                                                  if (value == null || value.isEmpty) {
+                                                                                                                    setState(() {
+                                                                                                                      editCountryError = true;
+                                                                                                                    });
+                                                                                                                    return "Enter Country Name";
+                                                                                                                  } else {
+                                                                                                                    setState(() {
+                                                                                                                      editCountryError = false;
+                                                                                                                    });
+                                                                                                                  }
+                                                                                                                  return null;
+                                                                                                                },
+                                                                                                                style: const TextStyle(fontSize: 14),
+                                                                                                                onChanged: (value) {
+                                                                                                                  editCountry.value=TextEditingValue(
+                                                                                                                    text: capitalizeFirstWord(value),
+                                                                                                                    selection: editCountry.selection,
+                                                                                                                  );
+                                                                                                                },
+                                                                                                                controller: editCountry,
+                                                                                                                decoration: decorationInput5(
+                                                                                                                    'Enter Country Name',
+                                                                                                                    editCountry.text.isNotEmpty),
+                                                                                                              ),
+                                                                                                            )
+                                                                                                          ],))
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      height:25,
+                                                                                                    ),
+                                                                                                    //address 1.
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          child: Column(  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              const SizedBox(child: Text('Address Line1 ')),
+                                                                                                              const SizedBox(height: 5),
+                                                                                                              AnimatedContainer(
+                                                                                                                duration: const Duration(seconds: 0),
+                                                                                                                height: editAddress1Error ? 60 : 35,
+                                                                                                                child: TextFormField(
+                                                                                                                  validator: (value) {
+                                                                                                                    if (value == null || value.isEmpty) {
+                                                                                                                      setState(() {
+                                                                                                                        editAddress1Error = true;
+                                                                                                                      });
+                                                                                                                      return "Enter Address Line";
+                                                                                                                    } else {
+                                                                                                                      setState(() {
+                                                                                                                        editAddress1Error = false;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                  },
+                                                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                                                  onChanged: (value) {
+                                                                                                                    editAddress1.value=TextEditingValue(
+                                                                                                                      text: capitalizeFirstWord(value),
+                                                                                                                      selection: editAddress1.selection,
+                                                                                                                    );
+
+                                                                                                                  },
+                                                                                                                  controller: editAddress1,
+                                                                                                                  decoration: decorationInput5(
+                                                                                                                      'Enter Address Line1',
+                                                                                                                      editAddress1.text.isNotEmpty),
+                                                                                                                ),
+                                                                                                              )
+                                                                                                            ],),
+                                                                                                        ),
+                                                                                                        const SizedBox(width: 35,),
+                                                                                                        Expanded(
+                                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              const SizedBox(child: Text('Address Line2 ')),
+                                                                                                              const SizedBox(height: 5),
+                                                                                                              AnimatedContainer(
+                                                                                                                duration: const Duration(seconds: 0),
+                                                                                                                height: editAddress2Error ? 60 : 35,
+                                                                                                                child: TextFormField(
+                                                                                                                  validator: (value) {
+                                                                                                                    if (value == null || value.isEmpty) {
+                                                                                                                      setState(() {
+                                                                                                                        editAddress2Error = true;
+                                                                                                                      });
+                                                                                                                      return "Enter Address Line";
+                                                                                                                    } else {
+                                                                                                                      setState(() {
+                                                                                                                        editAddress2Error = false;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                  },
+                                                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                                                  onChanged: (value) {
+                                                                                                                    editAddress2.value=TextEditingValue(
+                                                                                                                      text: capitalizeFirstWord(value),
+                                                                                                                      selection: editAddress2.selection,
+                                                                                                                    );
+                                                                                                                  },
+                                                                                                                  controller: editAddress2,
+                                                                                                                  decoration: decorationInput5(
+                                                                                                                      'Enter Address Line2',
+                                                                                                                      editAddress2.text.isNotEmpty),
+                                                                                                                ),
+                                                                                                              )
+                                                                                                            ],),
+                                                                                                        )
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      height:25,
+                                                                                                    ),
+                                                                                                    //zip code.
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              const SizedBox(child: Text('Zip Code')),
+                                                                                                              const SizedBox(height: 5),
+                                                                                                              AnimatedContainer(
+                                                                                                                duration: const Duration(seconds: 0),
+                                                                                                                height: editZipcodeError ? 60 : 35,
+                                                                                                                child: TextFormField(keyboardType: TextInputType.number,
+                                                                                                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                                                                                  maxLength: 6,
+                                                                                                                  validator: (value) {
+                                                                                                                    if (value == null || value.isEmpty) {
+                                                                                                                      setState(() {
+                                                                                                                        editZipcodeError = true;
+                                                                                                                      });
+                                                                                                                      return "Enter Zipcode";
+                                                                                                                    } else {
+                                                                                                                      setState(() {
+                                                                                                                        editZipcodeError = false;
+                                                                                                                      });
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                  },
+                                                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                                                  onChanged: (text) {
+                                                                                                                    setState(() {});
+                                                                                                                  },
+                                                                                                                  controller: editZipcode,
+                                                                                                                  decoration: decorationInput5('Enter Zipcode',
+                                                                                                                      editZipcode.text.isNotEmpty),
+                                                                                                                ),
+                                                                                                              )
+                                                                                                            ],),
+                                                                                                        )
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      height:25,
+                                                                                                    ),
+                                                                                                    SizedBox(
+                                                                                                      width: 100,
+                                                                                                      height:30,
+                                                                                                      child: OutlinedMButton(
+                                                                                                        text: 'Update',
+                                                                                                        buttonColor:mSaveButton ,
+                                                                                                        textColor: Colors.white,
+                                                                                                        borderColor: mSaveButton,
+                                                                                                        onTap:(){
+                                                                                                          if (editCompanyKey.currentState!.validate()) {
+                                                                                                            companyDetails = {
+                                                                                                              "company_id": displayListCompanies[i]['company_id'],
+                                                                                                              'company_name':editCompanyName.text,
+                                                                                                              'city':editCityName.text,
+                                                                                                              'state':editState.text,
+                                                                                                              'country':editCountry.text,
+                                                                                                              'address_line1':editAddress1.text,
+                                                                                                              'address_line2':editAddress2.text,
+                                                                                                              'zip_code':editZipcode.text.toString(),
+                                                                                                              // 'userid':'',
+                                                                                                            };
+                                                                                                            editCompany(companyDetails);
+                                                                                                          }
+                                                                                                        },
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ],),
+                                                                                                )
+                                                                                              ]),
                                                                                             ),
                                                                                           ),
-                                                                                          const Divider(height: 1,color:mTextFieldBorder),
-                                                                                          Padding(
-                                                                                            padding: const EdgeInsets.all(30),
-                                                                                            child: Column(children: [
-                                                                                              //Company Name.
-                                                                                              Row(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Expanded(
-                                                                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        const SizedBox( child: Text('Company Name')),
-                                                                                                        const SizedBox(height: 5),
-                                                                                                        AnimatedContainer(
-                                                                                                          duration: const Duration(seconds: 0),
-                                                                                                          height: editCompanyError ? 60 : 35,
-                                                                                                          child: TextFormField(
-                                                                                                            validator: (value) {
-                                                                                                              if (value == null || value.isEmpty) {
-                                                                                                                setState(() {
-                                                                                                                  editCompanyError = true;
-                                                                                                                });
-                                                                                                                return "Enter User Name";
-                                                                                                              } else {
-                                                                                                                setState(() {
-                                                                                                                  editCompanyError = false;
-                                                                                                                });
-                                                                                                              }
-                                                                                                              return null;
-                                                                                                            },
-                                                                                                            style: const TextStyle(fontSize: 14),
-                                                                                                            onChanged: (value) {
-                                                                                                              editCompanyName.value=TextEditingValue(
-                                                                                                                text: capitalizeFirstWord(value),
-                                                                                                                selection: editCompanyName.selection,
-                                                                                                              );
-                                                                                                            },
-                                                                                                            controller: editCompanyName,
-                                                                                                            decoration: decorationInput5(
-                                                                                                                'Edit Company Name',
-                                                                                                                editCompanyName.text.isNotEmpty),
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                      ],),
-                                                                                                  ),
-                                                                                                  const SizedBox(width: 35,),
-                                                                                                  Expanded(child: Column(
-                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                    children: [
-                                                                                                      const SizedBox(child: Text('City Name')),
-                                                                                                      const SizedBox(height: 5),
-                                                                                                      AnimatedContainer(
-                                                                                                        duration: const Duration(seconds: 0),
-                                                                                                        height: editCityNameError ? 60 : 35,
-                                                                                                        child: TextFormField(
-                                                                                                          validator: (value) {
-                                                                                                            if (value == null || value.isEmpty) {
-                                                                                                              setState(() {
-                                                                                                                editCityNameError = true;
-                                                                                                              });
-                                                                                                              return "Enter City Name";
-                                                                                                            } else {
-                                                                                                              setState(() {
-                                                                                                                editCityNameError = false;
-                                                                                                              });
-                                                                                                            }
-                                                                                                            return null;
-                                                                                                          },
-                                                                                                          style: const TextStyle(fontSize: 14),
-                                                                                                          onChanged: (value) {
-                                                                                                            editCityName.value=TextEditingValue(
-                                                                                                              text: capitalizeFirstWord(value),
-                                                                                                              selection: editCityName.selection,
-                                                                                                            );
-                                                                                                          },
-                                                                                                          controller: editCityName,
-                                                                                                          decoration: decorationInput5('Edit City Name',
-                                                                                                              editCityName.text.isNotEmpty),
-                                                                                                        ),
-                                                                                                      )
-                                                                                                    ],))
-                                                                                                ],
-                                                                                              ),
-                                                                                              const SizedBox(
-                                                                                                height:25,
-                                                                                              ),
-                                                                                              //state.
-                                                                                              Row(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Expanded(
-                                                                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        const SizedBox( child: Text('State Name')),
-                                                                                                        const SizedBox(height: 5),
-                                                                                                        AnimatedContainer(
-                                                                                                          duration: const Duration(seconds: 0),
-                                                                                                          height: editStateError ? 60 : 35,
-                                                                                                          child: TextFormField(
-                                                                                                            validator: (value) {
-                                                                                                              if (value == null || value.isEmpty) {
-                                                                                                                setState(() {
-                                                                                                                  editStateError = true;
-                                                                                                                });
-                                                                                                                return "Enter State Name";
-                                                                                                              } else {
-                                                                                                                setState(() {
-                                                                                                                  editStateError = false;
-                                                                                                                });
-                                                                                                              }
-                                                                                                              return null;
-                                                                                                            },
-                                                                                                            style: const TextStyle(fontSize: 14),
-                                                                                                            onChanged: (value) {
-                                                                                                              editState.value=TextEditingValue(
-                                                                                                                text: capitalizeFirstWord(value),
-                                                                                                                selection: editState.selection,
-                                                                                                              );
-                                                                                                            },
-                                                                                                            controller: editState,
-                                                                                                            decoration: decorationInput5(
-                                                                                                                'Edit State Name',
-                                                                                                                editState.text.isNotEmpty),
-                                                                                                          ),
-                                                                                                        )
-                                                                                                      ],),
-                                                                                                  ),
-                                                                                                  const SizedBox(width: 35,),
-                                                                                                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                    children: [
-                                                                                                      const SizedBox( child: Text('Country Name')),
-                                                                                                      const SizedBox(height: 5),
-                                                                                                      AnimatedContainer(
-                                                                                                        duration: const Duration(seconds: 0),
-                                                                                                        height: editCountryError ? 60 : 35,
-                                                                                                        child: TextFormField(
-                                                                                                          validator: (value) {
-                                                                                                            if (value == null || value.isEmpty) {
-                                                                                                              setState(() {
-                                                                                                                editCountryError = true;
-                                                                                                              });
-                                                                                                              return "Enter Country Name";
-                                                                                                            } else {
-                                                                                                              setState(() {
-                                                                                                                editCountryError = false;
-                                                                                                              });
-                                                                                                            }
-                                                                                                            return null;
-                                                                                                          },
-                                                                                                          style: const TextStyle(fontSize: 14),
-                                                                                                          onChanged: (value) {
-                                                                                                            editCountry.value=TextEditingValue(
-                                                                                                              text: capitalizeFirstWord(value),
-                                                                                                              selection: editCountry.selection,
-                                                                                                            );
-                                                                                                          },
-                                                                                                          controller: editCountry,
-                                                                                                          decoration: decorationInput5(
-                                                                                                              'Enter Country Name',
-                                                                                                              editCountry.text.isNotEmpty),
-                                                                                                        ),
-                                                                                                      )
-                                                                                                    ],))
-                                                                                                ],
-                                                                                              ),
-                                                                                              const SizedBox(
-                                                                                                height:25,
-                                                                                              ),
-                                                                                              //address 1.
-                                                                                              Row(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Expanded(
-                                                                                                    child: Column(  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        const SizedBox(child: Text('Address Line1 ')),
-                                                                                                        const SizedBox(height: 5),
-                                                                                                        AnimatedContainer(
-                                                                                                          duration: const Duration(seconds: 0),
-                                                                                                          height: editAddress1Error ? 60 : 35,
-                                                                                                          child: TextFormField(
-                                                                                                            validator: (value) {
-                                                                                                              if (value == null || value.isEmpty) {
-                                                                                                                setState(() {
-                                                                                                                  editAddress1Error = true;
-                                                                                                                });
-                                                                                                                return "Enter Address Line";
-                                                                                                              } else {
-                                                                                                                setState(() {
-                                                                                                                  editAddress1Error = false;
-                                                                                                                });
-                                                                                                              }
-                                                                                                              return null;
-                                                                                                            },
-                                                                                                            style: const TextStyle(fontSize: 14),
-                                                                                                            onChanged: (value) {
-                                                                                                              editAddress1.value=TextEditingValue(
-                                                                                                                text: capitalizeFirstWord(value),
-                                                                                                                selection: editAddress1.selection,
-                                                                                                              );
-
-                                                                                                            },
-                                                                                                            controller: editAddress1,
-                                                                                                            decoration: decorationInput5(
-                                                                                                                'Enter Address Line1',
-                                                                                                                editAddress1.text.isNotEmpty),
-                                                                                                          ),
-                                                                                                        )
-                                                                                                      ],),
-                                                                                                  ),
-                                                                                                  const SizedBox(width: 35,),
-                                                                                                  Expanded(
-                                                                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        const SizedBox(child: Text('Address Line2 ')),
-                                                                                                        const SizedBox(height: 5),
-                                                                                                        AnimatedContainer(
-                                                                                                          duration: const Duration(seconds: 0),
-                                                                                                          height: editAddress2Error ? 60 : 35,
-                                                                                                          child: TextFormField(
-                                                                                                            validator: (value) {
-                                                                                                              if (value == null || value.isEmpty) {
-                                                                                                                setState(() {
-                                                                                                                  editAddress2Error = true;
-                                                                                                                });
-                                                                                                                return "Enter Address Line";
-                                                                                                              } else {
-                                                                                                                setState(() {
-                                                                                                                  editAddress2Error = false;
-                                                                                                                });
-                                                                                                              }
-                                                                                                              return null;
-                                                                                                            },
-                                                                                                            style: const TextStyle(fontSize: 14),
-                                                                                                            onChanged: (value) {
-                                                                                                              editAddress2.value=TextEditingValue(
-                                                                                                                text: capitalizeFirstWord(value),
-                                                                                                                selection: editAddress2.selection,
-                                                                                                              );
-                                                                                                            },
-                                                                                                            controller: editAddress2,
-                                                                                                            decoration: decorationInput5(
-                                                                                                                'Enter Address Line2',
-                                                                                                                editAddress2.text.isNotEmpty),
-                                                                                                          ),
-                                                                                                        )
-                                                                                                      ],),
-                                                                                                  )
-                                                                                                ],
-                                                                                              ),
-                                                                                              const SizedBox(
-                                                                                                height:25,
-                                                                                              ),
-                                                                                              //zip code.
-                                                                                              Row(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Expanded(
-                                                                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        const SizedBox(child: Text('Zip Code')),
-                                                                                                        const SizedBox(height: 5),
-                                                                                                        AnimatedContainer(
-                                                                                                          duration: const Duration(seconds: 0),
-                                                                                                          height: editZipcodeError ? 60 : 35,
-                                                                                                          child: TextFormField(keyboardType: TextInputType.number,
-                                                                                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                                                                            maxLength: 6,
-                                                                                                            validator: (value) {
-                                                                                                              if (value == null || value.isEmpty) {
-                                                                                                                setState(() {
-                                                                                                                  editZipcodeError = true;
-                                                                                                                });
-                                                                                                                return "Enter Zipcode";
-                                                                                                              } else {
-                                                                                                                setState(() {
-                                                                                                                  editZipcodeError = false;
-                                                                                                                });
-                                                                                                              }
-                                                                                                              return null;
-                                                                                                            },
-                                                                                                            style: const TextStyle(fontSize: 14),
-                                                                                                            onChanged: (text) {
-                                                                                                              setState(() {});
-                                                                                                            },
-                                                                                                            controller: editZipcode,
-                                                                                                            decoration: decorationInput5('Enter Zipcode',
-                                                                                                                editZipcode.text.isNotEmpty),
-                                                                                                          ),
-                                                                                                        )
-                                                                                                      ],),
-                                                                                                  )
-                                                                                                ],
-                                                                                              ),
-                                                                                              const SizedBox(
-                                                                                                height:25,
-                                                                                              ),
-                                                                                              SizedBox(
-                                                                                                width: 100,
-                                                                                                height:30,
-                                                                                                child: OutlinedMButton(
-                                                                                                  text: 'Update',
-                                                                                                  buttonColor:mSaveButton ,
-                                                                                                  textColor: Colors.white,
-                                                                                                  borderColor: mSaveButton,
-                                                                                                  onTap:(){
-                                                                                                    if (editCompanyKey.currentState!.validate()) {
-                                                                                                      companyDetails = {
-                                                                                                        "company_id": displayListCompanies[i]['company_id'],
-                                                                                                        'company_name':editCompanyName.text,
-                                                                                                        'city':editCityName.text,
-                                                                                                        'state':editState.text,
-                                                                                                        'country':editCountry.text,
-                                                                                                        'address_line1':editAddress1.text,
-                                                                                                        'address_line2':editAddress2.text,
-                                                                                                        'zip_code':editZipcode.text.toString(),
-                                                                                                        // 'userid':'',
-                                                                                                      };
-                                                                                                      editCompany(companyDetails);
-                                                                                                    }
-                                                                                                  },
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],),
-                                                                                          )
-                                                                                        ]),
+                                                                                        ),
                                                                                       ),
                                                                                     ),
+                                                                                    Positioned(right: 0.0,
+
+                                                                                      child: InkWell(
+                                                                                        child: Container(
+                                                                                            width: 30,
+                                                                                            height: 30,
+                                                                                            decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(15),
+                                                                                                border: Border.all(
+                                                                                                  color:
+                                                                                                  const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                ),
+                                                                                                color: Colors.blue),
+                                                                                            child: const Icon(
+                                                                                              Icons.close_sharp,
+                                                                                              color: Colors.white,
+                                                                                            )),
+                                                                                        onTap: () {
+                                                                                          setState(() {
+                                                                                            Navigator.of(context).pop();
+                                                                                          });
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+
                                                                                   ),
-                                                                                ),
-                                                                              ),
-                                                                              Positioned(right: 0.0,
-
-                                                                                child: InkWell(
-                                                                                  child: Container(
-                                                                                      width: 30,
-                                                                                      height: 30,
-                                                                                      decoration: BoxDecoration(
-                                                                                          borderRadius: BorderRadius.circular(15),
-                                                                                          border: Border.all(
-                                                                                            color:
-                                                                                            const Color.fromRGBO(204, 204, 204, 1),
-                                                                                          ),
-                                                                                          color: Colors.blue),
-                                                                                      child: const Icon(
-                                                                                        Icons.close_sharp,
-                                                                                        color: Colors.white,
-                                                                                      )),
-                                                                                  onTap: () {
-                                                                                    setState(() {
-                                                                                      Navigator.of(context).pop();
-                                                                                    });
-                                                                                  },
-                                                                                ),
-                                                                              ),
-                                                                            ],
-
+                                                                                );
+                                                                              },
                                                                             ),
                                                                           );
                                                                         },
-                                                                      ),
-                                                                    );
+                                                                      );
+                                                                    });
                                                                   },
-                                                                );
-                                                              });
-                                                            },
 
-                                                          ),
-                                                        ),
-                                                        const SizedBox(width: 20,),
-                                                        SizedBox(   height: 28,
-                                                          width:100,
-                                                          child: OutlinedBorderColorForDelete(
-                                                            buttonText: 'Delete', iconData: Icons.delete,
-                                                            onTap: (){
-                                                              setState(() {
-                                                                showDialog(
-                                                                  context: context,
-                                                                  builder: (context) {
-                                                                    return Dialog(
-                                                                      backgroundColor: Colors.transparent,
-                                                                      child: StatefulBuilder(
-                                                                        builder: (context, setState) {
-                                                                          return SizedBox(
-                                                                            height: 200,
-                                                                            width: 300,
-                                                                            child: Stack(
-                                                                              children: [
-                                                                                Container(
-                                                                                  decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                                                                                  margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                                                  child: Column(
+                                                                ),
+                                                              ),
+                                                              const SizedBox(width: 20,),
+                                                              SizedBox(   height: 28,
+                                                                width:100,
+                                                                child: OutlinedBorderColorForDelete(
+                                                                  buttonText: 'Delete', iconData: Icons.delete,
+                                                                  onTap: (){
+                                                                    setState(() {
+                                                                      showDialog(
+                                                                        context: context,
+                                                                        builder: (context) {
+                                                                          return Dialog(
+                                                                            backgroundColor: Colors.transparent,
+                                                                            child: StatefulBuilder(
+                                                                              builder: (context, setState) {
+                                                                                return SizedBox(
+                                                                                  height: 200,
+                                                                                  width: 300,
+                                                                                  child: Stack(
                                                                                     children: [
-                                                                                      const SizedBox(height: 20,),
-                                                                                      const Icon(
-                                                                                        Icons.warning_rounded,
-                                                                                        color: Colors.red,
-                                                                                        size: 50,
-                                                                                      ),
-                                                                                      const SizedBox(
-                                                                                        height: 10,
-                                                                                      ),
-                                                                                      const Center(
-                                                                                          child: Text(
-                                                                                            'Are You Sure, You Want To Delete ?',
-                                                                                            style: TextStyle(
-                                                                                                color: Colors.indigo,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                                fontSize: 16),
-                                                                                          )),
-                                                                                      const SizedBox(
-                                                                                        height: 35,
-                                                                                      ),
-                                                                                      Row(
-                                                                                        mainAxisAlignment:
-                                                                                        MainAxisAlignment.spaceEvenly,
-                                                                                        children: [
-                                                                                          SizedBox(
-                                                                                            width: 50,
-                                                                                            height:30,
-                                                                                            child: OutlinedMButton(
-                                                                                              text: 'Ok',
-                                                                                              buttonColor:Colors.red ,
-                                                                                              textColor: Colors.white,
-                                                                                              borderColor: Colors.red,
-                                                                                              onTap:(){
-                                                                                                deleteCompany(displayListCompanies[i]['company_id']);
-                                                                                              },
+                                                                                      Container(
+                                                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                                                        margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                                        child: Column(
+                                                                                          children: [
+                                                                                            const SizedBox(height: 20,),
+                                                                                            const Icon(
+                                                                                              Icons.warning_rounded,
+                                                                                              color: Colors.red,
+                                                                                              size: 50,
                                                                                             ),
-                                                                                          ),
-                                                                                          SizedBox(
-                                                                                            width: 100,
-                                                                                            height:30,
-                                                                                            child: OutlinedMButton(
-                                                                                              text: 'Cancel',
-                                                                                              buttonColor:mSaveButton ,
-                                                                                              textColor: Colors.white,
-                                                                                              borderColor: mSaveButton,
-                                                                                              onTap:(){
-                                                                                                Navigator.of(context).pop();
-                                                                                              },
+                                                                                            const SizedBox(
+                                                                                              height: 10,
                                                                                             ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      )
+                                                                                            const Center(
+                                                                                                child: Text(
+                                                                                                  'Are You Sure, You Want To Delete ?',
+                                                                                                  style: TextStyle(
+                                                                                                      color: Colors.indigo,
+                                                                                                      fontWeight: FontWeight.bold,
+                                                                                                      fontSize: 16),
+                                                                                                )),
+                                                                                            const SizedBox(
+                                                                                              height: 35,
+                                                                                            ),
+                                                                                            Row(
+                                                                                              mainAxisAlignment:
+                                                                                              MainAxisAlignment.spaceEvenly,
+                                                                                              children: [
+                                                                                                SizedBox(
+                                                                                                  width: 50,
+                                                                                                  height:30,
+                                                                                                  child: OutlinedMButton(
+                                                                                                    text: 'Ok',
+                                                                                                    buttonColor:Colors.red ,
+                                                                                                    textColor: Colors.white,
+                                                                                                    borderColor: Colors.red,
+                                                                                                    onTap:(){
+                                                                                                      deleteCompany(displayListCompanies[i]['company_id']);
+                                                                                                    },
+                                                                                                  ),
+                                                                                                ),
+                                                                                                SizedBox(
+                                                                                                  width: 100,
+                                                                                                  height:30,
+                                                                                                  child: OutlinedMButton(
+                                                                                                    text: 'Cancel',
+                                                                                                    buttonColor:mSaveButton ,
+                                                                                                    textColor: Colors.white,
+                                                                                                    borderColor: mSaveButton,
+                                                                                                    onTap:(){
+                                                                                                      Navigator.of(context).pop();
+                                                                                                    },
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            )
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                      Positioned(right: 0.0,
+
+                                                                                        child: InkWell(
+                                                                                          child: Container(
+                                                                                              width: 30,
+                                                                                              height: 30,
+                                                                                              decoration: BoxDecoration(
+                                                                                                  borderRadius: BorderRadius.circular(15),
+                                                                                                  border: Border.all(
+                                                                                                    color:
+                                                                                                    const Color.fromRGBO(204, 204, 204, 1),
+                                                                                                  ),
+                                                                                                  color: Colors.blue),
+                                                                                              child: const Icon(
+                                                                                                Icons.close_sharp,
+                                                                                                color: Colors.white,
+                                                                                              )),
+                                                                                          onTap: () {
+                                                                                            setState(() {
+                                                                                              Navigator.of(context).pop();
+                                                                                            });
+                                                                                          },
+                                                                                        ),
+                                                                                      ),
                                                                                     ],
                                                                                   ),
-                                                                                ),
-                                                                                Positioned(right: 0.0,
-
-                                                                                  child: InkWell(
-                                                                                    child: Container(
-                                                                                        width: 30,
-                                                                                        height: 30,
-                                                                                        decoration: BoxDecoration(
-                                                                                            borderRadius: BorderRadius.circular(15),
-                                                                                            border: Border.all(
-                                                                                              color:
-                                                                                              const Color.fromRGBO(204, 204, 204, 1),
-                                                                                            ),
-                                                                                            color: Colors.blue),
-                                                                                        child: const Icon(
-                                                                                          Icons.close_sharp,
-                                                                                          color: Colors.white,
-                                                                                        )),
-                                                                                    onTap: () {
-                                                                                      setState(() {
-                                                                                        Navigator.of(context).pop();
-                                                                                      });
-                                                                                    },
-                                                                                  ),
-                                                                                ),
-                                                                              ],
+                                                                                );
+                                                                              },
                                                                             ),
                                                                           );
                                                                         },
-                                                                      ),
-                                                                    );
+                                                                      );
+                                                                    });
                                                                   },
-                                                                );
-                                                              });
-                                                            },
 
+                                                                ),
+                                                              ),
+
+                                                            ],
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8,),
-                                                  ],
-                                                );
+                                                          const SizedBox(height: 8,),
+                                                        ],
+                                                      );
 
-                                              }
-                                          ):const SizedBox(),
+                                                    }
+                                                ):const SizedBox(),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 35,height: 25,
+                                            child: MaterialButton(color: Colors.blue[50],
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if(expandedId==""){
+                                                      setState(() {
+                                                        expandedId=displayListCompanies[i]["company_id"];
+                                                        displayListCompanies[i]["isExpanded"]=true;
+                                                      });
+                                                    }
+                                                    else if(expandedId==displayListCompanies[i]["company_id"]){
+                                                      setState(() {
+                                                        displayListCompanies[i]["isExpanded"]=false;
+                                                        expandedId="";
+                                                      });
+                                                    }
+                                                    else if(expandedId.isNotEmpty || expandedId!=""){
+                                                      setState(() {
+                                                        for(var companyId in displayListCompanies){
+                                                          if(companyId["company_id"]==expandedId){
+                                                            companyId["isExpanded"]=false;
+                                                            expandedId=displayListCompanies[i]["company_id"];
+                                                            displayListCompanies[i]["isExpanded"]=true;
+                                                          }
+                                                        }
+                                                      });
+                                                    }
+                                                  });
+                                                },
+                                                child: displayListCompanies[i]['isExpanded']? const Center(child: Icon(Icons.arrow_drop_down_outlined,color: Colors.blue)):
+                                                const Center(child: Icon(Icons.arrow_right_outlined,color: Colors.grey))),
+                                          )
                                         ],
                                       ),
                                     ),
