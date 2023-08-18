@@ -241,7 +241,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                               "amount": lineAmount[i].text,
                                               "discount":  approvedPercentage[i].text,
                                               "estVehicleId": estimateItems['estVehicleId'],
-                                              "itemsService":selectedVehicles[i]['name']+" - "+selectedVehicles[i]['description'],
+                                              "itemsService":"${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
                                               "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                               "quantity": units[i].text,
                                               "tax": lineApprovedAmount[i].text,
@@ -524,9 +524,15 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 const SizedBox(height: 5,),
                 SizedBox(
                   width: width/2.8,
-                  child: const Text("Ikyam Solutions Private Limited #742, RJ Villa, Cross, 8th A Main Rd, Koramangala 4th Block, Koramangala, Bengaluru, Karnataka 560034",maxLines: 3,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  child: const Text("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
-                const Text("9087877767",style: TextStyle(fontSize: 14,color: Colors.grey))
+                const Row(
+                  children: [
+                    Icon(Icons.call,size: 16),
+                    SizedBox(width: 5,),
+                    Text("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  ],
+                )
 
               ],
             ),
@@ -1388,7 +1394,16 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
-                                            Navigator.pop(context,displayList[i]);
+                                            selectedItems={
+                                              "name":"${displayList[i]['name']??""} - ${displayList[i]['description']??""}",
+                                              "selling_price":displayList[i]['selling_price'].toString(),
+                                              "quantity":1,
+                                              "discount":0,
+                                              "tax":0,
+                                              "amount":displayList[i]['selling_price'].toString(),
+                                              "newitem_id": displayList[i]['newitem_id'].toString(),
+                                            };
+                                            Navigator.pop(context,selectedItems);
                                           });
 
                                         },
@@ -1514,7 +1529,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                   Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10,),
-                      const Text("Comments"),
+                      const Text("Reject Reason"),
                       const SizedBox(height: 10,),
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1836,6 +1851,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
 
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          Navigator.of(context).pop();
           Navigator.of(context).pushNamed(MotowsRoutes.warrantyRoutes);
         }
       }
@@ -1980,7 +1996,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                                 "amount": lineAmount[i].text,
                                                 "discount":  approvedPercentage[i].text,
                                                 "estVehicleId": estimateItems['estVehicleId'],
-                                                "itemsService": selectedVehicles[i]['name'] +" - "+selectedVehicles[i]['description'],
+                                                "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
                                                 "priceItem": selectedVehicles[i]['selling_price'].toString(),
                                                 "quantity": units[i].text,
                                                 "tax": lineApprovedAmount[i].text,

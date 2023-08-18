@@ -1,8 +1,5 @@
 
-
-
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -44,6 +41,7 @@ class _EstimateState extends State<Estimate> {
   var vendorSearchController = TextEditingController();
   final brandNameController=TextEditingController();
   var modelNameController = TextEditingController();
+  var checkingController=TextEditingController();
   var variantController=TextEditingController();
   var salesInvoiceDate = TextEditingController();
   var subAmountTotal = TextEditingController();
@@ -96,11 +94,10 @@ class _EstimateState extends State<Estimate> {
     'zipcode': '',
 
   };
-
+  int startVal=0;
   List vehicleList = [];
   List displayList=[];
   List selectedVehicles=[];
-
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
   var discountPercentage = <TextEditingController>[];
@@ -1042,31 +1039,32 @@ class _EstimateState extends State<Estimate> {
                                 borderColor:tableLineDataBool==true?Colors.redAccent: mSaveButton,
                                 textColor: mSaveButton,
 
-                                onTap: () {
+                                onTap: ()async {
                                   if(displayList.isNotEmpty){
                                     tableLineDataBool=false;
-                                  }
-                                  brandNameController.clear();
-                                  modelNameController.clear();
-                                  variantController.clear();
-                                  displayList=vehicleList;
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => showDialogBox(),
-                                  ).then((value) {
-                                    if(value!=null){
-                                      setState(() {
-                                        isVehicleSelected=true;
-                                        units.add(TextEditingController(text: '1'));
-                                        discountRupees.add(TextEditingController(text: '0'));
-                                        discountPercentage.add(TextEditingController(text: '0'));
-                                        tax.add(TextEditingController(text: '0'));
-                                        lineAmount.add(TextEditingController());
-                                        subAmountTotal.text='0';
-                                        selectedVehicles.add(value);
+                                    brandNameController.clear();
+                                    modelNameController.clear();
+                                    variantController.clear();
+                                    await getAllVehicleVariant().whenComplete(() => setState((){
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => showDialogBox(),
+                                      ).then((value) {
+                                        if(value!=null){
+                                          setState(() {
+                                            isVehicleSelected=true;
+                                            units.add(TextEditingController(text: '1'));
+                                            discountRupees.add(TextEditingController(text: '0'));
+                                            discountPercentage.add(TextEditingController(text: '0'));
+                                            tax.add(TextEditingController(text: '0'));
+                                            lineAmount.add(TextEditingController());
+                                            subAmountTotal.text='0';
+                                            selectedVehicles.add(value);
+                                          });
+                                        }
                                       });
-                                    }
-                                  });
+                                    }));
+                                  }
 
                                 },
                               )
@@ -1133,33 +1131,28 @@ class _EstimateState extends State<Estimate> {
           buildFooter(),
           const Divider(height: 1,color: mTextFieldBorder,),
 
-
-
-
-
-
         ],
       ),
     );
   }
 
   Widget showDialogBox(){
-    return AlertDialog(
-      backgroundColor:
-      Colors.transparent,
-      content:StatefulBuilder(
-          builder: (context, StateSetter setState) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child:StatefulBuilder(
+          builder: (context,  setState) {
             return SizedBox(
-              width: MediaQuery.of(context).size.width/1.5,
-              height: MediaQuery.of(context).size.height/1.1,
+             // width: MediaQuery.of(context).size.width/1.5,
+              //height: MediaQuery.of(context).size.height/1.1,
               child: Stack(
                 children: [
                   Container(
+                    width: 950,
                     decoration: BoxDecoration(
                         color: Colors.white, borderRadius: BorderRadius.circular(8)),
                     margin: const EdgeInsets.only(top: 13.0, right: 8.0),
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.only(left:20.0,right:20,bottom: 10,top:10),
                       child: Card(surfaceTintColor: Colors.white,
                         child: Column(
                           children: [
@@ -1168,23 +1161,23 @@ class _EstimateState extends State<Estimate> {
                             Row(
                               children: [
                                 const SizedBox(width: 10,),
-                                SizedBox(width: 250,
+                                SizedBox(width: 250,height: 35,
                                   child: TextFormField(
                                     controller: brandNameController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          variantController.clear();
-                                        }
-                                        else{
-                                          fetchBrandName(brandNameController.text);
-                                        }
-                                      });
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand',
+                                        onTap:()async{
+                                      if(brandNameController.text.isEmpty || brandNameController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                          }
+                                    ),
+                                    onChanged: (value) async{
+                                       if(value.isNotEmpty || value!=""){
+                                         await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
+                                       }
+                                       else if(value.isEmpty || value==""){
+                                         await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                       }
                                     },
                                   ),
                                 ),
@@ -1192,44 +1185,39 @@ class _EstimateState extends State<Estimate> {
                                 SizedBox(
                                   width: 250,
                                   child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                    decoration:  textFieldModelNameField(hintText: 'Search Model',onTap: ()async{
+                                      if(modelNameController.text.isEmpty || modelNameController.text==""){
+                                     await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
                                     controller: modelNameController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          brandNameController.clear();
-                                          variantController.clear();
-
-                                        }
-                                        else{
-                                          fetchModelName(modelNameController.text);
-                                        }
-
-                                      });
+                                    onChanged: (value)async {
+                                    if(value.isNotEmpty || value!=""){
+                                      await  fetchModelName(modelNameController.text).whenComplete(() =>setState((){}));
+                                    }
+                                    else if(value.isEmpty || value==""){
+                                      await getAllVehicleVariant().whenComplete(()=> setState((){}));
+                                    }
                                     },
                                   ),
                                 ),
+
                                 const SizedBox(width: 10,),
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          brandNameController.clear();
-                                        }
-                                        else{
-                                          fetchVariantName(variantController.text);
-                                        }
-                                      });
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
+                                      if(variantController.text.isEmpty || variantController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
+                                    onChanged: (value) async{
+                                      if(value.isNotEmpty || value!=""){
+                                        await fetchVariantName(variantController.text).whenComplete(() => setState((){}));
+                                      }
+                                      else if(value.isEmpty || value==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
                                     },
                                   ),
                                 ),
@@ -1253,65 +1241,145 @@ class _EstimateState extends State<Estimate> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 4,),
                             Expanded(
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    for (int i = 0; i < displayList.length; i++)
-                                      InkWell(
-                                        hoverColor: mHoverColor,
-                                        onTap: () {
-                                          setState(() {
-                                            Navigator.pop(context,displayList[i]);
-                                          });
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: displayList.length+1,
+                                    itemBuilder: (context,int i){
+                                  if(i<displayList.length){
+                                    return   Column(
+                                      children: [
+                                          MaterialButton(
+                                            hoverColor: mHoverColor,
+                                            onPressed: () {
+                                              setState(() {
+                                                Navigator.pop(context,displayList[i]);
+                                              });
 
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 18.0),
-                                          child: SizedBox(height: 30,
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 20,
-                                                    child: Text(displayList[i]['make']),
-                                                  ),
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 18.0),
+                                              child: SizedBox(height: 30,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        child: Text(displayList[i]['make']??""),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        child: Text(
+                                                            displayList[i]['model_name']??""),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        child: Text(displayList[i]['varient_name']??''),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        child: Text(displayList[i]['onroad_price'].toString()),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        child: Text(displayList[i]['varient_color1']??""),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 20,
-                                                    child: Text(
-                                                        displayList[i]['model_name']),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 20,
-                                                    child: Text(displayList[i]['varient_name']),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 20,
-                                                    child: Text(displayList[i]['onroad_price'].toString()),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 20,
-                                                    child: Text(displayList[i]['varient_color1']),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
+                                          Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                      ],
+                                    );
+                                  }
+                                  else{
+                                    return Column(children: [
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                      Row(mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text("${startVal+15>vehicleList.length?vehicleList.length:startVal+1}-${startVal+15>vehicleList.length?vehicleList.length:startVal+15} of ${vehicleList.length}",style: const TextStyle(color: Colors.grey)),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                              ),
+                                              onTap: (){
+                                                if(startVal>14){
+                                                  displayList=[];
+                                                  startVal = startVal-15;
+                                                  for(int i=startVal;i<startVal+15;i++){
+                                                    try{
+                                                      setState(() {
+                                                        displayList.add(vehicleList[i]);
+                                                      });
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                  }
+                                                }
+                                                else{
+                                                  log('else');
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_forward_ios,size: 12),
+                                              ),
+                                              onTap: (){
+                                                setState(() {
+                                                  if(vehicleList.length>startVal+15){
+                                                    displayList=[];
+                                                    startVal=startVal+15;
+                                                    for(int i=startVal;i<startVal+15;i++){
+                                                      try{
+                                                        setState(() {
+                                                          displayList.add(vehicleList[i]);
+                                                        });
+                                                      }
+                                                      catch(e){
+                                                        log("Expected Type Error $e ");
+                                                        log(e.toString());
+                                                      }
 
-                                  ],
-                                ),
+                                                    }
+                                                  }
+                                                });
+
+
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20,),
+                                        ],
+                                      ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                }),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -1491,32 +1559,35 @@ class _EstimateState extends State<Estimate> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldBrandNameField({required String hintText, bool? error}) {
+  textFieldBrandNameField( {required String hintText, bool? error, Function? onTap}) {
     return  InputDecoration(
       suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
           brandNameController.clear();
+          onTap!();
         });
-
       },
           child: const Icon(Icons.close,size: 18,)
       ),
-      border: const OutlineInputBorder(
-          borderSide: BorderSide(color:  Colors.blue)),
+
       constraints: BoxConstraints(maxHeight: error==true ? 60:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldModelNameField({required String hintText, bool? error}) {
+  textFieldModelNameField({required String hintText, bool? error,Function ? onTap}) {
     return  InputDecoration(
       suffixIcon:  modelNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        modelNameController.clear();
-        displayList=vehicleList;
+        setState(() {
+          modelNameController.clear();
+          onTap!();
+        });
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1531,10 +1602,11 @@ class _EstimateState extends State<Estimate> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldVariantNameField({required String hintText, bool? error}) {
+  textFieldVariantNameField({required String hintText, bool? error,Function ? onTap}) {
     return  InputDecoration(
       suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         variantController.clear();
+        onTap!();
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1550,7 +1622,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  fetchModelName(String modelName)async{
+  Future fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1558,7 +1630,26 @@ class _EstimateState extends State<Estimate> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            startVal=0;
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=startVal;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log("Excepted Type $e");
+            }
           }
         });
       }
@@ -1570,7 +1661,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  fetchBrandName(String brandName)async{
+  Future fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1578,7 +1669,26 @@ class _EstimateState extends State<Estimate> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            startVal=0;
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=startVal;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log("Excepted Type $e");
+            }
           }
         });
       });
@@ -1588,7 +1698,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  fetchVariantName(String variantName)async{
+  Future fetchVariantName(String variantName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
@@ -1596,8 +1706,26 @@ class _EstimateState extends State<Estimate> {
         setState((){
           if(value!=null){
             response=value;
-            displayList=response;
-
+            vehicleList=response;
+            displayList=[];
+            startVal=0;
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=startVal;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log("Excepted Type $e");
+            }
           }
         });
       });
@@ -1607,7 +1735,7 @@ class _EstimateState extends State<Estimate> {
     }
   }
 
-  getAllVehicleVariant() async {
+  Future getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1615,10 +1743,21 @@ class _EstimateState extends State<Estimate> {
         setState(() {
           if (value != null) {
             response = value;
-            vehicleList = value;
-            displayList=vehicleList;
-            // print('------------check proper--------------');
-            // print(displayList);
+            vehicleList = response;
+            startVal=0;
+            displayList=[];
+             if(displayList.isEmpty){
+               if(vehicleList.length>15){
+                 for(int i=startVal;i<startVal+15;i++){
+                     displayList.add(vehicleList[i]);
+                 }
+               }
+               else{
+                 for(int i=startVal;i<vehicleList.length;i++){
+                   displayList.add(vehicleList[i]);
+                 }
+               }
+             }
           }
           loading = false;
         });
@@ -1666,6 +1805,8 @@ class _EstimateState extends State<Estimate> {
       contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
+
+
 }
 
 class VendorModelAddress {

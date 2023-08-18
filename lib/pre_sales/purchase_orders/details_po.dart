@@ -152,7 +152,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     'zipcode': '',
 
   };
-
+  int startVal=0;
   List vehicleList = [];
   List displayList=[];
   List selectedVehicles=[];
@@ -565,13 +565,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                 const SizedBox(height: 5,),
                 SizedBox(
                   width: width/2.8,
-                  child: const SelectableText("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                  child: const Text("Ikyam Solutions Private Limited, 5, 80 Feet Rd, 4th Block, New Friends Colony, Koramangala, Bengaluru, Karnataka 560034",style: TextStyle(fontSize: 14,color: Colors.grey)),
                 ),
                 const Row(
                   children: [
                     Icon(Icons.call,size: 16),
                     SizedBox(width: 5,),
-                    SelectableText("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
+                    Text("081233 32485 / +917899726639",style: TextStyle(fontSize: 14,color: Colors.grey)),
                   ],
                 )
 
@@ -703,44 +703,42 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: SelectionArea(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showVendorDetails==true?vendorData['Name']??"":billToName,style: const TextStyle(fontWeight: FontWeight.bold)),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['street']??"":billToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['city']??"":billToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['state']??"":billToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showVendorDetails==true?vendorData['zipcode']??"":billToZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -812,43 +810,41 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: SelectionArea(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child:  Text("Street")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(showWareHouseDetails==true?wareHouse['Name']??"":shipToName,style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child:  Text("Street")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['street']??"":shipToStreet}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("City")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("City")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['city']??"":shipToCity}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("State")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("State")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['state']??"":shipToState}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
 
-                            Row(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 70,child: Text("ZipCode :")),
-                                const Text(": "),
-                                Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
-                          ],
-                        ),
+                          Row(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 70,child: Text("ZipCode :")),
+                              const Text(": "),
+                              Expanded(child: Text("${showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -1212,7 +1208,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                         lineAmount.removeAt(index);
                                         }
                                     catch(e){
-                                      print('Type Of Exception $e');
+                                      log('Type Of Exception $e');
                                     }
 
 
@@ -1260,7 +1256,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   brandNameController.clear();
                                   modelNameController.clear();
                                   variantController.clear();
-                                  displayList=vehicleList;
+                                 // displayList=vehicleList;
                                   showDialog(
                                       context: context,
                                       builder: (context) => showDialogBox()).then((value) {
@@ -1371,7 +1367,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                         color: Colors.white, borderRadius: BorderRadius.circular(8)),
                     margin: const EdgeInsets.only(top: 13.0, right: 8.0),
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.only(left:20.0,right:20,bottom: 11,top:10),
                       child: Card(surfaceTintColor: Colors.white,
                         child: Column(
                           children: [
@@ -1383,20 +1379,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: brandNameController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          variantController.clear();
-                                        }
-                                        else{
-                                          fetchBrandName(brandNameController.text);
-                                        }
-                                      });
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand',onTap:()async{
+                                      if(brandNameController.text.isEmpty || brandNameController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
+                                    onChanged: (value) async{
+                                      if(value.isNotEmpty || value!=""){
+                                        await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
+                                      }
+                                      else if(value.isEmpty || value==""){
+                                        await getAllVehicleVariant().whenComplete(()=>setState((){}));
+                                      }
                                     },
                                   ),
                                 ),
@@ -1404,23 +1398,19 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(
                                   width: 250,
                                   child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                    decoration:  textFieldModelNameField(hintText: 'Search Model',onTap: ()async{
+                                      if(modelNameController.text.isEmpty || modelNameController.text==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
+                                    }),
                                     controller: modelNameController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          brandNameController.clear();
-                                          variantController.clear();
-
-                                        }
-                                        else{
-                                          fetchModelName(modelNameController.text);
-                                        }
-
-                                      });
+                                    onChanged: (value) async{
+                                    if(value.isNotEmpty || value!=""){
+                                      await fetchModelName(modelNameController.text).whenComplete(()=>setState((){}));
+                                    }
+                                    else if(value.isEmpty || value==""){
+                                      await getAllVehicleVariant().whenComplete(()=>setState((){}));
+                                    }
                                     },
                                   ),
                                 ),
@@ -1428,20 +1418,16 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=vehicleList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          brandNameController.clear();
-                                        }
-                                        else{
-                                          fetchVariantName(variantController.text);
-                                        }
-                                      });
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
+                                      await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                    }),
+                                    onChanged: (value) async{
+                                      if(value.isNotEmpty || value!=""){
+                                        await fetchVariantName(variantController.text).whenComplete(()=>setState((){}));
+                                      }
+                                      else if(value.isEmpty || value==""){
+                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                      }
                                     },
                                   ),
                                 ),
@@ -1465,14 +1451,18 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 4,),
                             Expanded(
                               child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    for (int i = 0; i < displayList.length; i++)
-                                      InkWell(
+                                child: ListView.builder(
+                                    itemCount: displayList.length+1,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,int i){
+                                  if(i<displayList.length){
+                                    return Column(children: [
+                                      MaterialButton(
                                         hoverColor: mHoverColor,
-                                        onTap: () {
+                                        onPressed: () {
                                           setState(() {
                                             // print('---------Table Line T------');
                                             // print(displayList[i]);
@@ -1529,9 +1519,84 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           ),
                                         ),
                                       ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                  else{
+                                    return Column(children: [
 
-                                  ],
-                                ),
+                                      Row(mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text("${startVal+15>vehicleList.length?vehicleList.length:startVal+1}-${startVal+15>vehicleList.length?vehicleList.length:startVal+15} of ${vehicleList.length}",style: const TextStyle(color: Colors.grey)),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_back_ios_sharp,size: 12),
+                                              ),
+                                              onTap: (){
+                                                if(startVal>14){
+                                                  displayList=[];
+                                                  startVal = startVal-15;
+                                                  for(int i=startVal;i<startVal+15;i++){
+                                                    try{
+                                                      setState(() {
+                                                        displayList.add(vehicleList[i]);
+                                                      });
+                                                    }
+                                                    catch(e){
+                                                      log(e.toString());
+                                                    }
+                                                  }
+                                                }
+                                                else{
+                                                  log('else');
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10,),
+                                          Material(color: Colors.transparent,
+                                            child: InkWell(
+                                              hoverColor: mHoverColor,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(18.0),
+                                                child: Icon(Icons.arrow_forward_ios,size: 12),
+                                              ),
+                                              onTap: (){
+                                                setState(() {
+                                                  if(vehicleList.length>startVal+15){
+                                                    displayList=[];
+                                                    startVal=startVal+15;
+                                                    for(int i=startVal;i<startVal+15 && i< vehicleList.length;i++){
+                                                      try{
+                                                        setState(() {
+                                                          displayList.add(vehicleList[i]);
+                                                        });
+                                                      }
+                                                      catch(e){
+                                                        log("Expected Type Error $e ");
+                                                        log(e.toString());
+                                                      }
+
+                                                    }
+                                                  }
+                                                });
+
+
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20,),
+
+                                        ],
+                                      ),
+                                      Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
+                                    ],);
+                                  }
+                                })
                               ),
                             )
                           ],
@@ -1610,7 +1675,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                   Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10,),
-                      const Text("Comments"),
+                      const Text("Reject Reason"),
                       const SizedBox(height: 10,),
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1734,11 +1799,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldBrandNameField({required String hintText, bool? error}) {
+  textFieldBrandNameField({required String hintText, bool? error,Function? onTap}) {
     return  InputDecoration(
       suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
           brandNameController.clear();
+          onTap!();
         });
 
       },
@@ -1755,11 +1821,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldModelNameField({required String hintText, bool? error}) {
+  textFieldModelNameField({required String hintText, bool? error, Function? onTap}) {
     return  InputDecoration(
       suffixIcon:  modelNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        modelNameController.clear();
-        displayList=vehicleList;
+         setState(() {
+         modelNameController.clear();
+         onTap!();
+       });
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1774,10 +1842,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldVariantNameField({required String hintText, bool? error}) {
+  textFieldVariantNameField({required String hintText, bool? error,Function ? onTap}) {
     return  InputDecoration(
       suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        variantController.clear();
+        setState((){
+          variantController.clear();
+          onTap!();
+        });
+
       },
           child: const Icon(Icons.close,size: 18,)
       ),
@@ -1793,7 +1865,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
 
-  fetchModelName(String modelName)async{
+  Future fetchModelName(String modelName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
@@ -1801,7 +1873,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       }
@@ -1813,7 +1903,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  fetchBrandName(String brandName)async{
+  Future fetchBrandName(String brandName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
@@ -1821,7 +1911,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if(value!=null){
             response=value;
-            displayList=response;
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       });
@@ -1831,7 +1939,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  fetchVariantName(String variantName)async{
+  Future fetchVariantName(String variantName)async{
     dynamic response;
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
@@ -1839,8 +1947,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState((){
           if(value!=null){
             response=value;
-            displayList=response;
-
+            vehicleList=response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
         });
       });
@@ -1850,7 +1975,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     }
   }
 
-  getAllVehicleVariant() async {
+  Future getAllVehicleVariant() async {
     dynamic response;
     String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
     try {
@@ -1858,8 +1983,25 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
         setState(() {
           if (value != null) {
             response = value;
-            vehicleList = value;
-            displayList=vehicleList;
+            vehicleList = response;
+            displayList=[];
+            try{
+              if(displayList.isEmpty){
+                if(vehicleList.length>15){
+                  for(int i=startVal;i<startVal+15;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+                else{
+                  for(int i=0;i<vehicleList.length;i++){
+                    displayList.add(vehicleList[i]);
+                  }
+                }
+              }
+            }
+            catch(e){
+              log(e.toString());
+            }
           }
           loading = false;
         });
