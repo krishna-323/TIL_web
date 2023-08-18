@@ -365,11 +365,11 @@ class _DynamicFieldsState extends State<DynamicFields> {
       answerController = TextEditingController();
       questionController.text = widget.initialValue['question'] ?? '';
       if(widget.initialValue['type']=='textField' ||widget.initialValue['type']=='date'||widget.initialValue['type']=='rating') {
-        answerController.text = widget.initialValue['answer'].toString() ?? '';
+        answerController.text = widget.initialValue['answer'].toString();
       }
       if(widget.initialValue['type']=='dropDown') {
         optionItemSelected = OptionItem(id: '', title: widget.initialValue['answer'].toString());
-        answerController.text = widget.initialValue['answer'].toString() ?? '';
+        answerController.text = widget.initialValue['answer'].toString();
       }
 
       if(widget.initialValue['type']=='test') {
