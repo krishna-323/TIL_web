@@ -47,7 +47,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       masterExpanded=true;
     }
     //Settings.
-    if(_selectedDestination == 3.1 || _selectedDestination ==3.2 ){
+    if(_selectedDestination == 3.1 || _selectedDestination ==3.2 ||_selectedDestination==3.3){
       settingsHover=false;
       settingsExpanded=true;
     }
@@ -79,6 +79,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   bool vehicleListColorB=false;
   bool companyManagementColorB=false;
   bool userManagementColorB=false;
+  bool formTemplateColor=false;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -777,8 +778,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         });
                       },
                       child: SizedBox(height: 45,
-                        child: Icon(Icons.settings,color:_selectedDestination ==4.1
-                            ||_selectedDestination==4.2
+                        child: Icon(Icons.settings,color:_selectedDestination ==3.1
+                            ||_selectedDestination==3.2 || _selectedDestination==3.3
 
                             ? Colors.blue: Colors.black54,),
                       ),
@@ -812,7 +813,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 }
                               });
                             },
-                            initiallyExpanded: _selectedDestination == 3.1 || _selectedDestination == 3.2,
+                            initiallyExpanded: _selectedDestination == 3.1 || _selectedDestination == 3.2 ||_selectedDestination==3.3,
                             trailing: Padding(
                               padding: const EdgeInsets.only(right: 10.0),
                               child: Icon(
@@ -854,31 +855,60 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                     }
                                 ),
                               ),
+                              // User Management.
+                              // MouseRegion(
+                              //   onEnter: (val){
+                              //    setState(() {
+                              //      userManagementColorB=true;
+                              //    });
+                              //   },
+                              //   onExit: (val){
+                              //     setState(() {
+                              //       userManagementColorB=false;
+                              //     });
+                              //   },
+                              //   child: ListTile(
+                              //       title: Center(child: Align(alignment: Alignment.topLeft,
+                              //           child: Text(drawerWidth == 60 ? "" : 'User Management',
+                              //           style: TextStyle(color: _selectedDestination==3.2?(userManagementColorB==true?Colors.black:Colors.white):Colors.black),
+                              //           ))),
+                              //       selected: _selectedDestination == 3.2,
+                              //       hoverColor:mHoverColor,
+                              //       selectedTileColor: Colors.blue,
+                              //       selectedColor: Colors.white,
+                              //       onTap: () {
+                              //         setState(() {
+                              //           _selectedDestination=3.2;
+                              //         });
+                              //         Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.2));
+                              //       }
+                              //   ),
+                              // ),
                               MouseRegion(
                                 onEnter: (val){
-                                 setState(() {
-                                   userManagementColorB=true;
-                                 });
+                                  setState(() {
+                                    formTemplateColor=true;
+                                  });
                                 },
                                 onExit: (val){
                                   setState(() {
-                                    userManagementColorB=false;
+                                    formTemplateColor=false;
                                   });
                                 },
                                 child: ListTile(
-                                    title: Center(child: Align(alignment: Alignment.topLeft,
-                                        child: Text(drawerWidth == 60 ? "" : 'User Management',
-                                        style: TextStyle(color: _selectedDestination==3.2?(userManagementColorB==true?Colors.black:Colors.white):Colors.black),
-                                        ))),
-                                    selected: _selectedDestination == 3.2,
-                                    hoverColor:mHoverColor,
+                                    hoverColor: mHoverColor,
                                     selectedTileColor: Colors.blue,
                                     selectedColor: Colors.white,
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedDestination=3.2;
-                                      });
-                                      Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.2));
+                                    title: Align
+                                      (alignment: Alignment.topLeft,
+                                        child: Text(drawerWidth == 60 ? "" : 'Forms',
+                                          style: TextStyle(color: _selectedDestination==3.3?(formTemplateColor==true?Colors.black:Colors.white):Colors.black),
+                                        )),
+                                    selected: _selectedDestination == 3.3,
+                                    onTap: () { setState(() {
+                                      _selectedDestination=3.3;
+                                    });
+                                    Navigator.pushReplacementNamed(context, MotowsRoutes.formTemplate,arguments: FormTemplatesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.3));
                                     }
                                 ),
                               ),
