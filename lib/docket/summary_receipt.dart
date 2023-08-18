@@ -185,9 +185,27 @@ class _SummaryReceiptState extends State<SummaryReceipt> {
                                           child: Padding(
                                             padding: const EdgeInsets.only(top: 20, left: 18,),
                                             child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Expanded(flex: 5,child: Text("${widget.summaryDetails['make']}  ${widget.summaryDetails['model']}",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.indigo[800],fontSize: 16))),
-                                                Expanded(flex: 2,child: Text("On Road Price : Rs ${widget.summaryDetails['onroad_price']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.indigo[800]))),
+                                                Expanded(
+                                                    flex: 5,
+                                                    child: Text(
+                                                        "${widget.summaryDetails['make']}  ${widget.summaryDetails['model']}",
+                                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.indigo[800],fontSize: 16))
+                                                ),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                        "On Road Price : Rs ${widget.summaryDetails['onroad_price']}",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 16,
+                                                            color: Colors.indigo[800],
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      maxLines: 3,
+                                                    ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -204,23 +222,26 @@ class _SummaryReceiptState extends State<SummaryReceipt> {
                                             child: Column(
                                               children: [
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Varient")),
-                                                    Text(": ${widget.summaryDetails['variant']} "),
+                                                    Text(": ${widget.summaryDetails['variant']}",overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Color")),
-                                                    Text(": ${widget.summaryDetails['color']} "),
+                                                    Text(": ${widget.summaryDetails['color']}",overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Ex- Showroom Price")),
-                                                    Text(": ${widget.summaryDetails['ex_showroom_price']} "),
+                                                    Text(": ${widget.summaryDetails['ex_showroom_price']}",overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                   ],
                                                 ),
                                               ],
@@ -230,23 +251,26 @@ class _SummaryReceiptState extends State<SummaryReceipt> {
                                             child: Column(
                                               children: [
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Type")),
-                                                    Text(": ${widget.summaryDetails['type']} "),
+                                                    Text(": ${widget.summaryDetails['type']}",overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Labour Type")),
-                                                    Text(": Rs ${widget.summaryDetails['labour_type']}"),
+                                                    Expanded(child: Text(": Rs ${widget.summaryDetails['labour_type']}",overflow: TextOverflow.ellipsis, maxLines: 2,)),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Category Code")),
-                                                    Text(": ${widget.summaryDetails['vehicle_category_code']}"),
+                                                    Expanded(child: Text(": ${widget.summaryDetails['vehicle_category_code']}",overflow: TextOverflow.ellipsis, maxLines: 2,)),
                                                   ],
                                                 ),
                                               ],
@@ -259,21 +283,23 @@ class _SummaryReceiptState extends State<SummaryReceipt> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Transmission")),
-                                                    Expanded(child: Text(": ${widget.summaryDetails['transmission']} ")),
+                                                    Expanded(child: Text(": ${widget.summaryDetails['transmission']}",overflow: TextOverflow.ellipsis, maxLines: 2,)),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Model Code")),
-                                                    Text(": ${widget.summaryDetails['model_code']} "),
+                                                    Expanded(child: Text(": ${widget.summaryDetails['model_code']}",overflow: TextOverflow.ellipsis, maxLines: 2,)),
                                                   ],
                                                 ),
                                                 const SizedBox( height: 20,),
                                                 Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(width: 150,child: Text("Vehicle Type Code")),
-                                                    Text(": ${widget.summaryDetails["vehicle_category_code"]}"),
+                                                    Expanded(child: Text(": ${widget.summaryDetails["vehicle_category_code"]}",overflow: TextOverflow.ellipsis, maxLines: 2,)),
                                                   ],
                                                 ),
                                               ],

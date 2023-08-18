@@ -1401,6 +1401,9 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
                               const Text("Evaluation Date"),
                               const SizedBox(height: 6,),
                               TextFormField(
+                                onTap: () {
+                                  _selectEleDate(context);
+                                },
                                 enabled: selectExchange=='Yes',
                                 controller: evaluationDateController,
                                 validator: selectExchange == "Yes" ?checkEvaluationDate : null,
@@ -1723,6 +1726,19 @@ class AddNewCustomerState extends State<AddNewCustomer> with SingleTickerProvide
       _invalidEvaluationDate = false;
     });
     return null;
+  }
+
+  Future<void> _selectEleDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null) {
+      setState(() {
+        evaluationDateController.text = (picked.toLocal()).toString().split(' ')[0];
+      });
+    }
   }
 
   // String? checkFinanceCompany(String? value){
