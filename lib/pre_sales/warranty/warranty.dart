@@ -488,7 +488,7 @@ class _WarrantyState extends State<Warranty> {
                                     Row(mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
 
-                                        Text("${startVal+15>displayListItems.length?displayListItems.length:startVal+1}-${startVal+15>displayListItems.length?displayListItems.length:startVal+15} of ${displayListItems.length}",style: const TextStyle(color: Colors.grey)),
+                                        Text("${startVal+15>estimateItems.length?estimateItems.length:startVal+1}-${startVal+15>estimateItems.length?estimateItems.length:startVal+15} of ${estimateItems.length}",style: const TextStyle(color: Colors.grey)),
                                         const SizedBox(width: 10,),
                                         Material(color: Colors.transparent,
                                           child: InkWell(
