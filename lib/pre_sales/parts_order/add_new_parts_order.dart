@@ -626,21 +626,24 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Sales Invoice #'),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          width: 120,
-                                          height: 32,
-                                          color: Colors.grey[200],
-                                          child: TextFormField(
-                                            controller: salesInvoice,
-                                            decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                          ),
-                                        )
-                                      ],),
+                                    // Column(
+                                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                                    //   children: [
+                                    //     const Padding(
+                                    //       padding: EdgeInsets.only(left:10.0),
+                                    //       child: Text('Sales Invoice #'),
+                                    //     ),
+                                    //     const SizedBox(height: 10,),
+                                    //     Container(
+                                    //       width: 120,
+                                    //       height: 32,
+                                    //       color: Colors.grey[200],
+                                    //       child: TextFormField(
+                                    //         controller: salesInvoice,
+                                    //         decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
+                                    //       ),
+                                    //     )
+                                    //   ],),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [

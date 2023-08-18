@@ -355,11 +355,13 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                     MaterialButton(
                                       hoverColor: Colors.blue[50],
                                       onPressed: () {
+                                        // print("---------all data-----------");
+                                        // print(estimateItems[index]);
                                         Navigator.of(context).push(PageRouteBuilder(
                                           pageBuilder: (context, animation1, animation2) => ViewEstimateItem(
                                             drawerWidth: widget.args.drawerWidth,
                                             selectedDestination: widget.args.selectedDestination,
-                                            estimateItem: estimateItems[index],
+                                            estimateItem: displayListItems[index],
                                             transitionDuration: Duration.zero,
                                             reverseTransitionDuration: Duration.zero,
                                           ),

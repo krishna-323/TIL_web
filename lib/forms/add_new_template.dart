@@ -60,28 +60,27 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
                         title:  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Dynamic Form',),
-                            Padding(
-                              padding:  const EdgeInsets.all(20.0),
-                              child: ElevatedButton(
-                                style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.blue)),
-                                onPressed: () {
-                                  if(_formKey.currentState!.validate()) {
-                                    Map tempData = {
-                                      "title":titleController.text,
-                                      "description":descriptionController.text,
-                                      'fieldsList':fieldsList
-                                    };
-                                    Navigator.pop(context, tempData);
-                                  }
-
-                                },
-                                child: const Text('Save',style: TextStyle(color: Colors.white)),
-                              ),
+                             Padding(
+                               padding: const EdgeInsets.all(20),
+                               child: SizedBox(width: 100,
+                                height: 30,
+                                child: OutlinedMButton(text: 'Save',
+                                  borderColor: mSaveButton,
+                                  buttonColor: mSaveButton,
+                                  onTap: (){
+                                    if(_formKey.currentState!.validate()) {
+                                      Map tempData = {
+                                        "title":titleController.text,
+                                        "description":descriptionController.text,
+                                        'fieldsList':fieldsList
+                                      };
+                                      Navigator.pop(context, tempData);
+                                    }
+                                  },
+                                  textColor: Colors.white,
+                                ),
                             ),
-                            OutlinedMButton(text: 'Save',
-                              borderColor: mSaveButton,
-                              buttonColor: mSaveButton,
-                              textColor: Colors.white,),
+                             ),
                           ],
                         )),
                   ),
@@ -366,11 +365,11 @@ class _DynamicFieldsState extends State<DynamicFields> {
       answerController = TextEditingController();
       questionController.text = widget.initialValue['question'] ?? '';
       if(widget.initialValue['type']=='textField' ||widget.initialValue['type']=='date'||widget.initialValue['type']=='rating') {
-        answerController.text = widget.initialValue['answer'].toString() ?? '';
+        answerController.text = widget.initialValue['answer'].toString();
       }
       if(widget.initialValue['type']=='dropDown') {
         optionItemSelected = OptionItem(id: '', title: widget.initialValue['answer'].toString());
-        answerController.text = widget.initialValue['answer'].toString() ?? '';
+        answerController.text = widget.initialValue['answer'].toString();
       }
 
       if(widget.initialValue['type']=='test') {

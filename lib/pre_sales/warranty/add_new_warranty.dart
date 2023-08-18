@@ -613,22 +613,25 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Sales Invoice #'),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          width: 120,
-                                          height: 32,
-                                          color: Colors.grey[200],
-                                          child: TextFormField(
-                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                            controller: salesInvoice,
-                                            decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                          ),
-                                        )
-                                      ],),
+                                    // Column(
+                                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                                    //   children: [
+                                    //     const Padding(
+                                    //       padding: EdgeInsets.only(left:10.0),
+                                    //       child: Text('Sales Invoice #'),
+                                    //     ),
+                                    //     const SizedBox(height: 10,),
+                                    //     Container(
+                                    //       width: 120,
+                                    //       height: 32,
+                                    //       color: Colors.grey[200],
+                                    //       child: TextFormField(
+                                    //         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                    //         controller: salesInvoice,
+                                    //         decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
+                                    //       ),
+                                    //     )
+                                    //   ],),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -663,22 +666,22 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       ],)
                                   ]),
                               const SizedBox(height: 25,),
-                              Align(alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 120,height: 28,
-                                  child: OutlinedMButton(
-                                    text: 'Add Due Date',
-                                    textColor: mSaveButton,
-                                    borderColor: mSaveButton,
-                                    onTap: (){
-                                      setState(() {
-
-                                      });
-                                    },
-
-                                  ),
-                                ),
-                              ),
+                              // Align(alignment: Alignment.topLeft,
+                              //   child: SizedBox(
+                              //     width: 120,height: 28,
+                              //     child: OutlinedMButton(
+                              //       text: 'Add Due Date',
+                              //       textColor: mSaveButton,
+                              //       borderColor: mSaveButton,
+                              //       onTap: (){
+                              //         setState(() {
+                              //
+                              //         });
+                              //       },
+                              //
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

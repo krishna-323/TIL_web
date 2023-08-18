@@ -400,7 +400,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
                                               //customerList: displayList[i],
                                               drawerWidth: widget.args.drawerWidth,
                                               selectedDestination: widget.args.selectedDestination,
-                                              estimateItem: estimateItems[index],
+                                              estimateItem: displayListItems[index],
                                               transitionDuration: Duration.zero,
                                               reverseTransitionDuration: Duration.zero,
                                             )

@@ -89,8 +89,6 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     super.initState();
 
     estimateItems=widget.estimateItem;
-    // print('-additional charges');
-    // print(estimateItems);
     userId=estimateItems['userid'];
     commentController.text=estimateItems['comment']??"";
     billToName=estimateItems['billAddressName']??'';
@@ -187,12 +185,12 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   bool notesFromOEM=false;
   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    authToken = prefs.getString("authToken");
-    role= prefs.getString("role")??"";
-    managerId= prefs.getString("managerId")??"";
-    orgId= prefs.getString("orgId")??"";
-    // print('---------role----------');
-    // print(role);
+    setState(() {
+      authToken = prefs.getString("authToken");
+      role= prefs.getString("role")??"";
+      managerId= prefs.getString("managerId")??"";
+      orgId= prefs.getString("orgId")??"";
+    });
   }
   int indexNumber=0;
   @override
