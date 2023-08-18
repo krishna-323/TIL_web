@@ -15,72 +15,16 @@ class CustomAppBar extends StatefulWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
 
-  _getPopupMenu(BuildContext context) {
-    return <PopupMenuEntry<String>>[
 
-      const PopupMenuItem<String>(
-        value: '2',
-        child: Center(child: Text('Logout')),
-
-      ),
-
-
-    ];
-  }
 
   SharedPreferences? prefs ;
   String companyName='';
-
   Future getInitialData() async{
     prefs = await SharedPreferences.getInstance();
     setState(() {
       companyName = prefs!.getString("companyName") ?? "";
     });
   }
-
-  Theme _popMenu() {
-    return Theme(
-      data: Theme.of(context).copyWith(),
-      child: PopupMenuButton<String>(elevation: 4,shape: const RoundedRectangleBorder(
-        side: BorderSide(color:Color(0xFFE0E0E0)),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-        offset: const Offset(-10, 56),
-        itemBuilder: (context) => _getPopupMenu(context),
-        onSelected: (String value) async {
-          if(value=="1"){
-            //Navigator.push(context, MaterialPageRoute(builder: (context)=> OrgProfile(orgId,orgName)));
-          }
-          if(value=="2"){
-
-            setState(() {
-              bloc.setSubRole(false);
-              bloc.setMangerRole(false);
-              //   prefs.remove('authToken');
-              prefs!.setString('authToken', "");
-              prefs!.setString('companyName', "");
-              prefs!.setString('role', "");
-            });
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const MyApp()));
-          }
-        },
-        onCanceled: () {
-
-        },
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: const Icon(Icons.account_circle,color: Colors.black),
-
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -107,7 +51,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     )
   ];
+  List <CustomPopupMenuEntry<String>> logoutAppType =<CustomPopupMenuEntry<String>>[
 
+    const CustomPopupMenuItem(height: 40,
+      value: 'Logout',
+      child: Center(child: Text('Logout',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14))),
+
+    ),
+  ];
+  String logoutAppTypeName="";
 
 
   customPopupDecoration ({required String hintText, bool? error}){
@@ -124,7 +76,18 @@ class _CustomAppBarState extends State<CustomAppBar> {
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
     );
   }
-
+  logoutAppDecoration({required String hintText, bool? error, bool ? isFocused,}) {
+    return InputDecoration(
+      hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.account_circle, color:Colors.black),
+      border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      constraints: const BoxConstraints(maxHeight: 35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+    );
+  }
 
 
 String customerType='Select Customer Type';
@@ -308,7 +271,44 @@ String customerType='Select Customer Type';
                   //   ),
                   // ),
                   const SizedBox(width: 15,),
-                  _popMenu(),
+                 // _popMenu(),
+                  SizedBox(width: 25,
+                    height: 25,
+                    child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return CustomPopupMenuButton(elevation: 4,
+                            decoration: logoutAppDecoration(hintText:logoutAppTypeName,),
+                            hintText: '',
+                            childWidth: 150,
+                            offset: const Offset(1, 40),
+                            tooltip: '',
+                            itemBuilder:  (BuildContext context) {
+                              return logoutAppType;
+                            },
+
+                            onSelected: (String value)async{
+                              setState(() {
+                                logoutAppTypeName = value;
+                                if(logoutAppTypeName=="Logout"){
+                                  bloc.setSubRole(false);
+                                  bloc.setMangerRole(false);
+                                  //   prefs.remove('authToken');
+                                  prefs!.setString('authToken', "");
+                                  prefs!.setString('companyName', "");
+                                  prefs!.setString('role', "");
+                                }
+                              });
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const MyApp()));
+
+                            },
+                            onCanceled: () {
+
+                            },
+                            child: Container(),
+                          );
+                        }
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -316,23 +316,6 @@ String customerType='Select Customer Type';
         ),
 
       ],
-    );
-  }
-  decorationSearch(String hintString,) {
-    return InputDecoration(
-      prefixIcon:const Icon(
-        Icons.search,
-        size: 20,
-      ),
-      prefixIconColor:Colors.blue,
-      fillColor: Colors.white,
-      counterText: "",
-      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      hintText: hintString,
-      focusedBorder:  OutlineInputBorder(borderRadius: BorderRadius.circular(30),
-          borderSide:const BorderSide(color: Colors.blue, width: 0.5)),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: Colors.blue)),
     );
   }
 }
@@ -347,19 +330,6 @@ class CustomAppBar2 extends StatefulWidget {
 
 class _CustomAppBar2State extends State<CustomAppBar2> {
 
-  _getPopupMenu(BuildContext context) {
-    return <PopupMenuEntry<String>>[
-
-      const PopupMenuItem<String>(
-        value: '2',
-        child: Center(child: Text('Logout')),
-
-      ),
-
-
-    ];
-  }
-
   SharedPreferences? prefs ;
   String companyName='';
 
@@ -370,48 +340,6 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
     });
   }
 
-  Theme _popMenu() {
-    return Theme(
-      data: Theme.of(context).copyWith(),
-      child: PopupMenuButton<String>(elevation: 4,shape: const RoundedRectangleBorder(
-        side: BorderSide(color:Color(0xFFE0E0E0)),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-        offset: const Offset(-10, 56),
-        itemBuilder: (context) => _getPopupMenu(context),
-        onSelected: (String value) async {
-          if(value=="1"){
-            //Navigator.push(context, MaterialPageRoute(builder: (context)=> OrgProfile(orgId,orgName)));
-          }
-          if(value=="2"){
-
-            setState(() {
-              //   prefs.remove('authToken');
-              bloc.setSubRole(false);
-              bloc.setMangerRole(false);
-              prefs!.setString('authToken', "");
-              prefs!.setString('companyName', "");
-              prefs!.setString('role', "");
-            });
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const MyApp()));
-          }
-        },
-        onCanceled: () {
-
-        },
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: const Icon(Icons.account_circle,color: Colors.black),
-
-          ),
-        ),
-      ),
-    );
-  }
 
 
   customPopupDecoration ({required String hintText, bool? error}){
@@ -430,8 +358,21 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
   }
 
 
+  logoutDecoration({required String hintText, bool? error, bool ? isFocused,}) {
+    return InputDecoration(
+      hoverColor: mHoverColor,
+      suffixIcon: const Icon(Icons.account_circle, color:Colors.black),
+      border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      constraints: const BoxConstraints(maxHeight: 35),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),
+      counterText: '',
+      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+    );
+  }
 
   String customerType='Select Customer Type';
+  String logoutInitial="";
 
   List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
 
@@ -451,7 +392,15 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
 
     )
   ];
+  List <CustomPopupMenuEntry<String>> logout =<CustomPopupMenuEntry<String>>[
 
+    const CustomPopupMenuItem(height: 40,
+      value: 'Logout',
+      child: Center(child: Text('Logout',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14))),
+
+    ),
+
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -616,7 +565,44 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
                   //   ),
                   // ),
                   const SizedBox(width: 15,),
-                  _popMenu(),
+                 // _popMenu(),
+
+                  SizedBox(width: 25,
+                    height: 25,
+                    child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return CustomPopupMenuButton(elevation: 4,
+                            decoration: logoutDecoration(hintText:logoutInitial,),
+                            hintText: '',
+                            childWidth: 150,
+                            offset: const Offset(1, 40),
+                            tooltip: '',
+                            itemBuilder:  (BuildContext context) {
+                              return logout;
+                            },
+
+                            onSelected: (String value)async{
+                              setState(() {
+                                logoutInitial = value;
+                                if(logoutInitial=="Logout"){
+                                  bloc.setSubRole(false);
+                                  bloc.setMangerRole(false);
+                                  prefs!.setString('authToken', "");
+                                  prefs!.setString('companyName', "");
+                                  prefs!.setString('role', "");
+                                }
+                              });
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const MyApp()));
+
+                            },
+                            onCanceled: () {
+
+                            },
+                            child: Container(),
+                          );
+                        }
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -624,23 +610,6 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
         ),
 
       ],
-    );
-  }
-  decorationSearch(String hintString,) {
-    return InputDecoration(
-      prefixIcon:const Icon(
-        Icons.search,
-        size: 20,
-      ),
-      prefixIconColor:Colors.blue,
-      fillColor: Colors.white,
-      counterText: "",
-      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      hintText: hintString,
-      focusedBorder:  OutlineInputBorder(borderRadius: BorderRadius.circular(30),
-          borderSide:const BorderSide(color: Colors.blue, width: 0.5)),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: Colors.blue)),
     );
   }
 }

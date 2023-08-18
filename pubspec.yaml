@@ -54,7 +54,8 @@ dependencies:
   cloud_firestore: ^4.8.4
   pdf: ^3.10.4
   path_provider: ^2.0.15
-
+  flutter_speed_dial: ^7.0.0
+  flutter_rating_bar: ^4.0.1
 
 
 

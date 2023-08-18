@@ -21,6 +21,7 @@ import 'company_management/list_companies.dart';
 import 'customer/list_customer.dart';
 import 'dashboard/home_screen.dart';
 import 'docket/docket_list.dart';
+import 'forms/form_template.dart';
 import 'login_screen.dart';
 import 'pre_sales/invoice/invoice.dart';
 
@@ -149,6 +150,17 @@ class _MyAppState extends State<MyApp> {
                 newScreen = UserManagement(args : userManagement);
               }
               break;
+            case MotowsRoutes.formTemplate:{
+              FormTemplatesArguments formTemplates;
+              if(settings.arguments!=null){
+                formTemplates =settings.arguments as FormTemplatesArguments;
+              }
+              else{
+                formTemplates =FormTemplatesArguments(drawerWidth: 190, selectedDestination: 3.3);
+              }
+              newScreen  = TemplateScreen(args:formTemplates);
+            }
+            break;
             case MotowsRoutes.listGrnItems:{
               ListGrnArguments listGrn;if(settings.arguments!=null){
                 listGrn =settings.arguments as ListGrnArguments;

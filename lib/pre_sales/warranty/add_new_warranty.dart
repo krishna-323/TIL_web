@@ -51,6 +51,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  bool notesError=false;
   //Validation Error.
   int indexNumber=0;
   bool tableLineDataBool=false;
@@ -170,15 +171,19 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
+                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
                                     setState(() {
                                       searchVendor=true;
                                       searchWarehouse=true;
+                                      notesError=true;
                                       if(vendorSearchController.text.isNotEmpty){
                                         searchVendor=false;
                                       }
                                       if(wareHouseController.text.isNotEmpty){
                                         searchWarehouse=false;
+                                      }
+                                      if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
+                                        notesError=false;
                                       }
                                       if(indexNumber==0){
 
@@ -1315,7 +1320,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Terms and Conditions"),
+                const Text("Notes From Dealer"),
                 const SizedBox(height: 10,),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1337,7 +1342,9 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                         ),
                       ),
                     )
-                )
+                ),
+                const SizedBox(height: 5,),
+                notesError==true?const Text("Enter Notes",style:TextStyle(color: Colors.red)):const Text(""),
               ],
             ),
           ),
