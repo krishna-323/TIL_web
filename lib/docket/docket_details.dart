@@ -608,7 +608,9 @@ class _DocketDetailsState extends State<DocketDetails>
                                     ),
                                   ),
                                   const Divider(),
-                                  Row(children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 50.0),
@@ -751,7 +753,7 @@ class _DocketDetailsState extends State<DocketDetails>
                             child: Container(  decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),
                                 color: Colors.white,borderRadius: BorderRadius.circular(5)),
                               child: Padding(
-                                padding: const EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(10),
                                 child: Column(children: [
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 5),
@@ -787,64 +789,68 @@ class _DocketDetailsState extends State<DocketDetails>
                                     ),
                                   ),
                                   const Divider(),
-                                  Row(children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(width:150,
-                                              child: Text(
-                                                  "Ex-Showroom Price",
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow
-                                                      .ellipsis),
-                                            ),
-                                            Text(
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width:150,
+                                            child: Text(
+                                                "Ex-Showroom Price",
+                                                maxLines: 1,
+                                                overflow: TextOverflow
+                                                    .ellipsis),
+                                          ),
+                                          Expanded(
+                                            child: Text(
                                               ": $exShowRoomPrice",
                                               maxLines: 2,
                                               overflow: TextOverflow
                                                   .ellipsis,
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const SizedBox(width:150,
-                                              child: Text(
-                                                  "Model Code",
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow
-                                                      .ellipsis),
                                             ),
-                                            Text(
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width:150,
+                                            child: Text(
+                                                "Model Code",
+                                                maxLines: 1,
+                                                overflow: TextOverflow
+                                                    .ellipsis),
+                                          ),
+                                          Expanded(
+                                            child: Text(
                                               ": $modelCode",
                                               maxLines: 2,
                                               overflow: TextOverflow
                                                   .ellipsis,
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const SizedBox(width:150,
-                                              child: Text(
-                                                  "Labour Type",
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow
-                                                      .ellipsis),
                                             ),
-                                            Text(
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width:150,
+                                            child: Text(
+                                                "Labour Type",
+                                                maxLines: 1,
+                                                overflow: TextOverflow
+                                                    .ellipsis),
+                                          ),
+                                          Expanded(
+                                            child: Text(
                                               ": $labourType",
                                               maxLines: 2,
                                               overflow: TextOverflow
                                                   .ellipsis,
-                                            )
-                                          ],
-                                        ),
-                                      ],)
-                                  ],)
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],)
                                 ]),
                               ),
                             ),
@@ -1219,37 +1225,59 @@ class _DocketDetailsState extends State<DocketDetails>
                           boxShadow: const [
                             BoxShadow(color: Colors.white, blurRadius: 2)
                           ]) : BoxDecoration(color: Colors.grey[200]),
-                      child: Transform.scale(
-                        alignment: Alignment.topLeft,
-                        scale: 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0),
-                          child: AnimatedContainer(height: 36,
-                              duration: const Duration(seconds: 0),
-                              // decoration: isDisabled ? BoxDecoration(border: Border.all(color: Colors.blue),boxShadow: [BoxShadow(color:Colors.white,blurRadius: 2)]):BoxDecoration(),
-                              child: SwitchListTile(
-                                activeColor: Colors.green,
-                                value: isDisabled,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isDisabled = value;
-                                    if (value == true) {
-                                      existingCar.text =
-                                          displayDocketDetails['car_model'] ??
-                                              "";
-                                      evaluationDate.text =
-                                          displayDocketDetails['evaluation_date'] ??
-                                              "";
-                                    }
-                                    else if (value == false) {
-                                      existingCar.clear();
-                                      evaluationDate.clear();
-                                    }
-                                  });
-                                },
-                                title: const Text('Exchange Car',
-                                  style: TextStyle(fontSize: 18),),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: AnimatedContainer(height: 36,
+                            duration: const Duration(seconds: 0),
+                            // decoration: isDisabled ? BoxDecoration(border: Border.all(color: Colors.blue),boxShadow: [BoxShadow(color:Colors.white,blurRadius: 2)]):BoxDecoration(),
+                            // child: SwitchListTile(
+                            //   activeColor: Colors.green,
+                            //   value: isDisabled,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       isDisabled = value;
+                            //       if (value == true) {
+                            //         existingCar.text =
+                            //             displayDocketDetails['car_model'] ??
+                            //                 "";
+                            //         evaluationDate.text =
+                            //             displayDocketDetails['evaluation_date'] ??
+                            //                 "";
+                            //       }
+                            //       else if (value == false) {
+                            //         existingCar.clear();
+                            //         evaluationDate.clear();
+                            //       }
+                            //     });
+                            //   },
+                            //   title: const Text('Exchange Car',
+                            //     style: TextStyle(fontSize: 18),),
+                            // )
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Exchange Car"),
+                              buildCustomToggleSwitch(
+                                  value: isDisabled,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isDisabled = value;
+                                      if (value == true) {
+                                        existingCar.text =
+                                            displayDocketDetails['car_model'] ??
+                                                "";
+                                        evaluationDate.text =
+                                            displayDocketDetails['evaluation_date'] ??
+                                                "";
+                                      }
+                                      else if (value == false) {
+                                        existingCar.clear();
+                                        evaluationDate.clear();
+                                      }
+                                    });
+                                  },
                               )
+                            ],
                           ),
                         ),
                       ),
@@ -1323,39 +1351,61 @@ class _DocketDetailsState extends State<DocketDetails>
                           boxShadow: const [
                             BoxShadow(color: Colors.white, blurRadius: 2)
                           ]) : BoxDecoration(color: Colors.grey[200]),
-                      child: Transform.scale(
-                        alignment: Alignment.topLeft,
-                        scale: 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0),
-                          child: AnimatedContainer(height: 36,
-                              duration: const Duration(seconds: 0),
-                              // decoration: financeScheme ? BoxDecoration(border: Border.all(color: Colors.blue),boxShadow: const [BoxShadow(color:Colors.white,blurRadius: 2)]):const BoxDecoration(),
-                              child: SwitchListTile(activeColor: Colors.green,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: AnimatedContainer(height: 36,
+                            duration: const Duration(seconds: 0),
+                            // decoration: financeScheme ? BoxDecoration(border: Border.all(color: Colors.blue),boxShadow: const [BoxShadow(color:Colors.white,blurRadius: 2)]):const BoxDecoration(),
+                            // child: SwitchListTile(activeColor: Colors.green,
+                            //   value: financeScheme,
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       financeScheme = value;
+                            //       if (value == true) {
+                            //         financeCompany.text =
+                            //             displayDocketDetails['finance_company'] ??
+                            //                 "";
+                            //         financeAmount.text =
+                            //             displayDocketDetails['finance_amount'] ??
+                            //                 "";
+                            //       }
+                            //       else if (value == false) {
+                            //         financeCompany.clear();
+                            //         financeAmount.clear();
+                            //       }
+                            //     });
+                            //   },
+                            //   title: const Text('Finance Scheme',
+                            //     style: TextStyle(fontSize: 18),
+                            //   ),
+                            //   controlAffinity: ListTileControlAffinity
+                            //       .trailing,
+                            // )
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Finance Scheme"),
+                              buildCustomToggleSwitch(
                                 value: financeScheme,
-                                onChanged: (value) {
-                                  setState(() {
-                                    financeScheme = value;
-                                    if (value == true) {
-                                      financeCompany.text =
-                                          displayDocketDetails['finance_company'] ??
-                                              "";
-                                      financeAmount.text =
-                                          displayDocketDetails['finance_amount'] ??
-                                              "";
-                                    }
-                                    else if (value == false) {
-                                      financeCompany.clear();
-                                      financeAmount.clear();
-                                    }
-                                  });
-                                },
-                                title: const Text('Finance Scheme',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      financeScheme = value;
+                                      if (value == true) {
+                                        financeCompany.text =
+                                            displayDocketDetails['finance_company'] ??
+                                                "";
+                                        financeAmount.text =
+                                            displayDocketDetails['finance_amount'] ??
+                                                "";
+                                      }
+                                      else if (value == false) {
+                                        financeCompany.clear();
+                                        financeAmount.clear();
+                                      }
+                                    });
+                                  },
                               )
+                            ],
                           ),
                         ),
                       ),
@@ -3792,261 +3842,280 @@ class _DocketDetailsState extends State<DocketDetails>
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    backgroundColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    content: Container(
-                      height: 300,
-                      width: 500,
-                      color: Colors.white,
+                    content: SizedBox(
                       child: Stack(
                         clipBehavior: Clip.none, children: <Widget>[
-                        Positioned(
-                          right: -40.0,
-                          top: -30.0,
+                        Container(
+                          width: 600,
+                          height: 380,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5)
+                          ),
+                          margin: const EdgeInsets.only(top: 13.0, right: 8.0),
+                          child: Padding(
+                              padding: const EdgeInsets.all(30),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: mTextFieldBorder),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    color: Colors.grey[100],
+                                    child: IgnorePointer(
+                                      ignoring: true,
+                                      child: MaterialButton(
+                                        hoverColor: Colors.transparent,
+                                        onPressed: () {
+
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Add Payment',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(height: 1,color:mTextFieldBorder),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    const Text("Receipt Date"),
+                                                    const SizedBox(height: 6,),
+                                                    TextFormField(
+                                                      onTap: () {
+                                                        _selectDate(context);
+                                                      },
+                                                      controller: recDate,
+                                                      decoration: textFieldDecoration(
+                                                          "Receipt Date", false),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child:
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      const Text("Select"),
+                                                      const SizedBox(height: 6,),
+                                                      Focus(
+                                                        onFocusChange: (value) {
+                                                          setState(() {
+
+                                                          });
+                                                        },
+                                                        skipTraversal: true,
+                                                        descendantsAreFocusable: true,
+                                                        child: LayoutBuilder(
+                                                            builder: (
+                                                                BuildContext context,
+                                                                BoxConstraints constraints) {
+                                                              return CustomPopupMenuButton(
+                                                                elevation: 4,
+                                                                decoration: customPopupDecoration(
+                                                                    hintText: 'Select type'),
+                                                                hintText: currentSelectedValue,
+                                                                childWidth: constraints
+                                                                    .maxWidth,
+                                                                textController: selectTypeController,
+                                                                shape: const RoundedRectangleBorder(
+                                                                  side: BorderSide(
+                                                                      color: mTextFieldBorder),
+                                                                  borderRadius: BorderRadius
+                                                                      .all(
+                                                                    Radius.circular(
+                                                                        5),
+                                                                  ),
+                                                                ),
+                                                                offset: const Offset(
+                                                                    1, 40),
+                                                                tooltip: '',
+                                                                itemBuilder: (
+                                                                    BuildContext context) {
+                                                                  return currencies
+                                                                      .map((value) {
+                                                                    return CustomPopupMenuItem(
+                                                                      value: value,
+                                                                      text: value,
+                                                                      child: Container(),
+                                                                    );
+                                                                  }).toList();
+                                                                },
+
+                                                                onSelected: (
+                                                                    String value) {
+                                                                  setState(() {
+                                                                    currentSelectedValue =
+                                                                        value;
+                                                                    selectTypeController
+                                                                        .text = value;
+                                                                  });
+                                                                },
+                                                                onCanceled: () {
+
+                                                                },
+                                                                child: Container(),
+                                                              );
+                                                            }
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    const Text("Note"),
+                                                    const SizedBox(height: 6,),
+                                                    TextFormField(
+                                                      controller: recNote,
+                                                      decoration: textFieldDecoration(
+                                                          "Note", false),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    const Text("Amount"),
+                                                    const SizedBox(height: 6,),
+                                                    TextFormField(
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .digitsOnly
+                                                      ],
+                                                      controller: recAmount,
+                                                      decoration: textFieldDecoration(
+                                                          "Amount", false),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                width: 120,
+                                                height: 28,
+                                                child: OutlinedMButton(
+                                                  text: 'Submit',
+                                                  buttonColor: mSaveButton,
+                                                  textColor: Colors.white,
+                                                  borderColor: mSaveButton,
+                                                  onTap: () {
+                                                    Map requestBody = {
+                                                      "dock_customer_id": '',
+                                                      "general_id": widget
+                                                          .docketData["general_id"],
+                                                      "payment_amount": recAmount.text,
+                                                      "payment_mode": currentSelectedValue,
+                                                      "receipt_date": recDate.text,
+                                                      "note": recNote.text,
+                                                      "docket_id": docketId,
+                                                    };
+                                                    addPaymentMode(requestBody)
+                                                        .whenComplete(() {
+                                                      setState(() {
+
+                                                      });
+                                                    });
+                                                    recAmount.clear();
+                                                    recDate.clear();
+                                                    recNote.clear();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(right: 0.0,
                           child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Container(
+                            child: Container(
                                 width: 30,
                                 height: 30,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
-                                      color: const Color.fromRGBO(
-                                          204, 204, 204, 1),
+                                      color:
+                                      const Color.fromRGBO(204, 204, 204, 1),
                                     ),
-                                    color: Colors.blue
-                                ),
+                                    color: Colors.blue),
                                 child: const Icon(
-                                    Icons.close_sharp, color: Colors.white),
-                              ),
-                            ),
+                                  Icons.close_sharp,
+                                  color: Colors.white,
+                                )),
+                            onTap: () {
+                              setState(() {
+                                Navigator.of(context).pop();
+                              });
+                            },
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              // color: Colors.white,
-                              border: Border.all(
-                                  color: Colors.grey
-                              )
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 500,
-                                color: Colors.grey[100],
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Add Payment",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Divider(
-                                height: 1,
-                                color: mTextFieldBorder,
-                              ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          const Text("Receipt Date"),
-                                          const SizedBox(height: 6,),
-                                          TextFormField(
-                                            onTap: () {
-                                              _selectDate(context);
-                                            },
-                                            controller: recDate,
-                                            decoration: textFieldDecoration(
-                                                "Receipt Date", false),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child:
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            const Text("Select"),
-                                            const SizedBox(height: 6,),
-                                            Focus(
-                                              onFocusChange: (value) {
-                                                setState(() {
-
-                                                });
-                                              },
-                                              skipTraversal: true,
-                                              descendantsAreFocusable: true,
-                                              child: LayoutBuilder(
-                                                  builder: (
-                                                      BuildContext context,
-                                                      BoxConstraints constraints) {
-                                                    return CustomPopupMenuButton(
-                                                      elevation: 4,
-                                                      decoration: customPopupDecoration(
-                                                          hintText: 'Select type'),
-                                                      hintText: currentSelectedValue,
-                                                      childWidth: constraints
-                                                          .maxWidth,
-                                                      textController: selectTypeController,
-                                                      shape: const RoundedRectangleBorder(
-                                                        side: BorderSide(
-                                                            color: mTextFieldBorder),
-                                                        borderRadius: BorderRadius
-                                                            .all(
-                                                          Radius.circular(
-                                                              5),
-                                                        ),
-                                                      ),
-                                                      offset: const Offset(
-                                                          1, 40),
-                                                      tooltip: '',
-                                                      itemBuilder: (
-                                                          BuildContext context) {
-                                                        return currencies
-                                                            .map((value) {
-                                                          return CustomPopupMenuItem(
-                                                            value: value,
-                                                            text: value,
-                                                            child: Container(),
-                                                          );
-                                                        }).toList();
-                                                      },
-
-                                                      onSelected: (
-                                                          String value) {
-                                                        setState(() {
-                                                          currentSelectedValue =
-                                                              value;
-                                                          selectTypeController
-                                                              .text = value;
-                                                        });
-                                                      },
-                                                      onCanceled: () {
-
-                                                      },
-                                                      child: Container(),
-                                                    );
-                                                  }
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          const Text("Note"),
-                                          const SizedBox(height: 6,),
-                                          TextFormField(
-                                            controller: recNote,
-                                            decoration: textFieldDecoration(
-                                                "Note", false),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          const Text("Amount"),
-                                          const SizedBox(height: 6,),
-                                          TextFormField(
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly
-                                            ],
-                                            controller: recAmount,
-                                            decoration: textFieldDecoration(
-                                                "Amount", false),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      width: 120,
-                                      height: 28,
-                                      child: OutlinedMButton(
-                                        text: 'Submit',
-                                        buttonColor: mSaveButton,
-                                        textColor: Colors.white,
-                                        borderColor: mSaveButton,
-                                        onTap: () {
-                                          Map requestBody = {
-                                            "dock_customer_id": '',
-                                            "general_id": widget
-                                                .docketData["general_id"],
-                                            "payment_amount": recAmount.text,
-                                            "payment_mode": currentSelectedValue,
-                                            "receipt_date": recDate.text,
-                                            "note": recNote.text,
-                                            "docket_id": docketId,
-                                          };
-                                          addPaymentMode(requestBody)
-                                              .whenComplete(() {
-                                            setState(() {
-
-                                            });
-                                          });
-                                          recAmount.clear();
-                                          recDate.clear();
-                                          recNote.clear();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
                       ],
                       ),
                     ),
@@ -4153,410 +4222,425 @@ class _DocketDetailsState extends State<DocketDetails>
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      backgroundColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      content: Container(
-                        // height: 300,
-                        width: 500,
-                        color: Colors.white,
+                      content: SizedBox(
                         child: Stack(
                           clipBehavior: Clip.none, children: <Widget>[
-                          Positioned(
-                            right: -35.0,
-                            top: -30.0,
+                          Container(
+                            width: 600,
+                            height: 360,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            margin: const EdgeInsets.only(top: 13.0, right: 8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(30.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: mTextFieldBorder),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      color: Colors.grey[100],
+                                      child: IgnorePointer(
+                                        ignoring: true,
+                                        child: MaterialButton(
+                                          hoverColor: Colors.transparent,
+                                          onPressed: () {
+
+                                          },
+                                          child: const Row(
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Add Accessories',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 1,
+                                      color: mTextFieldBorder,
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child:
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  const Text("Issued/NotIssued"),
+                                                  const SizedBox(height: 6,),
+                                                  Focus(
+                                                    onFocusChange: (value) {
+                                                      setState(() {
+
+                                                      });
+                                                    },
+                                                    skipTraversal: true,
+                                                    descendantsAreFocusable: true,
+                                                    child: LayoutBuilder(
+                                                        builder: (
+                                                            BuildContext context,
+                                                            BoxConstraints constraints) {
+                                                          return CustomPopupMenuButton(
+                                                            elevation: 4,
+                                                            decoration: customPopupDecoration(
+                                                                hintText: 'Issued/NotIssued'),
+                                                            hintText: issuedNotIssued,
+                                                            childWidth: constraints
+                                                                .maxWidth,
+                                                            textController: selectIssueController,
+                                                            shape: const RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: mTextFieldBorder),
+                                                              borderRadius: BorderRadius
+                                                                  .all(
+                                                                Radius.circular(5),
+                                                              ),
+                                                            ),
+                                                            offset: const Offset(
+                                                                1, 40),
+                                                            tooltip: '',
+                                                            itemBuilder: (
+                                                                BuildContext context) {
+                                                              return issue.map((
+                                                                  value) {
+                                                                return CustomPopupMenuItem(
+                                                                  value: value,
+                                                                  text: value,
+                                                                  child: Container(),
+                                                                );
+                                                              }).toList();
+                                                            },
+
+                                                            onSelected: (
+                                                                String value) {
+                                                              setState(() {
+                                                                issuedNotIssued =
+                                                                    value;
+                                                                selectIssueController
+                                                                    .text = value;
+                                                              });
+                                                            },
+                                                            onCanceled: () {
+
+                                                            },
+                                                            child: Container(),
+                                                          );
+                                                        }
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                const Text("Amount"),
+                                                const SizedBox(height: 6,),
+                                                TextFormField(
+                                                  controller: accessoriesAmount,
+                                                  decoration: textFieldDecoration(
+                                                      "Amount", false),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child:
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  const Text("Approved By"),
+                                                  const SizedBox(height: 6,),
+                                                  Focus(
+                                                    onFocusChange: (value) {
+                                                      setState(() {
+
+                                                      });
+                                                    },
+                                                    skipTraversal: true,
+                                                    descendantsAreFocusable: true,
+                                                    child: LayoutBuilder(
+                                                        builder: (
+                                                            BuildContext context,
+                                                            BoxConstraints constraints) {
+                                                          return CustomPopupMenuButton(
+                                                            elevation: 4,
+                                                            decoration: customPopupDecoration(
+                                                                hintText: 'Approved By'),
+                                                            hintText: approvedBy,
+                                                            childWidth: constraints
+                                                                .maxWidth,
+                                                            textController: selectApproveController,
+                                                            shape: const RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: mTextFieldBorder),
+                                                              borderRadius: BorderRadius
+                                                                  .all(
+                                                                Radius.circular(5),
+                                                              ),
+                                                            ),
+                                                            offset: const Offset(
+                                                                1, 40),
+                                                            tooltip: '',
+                                                            itemBuilder: (
+                                                                BuildContext context) {
+                                                              return approve.map((
+                                                                  value) {
+                                                                return CustomPopupMenuItem(
+                                                                  value: value,
+                                                                  text: value,
+                                                                  child: Container(),
+                                                                );
+                                                              }).toList();
+                                                            },
+
+                                                            onSelected: (
+                                                                String value) {
+                                                              setState(() {
+                                                                approvedBy = value;
+                                                                selectApproveController
+                                                                    .text = value;
+                                                              });
+                                                            },
+                                                            onCanceled: () {
+
+                                                            },
+                                                            child: Container(),
+                                                          );
+                                                        }
+                                                    ),
+                                                  ),
+                                                  // FormField<String>(
+                                                  //   builder: (FormFieldState<String> state) {
+                                                  //     return InputDecorator(
+                                                  //       decoration: decorationInput3("Approved By",false),
+                                                  //
+                                                  //       isEmpty: approvedBy == '',
+                                                  //       child: DropdownButtonHideUnderline(
+                                                  //         child: DropdownButton<String>(
+                                                  //           value: approvedBy,
+                                                  //           isDense: true,
+                                                  //           onChanged: (String? newValue) {
+                                                  //             setState(() {
+                                                  //               approvedBy = newValue.toString();
+                                                  //               state.didChange(newValue);
+                                                  //             });
+                                                  //           },
+                                                  //           items: ["Manager1","Manager2",].map(( value) {
+                                                  //             return DropdownMenuItem<String>(
+                                                  //               value: value,
+                                                  //               child: Text(value),
+                                                  //             );
+                                                  //           }).toList(),
+                                                  //         ),
+                                                  //       ),
+                                                  //     );
+                                                  //   },
+                                                  // ),
+                                                ],
+                                              )
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child:
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  const Text("Signature"),
+                                                  const SizedBox(height: 6,),
+                                                  Focus(
+                                                    onFocusChange: (value) {
+                                                      setState(() {
+
+                                                      });
+                                                    },
+                                                    skipTraversal: true,
+                                                    descendantsAreFocusable: true,
+                                                    child: LayoutBuilder(
+                                                        builder: (
+                                                            BuildContext context,
+                                                            BoxConstraints constraints) {
+                                                          return CustomPopupMenuButton(
+                                                            elevation: 4,
+                                                            decoration: customPopupDecoration(
+                                                                hintText: 'Signature'),
+                                                            hintText: accessoriesSign,
+                                                            childWidth: constraints
+                                                                .maxWidth,
+                                                            textController: selectSignatureController,
+                                                            shape: const RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: mTextFieldBorder),
+                                                              borderRadius: BorderRadius
+                                                                  .all(
+                                                                Radius.circular(5),
+                                                              ),
+                                                            ),
+                                                            offset: const Offset(
+                                                                1, 40),
+                                                            tooltip: '',
+                                                            itemBuilder: (
+                                                                BuildContext context) {
+                                                              return signature.map((
+                                                                  value) {
+                                                                return CustomPopupMenuItem(
+                                                                  value: value,
+                                                                  text: value,
+                                                                  child: Container(),
+                                                                );
+                                                              }).toList();
+                                                            },
+
+                                                            onSelected: (
+                                                                String value) {
+                                                              setState(() {
+                                                                accessoriesSign =
+                                                                    value;
+                                                                selectSignatureController
+                                                                    .text = value;
+                                                              });
+                                                            },
+                                                            onCanceled: () {
+
+                                                            },
+                                                            child: Container(),
+                                                          );
+                                                        }
+                                                    ),
+                                                  ),
+                                                  // FormField<String>(
+                                                  //   builder: (FormFieldState<String> state) {
+                                                  //     return InputDecorator(
+                                                  //       decoration: decorationInput3("Signature",false),
+                                                  //
+                                                  //       isEmpty: accessoriesSign == '',
+                                                  //       child: DropdownButtonHideUnderline(
+                                                  //         child: DropdownButton<String>(
+                                                  //           value: accessoriesSign,
+                                                  //           isDense: true,
+                                                  //           onChanged: (String? newValue) {
+                                                  //             setState(() {
+                                                  //               accessoriesSign = newValue.toString();
+                                                  //               state.didChange(newValue);
+                                                  //             });
+                                                  //           },
+                                                  //           items: ["Yes","No",].map(( value) {
+                                                  //             return DropdownMenuItem<String>(
+                                                  //               value: value,
+                                                  //               child: Text(value),
+                                                  //             );
+                                                  //           }).toList(),
+                                                  //         ),
+                                                  //       ),
+                                                  //     );
+                                                  //   },
+                                                  // ),
+                                                ],
+                                              )
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        width: 120,
+                                        height: 28,
+                                        child: OutlinedMButton(
+                                          text: 'Submit',
+                                          buttonColor: mSaveButton,
+                                          textColor: Colors.white,
+                                          borderColor: mSaveButton,
+                                          onTap: () {
+                                            Map requestBody = {
+                                              "dock_customer_id": '',
+                                              "general_id": widget
+                                                  .docketData["general_id"],
+                                              "docket_id": widget
+                                                  .docketData["docket_id"],
+                                              "accessories": issuedNotIssued,
+                                              "amount": accessoriesAmount.text,
+                                              "approved_by": approvedBy,
+                                              "signature": accessoriesSign,
+                                              "bill_no": "",
+                                            };
+                                            accessoriesAmount.clear();
+                                            addAccessories(requestBody)
+                                                .whenComplete(() {
+                                              getAccessories();
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(right: 0.0,
                             child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  Navigator.of(context).pop();
-                                });
-                              },
-                              child: Material(
-                                color: Colors.transparent,
-                                child: Container(
+                              child: Container(
                                   width: 30,
                                   height: 30,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       border: Border.all(
-                                        color: const Color.fromRGBO(
-                                            204, 204, 204, 1),
+                                        color:
+                                        const Color.fromRGBO(204, 204, 204, 1),
                                       ),
-                                      color: Colors.blue
-                                  ),
+                                      color: Colors.blue),
                                   child: const Icon(
-                                      Icons.close_sharp, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                // color: Colors.white,
-                                border: Border.all(
-                                    color: Colors.grey
-                                )
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  width: 500,
-                                  color: Colors.grey[100],
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "Add Accessories",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 1,
-                                  color: mTextFieldBorder,
-                                ),
-                                const SizedBox(height: 10,),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              const Text("Issued/NotIssued"),
-                                              const SizedBox(height: 6,),
-                                              Focus(
-                                                onFocusChange: (value) {
-                                                  setState(() {
-
-                                                  });
-                                                },
-                                                skipTraversal: true,
-                                                descendantsAreFocusable: true,
-                                                child: LayoutBuilder(
-                                                    builder: (
-                                                        BuildContext context,
-                                                        BoxConstraints constraints) {
-                                                      return CustomPopupMenuButton(
-                                                        elevation: 4,
-                                                        decoration: customPopupDecoration(
-                                                            hintText: 'Issued/NotIssued'),
-                                                        hintText: issuedNotIssued,
-                                                        childWidth: constraints
-                                                            .maxWidth,
-                                                        textController: selectIssueController,
-                                                        shape: const RoundedRectangleBorder(
-                                                          side: BorderSide(
-                                                              color: mTextFieldBorder),
-                                                          borderRadius: BorderRadius
-                                                              .all(
-                                                            Radius.circular(5),
-                                                          ),
-                                                        ),
-                                                        offset: const Offset(
-                                                            1, 40),
-                                                        tooltip: '',
-                                                        itemBuilder: (
-                                                            BuildContext context) {
-                                                          return issue.map((
-                                                              value) {
-                                                            return CustomPopupMenuItem(
-                                                              value: value,
-                                                              text: value,
-                                                              child: Container(),
-                                                            );
-                                                          }).toList();
-                                                        },
-
-                                                        onSelected: (
-                                                            String value) {
-                                                          setState(() {
-                                                            issuedNotIssued =
-                                                                value;
-                                                            selectIssueController
-                                                                .text = value;
-                                                          });
-                                                        },
-                                                        onCanceled: () {
-
-                                                        },
-                                                        child: Container(),
-                                                      );
-                                                    }
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            const Text("Amount"),
-                                            const SizedBox(height: 6,),
-                                            TextFormField(
-                                              controller: accessoriesAmount,
-                                              decoration: textFieldDecoration(
-                                                  "Amount", false),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10,),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              const Text("Approved By"),
-                                              const SizedBox(height: 6,),
-                                              Focus(
-                                                onFocusChange: (value) {
-                                                  setState(() {
-
-                                                  });
-                                                },
-                                                skipTraversal: true,
-                                                descendantsAreFocusable: true,
-                                                child: LayoutBuilder(
-                                                    builder: (
-                                                        BuildContext context,
-                                                        BoxConstraints constraints) {
-                                                      return CustomPopupMenuButton(
-                                                        elevation: 4,
-                                                        decoration: customPopupDecoration(
-                                                            hintText: 'Approved By'),
-                                                        hintText: approvedBy,
-                                                        childWidth: constraints
-                                                            .maxWidth,
-                                                        textController: selectApproveController,
-                                                        shape: const RoundedRectangleBorder(
-                                                          side: BorderSide(
-                                                              color: mTextFieldBorder),
-                                                          borderRadius: BorderRadius
-                                                              .all(
-                                                            Radius.circular(5),
-                                                          ),
-                                                        ),
-                                                        offset: const Offset(
-                                                            1, 40),
-                                                        tooltip: '',
-                                                        itemBuilder: (
-                                                            BuildContext context) {
-                                                          return approve.map((
-                                                              value) {
-                                                            return CustomPopupMenuItem(
-                                                              value: value,
-                                                              text: value,
-                                                              child: Container(),
-                                                            );
-                                                          }).toList();
-                                                        },
-
-                                                        onSelected: (
-                                                            String value) {
-                                                          setState(() {
-                                                            approvedBy = value;
-                                                            selectApproveController
-                                                                .text = value;
-                                                          });
-                                                        },
-                                                        onCanceled: () {
-
-                                                        },
-                                                        child: Container(),
-                                                      );
-                                                    }
-                                                ),
-                                              ),
-                                              // FormField<String>(
-                                              //   builder: (FormFieldState<String> state) {
-                                              //     return InputDecorator(
-                                              //       decoration: decorationInput3("Approved By",false),
-                                              //
-                                              //       isEmpty: approvedBy == '',
-                                              //       child: DropdownButtonHideUnderline(
-                                              //         child: DropdownButton<String>(
-                                              //           value: approvedBy,
-                                              //           isDense: true,
-                                              //           onChanged: (String? newValue) {
-                                              //             setState(() {
-                                              //               approvedBy = newValue.toString();
-                                              //               state.didChange(newValue);
-                                              //             });
-                                              //           },
-                                              //           items: ["Manager1","Manager2",].map(( value) {
-                                              //             return DropdownMenuItem<String>(
-                                              //               value: value,
-                                              //               child: Text(value),
-                                              //             );
-                                              //           }).toList(),
-                                              //         ),
-                                              //       ),
-                                              //     );
-                                              //   },
-                                              // ),
-                                            ],
-                                          )
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              const Text("Signature"),
-                                              const SizedBox(height: 6,),
-                                              Focus(
-                                                onFocusChange: (value) {
-                                                  setState(() {
-
-                                                  });
-                                                },
-                                                skipTraversal: true,
-                                                descendantsAreFocusable: true,
-                                                child: LayoutBuilder(
-                                                    builder: (
-                                                        BuildContext context,
-                                                        BoxConstraints constraints) {
-                                                      return CustomPopupMenuButton(
-                                                        elevation: 4,
-                                                        decoration: customPopupDecoration(
-                                                            hintText: 'Signature'),
-                                                        hintText: accessoriesSign,
-                                                        childWidth: constraints
-                                                            .maxWidth,
-                                                        textController: selectSignatureController,
-                                                        shape: const RoundedRectangleBorder(
-                                                          side: BorderSide(
-                                                              color: mTextFieldBorder),
-                                                          borderRadius: BorderRadius
-                                                              .all(
-                                                            Radius.circular(5),
-                                                          ),
-                                                        ),
-                                                        offset: const Offset(
-                                                            1, 40),
-                                                        tooltip: '',
-                                                        itemBuilder: (
-                                                            BuildContext context) {
-                                                          return signature.map((
-                                                              value) {
-                                                            return CustomPopupMenuItem(
-                                                              value: value,
-                                                              text: value,
-                                                              child: Container(),
-                                                            );
-                                                          }).toList();
-                                                        },
-
-                                                        onSelected: (
-                                                            String value) {
-                                                          setState(() {
-                                                            accessoriesSign =
-                                                                value;
-                                                            selectSignatureController
-                                                                .text = value;
-                                                          });
-                                                        },
-                                                        onCanceled: () {
-
-                                                        },
-                                                        child: Container(),
-                                                      );
-                                                    }
-                                                ),
-                                              ),
-                                              // FormField<String>(
-                                              //   builder: (FormFieldState<String> state) {
-                                              //     return InputDecorator(
-                                              //       decoration: decorationInput3("Signature",false),
-                                              //
-                                              //       isEmpty: accessoriesSign == '',
-                                              //       child: DropdownButtonHideUnderline(
-                                              //         child: DropdownButton<String>(
-                                              //           value: accessoriesSign,
-                                              //           isDense: true,
-                                              //           onChanged: (String? newValue) {
-                                              //             setState(() {
-                                              //               accessoriesSign = newValue.toString();
-                                              //               state.didChange(newValue);
-                                              //             });
-                                              //           },
-                                              //           items: ["Yes","No",].map(( value) {
-                                              //             return DropdownMenuItem<String>(
-                                              //               value: value,
-                                              //               child: Text(value),
-                                              //             );
-                                              //           }).toList(),
-                                              //         ),
-                                              //       ),
-                                              //     );
-                                              //   },
-                                              // ),
-                                            ],
-                                          )
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width: 120,
-                                    height: 28,
-                                    child: OutlinedMButton(
-                                      text: 'Submit',
-                                      buttonColor: mSaveButton,
-                                      textColor: Colors.white,
-                                      borderColor: mSaveButton,
-                                      onTap: () {
-                                        Map requestBody = {
-                                          "dock_customer_id": '',
-                                          "general_id": widget
-                                              .docketData["general_id"],
-                                          "docket_id": widget
-                                              .docketData["docket_id"],
-                                          "accessories": issuedNotIssued,
-                                          "amount": accessoriesAmount.text,
-                                          "approved_by": approvedBy,
-                                          "signature": accessoriesSign,
-                                          "bill_no": "",
-                                        };
-                                        accessoriesAmount.clear();
-                                        addAccessories(requestBody)
-                                            .whenComplete(() {
-                                          getAccessories();
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
+                                    Icons.close_sharp,
+                                    color: Colors.white,
+                                  )),
+                              onTap: () {
+                                setState(() {
+                                  Navigator.of(context).pop();
+                                });
+                              },
                             ),
                           ),
                         ],
@@ -6623,6 +6707,38 @@ class _DocketDetailsState extends State<DocketDetails>
       focusedBorder:   const OutlineInputBorder(
           borderSide:  BorderSide(color:Colors.blue )),
       enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+    );
+  }
+
+  Widget buildCustomToggleSwitch({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        onChanged(!value);
+      },
+      child: Container(
+        width: 40,
+        height: 20,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: value ? Colors.green : Colors.grey,
+        ),
+        child: Stack(
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          children: [
+            Container(
+              height: 20,
+              width: 20,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

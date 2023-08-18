@@ -62,9 +62,33 @@ class PdfGenerate{
           vehicleDetails(model, variant, color, onRoadPrice, transmission, exShowroomPrice),
           if(exchange == "Yes" || carFinance == "Yes")
           orderDetails(exchange, existingCarModel, evaluationDate, carFinance, financeAmount, financeCompany),
-          termsAndConditionDetails(termsAndConditions),
+          // termsAndConditionDetails(termsAndConditions),
+          Text(
+            "Terms And Conditions",
+            style: TextStyle(
+              color: PdfColors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 3),
+          Paragraph(
+              text: termsAndConditions,
+              style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10,)
+          ),
           SizedBox(height: 5),
-          customerNotesDetails(customerNotes),
+          // customerNotesDetails(customerNotes),
+          Text(
+            "Customer Notes",
+            style: TextStyle(
+              color: PdfColors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 3),
+          Paragraph(
+              text: customerNotes,
+              style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10,)
+          ),
         ],
       )
     );
@@ -381,35 +405,46 @@ class PdfGenerate{
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            height: 30,
-                            width: 230,
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  // height: 10,
+                                  width: 90,
+                                  child: Text("Existing Car Model",style: const TextStyle(fontSize: 10)),
+                                ),
+                                Container(
+                                  // height: 10,
+                                  width: 10,
+                                  child: Text(":",style: const TextStyle(fontSize: 10)),
+                                ),
+                                Container(
+                                  // height: 10,
+                                  width: 120,
+                                  child: Text(existingCarModel,style: const TextStyle(fontSize: 10),overflow: TextOverflow.clip,maxLines: 3),
+                                ),
+                              ]
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
                             child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 100,
-                                    child: Text("Existing Car Model",style: const TextStyle(fontSize: 10)),
+                                    width: 80,
+                                    child: Text("Evaluation Date",style: const TextStyle(fontSize: 10)),
                                   ),
-                                  Flexible(child: Text(": $existingCarModel",style: const TextStyle(fontSize: 10))),
+                                  Container(
+                                    // height: 10,
+                                    width: 10,
+                                    child: Text(":",style: const TextStyle(fontSize: 10)),
+                                  ),
+                                  Container(
+                                    // height: 10,
+                                    width: 120,
+                                    child: Text(evaluationDate,style: const TextStyle(fontSize: 10),overflow: TextOverflow.clip,maxLines: 3),
+                                  ),
                                 ]
-                            )
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Container(
-                                height: 30,
-                                width: 230,
-                                child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        child: Text("Evaluation Date",style: const TextStyle(fontSize: 10)),
-                                      ),
-                                      Flexible(child: Text(": $evaluationDate",style: const TextStyle(fontSize: 10))),
-                                    ]
-                                )
                             )
                           ),
                         ],
@@ -419,35 +454,45 @@ class PdfGenerate{
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                              height: 30,
-                              width: 230,
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 90,
+                                  child: Text("Finance Company",style: const TextStyle(fontSize: 10)),
+                                ),
+                                Container(
+                                  // height: 10,
+                                  width: 10,
+                                  child: Text(":",style: const TextStyle(fontSize: 10)),
+                                ),
+                                Container(
+                                  // height: 10,
+                                  width: 120,
+                                  child: Text(financeCompany,style: const TextStyle(fontSize: 10),overflow: TextOverflow.clip,maxLines: 3),
+                                ),
+                              ]
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
                             child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 100,
-                                    child: Text("Finance Company",style: const TextStyle(fontSize: 10)),
+                                    width: 80,
+                                    child: Text("Finance Amount",style: const TextStyle(fontSize: 10)),
                                   ),
-                                  Flexible(child: Text(": $financeCompany",style: const TextStyle(fontSize: 10))),
+                                  Container(
+                                    // height: 10,
+                                    width: 10,
+                                    child: Text(":",style: const TextStyle(fontSize: 10)),
+                                  ),
+                                  Container(
+                                    // height: 10,
+                                    width: 120,
+                                    child: Text(financeAmount,style: const TextStyle(fontSize: 10),overflow: TextOverflow.clip,maxLines: 3),
+                                  ),
                                 ]
-                            )
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Container(
-                                height: 30,
-                                width: 230,
-                                child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        child: Text("Finance Amount",style: const TextStyle(fontSize: 10)),
-                                      ),
-                                      Flexible(child: Text(": $financeAmount",style: const TextStyle(fontSize: 10))),
-                                    ]
-                                )
                             )
                           ),
                         ],
@@ -462,35 +507,37 @@ class PdfGenerate{
       ),
     );
   }
-  static Widget termsAndConditionDetails(String termsAndConditions){
+  static Widget termsAndConditionDetails(String termsAndConditions) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RichText(
-                text: TextSpan(
-                  text: "Terms And Conditions\n",
-                  style: TextStyle(
-                    color: PdfColors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    const TextSpan(
-                      text: '\n',
-                      style: TextStyle(
-                        fontSize: 10,
-                      )
-                    ),
-                    TextSpan(
-                      text: termsAndConditions,
-                      style:  TextStyle(color: PdfColors.black,fontWeight: FontWeight.normal,fontSize: 10)
-                    )
-                  ]
-                ),
-            )
-          ),
-        ]
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 10),
+        //   child: Text(
+        //     "Terms And Conditions",
+        //     style: TextStyle(
+        //       color: PdfColors.blue,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10),
+        Paragraph(
+          text: termsAndConditions,
+          style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10,)
+        ),// Adjust the spacing between title and content
+        // Container(
+        //   constraints: const BoxConstraints(maxHeight: double.infinity),
+        //   child: Text(
+        //     termsAndConditions,
+        //     style: TextStyle(
+        //       color: PdfColors.black,
+        //       fontWeight: FontWeight.normal,
+        //       fontSize: 10,
+        //     ),
+        //   )
+        // )
+      ],
     );
   }
   static Widget customerNotesDetails(String customerNotes)  {

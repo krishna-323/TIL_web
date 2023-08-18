@@ -922,6 +922,9 @@ var differentTabs=false;
                               const Text("Evaluation Date"),
                               const SizedBox(height: 6,),
                               TextFormField(
+                                onTap: () {
+                                  _selectEleDate(context);
+                                },
                                 enabled: exchangeController.text == "Yes",
                                 controller: dateController,
                                 validator: selectExchange == "Yes" ?checkEvaluationDate : null,
@@ -1059,6 +1062,19 @@ var differentTabs=false;
       ),
     );
 
+  }
+
+  Future<void> _selectEleDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null) {
+      setState(() {
+        dateController.text = (picked.toLocal()).toString().split(' ')[0];
+      });
+    }
   }
 
   String? checkNameError(String? value) {
