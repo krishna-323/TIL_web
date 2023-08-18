@@ -52,6 +52,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   final termsAndConditions=TextEditingController();
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
+  bool notesFromDealerError=false;
   // Tax Codes.
   List taxCodes=[];
   List taxPercentage=[];
@@ -170,32 +171,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                     shadowColor: Colors.black,
                     title: const Text("Create New Parts Purchase Order"),
                     actions: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Save and New',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context)=>DisplayEstimateItems(
-                                //       drawerWidth:widget.args.drawerWidth ,
-                                //       selectedDestination: widget.args.selectedDestination,
-                                //     )
-                                //     )
-                                // );
-                                setState(() {
-
-                                });
-                              },
-
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(width: 20),
                       Row(
                         children: [
@@ -208,15 +183,19 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               borderColor: mSaveButton,
                               onTap: (){
                                 setState(() {
-                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
+                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
                                     setState(() {
                                       searchVendor=true;
                                       searchWarehouse=true;
+                                      notesFromDealerError=true;
                                       if(vendorSearchController.text.isNotEmpty){
                                         searchVendor=false;
                                       }
                                       if(wareHouseController.text.isNotEmpty){
                                         searchWarehouse=false;
+                                      }
+                                      if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
+                                        notesFromDealerError=false;
                                       }
                                       if(indexNumber==0){
                                         // print('-------if condition------');
@@ -1467,7 +1446,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Terms and Conditions"),
+                const Text("Notes From Dealer"),
                 const SizedBox(height: 10,),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1489,7 +1468,9 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                         ),
                       ),
                     )
-                )
+                ),
+                const SizedBox(height: 5,),
+                notesFromDealerError==true?const Text("Enter Notes",style:TextStyle(color: Colors.red)):const Text(""),
               ],
             ),
           ),

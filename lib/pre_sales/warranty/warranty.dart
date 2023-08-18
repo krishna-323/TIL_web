@@ -611,7 +611,7 @@ class _WarrantyState extends State<Warranty> {
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
     }
     else{
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$role/$orderID";
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$userId/$orderID";
     }
     try{
       await getData(context: context,url: url).then((orderID){

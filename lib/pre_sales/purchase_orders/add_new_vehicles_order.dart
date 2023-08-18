@@ -48,6 +48,7 @@ class _EstimateState extends State<Estimate> {
   var subTaxTotal = TextEditingController();
   var subDiscountTotal = TextEditingController();
   final termsAndConditions=TextEditingController();
+  bool termsAndConditionError=false;
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
   final grandTotalAmount =TextEditingController();
@@ -56,6 +57,7 @@ class _EstimateState extends State<Estimate> {
   bool searchVendor=false;
   bool searchWarehouse=false;
   bool tableLineDataBool =false;
+  bool searchVendorError=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -168,32 +170,6 @@ class _EstimateState extends State<Estimate> {
                     shadowColor: Colors.black,
                     title: const Text("Create Vehicle Order"),
                     actions: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Save and New',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context)=>DisplayEstimateItems(
-                                //       drawerWidth:widget.args.drawerWidth ,
-                                //       selectedDestination: widget.args.selectedDestination,
-                                //     )
-                                //     )
-                                // );
-                                setState(() {
-
-                                });
-                              },
-
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(width: 20),
                       Row(
                         children: [
@@ -205,15 +181,20 @@ class _EstimateState extends State<Estimate> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
-                                if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0){
+
+                                 if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
                                   setState(() {
                                     searchVendor=true;
                                     searchWarehouse=true;
+                                    termsAndConditionError=true;
                                     if(vendorSearchController.text.isNotEmpty){
                                       searchVendor=false;
                                     }
                                     if(wareHouseController.text.isNotEmpty){
                                       searchWarehouse=false;
+                                    }
+                                    if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
+                                      termsAndConditionError=false;
                                     }
                                     if(indexNumber==0){
                                       // print('-------if condition------');
@@ -221,64 +202,63 @@ class _EstimateState extends State<Estimate> {
                                       tableLineDataBool=true;
                                     }
                                   });
-
                                 }
-                                  else{
-                                    print('--------else condition-----------------');
-                                    double tempTotal =0;
-                                    try{
-                                      tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
-                                    }
-                                    catch(e){
-                                      tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
-                                    }
-                                    postDetails= {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName": vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet": vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "string",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                      "termsConditions": termsAndConditions.text,
-                                      "status":"In-review",
-                                      "comment":"",
-                                      "total": tempTotal.toString(),
-                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "manager_id": managerId,
-                                      "userid": userId,
-                                      "org_id": orgId,
-                                      "items": [
-
-                                      ]
-                                    };
-                                    for (int i = 0; i < selectedVehicles.length; i++) {
-                                      postDetails['items'].add({
-                                        "amount": lineAmount[i].text,
-                                        "discount": discountPercentage[i].text,
-                                        "estVehicleId": "string",
-                                        "itemsService": selectedVehicles[i]['model_name']??"",
-                                        "priceItem": selectedVehicles[i]['onroad_price']??"",
-                                        "quantity": units[i].text,
-                                        "tax": tax[i].text,
-                                      }
-                                      );
-                                    }
-                                    // print('-------postDetails--------');
-                                    // print(postDetails);
-                                    postEstimate(postDetails);
+                                else{
+                                  print('--------else condition-----------------');
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
                                   }
+                                  catch(e){
+                                    tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                  }
+                                  postDetails= {
+                                    "additionalCharges": additionalCharges.text,
+                                    "address": "string",
+                                    "billAddressCity": vendorData['city']??"",
+                                    "billAddressName": vendorData['Name']??"",
+                                    "billAddressState": vendorData['state']??"",
+                                    "billAddressStreet": vendorData['street']??"",
+                                    "billAddressZipcode": vendorData['zipcode']??"",
+                                    "serviceDueDate": "string",
+                                    "serviceInvoice": salesInvoice.text,
+                                    "serviceInvoiceDate": salesInvoiceDate.text,
+                                    "shipAddressCity": wareHouse['city']??"",
+                                    "shipAddressName": wareHouse['Name']??"",
+                                    "shipAddressState": wareHouse['state']??"",
+                                    "shipAddressStreet": wareHouse['street']??"",
+                                    "shipAddressZipcode": wareHouse['zipcode']??"",
+                                    "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                    "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                    "termsConditions": termsAndConditions.text,
+                                    "status":"In-review",
+                                    "comment":"",
+                                    "total": tempTotal.toString(),
+                                    "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    "manager_id": managerId,
+                                    "userid": userId,
+                                    "org_id": orgId,
+                                    "items": [
+
+                                    ]
+                                  };
+                                  for (int i = 0; i < selectedVehicles.length; i++) {
+                                    postDetails['items'].add({
+                                      "amount": lineAmount[i].text,
+                                      "discount": discountPercentage[i].text,
+                                      "estVehicleId": "string",
+                                      "itemsService": selectedVehicles[i]['model_name']??"",
+                                      "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                      "quantity": units[i].text,
+                                      "tax": tax[i].text,
+                                    }
+                                    );
+                                  }
+                                  // print('-------postDetails--------');
+                                  // print(postDetails);
+                                  postEstimate(postDetails);
+                                }
                               },
 
                             ),
@@ -1425,7 +1405,7 @@ class _EstimateState extends State<Estimate> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Terms and Conditions"),
+                const Text("Notes From Dealer"),
                 const SizedBox(height: 10,),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1447,7 +1427,9 @@ class _EstimateState extends State<Estimate> {
                         ),
                       ),
                     )
-                )
+                ),
+                const SizedBox(height: 5,),
+                termsAndConditionError==true? const Text("Enter Notes",style: TextStyle(color: Colors.red),):const Text(""),
               ],
             ),
           ),

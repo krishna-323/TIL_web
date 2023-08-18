@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../classes/arguments_classes/arguments_classes.dart';
 import '../classes/motows_routes.dart';
+import '../docket/docket_list.dart';
 import '../utils/api/get_api.dart';
 import '../utils/static_data/motows_colors.dart';
 import 'kpi_card.dart';
@@ -205,83 +206,88 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   )),
                   const SizedBox(width: 30),
-                  Expanded(child: Card(
-                      color: Colors.transparent,
-                      elevation: 4,
-                      child:  Container(
-                        height: 130,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(12),
-                            topLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                            bottomLeft: Radius.circular(12),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0,top: 20),
-                              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 55,
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
-                                    child: const Icon(Icons.account_balance_wallet_outlined,color: Colors.white,size: 30),
-                                  ),
-                                  const SizedBox(width: 10,),
-                                  Expanded(
-                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Flexible(child: Text(" Dockets",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
-                                        Flexible(
-                                          child: Row(
-                                            children: [
-                                              Flexible(child: Text("1,300",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
-                                               const Flexible(
-                                                child: Row(
-                                                  children: [
-                                                    Flexible(child: Icon(Icons.arrow_upward_sharp,color: Colors.green,size: 16)),
-                                                    Flexible(child: Text("134",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.green,fontSize: 12,))),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            Container(
-                              height: 40,decoration: BoxDecoration(
-                              color: const Color(0xffF9FAFB),
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
-                              ),
-                              border: Border.all(
-                                width: 3,
-                                color: Colors.transparent,
-                                style: BorderStyle.solid,
-                              ),
+                  Expanded(child: InkWell(
+                    onTap:(){
+                      Navigator.pushReplacementNamed(context, MotowsRoutes.docketList,arguments: DocketListArgs(selectedDestination: 0,drawerWidth: 190));
+                   },
+                    child: Card(
+                        color: Colors.transparent,
+                        elevation: 4,
+                        child:  Container(
+                          height: 130,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              topLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(12),
+                              bottomLeft: Radius.circular(12),
                             ),
-                              child:  const Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
-                                    child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
-                                  ),
-                                ],
+                          ),
+                          child: Column(
+                            children: [
+                              Expanded(child: Padding(
+                                padding: const EdgeInsets.only(left: 20.0,top: 20),
+                                child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 55,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
+                                      child: const Icon(Icons.account_balance_wallet_outlined,color: Colors.white,size: 30),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    Expanded(
+                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(child: Text(" Dockets",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                          Flexible(
+                                            child: Row(
+                                              children: [
+                                                Flexible(child: Text("1,300",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+                                                 const Flexible(
+                                                  child: Row(
+                                                    children: [
+                                                      Flexible(child: Icon(Icons.arrow_upward_sharp,color: Colors.green,size: 16)),
+                                                      Flexible(child: Text("134",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.green,fontSize: 12,))),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                              Container(
+                                height: 40,decoration: BoxDecoration(
+                                color: const Color(0xffF9FAFB),
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                                border: Border.all(
+                                  width: 3,
+                                  color: Colors.transparent,
+                                  style: BorderStyle.solid,
+                                ),
                               ),
-                            )
-                          ],
-                        ),
-                      ))),
+                                child:  const Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
+                                      child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                  )),
                   const SizedBox(width: 30),
                   Expanded(child: Card(
                       color: Colors.transparent,

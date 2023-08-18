@@ -52,6 +52,11 @@ class CompanyManagementArguments{
   final double selectedDestination;
   CompanyManagementArguments({required this.drawerWidth,required this.selectedDestination});
 }
+class FormTemplatesArguments{
+  final double drawerWidth;
+  final double selectedDestination;
+  FormTemplatesArguments({required this.drawerWidth,required this.selectedDestination});
+}
 class UserManagementArguments{
   final double drawerWidth;
   final double selectedDestination;

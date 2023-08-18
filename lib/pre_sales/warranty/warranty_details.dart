@@ -46,12 +46,14 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
   Map updateEstimate={};
   bool warrantyLineDataError=false;
   final commentController=TextEditingController();
+  bool notesFromOEM=false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     estimateItems=widget.estimateItem;
-
+    // print("-----------------");
+    // print(estimateItems);
     userId=estimateItems['userid'];
     commentController.text=estimateItems['comment']??"";
 
@@ -183,305 +185,663 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                     shadowColor: Colors.black,
                     title: const Text("Warranty Details"),
                     actions: [
-                      if(role=="Manager")
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 120,height: 28,
-                              child: OutlinedMButton(
-                                text: 'Approve',
-                                textColor: Colors.green,
-                                borderColor: Colors.green,
-                                onTap: (){
-                                  setState(() {
-                                    if(selectedVehicles.isEmpty){
-                                      warrantyLineDataError=true;
-                                    }
-                                    else{
-                                      double tempTotal=0;
-                                      try{
-                                        tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                      if(role=="Manager")...[
+                        if(estimateItems["status"]=="In-review")...[
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Approve',
+                                  textColor: Colors.green,
+                                  borderColor: Colors.green,
+                                  onTap: (){
+                                    setState(() {
+                                      if(commentController.text.isEmpty || commentController.text==""){
+                                        notesFromOEM=true;
                                       }
-                                      catch(e){
-                                        tempTotal = double.parse(subAmountTotal.text);
+                                     else if(selectedVehicles.isEmpty){
+                                        warrantyLineDataError=true;
                                       }
-                                      updateEstimate =    {
-                                        "additionalCharges": additionalCharges.text,
-                                        "address": "string",
-                                        "billAddressCity": vendorData['city']??"",
-                                        "billAddressName":vendorData['Name']??"",
-                                        "billAddressState": vendorData['state']??"",
-                                        "billAddressStreet":vendorData['street']??"",
-                                        "billAddressZipcode": vendorData['zipcode']??"",
-                                        "serviceDueDate": "",
-                                        "estVehicleId": estimateItems['estVehicleId']??"",
-                                        "serviceInvoice": salesInvoice.text,
-                                        "serviceInvoiceDate": salesInvoiceDate.text,
-                                        "shipAddressCity":wareHouse['city']??"",
-                                        "shipAddressName": wareHouse['Name']??"",
-                                        "shipAddressState": wareHouse['state']??"",
-                                        "shipAddressStreet": wareHouse['street']??"",
-                                        "shipAddressZipcode": wareHouse['zipcode']??"",
-                                        "subTotalAmount": subAmountTotal.text,
-                                        "subTotalDiscount": subDiscountTotal.text,
-                                        "subTotalTax": subTaxTotal.text,
-                                        "status":"Approved",
-                                        "comment":estimateItems['comment']??"",
-                                        "termsConditions": termsAndConditions.text,
-                                        "total": tempTotal.toString(),
-                                        "totalTaxableAmount": 0,
-                                        "manager_id": managerId,
-                                        "userid": userId,
-                                        "org_id": orgId,
-                                        "items": [],
-                                      };
-                                      for(int i=0;i<selectedVehicles.length;i++){
-                                        updateEstimate['items'].add(
-                                            {
-                                              "amount": lineAmount[i].text,
-                                              "discount":  approvedPercentage[i].text,
-                                              "estVehicleId": estimateItems['estVehicleId'],
-                                              "itemsService":"${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
-                                              "priceItem": selectedVehicles[i]['selling_price'].toString(),
-                                              "quantity": units[i].text,
-                                              "tax": lineApprovedAmount[i].text,
-                                            }
-                                        );
-                                      }
+                                      else{
+                                        double tempTotal=0;
+                                        try{
+                                          tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                        }
+                                        catch(e){
+                                          tempTotal = double.parse(subAmountTotal.text);
+                                        }
+                                        updateEstimate =    {
+                                          "additionalCharges": additionalCharges.text,
+                                          "address": "string",
+                                          "billAddressCity": vendorData['city']??"",
+                                          "billAddressName":vendorData['Name']??"",
+                                          "billAddressState": vendorData['state']??"",
+                                          "billAddressStreet":vendorData['street']??"",
+                                          "billAddressZipcode": vendorData['zipcode']??"",
+                                          "serviceDueDate": "",
+                                          "estVehicleId": estimateItems['estVehicleId']??"",
+                                          "serviceInvoice": salesInvoice.text,
+                                          "serviceInvoiceDate": salesInvoiceDate.text,
+                                          "shipAddressCity":wareHouse['city']??"",
+                                          "shipAddressName": wareHouse['Name']??"",
+                                          "shipAddressState": wareHouse['state']??"",
+                                          "shipAddressStreet": wareHouse['street']??"",
+                                          "shipAddressZipcode": wareHouse['zipcode']??"",
+                                          "subTotalAmount": subAmountTotal.text,
+                                          "subTotalDiscount": subDiscountTotal.text,
+                                          "subTotalTax": subTaxTotal.text,
+                                          "status":"Approved",
+                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
+                                          "termsConditions": termsAndConditions.text,
+                                          "total": tempTotal.toString(),
+                                          "totalTaxableAmount": 0,
+                                          "manager_id": managerId,
+                                          "userid": userId,
+                                          "org_id": orgId,
+                                          "items": [],
+                                        };
+                                        for(int i=0;i<selectedVehicles.length;i++){
+                                          updateEstimate['items'].add(
+                                              {
+                                                "amount": lineAmount[i].text,
+                                                "discount":  approvedPercentage[i].text,
+                                                "estVehicleId": estimateItems['estVehicleId'],
+                                                "itemsService":"${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                                "priceItem": selectedVehicles[i]['selling_price'].toString(),
+                                                "quantity": units[i].text,
+                                                "tax": lineApprovedAmount[i].text,
+                                              }
+                                          );
+                                        }
 
-                                      putUpdatedEstimated(updateEstimate);
-                                    }
-                                  });
-                                },
+                                        putUpdatedEstimated(updateEstimate);
+                                      }
+                                    });
+                                  },
 
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 10,),
-                            SizedBox(
-                              width: 120,height: 28,
-                              child: OutlinedMButton(
-                                text: 'Reject',
-                                textColor:  Colors.red,
-                                borderColor: Colors.red,
-                                onTap: (){
-                                 rejectShowDialog();
-                                },
+                              const SizedBox(width: 10,),
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Reject',
+                                  textColor:  Colors.red,
+                                  borderColor: Colors.red,
+                                  onTap: (){
+                                    rejectShowDialog();
+                                  },
 
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 120,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Delete',
-                              textColor: mSaveButton,
-                              borderColor: mSaveButton,
-                              onTap: (){
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      child: StatefulBuilder(
-                                        builder: (context, setState) {
-                                          return SizedBox(
-                                            height: 200,
-                                            width: 300,
-                                            child: Stack(children: [
-                                              Container(
-                                                decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                                margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                                  child: Column(
-                                                    children: [
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      const Icon(
-                                                        Icons.warning_rounded,
-                                                        color: Colors.red,
-                                                        size: 50,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Column(
-                                                        children:  [
-                                                          const Center(
-                                                              child: Text(
-                                                                'Are You Sure, You Want To Delete ?',
-                                                                style: TextStyle(
-                                                                    color: Colors.indigo,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 15),
-                                                              )),
-                                                          const  SizedBox(height:5),
-                                                          Center(
-                                                              child: Text(estimateItems['estVehicleId']??"",
-                                                                style: const TextStyle(
-                                                                    color: Colors.indigo,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 15),
-                                                              )),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Delete',
+                                  textColor: mSaveButton,
+                                  borderColor: mSaveButton,
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          child: StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child: Stack(children: [
+                                                  Container(
+                                                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                      child: Column(
                                                         children: [
-                                                          MaterialButton(
-                                                            color: Colors.red,
-                                                            onPressed: () {
-
-                                                              deleteEstimateItemData(estimateItems['estVehicleId']);
-                                                            },
-                                                            child: const Text(
-                                                              'Ok',
-                                                              style: TextStyle(color: Colors.white),
-                                                            ),
+                                                          const SizedBox(
+                                                            height: 20,
                                                           ),
-                                                          MaterialButton(
-                                                            color: Colors.blue,
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                Navigator.of(context).pop();
-                                                              });
-                                                            },
-                                                            child: const Text(
-                                                              'Cancel',
-                                                              style: TextStyle(color: Colors.white),
-                                                            ),
+                                                          const Icon(
+                                                            Icons.warning_rounded,
+                                                            color: Colors.red,
+                                                            size: 50,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Column(
+                                                            children:  [
+                                                              const Center(
+                                                                  child: Text(
+                                                                    'Are You Sure, You Want To Delete ?',
+                                                                    style: TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                              const  SizedBox(height:5),
+                                                              Center(
+                                                                  child: Text(estimateItems['estVehicleId']??"",
+                                                                    style: const TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              MaterialButton(
+                                                                color: Colors.red,
+                                                                onPressed: () {
+
+                                                                  deleteEstimateItemData(estimateItems['estVehicleId']);
+                                                                },
+                                                                child: const Text(
+                                                                  'Ok',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              ),
+                                                              MaterialButton(
+                                                                color: Colors.blue,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    Navigator.of(context).pop();
+                                                                  });
+                                                                },
+                                                                child: const Text(
+                                                                  'Cancel',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              )
+                                                            ],
                                                           )
                                                         ],
-                                                      )
-                                                    ],
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                              Positioned(right: 0.0,
+                                                  Positioned(right: 0.0,
 
-                                                child: InkWell(
-                                                  child: Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(15),
-                                                          border: Border.all(
-                                                            color:
-                                                            const Color.fromRGBO(204, 204, 204, 1),
-                                                          ),
-                                                          color: Colors.blue),
-                                                      child: const Icon(
-                                                        Icons.close_sharp,
-                                                        color: Colors.white,
-                                                      )),
-                                                  onTap: () {
-                                                    setState(() {
-                                                      Navigator.of(context).pop();
-                                                    });
-                                                  },
+                                                    child: InkWell(
+                                                      child: Container(
+                                                          width: 30,
+                                                          height: 30,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(15),
+                                                              border: Border.all(
+                                                                color:
+                                                                const Color.fromRGBO(204, 204, 204, 1),
+                                                              ),
+                                                              color: Colors.blue),
+                                                          child: const Icon(
+                                                            Icons.close_sharp,
+                                                            color: Colors.white,
+                                                          )),
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.of(context).pop();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
                                                 ),
-                                              ),
-                                            ],
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
 
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 100,height: 28,
-                            child: OutlinedMButton(
-                              text: 'Update',
-                              buttonColor:mSaveButton ,
-                              textColor: Colors.white,
-                              borderColor: mSaveButton,
-                              onTap: (){
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 100,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Update',
+                                  buttonColor:mSaveButton ,
+                                  textColor: Colors.white,
+                                  borderColor: mSaveButton,
+                                  onTap: (){
 
-                                setState(() {
+                                    setState(() {
 
-                                  if(selectedVehicles.isEmpty){
-                                    warrantyLineDataError=true;
-                                  }
-                                  else{
-                                    double tempTotal=0;
-                                    try{
-                                      tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
-                                    }
-                                    catch(e){
-                                      tempTotal = double.parse(subAmountTotal.text);
-                                    }
-                                    updateEstimate =    {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName":vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet":vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "",
-                                      "estVehicleId": estimateItems['estVehicleId']??"",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text,
-                                      "status":estimateItems['status']??"In-review",
-                                      "comment":"",
-                                      "termsConditions": termsAndConditions.text,
-                                      "total": tempTotal.toString(),
-                                      "totalTaxableAmount": 0,
-                                      "manager_id": managerId,
-                                      "userid": userId,
-                                      "org_id": orgId,
-                                      "items": [],
-                                    };
-                                    for(int i=0;i<selectedVehicles.length;i++){
-                                      updateEstimate['items'].add(
-                                          {
-                                            "amount": lineAmount[i].text,
-                                            "discount":  approvedPercentage[i].text,
-                                            "estVehicleId": estimateItems['estVehicleId'],
-                                            "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
-                                            "priceItem": selectedVehicles[i]['selling_price'].toString(),
-                                            "quantity": units[i].text,
-                                            "tax": lineApprovedAmount[i].text,
-                                          }
-                                      );
-                                    }
-                                    putUpdatedEstimated(updateEstimate);
-                                  }
-                                });
-                              },
+                                      if(selectedVehicles.isEmpty){
+                                        warrantyLineDataError=true;
+                                      }
+                                      else{
+                                        double tempTotal=0;
+                                        try{
+                                          tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                        }
+                                        catch(e){
+                                          tempTotal = double.parse(subAmountTotal.text);
+                                        }
+                                        updateEstimate =    {
+                                          "additionalCharges": additionalCharges.text,
+                                          "address": "string",
+                                          "billAddressCity": vendorData['city']??"",
+                                          "billAddressName":vendorData['Name']??"",
+                                          "billAddressState": vendorData['state']??"",
+                                          "billAddressStreet":vendorData['street']??"",
+                                          "billAddressZipcode": vendorData['zipcode']??"",
+                                          "serviceDueDate": "",
+                                          "estVehicleId": estimateItems['estVehicleId']??"",
+                                          "serviceInvoice": salesInvoice.text,
+                                          "serviceInvoiceDate": salesInvoiceDate.text,
+                                          "shipAddressCity": wareHouse['city']??"",
+                                          "shipAddressName": wareHouse['Name']??"",
+                                          "shipAddressState": wareHouse['state']??"",
+                                          "shipAddressStreet": wareHouse['street']??"",
+                                          "shipAddressZipcode": wareHouse['zipcode']??"",
+                                          "subTotalAmount": subAmountTotal.text,
+                                          "subTotalDiscount": subDiscountTotal.text,
+                                          "subTotalTax": subTaxTotal.text,
+                                          "status":estimateItems['status']??"In-review",
+                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
+                                          "termsConditions": termsAndConditions.text,
+                                          "total": tempTotal.toString(),
+                                          "totalTaxableAmount": 0,
+                                          "manager_id": managerId,
+                                          "userid": userId,
+                                          "org_id": orgId,
+                                          "items": [],
+                                        };
+                                        for(int i=0;i<selectedVehicles.length;i++){
+                                          updateEstimate['items'].add(
+                                              {
+                                                "amount": lineAmount[i].text,
+                                                "discount":  approvedPercentage[i].text,
+                                                "estVehicleId": estimateItems['estVehicleId'],
+                                                "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                                "priceItem": selectedVehicles[i]['selling_price'].toString(),
+                                                "quantity": units[i].text,
+                                                "tax": lineApprovedAmount[i].text,
+                                              }
+                                          );
+                                        }
+                                        putUpdatedEstimated(updateEstimate);
+                                      }
+                                    });
+                                  },
 
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 30),
+                          const SizedBox(width: 30),
+                        ]
+                      else if(estimateItems["status"]=="Approved")...[
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Delete',
+                                  textColor: mSaveButton,
+                                  borderColor: mSaveButton,
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          child: StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child: Stack(children: [
+                                                  Container(
+                                                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                      child: Column(
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          const Icon(
+                                                            Icons.warning_rounded,
+                                                            color: Colors.red,
+                                                            size: 50,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Column(
+                                                            children:  [
+                                                              const Center(
+                                                                  child: Text(
+                                                                    'Are You Sure, You Want To Delete ?',
+                                                                    style: TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                              const  SizedBox(height:5),
+                                                              Center(
+                                                                  child: Text(estimateItems['estVehicleId']??"",
+                                                                    style: const TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              MaterialButton(
+                                                                color: Colors.red,
+                                                                onPressed: () {
+
+                                                                  deleteEstimateItemData(estimateItems['estVehicleId']);
+                                                                },
+                                                                child: const Text(
+                                                                  'Ok',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              ),
+                                                              MaterialButton(
+                                                                color: Colors.blue,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    Navigator.of(context).pop();
+                                                                  });
+                                                                },
+                                                                child: const Text(
+                                                                  'Cancel',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(right: 0.0,
+
+                                                    child: InkWell(
+                                                      child: Container(
+                                                          width: 30,
+                                                          height: 30,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(15),
+                                                              border: Border.all(
+                                                                color:
+                                                                const Color.fromRGBO(204, 204, 204, 1),
+                                                              ),
+                                                              color: Colors.blue),
+                                                          child: const Icon(
+                                                            Icons.close_sharp,
+                                                            color: Colors.white,
+                                                          )),
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.of(context).pop();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                        ]
+                      ]
+                      else if(role=="Admin" || role=="User")...[
+                        if(estimateItems["status"]=="In-review")...[
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 120,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Delete',
+                                  textColor: mSaveButton,
+                                  borderColor: mSaveButton,
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          child: StatefulBuilder(
+                                            builder: (context, setState) {
+                                              return SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child: Stack(children: [
+                                                  Container(
+                                                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                                      child: Column(
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          const Icon(
+                                                            Icons.warning_rounded,
+                                                            color: Colors.red,
+                                                            size: 50,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Column(
+                                                            children:  [
+                                                              const Center(
+                                                                  child: Text(
+                                                                    'Are You Sure, You Want To Delete ?',
+                                                                    style: TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                              const  SizedBox(height:5),
+                                                              Center(
+                                                                  child: Text(estimateItems['estVehicleId']??"",
+                                                                    style: const TextStyle(
+                                                                        color: Colors.indigo,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15),
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              MaterialButton(
+                                                                color: Colors.red,
+                                                                onPressed: () {
+
+                                                                  deleteEstimateItemData(estimateItems['estVehicleId']);
+                                                                },
+                                                                child: const Text(
+                                                                  'Ok',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              ),
+                                                              MaterialButton(
+                                                                color: Colors.blue,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    Navigator.of(context).pop();
+                                                                  });
+                                                                },
+                                                                child: const Text(
+                                                                  'Cancel',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(right: 0.0,
+
+                                                    child: InkWell(
+                                                      child: Container(
+                                                          width: 30,
+                                                          height: 30,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(15),
+                                                              border: Border.all(
+                                                                color:
+                                                                const Color.fromRGBO(204, 204, 204, 1),
+                                                              ),
+                                                              color: Colors.blue),
+                                                          child: const Icon(
+                                                            Icons.close_sharp,
+                                                            color: Colors.white,
+                                                          )),
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.of(context).pop();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 100,height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Update',
+                                  buttonColor:mSaveButton ,
+                                  textColor: Colors.white,
+                                  borderColor: mSaveButton,
+                                  onTap: (){
+
+                                    setState(() {
+
+                                      if(selectedVehicles.isEmpty){
+                                        warrantyLineDataError=true;
+                                      }
+                                      else{
+                                        double tempTotal=0;
+                                        try{
+                                          tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                        }
+                                        catch(e){
+                                          tempTotal = double.parse(subAmountTotal.text);
+                                        }
+                                        updateEstimate =    {
+                                          "additionalCharges": additionalCharges.text,
+                                          "address": "string",
+                                          "billAddressCity": vendorData['city']??"",
+                                          "billAddressName":vendorData['Name']??"",
+                                          "billAddressState": vendorData['state']??"",
+                                          "billAddressStreet":vendorData['street']??"",
+                                          "billAddressZipcode": vendorData['zipcode']??"",
+                                          "serviceDueDate": "",
+                                          "estVehicleId": estimateItems['estVehicleId']??"",
+                                          "serviceInvoice": salesInvoice.text,
+                                          "serviceInvoiceDate": salesInvoiceDate.text,
+                                          "shipAddressCity": wareHouse['city']??"",
+                                          "shipAddressName": wareHouse['Name']??"",
+                                          "shipAddressState": wareHouse['state']??"",
+                                          "shipAddressStreet": wareHouse['street']??"",
+                                          "shipAddressZipcode": wareHouse['zipcode']??"",
+                                          "subTotalAmount": subAmountTotal.text,
+                                          "subTotalDiscount": subDiscountTotal.text,
+                                          "subTotalTax": subTaxTotal.text,
+                                          "status":estimateItems['status']??"In-review",
+                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
+                                          "termsConditions": termsAndConditions.text,
+                                          "total": tempTotal.toString(),
+                                          "totalTaxableAmount": 0,
+                                          "manager_id": managerId,
+                                          "userid": userId,
+                                          "org_id": orgId,
+                                          "items": [],
+                                        };
+                                        for(int i=0;i<selectedVehicles.length;i++){
+                                          updateEstimate['items'].add(
+                                              {
+                                                "amount": lineAmount[i].text,
+                                                "discount":  approvedPercentage[i].text,
+                                                "estVehicleId": estimateItems['estVehicleId'],
+                                                "itemsService": "${selectedVehicles[i]['name']}${selectedVehicles[i]['description']==null?"":" - ${selectedVehicles[i]['description']}"}",
+                                                "priceItem": selectedVehicles[i]['selling_price'].toString(),
+                                                "quantity": units[i].text,
+                                                "tax": lineApprovedAmount[i].text,
+                                              }
+                                          );
+                                        }
+                                        putUpdatedEstimated(updateEstimate);
+                                      }
+                                    });
+                                  },
+
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 30),
+                        ]
+                      ]
+
                     ],
                   ),
                 ),
@@ -824,16 +1184,18 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        const Text('Sales Invoice #'),
+                                        const Text("Order Id"),
+                                      //  const Text('Sales Invoice #'),
                                         const SizedBox(height: 10,),
                                         Container(
                                           width: 120,
                                           height: 32,
                                           color: Colors.grey[200],
-                                          child: TextFormField(
-                                            controller: salesInvoice,
-                                            decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                          ),
+                                          child: Center(child: Text(estimateItems["estVehicleId"]??""))
+                                          // TextFormField(
+                                          //   controller: salesInvoice,
+                                          //   decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
+                                          // ),
                                         )
                                       ],),
                                     Column(
@@ -870,22 +1232,22 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                       ],)
                                   ]),
                               const SizedBox(height: 25,),
-                              Align(alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 120,height: 28,
-                                  child: OutlinedMButton(
-                                    text: 'Add Due Date',
-                                    textColor: mSaveButton,
-                                    borderColor: mSaveButton,
-                                    onTap: (){
-                                      setState(() {
-
-                                      });
-                                    },
-
-                                  ),
-                                ),
-                              ),
+                              // Align(alignment: Alignment.topLeft,
+                              //   child: SizedBox(
+                              //     width: 120,height: 28,
+                              //     child: OutlinedMButton(
+                              //       text: 'Add Due Date',
+                              //       textColor: mSaveButton,
+                              //       borderColor: mSaveButton,
+                              //       onTap: (){
+                              //         setState(() {
+                              //
+                              //         });
+                              //       },
+                              //
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -1500,7 +1862,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10,),
-                    const Text("Terms and Conditions"),
+                    const Text("Notes From Delivery"),
                     const SizedBox(height: 10,),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -1525,35 +1887,69 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                     )
                   ],
                 ),
-                if(commentController.text.isNotEmpty)
-                  Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 10,),
-                      const Text("Reject Reason"),
-                      const SizedBox(height: 10,),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                            height: 80,
-                            child: TextFormField(readOnly: true,
-                              controller: commentController,
-                              style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration:  const InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                              ),
+                commentController.text.isNotEmpty?
+                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10,),
+                    const Text("Notes From OEM"),
+                    const SizedBox(height: 10,),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                          height: 80,
+                          child: TextFormField(readOnly: true,
+                            controller: commentController,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration:  const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
                             ),
-                          )
-                      )
-                    ],
-                  ),
+                          ),
+                        )
+                    )
+                  ],
+                ):
+                Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:  [
+                    const  SizedBox(height:10),
+                    const  Text(
+                      'Notes From OEM',
+                    ),
+                    const  SizedBox(height:10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Container(
+                        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                        height: 80,
+                        child: TextFormField(
+                          controller: commentController,
+                          style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration:  const InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    if(notesFromOEM)
+                      const Text("Enter OEM Notes",style: TextStyle(color: Colors.red),)
+                  ],
+                ),
               ],
             ),
           ),
@@ -1893,7 +2289,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 width: 300,
                 child: Stack(children: [
                   Container(
-                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
                     margin:const EdgeInsets.only(top: 13.0,right: 8.0),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0,right: 25),
@@ -1902,38 +2298,26 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Column(
-                            children:  [
-                              const Center(
-                                  child: Text(
-                                    'Comment',
-                                    style: TextStyle(
-                                        fontSize: 15),
-                                  )),
-                              const  SizedBox(height:10),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                child: Container(
-                                  height: 80,
-                                  decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(8)),
-                                  child: TextFormField(
-                                    controller: commentController,
-                                    style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null,
-                                    decoration:  const InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+
+                          const SizedBox(
+                            height: 20,
                           ),
+                          const Icon(
+                            Icons.warning_rounded,
+                            color: Colors.red,
+                            size: 50,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Center(
+                              child: Text(
+                                'Are You Sure, You  Want To Reject ?',
+                                style: TextStyle(
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              )),
                           const SizedBox(
                             height: 20,
                           ),
@@ -1981,7 +2365,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                                           "subTotalDiscount": subDiscountTotal.text,
                                           "subTotalTax": subTaxTotal.text,
                                           "status":"Rejected",
-                                          "comment":commentController.text,
+                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
                                           "termsConditions": termsAndConditions.text,
                                           "total": tempTotal.toString(),
                                           "totalTaxableAmount": 0,

@@ -7,6 +7,7 @@ abstract class MotowsRoutes{
   static const String docketRoute = "/docket";
   static const String invoiceListRoute = "/invoice";
   static const String companyManagement= "/companyManagement";
+  static const String formTemplate="/formTemplate";
   static const String userManagement= "/userManagement";
   static const String uploadData = "/uploadData";
   static const String pricesRoute = "/prices";
