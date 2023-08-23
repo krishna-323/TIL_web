@@ -45,13 +45,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   var subTaxTotal = TextEditingController();
   var subDiscountTotal = TextEditingController();
   final termsAndConditions=TextEditingController();
+  bool termsError=false;
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
   Map estimateItems={};
   List lineItems=[];
   Map updateEstimate={};
   bool vehicleLineTableData=false;
-  final commentController=TextEditingController();
+  final notesFromOEMController=TextEditingController();
   //Tax Percentages.
   List taxPercentages=[];
   List taxCodes=[];
@@ -90,7 +91,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
     estimateItems=widget.estimateItem;
     userId=estimateItems['userid'];
-    commentController.text=estimateItems['comment']??"";
+    notesFromOEMController.text=estimateItems['comment']??"";
     billToName=estimateItems['billAddressName']??'';
     billToCity=estimateItems['billAddressCity']??"";
     billToStreet=estimateItems['billAddressStreet']??"";
@@ -183,6 +184,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
   String managerId ='';
   String orgId ='';
   bool notesFromOEM=false;
+  bool notesFromDealer=false;
   getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -233,13 +235,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   borderColor: Colors.green,
                                   onTap: (){
                                     setState(() {
-                                      if(commentController.text.isEmpty){
-                                        notesFromOEM=true;
-                                      }
-                                     else if(estimateItems['items'].isEmpty){
+                                      if(estimateItems['items'].isEmpty ){
                                         vehicleLineTableData=true;
                                       }
-                                      else{
+                                      else if(notesFromOEMController.text.trim().isEmpty){
+                                        notesFromOEM=true;
+                                      }
+                                      else {
+                                        notesFromOEM=false;
                                         double tempTotal =0;
                                         try{
                                           tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
@@ -270,7 +273,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           "termsConditions": termsAndConditions.text,
                                           "total":tempTotal.toString(),
                                           "status":"Approved",
-                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
+                                          "comment":notesFromOEMController.text.isEmpty?estimateItems['comment']??"":notesFromOEMController.text,
                                           "manager_id": managerId,
                                           "userid": userId,
                                           "org_id": orgId,
@@ -292,9 +295,13 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                               }
                                           );
                                         }
+                                        // print('---updateEstimate--');
+                                        // print(updateEstimate);
                                         putUpdatedEstimated(updateEstimate);
+
                                       }
                                     });
+
                                   },
 
                                 ),
@@ -307,7 +314,22 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   textColor:  Colors.red,
                                   borderColor: Colors.red,
                                   onTap: (){
-                                    rejectShowDialog();
+                                     if(notesFromOEMController.text.trim().isEmpty){
+                                       setState((){
+                                        notesFromOEM=true;
+                                      });
+                                    }
+                                     else{
+                                       setState((){
+                                         notesFromOEM=false;
+                                       });
+                                       showDialog(context: context,
+                                           builder: (context) {
+                                             return rejectShowDialog();
+                                           });
+                                     }
+
+
                                   },
 
                                 ),
@@ -384,6 +406,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                                                 color: Colors.red,
                                                                 onPressed: () {
                                                                   // print(userId);
+
                                                                   deleteEstimateItemData(estimateItems['estVehicleId']);
                                                                 },
                                                                 child: const Text(
@@ -459,10 +482,14 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   borderColor: mSaveButton,
                                   onTap: (){
                                     setState(() {
-                                      if(estimateItems['items'].isEmpty || indexNumber==0){
-                                        vehicleLineTableData=true;
+                                      if(estimateItems['items'].isEmpty || indexNumber==0) {
+                                        vehicleLineTableData = true;
                                       }
-                                      else{
+                                      else if(notesFromOEMController.text.trim().isEmpty){
+                                        notesFromOEM=true;
+                                      }
+                                      else {
+                                        notesFromOEM=false;
                                         double tempTotal =0;
                                         try{
                                           tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
@@ -493,7 +520,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                           "termsConditions": termsAndConditions.text,
                                           "total":tempTotal.toString(),
                                           "status":estimateItems['status']??"In-review",
-                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
+                                          "comment":notesFromOEMController.text.isEmpty?estimateItems['comment']??"":notesFromOEMController.text,
                                           "manager_id": managerId,
                                           "userid": userId,
                                           "org_id": orgId,
@@ -527,7 +554,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           ),
                           const SizedBox(width: 30),
                         ]
-                        else if(estimateItems["status"]=="Approved")...[
+                        else if(estimateItems["status"]=="Approved" || estimateItems['status']=="Rejected")...[
                           const SizedBox(width: 30),
                           Row(
                             children: [
@@ -810,10 +837,15 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                   borderColor: mSaveButton,
                                   onTap: (){
                                     setState(() {
-                                      if(estimateItems['items'].isEmpty || indexNumber==0){
+
+                                      if(estimateItems['items'].isEmpty  || indexNumber==0 ){
                                         vehicleLineTableData=true;
                                       }
+                                      else if( termsAndConditions.text.trim().isEmpty){
+                                        termsError=true;
+                                      }
                                       else{
+                                      termsError=false;
                                         double tempTotal =0;
                                         try{
                                           tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
@@ -1039,6 +1071,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: CustomTextFieldSearch(
+                              showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search Vendor') ,
                               controller: vendorSearchController,
                               future: fetchData,
@@ -1141,6 +1174,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 18.0,right: 18),
                             child: CustomTextFieldSearch(
+                              showAdd: false,
                               decoration:textFieldDecoration(hintText: 'Search warehouse'),
                               controller: wareHouseController,
                               future: fetchData,
@@ -1560,6 +1594,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                             setState(() {
                                 if(estimateItems['items'][index]['estItemId']!=null){
                                   deleteLineItem(estimateItems['items'][index]['estItemId'],index);
+
                               }
                               else{
                                     try{
@@ -1568,6 +1603,9 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                                         discountPercentage.removeAt(index);
                                         tax.removeAt(index);
                                         lineAmount.removeAt(index);
+                                        if(estimateItems['items'].isEmpty){
+                                          vehicleLineTableData=true;
+                                        }
                                         }
                                     catch(e){
                                       log('Type Of Exception $e');
@@ -1609,10 +1647,11 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor: vehicleLineTableData==true?Colors.red:mSaveButton,
+                                borderColor: vehicleLineTableData?Colors.red:mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
-                                  if(displayList.isEmpty){
+
+                                  if(estimateItems["items"].isEmpty){
                                     vehicleLineTableData=true;
                                   }
                                   brandNameController.clear();
@@ -2005,7 +2044,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
             padding: const EdgeInsets.all(28.0),
             child: Column(
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+               role=="User" || role=="Admin"? Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10,),
                     const Text("Notes From Dealer"),
@@ -2013,28 +2052,76 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2.0),
                         child: Container(
-                          decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                          height: 80,
+                          height: 100,
+                          decoration: BoxDecoration(border: Border.all(color: termsError?Colors.red:mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
                           child: TextFormField(
                             controller: termsAndConditions,
+                            decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.all(10)),
                             style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
-                            decoration:  const InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                            ),
                           ),
                         )
-                    )
+                    ),
+                    const SizedBox(height: 5,),
+                    termsError?const Text("Enter Dealer Notes",style: TextStyle(color: Colors.red),):const Text(""),
                   ],
-                ),
-                commentController.text.isNotEmpty?
-                  Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                ):
+               Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   const SizedBox(height: 10,),
+                   const Text("Notes From Dealer"),
+                   const SizedBox(height: 10,),
+                   Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                       child: Container(
+                         height: 100,
+                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
+                         child: TextFormField(
+                           readOnly: true,
+                           decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.all(10)),
+                           controller: termsAndConditions,
+                           style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                           keyboardType: TextInputType.multiline,
+                           maxLines: null,
+                        //   decoration:  decorationInput5("Enter Dealer Notes",notesFromDealer),
+                         ),
+                       )
+                   ),
+                   notesFromDealer?const Text("Enter Dealer Notes"):const Text(""),
+                 ],
+               ),
+                if(role=="Manager")...[
+                  Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:  [
+                      const  SizedBox(height:10),
+                      const  Text(
+                        'Notes From OEM',
+                      ),
+                      const  SizedBox(height:10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        child: Container(
+                          height: 80,
+                          decoration: BoxDecoration(border: Border.all(color: notesFromOEM?Colors.red:mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
+                          child: TextFormField(
+                            decoration: const InputDecoration(border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(10)),
+                            controller: notesFromOEMController,
+                            style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,maxLength: null,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5,),
+                      notesFromOEM?const Text("Enter OEM Notes",style: TextStyle(color: Colors.red),):const Text(""),
+                    ],
+                  ),
+                ]
+                else if(role=="User" || role=="Admin")...[
+                  notesFromOEMController.text.isNotEmpty? Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10,),
                       const Text("Notes From OEM"),
@@ -2042,60 +2129,23 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 2.0),
                           child: Container(
-                            decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
                             height: 80,
-                            child: TextFormField(readOnly: true,
-                              controller: commentController,
-                              style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration:  const InputDecoration(
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                              ),
+                            decoration: BoxDecoration(border: Border.all(color:notesFromOEM?Colors.red:mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
+                            child: TextFormField(
+                              decoration: const InputDecoration(border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(10)),
+                                readOnly: true,
+                                controller: notesFromOEMController,
+                                style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
                             ),
                           )
-                      )
-                    ],
-                  ):
-                Column(crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children:  [
-                    const  SizedBox(height:10),
-                    const  Text(
-                      'Notes From OEM',
-                    ),
-                    const  SizedBox(height:10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Container(
-                        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                        height: 80,
-                        child: TextFormField(
-                          controller: commentController,
-                          style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          decoration:  const InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                          ),
-                        ),
                       ),
-                    ),
-                    const SizedBox(height: 5,),
-                    if(notesFromOEM)
-                      const Text("Enter OEM Notes",style: TextStyle(color: Colors.red),)
-                  ],
-                ),
+                      notesFromOEM?const Text("Enter OEM Notes"):const Text(""),
+                    ],
+                  ):const Text(""),
+                ]
               ],
             ),
           ),
@@ -2441,6 +2491,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           log(value.toString());
           if(mounted){
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Updated')));
+            Navigator.of(context).pop();
             Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
           }
         }
@@ -2463,6 +2514,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
           tax.removeAt(index);
           lineAmount.removeAt(index);
           estimateItems['items'].removeWhere((map)=>map['estItemId']==estimateItemId);
+          vehicleLineTableData=true;
         });
       }
     }
@@ -2482,6 +2534,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
       if(response.statusCode ==200){
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text("$estVehicleId Id Deleted" )));
+          Navigator.of(context).pop();
           Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
         }
       }
@@ -2511,173 +2564,172 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
     );
   }
   // Reject.
-  rejectShowDialog(){
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return SizedBox(
-                height: 200,
-                width: 300,
-                child: Stack(children: [
-                  Container(
-                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0,right: 25),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Icon(
-                            Icons.warning_rounded,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Center(
-                              child: Text(
-                                'Are You Sure, You  Want To Reject ?',
-                                style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                              )),
-                          const SizedBox(
-                            height: 35,
-                          ),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 120,height: 28,
-                                child: OutlinedMButton(
-                                  text: 'Reject',
-                                  textColor: Colors.red,
-                                  borderColor: Colors.red,
-                                  onTap: (){
-                                    setState(() {
-                                      if(estimateItems['items'].isEmpty){
-                                        vehicleLineTableData=true;
-                                      }
-                                      else{
-                                        double tempTotal =0;
-                                        try{
-                                          tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
-                                        }
-                                        catch(e){
-                                          tempTotal = double.parse(subAmountTotal.text);
-                                        }
-                                        updateEstimate =    {
-                                          "additionalCharges": additionalCharges.text,
-                                          "address": "string",
-                                          "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
-                                          "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
-                                          "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
-                                          "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
-                                          "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
-                                          "serviceDueDate": "",
-                                          "estVehicleId": estimateItems['estVehicleId']??"",
-                                          "serviceInvoice": salesInvoice.text,
-                                          "serviceInvoiceDate": salesInvoiceDate.text,
-                                          "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
-                                          "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
-                                          "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
-                                          "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
-                                          "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
-                                          "subTotalAmount": subAmountTotal.text,
-                                          "subTotalDiscount": subDiscountTotal.text,
-                                          "subTotalTax": subTaxTotal.text,
-                                          "termsConditions": termsAndConditions.text,
-                                          "total":tempTotal.toString(),
-                                          "status":"Rejected",
-                                          "comment":commentController.text.isEmpty?estimateItems['comment']??"":commentController.text,
-                                          "manager_id": managerId,
-                                          "userid": userId,
-                                          "org_id": orgId,
-                                          "totalTaxableAmount": 0,
-                                          "items": [],
-                                        };
+ Widget rejectShowDialog(){
+   return Dialog(
+     backgroundColor: Colors.transparent,
+     child: StatefulBuilder(
+       builder: (context, setState) {
+         return SizedBox(
+           height: 200,
+           width: 300,
+           child: Stack(children: [
+             Container(
+               decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(10)),
+               margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+               child: Padding(
+                 padding: const EdgeInsets.only(left: 20.0,right: 25),
+                 child: Column(
+                   children: [
+                     const SizedBox(
+                       height: 20,
+                     ),
+                     const Icon(
+                       Icons.warning_rounded,
+                       color: Colors.red,
+                       size: 50,
+                     ),
+                     const SizedBox(
+                       height: 10,
+                     ),
+                     const Center(
+                         child: Text(
+                           'Are You Sure, You  Want To Reject ?',
+                           style: TextStyle(
+                               color: Colors.indigo,
+                               fontWeight: FontWeight.bold,
+                               fontSize: 15),
+                         )),
+                     const SizedBox(
+                       height: 35,
+                     ),
+                     Row(
+                       mainAxisAlignment:
+                       MainAxisAlignment.spaceBetween,
+                       children: [
+                         SizedBox(
+                           width: 120,height: 28,
+                           child: OutlinedMButton(
+                             text: 'Ok',
+                             textColor: Colors.red,
+                             borderColor: Colors.red,
+                             onTap: (){
+                               setState((){
+                                 if(estimateItems['items'].isEmpty){
+                                   vehicleLineTableData=true;
+                                 }
+                                 else{
+                                   double tempTotal =0;
+                                   try{
+                                     tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                   }
+                                   catch(e){
+                                     tempTotal = double.parse(subAmountTotal.text);
+                                   }
+                                   updateEstimate =    {
+                                     "additionalCharges": additionalCharges.text,
+                                     "address": "string",
+                                     "billAddressCity": showVendorDetails==true?vendorData['city']??"":billToCity,
+                                     "billAddressName":showVendorDetails==true?vendorData['Name']??"":billToName,
+                                     "billAddressState": showVendorDetails==true?vendorData['state']??"":billToState,
+                                     "billAddressStreet":showVendorDetails==true?vendorData['street']??"":billToStreet,
+                                     "billAddressZipcode": showVendorDetails==true?vendorData['zipcode']??"":billToZipcode,
+                                     "serviceDueDate": "",
+                                     "estVehicleId": estimateItems['estVehicleId']??"",
+                                     "serviceInvoice": salesInvoice.text,
+                                     "serviceInvoiceDate": salesInvoiceDate.text,
+                                     "shipAddressCity": showWareHouseDetails==true?wareHouse['city']??"":shipToCity,
+                                     "shipAddressName": showWareHouseDetails==true?wareHouse['Name']??"":shipToName,
+                                     "shipAddressState": showWareHouseDetails==true?wareHouse['state']??"":shipToState,
+                                     "shipAddressStreet": showWareHouseDetails==true?wareHouse['street']??"":shipToStreet,
+                                     "shipAddressZipcode": showWareHouseDetails==true?wareHouse['zipcode']??"":shipZipcode,
+                                     "subTotalAmount": subAmountTotal.text,
+                                     "subTotalDiscount": subDiscountTotal.text,
+                                     "subTotalTax": subTaxTotal.text,
+                                     "termsConditions": termsAndConditions.text,
+                                     "total":tempTotal.toString(),
+                                     "status":"Rejected",
+                                     "comment":notesFromOEMController.text.isEmpty?estimateItems['comment']??"":notesFromOEMController.text,
+                                     "manager_id": managerId,
+                                     "userid": userId,
+                                     "org_id": orgId,
+                                     "totalTaxableAmount": 0,
+                                     "items": [],
+                                   };
 
 
-                                        for(int i=0;i<estimateItems['items'].length;i++){
-                                          lineItems.add(
-                                              {
-                                                "amount": lineAmount[i].text,
-                                                "discount":  discountPercentage[i].text,
-                                                "estVehicleId": estimateItems['estVehicleId'],
-                                                "itemsService": estimateItems['items'][i]['itemsService'],
-                                                "priceItem": estimateItems['items'][i]['priceItem'].toString(),
-                                                "quantity": units[i].text,
-                                                "tax": tax[i].text,
-                                              }
-                                          );
-                                        }
-                                        putUpdatedEstimated(updateEstimate);
-                                      }
-                                    });
-                                  },
+                                   for(int i=0;i<estimateItems['items'].length;i++){
+                                     lineItems.add(
+                                         {
+                                           "amount": lineAmount[i].text,
+                                           "discount":  discountPercentage[i].text,
+                                           "estVehicleId": estimateItems['estVehicleId'],
+                                           "itemsService": estimateItems['items'][i]['itemsService'],
+                                           "priceItem": estimateItems['items'][i]['priceItem'].toString(),
+                                           "quantity": units[i].text,
+                                           "tax": tax[i].text,
+                                         }
+                                     );
+                                   }
+                                   putUpdatedEstimated(updateEstimate);
+                                 }
 
-                                ),
-                              ),
-                              SizedBox(
-                                width: 120,height: 28,
-                                child: OutlinedMButton(
-                                  text: 'Cancel',
-                                  textColor: Colors.green,
-                                  borderColor: Colors.green,
-                                  onTap: (){
-                                    Navigator.of(context).pop();
-                                  },
+                               });
+                               Navigator.of(context).pop();
 
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(right: 0.0,
+                             },
 
-                    child: InkWell(
-                      child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color:
-                                const Color.fromRGBO(204, 204, 204, 1),
-                              ),
-                              color: Colors.blue),
-                          child: const Icon(
-                            Icons.close_sharp,
-                            color: Colors.white,
-                          )),
-                      onTap: () {
-                        setState(() {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
+                           ),
+                         ),
+                         SizedBox(
+                           width: 120,height: 28,
+                           child: OutlinedMButton(
+                             text: 'Cancel',
+                             textColor: Colors.green,
+                             borderColor: Colors.green,
+                             onTap: (){
+                               Navigator.of(context).pop();
+                             },
+
+                           ),
+                         ),
+                       ],
+                     )
+                   ],
+                 ),
+               ),
+             ),
+             Positioned(right: 0.0,
+
+               child: InkWell(
+                 child: Container(
+                     width: 30,
+                     height: 30,
+                     decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(15),
+                         border: Border.all(
+                           color:
+                           const Color.fromRGBO(204, 204, 204, 1),
+                         ),
+                         color: Colors.blue),
+                     child: const Icon(
+                       Icons.close_sharp,
+                       color: Colors.white,
+                     )),
+                 onTap: () {
+                   setState(() {
+                     Navigator.of(context).pop();
+                   });
+                 },
+               ),
+             ),
+           ],
+           ),
+         );
+       },
+     ),
+   );
   }
+
 }
 class VendorModelAddress {
   String label;

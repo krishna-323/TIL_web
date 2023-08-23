@@ -69,7 +69,10 @@ class _EstimateState extends State<Estimate> {
       fetchTaxData();
     });
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
@@ -182,7 +185,7 @@ class _EstimateState extends State<Estimate> {
                               borderColor: mSaveButton,
                               onTap: (){
 
-                                 if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
+                                 if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.trim().isEmpty){
                                   setState(() {
                                     searchVendor=true;
                                     searchWarehouse=true;
@@ -193,9 +196,6 @@ class _EstimateState extends State<Estimate> {
                                     if(wareHouseController.text.isNotEmpty){
                                       searchWarehouse=false;
                                     }
-                                    if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
-                                      termsAndConditionError=false;
-                                    }
                                     if(indexNumber==0){
                                       // print('-------if condition------');
                                       // print(indexNumber);
@@ -203,8 +203,11 @@ class _EstimateState extends State<Estimate> {
                                     }
                                   });
                                 }
+
                                 else{
-                                  print('--------else condition-----------------');
+                                 setState(() {
+                                   termsAndConditionError=false;
+                                 });
                                   double tempTotal =0;
                                   try{
                                     tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
@@ -1413,27 +1416,20 @@ class _EstimateState extends State<Estimate> {
                 const SizedBox(height: 10,),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
+                    child:    Container(
                       height: 80,
+                      decoration: BoxDecoration(border: Border.all(color: termsAndConditionError?Colors.red:mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
                       child: TextFormField(
-                        controller: termsAndConditions,
-                        style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                        keyboardType: TextInputType.multiline,
+                        maxLength: null,
                         maxLines: null,
-                        decoration:  const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                        ),
+                        controller: termsAndConditions,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,contentPadding: EdgeInsets.all(10)),
                       ),
-                    )
+                    ),
                 ),
                 const SizedBox(height: 5,),
-                termsAndConditionError==true? const Text("Enter Notes",style: TextStyle(color: Colors.red),):const Text(""),
+                termsAndConditionError?const Text("Enter Dealer Notes",style: TextStyle(color: Colors.red),):const Text(""),
               ],
             ),
           ),
