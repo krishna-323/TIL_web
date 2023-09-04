@@ -3,6 +3,7 @@ import 'package:new_project/master/parts/add_part.dart';
 import 'package:new_project/master/parts/bloc/part_details_bloc.dart';
 import 'package:new_project/master/parts/edit_part.dart';
 import 'package:new_project/master/parts/model/part_detail_model.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,6 +11,7 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
 
 
@@ -142,77 +144,96 @@ class _PartDetailsState extends State<PartDetails> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          controller: ScrollController(),
-                          child: Column(mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(color: Colors.grey[200],
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                                  child: Column(
-                                    children: [
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text("All Items"),
-                                          Row(
-                                            children: [
-                                              SizedBox(width: 60,child: MaterialButton(onPressed: (){
-                                               // Navigator.push(context, MaterialPageRoute(builder: (context)=>AddItems(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: widget.selectedDestination))).then((value) =>fetchItemData());
-                                                Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                    const AddPart(drawerWidth: 190, selectedDestination: 2.4,)));
-                                              },color: Colors.blue,child: const Text("+ New",style: TextStyle(color: Colors.white)),))
-                                            ],
-                                          )
-                                        ],
-                                      ),
-
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-
-                                itemCount: itemList.length,
-                                itemBuilder: (context, index) {
-                                  print(itemList[index]);
-                                  return Column(
-                                    children: [
-                                      Container(color: selectedId==itemList[index]['newitem_id'] ?Colors.grey[100]: Colors.white,
-                                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            InkWell(onTap: (){
-                                              selectedId=itemList[index]['newitem_id'];
-                                              setState(() {
-                                                selectedIndex = index;
-                                                partDetailsBloc.fetchItemNetwork(itemList[index]['newitem_id'],authToken!
-
-                                                );
-                                              });
-                                            },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 8.0,top: 10,bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Center(child: Text(itemList[index]['name'],style: TextStyle(color: Colors.blue[800]))),
-                                                  ],
+                      SizedBox(
+                        width: 300,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 0, right: 0, top: 0, bottom: 0),
+                              child: Row(
+                                // crossAxisAlignment: CrossAxisAlignment.end,
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 300,
+                                    child: AppBar(
+                                      title: const Text("All Items",style: TextStyle(fontSize: 20)),
+                                      elevation: 1,
+                                      surfaceTintColor: Colors.white,
+                                      shadowColor: Colors.black,
+                                      backgroundColor: Colors.white,
+                                      actions: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                              width: 80,
+                                              height: 30,
+                                              decoration: BoxDecoration(border: Border.all(color:  Colors.blue),borderRadius: BorderRadius.circular(4)),
+                                              child: InkWell(
+                                                hoverColor: mHoverColor,
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                      PageRouteBuilder(
+                                                          pageBuilder: (context,animation1,animation2)=>
+                                                  const AddPart(drawerWidth: 190, selectedDestination: 2.4,)
+                                                      )
+                                                  );
+                                                },
+                                                child: const Center(
+                                                  child: Text("+ New",
+                                                      style: TextStyle(
+                                                          color: Colors.blue)),
                                                 ),
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(height: 1),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+
+                              itemCount: itemList.length,
+                              itemBuilder: (context, index) {
+                                print(itemList[index]);
+                                return Column(
+                                  children: [
+                                    Container(color: selectedId==itemList[index]['newitem_id'] ?Colors.grey[100]: Colors.white,
+                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(onTap: (){
+                                            selectedId=itemList[index]['newitem_id'];
+                                            setState(() {
+                                              selectedIndex = index;
+                                              partDetailsBloc.fetchItemNetwork(itemList[index]['newitem_id'],authToken!
+
+                                              );
+                                            });
+                                          },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 8.0,top: 10,bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  Center(child: Text(itemList[index]['name'],style: TextStyle(color: Colors.blue[800]))),
+                                                ],
                                               ),
                                             ),
+                                          ),
 
-                                          ],
-                                        ),
+                                        ],
                                       ),
-                                      const Divider(height: 1),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                                    ),
+                                    const Divider(height: 1),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                       const VerticalDivider(width: 1),
@@ -241,7 +262,7 @@ class _PartDetailsState extends State<PartDetails> {
                                             const Align(
                                               alignment: Alignment.topLeft,
                                               child: SizedBox(
-                                                width: 400,
+                                                // width: 400,
                                                 child: TabBar(
                                                   // /    labelStyle: TextStyle(fontWeight: FontWeight.bold),
                                                   indicatorColor: Colors.blue,
@@ -695,12 +716,19 @@ class _PartDetailsState extends State<PartDetails> {
                                                                   'Inventory',
                                                                   style: TextStyle(fontSize: 16),
                                                                 ),
-                                                                MaterialButton(onPressed: () {
-                                                                  showInventoryDialog(context);
-                                                                },
-                                                                  color: Colors.blue,
-                                                                  child: const Text('Add',style: TextStyle(color: Colors.white)),
-                                                                )
+                                                                SizedBox(
+                                                                  width: 80,
+                                                                  height: 30,
+                                                                  child: OutlinedMButton(
+                                                                    text: 'Add',
+                                                                    buttonColor:mSaveButton ,
+                                                                    textColor: Colors.white,
+                                                                    borderColor: mSaveButton,
+                                                                    onTap: () {
+                                                                      showInventoryDialog(context);
+                                                                    },
+                                                                  ),
+                                                                ),
                                                               ],
                                                             ),
                                                             const SizedBox(height: 20,),
@@ -772,12 +800,17 @@ class _PartDetailsState extends State<PartDetails> {
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                         children: [
-                                                                          MaterialButton(
-                                                                            onPressed: () {
+                                                                          SizedBox(
+                                                                            width: 80,
+                                                                            height: 30,
+                                                                            child: OutlinedMButton(
+                                                                              text :"Edit",
+                                                                              borderColor: Colors.indigo,
+                                                                              textColor:  Colors.indigo,
+                                                                              onTap: () {
 
-                                                                            },
-                                                                            color: Colors.blue,
-                                                                            child: const Text('Edit',style:TextStyle(color: Colors.white)),
+                                                                              },
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -808,12 +841,19 @@ class _PartDetailsState extends State<PartDetails> {
                                                                   'Purchase',
                                                                   style: TextStyle(fontSize: 16),
                                                                 ),
-                                                                MaterialButton(onPressed: () {
-                                                                  showPurchaseDialog(context);
-                                                                },
-                                                                  color: Colors.blue,
-                                                                  child: const Text('Add',style: TextStyle(color: Colors.white)),
-                                                                )
+                                                                SizedBox(
+                                                                  width: 80,
+                                                                  height: 30,
+                                                                  child: OutlinedMButton(
+                                                                    text: 'Add',
+                                                                    buttonColor:mSaveButton ,
+                                                                    textColor: Colors.white,
+                                                                    borderColor: mSaveButton,
+                                                                    onTap: () {
+                                                                      showPurchaseDialog(context);
+                                                                    },
+                                                                  ),
+                                                                ),
                                                               ],
                                                             ),
                                                             const SizedBox(height: 20,),
@@ -885,12 +925,17 @@ class _PartDetailsState extends State<PartDetails> {
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                         children: [
-                                                                          MaterialButton(
-                                                                            onPressed: () {
+                                                                          SizedBox(
+                                                                            width: 80,
+                                                                            height: 30,
+                                                                            child: OutlinedMButton(
+                                                                              text :"Edit",
+                                                                              borderColor: Colors.indigo,
+                                                                              textColor:  Colors.indigo,
+                                                                              onTap: () {
 
-                                                                            },
-                                                                            color: Colors.blue,
-                                                                            child: const Text('Edit',style:TextStyle(color: Colors.white)),
+                                                                              },
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -920,36 +965,20 @@ class _PartDetailsState extends State<PartDetails> {
                                         padding: const EdgeInsets.only(left: 30),
                                         child: Row(
                                           children: [
-                                            MaterialButton(
-                                              onPressed: () {
-                                                // print("----------view edit vendor-----------");
-                                                // print(snapshot.data!.vendorDocketData[0].vendorData);
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) => EditItems(
-                                                //           drawerWidth: widget.drawerWidth,
-                                                //           selectedDestination: widget.selectedDestination,
-                                                //           itemData:snapshot.data!.docketData[0].itemData,
-                                                //
-                                                //         )
-                                                //     )
-                                                // ).then(
-                                                //         (value) =>
-                                                //         fetchItemData());
-                                                Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                EditPart(drawerWidth: 190, selectedDestination: 2.4, itemData:snapshot.data!.docketData[0].itemData,)
-                                                ));
-                                              },
-                                              color: Colors.blue,
-                                              child: const Row(
-                                                children: [
-                                                  Icon(Icons.edit,color: Colors.white),
-                                                  Text("Edit",
-                                                      style: TextStyle(
-                                                          color: Colors.white)
-                                                  ),
-                                                ],
+                                            SizedBox(
+                                              width: 80,
+                                              height: 30,
+                                              child: OutlinedMButton(
+                                                text :"Edit",
+                                                borderColor: Colors.indigo,
+                                                textColor:  Colors.indigo,
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                      PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                      EditPart(drawerWidth: 190, selectedDestination: 2.4, itemData:snapshot.data!.docketData[0].itemData,)
+                                                  )
+                                                  );
+                                                },
                                               ),
                                             ),
                                           ],
@@ -1300,19 +1329,26 @@ class _InventoryDialogState extends State<InventoryDialog> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MaterialButton(onPressed: () {
-                  if(_inventoryForm.currentState!.validate()){
-                    itemCodeController.text.isNotEmpty&&
-                        nameController.text.isNotEmpty&&
-                        manufacturerController.text.isNotEmpty&&
-                        // descriptionController.text.isNotEmpty&&
-                        costPerItemController.text.isNotEmpty&&
-                        stockQuantityController.text.isNotEmpty;
-                    print(nameController.text);
-                  }
-                },
-                  color: Colors.blue,
-                  child: const Text('Save',style: TextStyle(color: Colors.white)),
+                SizedBox(
+                  width: 80,
+                  height: 30,
+                  child: OutlinedMButton(
+                    text: 'Save',
+                    buttonColor:mSaveButton ,
+                    textColor: Colors.white,
+                    borderColor: mSaveButton,
+                    onTap: () {
+                      if(_inventoryForm.currentState!.validate()){
+                        itemCodeController.text.isNotEmpty&&
+                            nameController.text.isNotEmpty&&
+                            manufacturerController.text.isNotEmpty&&
+                            // descriptionController.text.isNotEmpty&&
+                            costPerItemController.text.isNotEmpty&&
+                            stockQuantityController.text.isNotEmpty;
+                        print(nameController.text);
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -1609,13 +1645,20 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MaterialButton(onPressed: () {
-                  if(_grnForm.currentState!.validate()){
+                SizedBox(
+                  width: 80,
+                  height: 30,
+                  child: OutlinedMButton(
+                    text: 'Save',
+                    buttonColor:mSaveButton ,
+                    textColor: Colors.white,
+                    borderColor: mSaveButton,
+                    onTap: () {
+                      if(_grnForm.currentState!.validate()){
 
-                  }
-                },
-                  color: Colors.blue,
-                  child: const Text('Save',style: TextStyle(color: Colors.white)),
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

@@ -9,6 +9,7 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 import 'display_grn_details.dart';
 import 'display_vehicle_po.dart';
 
@@ -115,21 +116,41 @@ class _ListGrnItemsState extends State<ListGrnItems> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children:  [
                                     const Text("All Items",style: TextStyle(color: Colors.indigo,fontSize: 18,fontWeight: FontWeight.bold),),
-
-                                    MaterialButton(
-                                      onPressed: () {
-
-                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>const ViewGrn(
-                                          drawerWidth: 190,
-                                          selectedDestination: 2.2,),
-                                            transitionDuration: Duration.zero,
-                                            reverseTransitionDuration: Duration.zero
-                                        )).then((value) => fetchPurchaseData());
-                                      },color: Colors.blue,
-                                      child: const Text(
-                                          "+ New",
-                                          style: TextStyle(color: Colors.white)),
-                                    )
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        width: 100,
+                                        height: 30,
+                                        child: OutlinedMButton(
+                                          text: "+ New",
+                                          buttonColor:mSaveButton ,
+                                          textColor: Colors.white,
+                                          borderColor: mSaveButton,
+                                          onTap: () {
+                                            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>const ViewGrn(
+                                              drawerWidth: 190,
+                                              selectedDestination: 2.2,),
+                                                transitionDuration: Duration.zero,
+                                                reverseTransitionDuration: Duration.zero
+                                            )).then((value) => fetchPurchaseData());
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    // MaterialButton(
+                                    //   onPressed: () {
+                                    //
+                                    //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>const ViewGrn(
+                                    //       drawerWidth: 190,
+                                    //       selectedDestination: 2.2,),
+                                    //         transitionDuration: Duration.zero,
+                                    //         reverseTransitionDuration: Duration.zero
+                                    //     )).then((value) => fetchPurchaseData());
+                                    //   },color: Colors.blue,
+                                    //   child: const Text(
+                                    //       "+ New",
+                                    //       style: TextStyle(color: Colors.white)),
+                                    // )
                                   ],
                                 ),
                               ),

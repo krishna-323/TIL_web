@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_project/utils/static_data/motows_colors.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../classes/arguments_classes/arguments_classes.dart';
@@ -140,16 +141,19 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                                   ),
                                 ),
                                 //New Tax Details create.
-                                MaterialButton(
-                                  onPressed: () {
-                                    createTaxDialog(context);
-
-                                  },
-                                  color: Colors.blue,
-                                  child: const Text(
-                                      "+ New",
-                                      style: TextStyle(color: Colors.white)),
-                                )
+                                SizedBox(
+                                  width: 80,
+                                  height: 30,
+                                  child: OutlinedMButton(
+                                    text: '+ New',
+                                    buttonColor:mSaveButton ,
+                                    textColor: Colors.white,
+                                    borderColor: mSaveButton,
+                                    onTap: () {
+                                      createTaxDialog(context);
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -997,37 +1001,40 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                             ),
                             const SizedBox(height: 20,),
                             Align(alignment: Alignment.center,
-                              child: MaterialButton(
-                                color: Colors.lightBlue,
-                                child: const Text("Save",style: TextStyle(color: Colors.white),),
-                                onPressed: () {
+                              child: SizedBox(
+                                height: 30,
+                                width: 80,
+                                child: OutlinedMButton(
+                                    text: 'Save',
+                                  buttonColor:mSaveButton ,
+                                  textColor: Colors.white,
+                                  borderColor: mSaveButton,
+                                  onTap: () {
+                                    setState(() {
 
-                                  setState(() {
+                                      if(formKey.currentState!.validate()){
+                                        createTax={
+                                          'tax_code':tax.text,
+                                          'tax_name':name.text,
+                                          'tax_name1':tax1.text,
+                                          'tax_name2':tax2.text,
+                                          'tax_name3':tax3.text,
+                                          'tax_name4':tax4.text,
+                                          'tax_name5':tax5.text,
+                                          'tax_percent':'',
+                                          'tax_percent1':tax1Per.text,
+                                          'tax_percent2':tax2Per.text,
+                                          'tax_percent3':tax3Per.text,
+                                          'tax_percent4':tax4Per.text,
+                                          'tax_percent5':tax5Per.text,
+                                          'tax_total':answerController.text,
+                                        };
+                                        saveTaxDetails(createTax);
+                                      }
 
-                                    if(formKey.currentState!.validate()){
-                                      createTax={
-                                        'tax_code':tax.text,
-                                        'tax_name':name.text,
-                                        'tax_name1':tax1.text,
-                                        'tax_name2':tax2.text,
-                                        'tax_name3':tax3.text,
-                                        'tax_name4':tax4.text,
-                                        'tax_name5':tax5.text,
-                                        'tax_percent':'',
-                                        'tax_percent1':tax1Per.text,
-                                        'tax_percent2':tax2Per.text,
-                                        'tax_percent3':tax3Per.text,
-                                        'tax_percent4':tax4Per.text,
-                                        'tax_percent5':tax5Per.text,
-                                        'tax_total':answerController.text,
-                                      };
-                                      saveTaxDetails(createTax);
-                                    }
-
-                                  });
-
-
-                                },
+                                    });
+                                  },
+                                ),
                               ),
                             )
                           ],
@@ -1699,156 +1706,308 @@ class _ListTaxDetailsState extends State<ListTaxDetails> {
                             const SizedBox(height: 20,),
                             Row(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                MaterialButton(
-                                  color: Colors.lightBlue,
-                                  child: const Text("Update",style: TextStyle(color: Colors.white),),
-                                  onPressed: () {
+                                SizedBox(
+                                  width: 80,
+                                  height: 30,
+                                  child: OutlinedMButton(
+                                    text :"Update",
+                                    borderColor: Colors.indigo,
+                                    textColor:  Colors.indigo,
+                                    onTap: () {
+                                      setState(() {
 
-                                    setState(() {
+                                        if(editForm.currentState!.validate()){
+                                          Map  updateTax={
+                                            'tax_id':taxList['tax_id'],
+                                            'tax_code':taxCode.text,
+                                            'tax_name':name.text,
+                                            'tax_name1':tax1.text,
+                                            'tax_name2':tax2.text,
+                                            'tax_name3':tax3.text,
+                                            'tax_name4':tax4.text,
+                                            'tax_name5':tax5.text,
+                                            'tax_percent1':tax1Per.text,
+                                            'tax_percent2':tax2Per.text,
+                                            'tax_percent3':tax3Per.text,
+                                            'tax_percent4':tax4Per.text,
+                                            'tax_percent5':tax5Per.text,
+                                            'tax_total':editAnswerController.text,
+                                          };
+                                          // print('-------updateTax-----');
+                                          // print(updateTax);
+                                          updateDetails(updateTax);
+                                        }
 
-                                      if(editForm.currentState!.validate()){
-                                        Map  updateTax={
-                                          'tax_id':taxList['tax_id'],
-                                          'tax_code':taxCode.text,
-                                          'tax_name':name.text,
-                                          'tax_name1':tax1.text,
-                                          'tax_name2':tax2.text,
-                                          'tax_name3':tax3.text,
-                                          'tax_name4':tax4.text,
-                                          'tax_name5':tax5.text,
-                                          'tax_percent1':tax1Per.text,
-                                          'tax_percent2':tax2Per.text,
-                                          'tax_percent3':tax3Per.text,
-                                          'tax_percent4':tax4Per.text,
-                                          'tax_percent5':tax5Per.text,
-                                          'tax_total':editAnswerController.text,
-                                        };
-                                        // print('-------updateTax-----');
-                                        // print(updateTax);
-                                        updateDetails(updateTax);
-                                      }
-
-                                    });
-
-
-                                  },
+                                      });
+                                    },
+                                  ),
                                 ),
+                                // MaterialButton(
+                                //   color: Colors.lightBlue,
+                                //   child: const Text("Update",style: TextStyle(color: Colors.white),),
+                                //   onPressed: () {
+                                //
+                                //     setState(() {
+                                //
+                                //       if(editForm.currentState!.validate()){
+                                //         Map  updateTax={
+                                //           'tax_id':taxList['tax_id'],
+                                //           'tax_code':taxCode.text,
+                                //           'tax_name':name.text,
+                                //           'tax_name1':tax1.text,
+                                //           'tax_name2':tax2.text,
+                                //           'tax_name3':tax3.text,
+                                //           'tax_name4':tax4.text,
+                                //           'tax_name5':tax5.text,
+                                //           'tax_percent1':tax1Per.text,
+                                //           'tax_percent2':tax2Per.text,
+                                //           'tax_percent3':tax3Per.text,
+                                //           'tax_percent4':tax4Per.text,
+                                //           'tax_percent5':tax5Per.text,
+                                //           'tax_total':editAnswerController.text,
+                                //         };
+                                //         // print('-------updateTax-----');
+                                //         // print(updateTax);
+                                //         updateDetails(updateTax);
+                                //       }
+                                //
+                                //     });
+                                //
+                                //
+                                //   },
+                                // ),
                                 const SizedBox(width: 50,),
-                                MaterialButton(
-                                  color:Colors.red,
-                                  onPressed: (){
-                                    Navigator.of(context).pop();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          child: StatefulBuilder(
-                                            builder: (context, setState) {
-                                              return SizedBox(
-                                                height: 200,
-                                                width: 300,
-                                                child: Stack(children: [
-                                                  Container(
-                                                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                                    child: Column(
-                                                      children: [
+                                SizedBox(
+                                  height: 30,
+                                  width: 100,
+                                  child: OutlinedMButton(
+                                    text :"Delete",
+                                    borderColor: Colors.redAccent,
+                                    textColor:  Colors.redAccent,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            child: StatefulBuilder(
+                                              builder: (context, setState) {
+                                                return SizedBox(
+                                                  height: 200,
+                                                  width: 300,
+                                                  child: Stack(children: [
+                                                    Container(
+                                                      decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                                      margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                      child: Column(
+                                                        children: [
 
-                                                        const SizedBox(
-                                                          height: 20,
-                                                        ),
-                                                        const Icon(
-                                                          Icons.warning_rounded,
-                                                          color: Colors.red,
-                                                          size: 50,
-                                                        ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          const Icon(
+                                                            Icons.warning_rounded,
+                                                            color: Colors.red,
+                                                            size: 50,
+                                                          ),
 
-                                                        const Center(
-                                                            child: Text(
-                                                              'Are You Sure, You Want To Delete ?',
-                                                              style: TextStyle(
-                                                                  color: Colors.indigo,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontSize: 16),
+                                                          const Center(
+                                                              child: Text(
+                                                                'Are You Sure, You Want To Delete ?',
+                                                                style: TextStyle(
+                                                                    color: Colors.indigo,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 16),
+                                                              )),
+                                                          const SizedBox(
+                                                            height: 35,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceEvenly,
+                                                            children: [
+                                                              MaterialButton(
+                                                                color: Colors.red,
+                                                                onPressed: () {
+                                                                  // print(userId);
+
+                                                                  deleteTaxDetails(taxList['tax_id']);
+
+                                                                },
+                                                                child: const Text(
+                                                                  'Ok',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              ),
+                                                              MaterialButton(
+                                                                color: Colors.blue,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    Navigator.of(context).pop();
+                                                                  });
+                                                                },
+                                                                child: const Text(
+                                                                  'Cancel',
+                                                                  style: TextStyle(color: Colors.white),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Positioned(right: 0.0,
+
+                                                      child: InkWell(
+                                                        child: Container(
+                                                            width: 30,
+                                                            height: 30,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(15),
+                                                                border: Border.all(
+                                                                  color:
+                                                                  const Color.fromRGBO(204, 204, 204, 1),
+                                                                ),
+                                                                color: Colors.blue),
+                                                            child: const Icon(
+                                                              Icons.close_sharp,
+                                                              color: Colors.white,
                                                             )),
-                                                        const SizedBox(
-                                                          height: 35,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment.spaceEvenly,
-                                                          children: [
-                                                            MaterialButton(
-                                                              color: Colors.red,
-                                                              onPressed: () {
-                                                                // print(userId);
-
-                                                                deleteTaxDetails(taxList['tax_id']);
-
-                                                              },
-                                                              child: const Text(
-                                                                'Ok',
-                                                                style: TextStyle(color: Colors.white),
-                                                              ),
-                                                            ),
-                                                            MaterialButton(
-                                                              color: Colors.blue,
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  Navigator.of(context).pop();
-                                                                });
-                                                              },
-                                                              child: const Text(
-                                                                'Cancel',
-                                                                style: TextStyle(color: Colors.white),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
+                                                        onTap: () {
+                                                          setState(() {
+                                                            Navigator.of(context).pop();
+                                                          });
+                                                        },
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Positioned(right: 0.0,
+                                                  ],
 
-                                                    child: InkWell(
-                                                      child: Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(15),
-                                                              border: Border.all(
-                                                                color:
-                                                                const Color.fromRGBO(204, 204, 204, 1),
-                                                              ),
-                                                              color: Colors.blue),
-                                                          child: const Icon(
-                                                            Icons.close_sharp,
-                                                            color: Colors.white,
-                                                          )),
-                                                      onTap: () {
-                                                        setState(() {
-                                                          Navigator.of(context).pop();
-                                                        });
-                                                      },
-                                                    ),
                                                   ),
-                                                ],
-
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Row(
-                                      children: const [
-                                        Icon(Icons.delete,color: Colors.white,),
-                                        Text('Delete',style: TextStyle(color:Colors.white),)
-                                      ]),
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
+                                // MaterialButton(
+                                //   color:Colors.red,
+                                //   onPressed: (){
+                                //     Navigator.of(context).pop();
+                                //     showDialog(
+                                //       context: context,
+                                //       builder: (context) {
+                                //         return Dialog(
+                                //           backgroundColor: Colors.transparent,
+                                //           child: StatefulBuilder(
+                                //             builder: (context, setState) {
+                                //               return SizedBox(
+                                //                 height: 200,
+                                //                 width: 300,
+                                //                 child: Stack(children: [
+                                //                   Container(
+                                //                     decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                //                     margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                //                     child: Column(
+                                //                       children: [
+                                //
+                                //                         const SizedBox(
+                                //                           height: 20,
+                                //                         ),
+                                //                         const Icon(
+                                //                           Icons.warning_rounded,
+                                //                           color: Colors.red,
+                                //                           size: 50,
+                                //                         ),
+                                //
+                                //                         const Center(
+                                //                             child: Text(
+                                //                               'Are You Sure, You Want To Delete ?',
+                                //                               style: TextStyle(
+                                //                                   color: Colors.indigo,
+                                //                                   fontWeight: FontWeight.bold,
+                                //                                   fontSize: 16),
+                                //                             )),
+                                //                         const SizedBox(
+                                //                           height: 35,
+                                //                         ),
+                                //                         Row(
+                                //                           mainAxisAlignment:
+                                //                           MainAxisAlignment.spaceEvenly,
+                                //                           children: [
+                                //                             MaterialButton(
+                                //                               color: Colors.red,
+                                //                               onPressed: () {
+                                //                                 // print(userId);
+                                //
+                                //                                 deleteTaxDetails(taxList['tax_id']);
+                                //
+                                //                               },
+                                //                               child: const Text(
+                                //                                 'Ok',
+                                //                                 style: TextStyle(color: Colors.white),
+                                //                               ),
+                                //                             ),
+                                //                             MaterialButton(
+                                //                               color: Colors.blue,
+                                //                               onPressed: () {
+                                //                                 setState(() {
+                                //                                   Navigator.of(context).pop();
+                                //                                 });
+                                //                               },
+                                //                               child: const Text(
+                                //                                 'Cancel',
+                                //                                 style: TextStyle(color: Colors.white),
+                                //                               ),
+                                //                             )
+                                //                           ],
+                                //                         )
+                                //                       ],
+                                //                     ),
+                                //                   ),
+                                //                   Positioned(right: 0.0,
+                                //
+                                //                     child: InkWell(
+                                //                       child: Container(
+                                //                           width: 30,
+                                //                           height: 30,
+                                //                           decoration: BoxDecoration(
+                                //                               borderRadius: BorderRadius.circular(15),
+                                //                               border: Border.all(
+                                //                                 color:
+                                //                                 const Color.fromRGBO(204, 204, 204, 1),
+                                //                               ),
+                                //                               color: Colors.blue),
+                                //                           child: const Icon(
+                                //                             Icons.close_sharp,
+                                //                             color: Colors.white,
+                                //                           )),
+                                //                       onTap: () {
+                                //                         setState(() {
+                                //                           Navigator.of(context).pop();
+                                //                         });
+                                //                       },
+                                //                     ),
+                                //                   ),
+                                //                 ],
+                                //
+                                //                 ),
+                                //               );
+                                //             },
+                                //           ),
+                                //         );
+                                //       },
+                                //     );
+                                //   },
+                                //   child: Row(
+                                //       children: const [
+                                //         Icon(Icons.delete,color: Colors.white,),
+                                //         Text('Delete',style: TextStyle(color:Colors.white),)
+                                //       ]),
+                                // ),
                               ],
                             ),
 

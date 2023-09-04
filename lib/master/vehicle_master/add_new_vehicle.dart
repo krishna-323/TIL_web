@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,8 +36,10 @@ class _AddVehiclesState extends State<AddNewVehicles> {
   var typeController = TextEditingController();
   var transmissionController1 = TextEditingController();
   var transmissionController2 = TextEditingController();
+  var transmissionController3 = TextEditingController();
+  var transmissionController4 = TextEditingController();
   var imageController = TextEditingController();
-  String engineType='Select Customer Type';
+  String engineType='Select Engine Type';
 
   List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
 
@@ -56,8 +59,36 @@ class _AddVehiclesState extends State<AddNewVehicles> {
 
     )
   ];
-
-  var engine = "--Select--";
+  List <String> engineList = [
+    "Petrol",
+    "Diesel",
+    "EV",
+  ];
+  List <String> transType = [
+    "Automatic Transmission",
+    "Manual Transmission",
+    "Automated Manual Transmission",
+    "Continuously Variable Transmission",
+  ];
+  List <String> transType1 = [
+    "Automatic Transmission",
+    "Manual Transmission",
+    "Automated Manual Transmission",
+    "Continuously Variable Transmission",
+  ];
+  List <String> transType2 = [
+    "Automatic Transmission",
+    "Manual Transmission",
+    "Automated Manual Transmission",
+    "Continuously Variable Transmission",
+  ];
+  List <String> transType3 = [
+    "Automatic Transmission",
+    "Manual Transmission",
+    "Automated Manual Transmission",
+    "Continuously Variable Transmission",
+  ];
+  String engine = "--Select--";
   final _engineList = [
     'Petrol',
     'Diesel',
@@ -114,7 +145,7 @@ class _AddVehiclesState extends State<AddNewVehicles> {
     Transmission(key: 'MT', value: 'Manual Transmission'),
     Transmission(key: 'AMT', value: 'Automated Manual Transmission'),
     Transmission(key: 'CVT', value: 'Continuously Variable Transmission')
-  ];
+  ].cast<String>();
   Transmission? trans;
   final _transList = <Transmission>[
     Transmission(key: 'AT', value: 'Automatic Transmission'),
@@ -186,6 +217,11 @@ class _AddVehiclesState extends State<AddNewVehicles> {
   bool engineError3 = false;
   bool engineError4 = false;
   bool typeError = false;
+  bool isTypeFocused = false;
+  bool isTransFocused = false;
+  bool isTransFocused1 = false;
+  bool isTransFocused2 = false;
+  bool isTransFocused3 = false;
   bool transmissionError1 = false;
   bool transmissionError2 = false;
   bool transmissionError3 = false;
@@ -215,48 +251,96 @@ class _AddVehiclesState extends State<AddNewVehicles> {
           ),
           Expanded(
             child: Scaffold(
-
+              backgroundColor: Colors.white,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(88.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: AppBar(
+                      elevation: 1,
+                      surfaceTintColor: Colors.white,
+                      shadowColor: Colors.black,
+                      title: const Text("New Vehicle"),
+                      actions: [
+                        Row(
+                          children:  [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20,top: 8,bottom: 8),
+                              child: SizedBox(
+                                width: 100,
+                                height: 28,
+                                child: OutlinedMButton(
+                                  text: 'Save',
+                                  textColor: mSaveButton,
+                                  borderColor: mSaveButton,
+                                  onTap: () {
+                                    if(_addVehiclesForm.currentState!.validate()){
+                                      Map _addVehiclePage = {
+                                        "brand": brandController.text,
+                                        "name": nameController.text,
+                                        "color1":colorController1.text,
+                                        "color2":colorController2.text,
+                                        "color3":colorController3.text,
+                                        "color4":colorController4.text,
+                                        "color5":colorController5.text,
+                                        "engine_1":engineType,
+                                        "engine_2":"",
+                                        "engine_3":"",
+                                        "engine_4":"",
+                                        "transmission_1":engine,
+                                        "transmission_2":engine1,
+                                        "transmission_3":engine2,
+                                        "transmission_4":engine3,
+                                      };
+                                      // print(_addVehiclePage);
+                                      addNewVehicles(_addVehiclePage);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+              ),
               body: SingleChildScrollView(
                 child: Form(
                   key: _addVehiclesForm,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        color: const Color(0xffF4FAFF),
-                        child: Column(
-                          children: [
-                            //-----top container--------
-                            Container(
-                              height: 60,
+                  child: FocusTraversalGroup(
+                    policy: OrderedTraversalPolicy(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50, right: 50, top: 50, bottom: 50),
+                          child: Container(
+                            // width: 800,
+                            decoration: BoxDecoration(
                               color: Colors.white,
-                              child: Row(
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.only(top:20.0,bottom: 20,left:50),
-                                    child: Text("New Vehicle",style: TextStyle(color: Colors.indigo,fontSize: 18),),
-                                  ),
-                                ],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                  color: mTextFieldBorder.withOpacity(0.8),
+                                width: 1
                               ),
                             ),
-                            const SizedBox(height: 20,),
-                            if(width>800)
-                              Padding(
-                                padding: const EdgeInsets.only(left:50.0,right:50,top:30),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Brand'),
-                                        ),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: brandError ? 55:30,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15, top: 10, bottom: 30, right: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Brand"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
                                             child: TextFormField(
+                                              autofocus: true,
                                               validator: (value){
                                                 if(value == null || value.isEmpty){
                                                   setState(() {
@@ -271,27 +355,28 @@ class _AddVehiclesState extends State<AddNewVehicles> {
                                                 }
                                                 return null;
                                               },
-                                              style: const TextStyle(fontSize: 14),
                                               controller: brandController,
-                                              decoration: decorationInput5('Enter Brand', brandController.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Brand", error: brandError),
+                                              onChanged: (value) {
+                                                brandController.value = TextEditingValue(
+                                                  text: capitalizeFirstWord(value),
+                                                  selection: brandController.selection,
+                                                );
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Row(
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Name'),
-                                        ),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: nameError ? 55:30,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 20,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Name"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
                                             child: TextFormField(
+                                              autofocus: true,
                                               validator: (value){
                                                 if(value == null || value.isEmpty){
                                                   setState(() {
@@ -306,558 +391,32 @@ class _AddVehiclesState extends State<AddNewVehicles> {
                                                 }
                                                 return null;
                                               },
-                                              style: const TextStyle(fontSize: 14),
                                               controller: nameController,
-                                              decoration: decorationInput5('Enter Name', nameController.text.isNotEmpty),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Row(
-                                      children:  [
-                                        const SizedBox(
-                                          width: 170,
-                                          child: Text('Color'),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 140,
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 0),
-                                                  height: colorError1 ? 55:30,
-                                                  child: TextFormField(
-                                                    validator: (value){
-                                                      if(value == null || value.isEmpty){
-                                                        setState(() {
-                                                          colorError1 = true;
-                                                        });
-                                                        return 'Required';
-                                                      }
-                                                      else{
-                                                        setState(() {
-                                                          colorError1 = false;
-                                                        });
-                                                      }
-                                                      return null;
-                                                    },
-                                                    style: const TextStyle(fontSize: 14),
-                                                    controller: colorController1,
-                                                    decoration: decorationInput5('Color 1', colorController1.text.isNotEmpty),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                              SizedBox(
-                                                width: 140,
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 0),
-                                                  height: colorError2 ? 55:30,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(fontSize: 14),
-                                                    controller: colorController2,
-                                                    decoration: decorationInput5('Color 2', colorController2.text.isNotEmpty),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                              SizedBox(
-                                                width: 140,
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 0),
-                                                  height: colorError3 ? 55:30,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(fontSize: 14),
-                                                    controller: colorController3,
-                                                    decoration: decorationInput5('Color 3', colorController3.text.isNotEmpty),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                              SizedBox(
-                                                width: 140,
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 0),
-                                                  height: colorError4 ? 55:30,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(fontSize: 14),
-                                                    controller: colorController4,
-                                                    decoration: decorationInput5('Color 4', colorController4.text.isNotEmpty),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                              SizedBox(
-                                                width: 140,
-                                                child: AnimatedContainer(
-                                                  duration: const Duration(seconds: 0),
-                                                  height: colorError5 ? 55:30,
-                                                  child: TextFormField(
-                                                    style: const TextStyle(fontSize: 14),
-                                                    controller: colorController5,
-                                                    decoration: decorationInput5('Color 5', colorController5.text.isNotEmpty),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Row(
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Engine'),
-                                        ),
-                                        Row(
-                                          children: [
-
-                                            SizedBox(width: 200,
-                                              child: CustomPopupMenuButton<String>( childWidth: 385,position: CustomPopupMenuPosition.under,
-                                                decoration: customPopupDecoration(hintText: engineType),
-                                                hintText: engineType,
-                                                shape: const RoundedRectangleBorder(
-                                                  side: BorderSide(color:Color(0xFFE0E0E0)),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(5),
-                                                  ),
-                                                ),
-                                                offset: const Offset(1, 12),
-                                                tooltip: '',
-                                                itemBuilder: (context) {
-                                                  return customerTypes;
-                                                },
-                                                onSelected: (String value)  {
-                                                  setState(() {
-                                                    print(value);
-                                                    engineType= value;
-
-                                                  });
-                                                },
-                                                onCanceled: () {
-
-                                                },
-                                                child: Container(height: 30,width: 200,
-                                                  decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.grey)),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(right: 4),
-                                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        SizedBox(width: 150,child: Center(child: Text(engineType,style: TextStyle(color: Colors.grey[700],fontSize: 14,),maxLines: 1))),
-                                                        const Icon(Icons.arrow_drop_down,color: Colors.grey,size: 14,)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            // Container(
-                                            //   color: Colors.white,
-                                            //   width: 140,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: engineError1 ? 50 : 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       validator: (value) {
-                                            //         if (value == null ||
-                                            //             value=="--Select--") {
-                                            //           setState(() {
-                                            //             engineError1 = true;
-                                            //           });
-                                            //           return "Required";
-                                            //         } else {
-                                            //           setState(() {
-                                            //             engineError1 = false;
-                                            //           });
-                                            //         }
-                                            //       },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(
-                                            //             maxHeight: 200),
-                                            //         showSearchBox: false,
-                                            //         showSelectedItems: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration:
-                                            //           dropdownDecorationSearch(
-                                            //               engine.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: _engineList,
-                                            //       selectedItem: engine,
-                                            //       onChanged: engineDisplay,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            // const SizedBox(width: 20,),
-                                            // Container(
-                                            //   color: Colors.white,
-                                            //   width: 140,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: engineError2 ? 50 : 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       // validator: (value) {
-                                            //       //   if (value == null ||
-                                            //       //       value.isEmpty) {
-                                            //       //     setState(() {
-                                            //       //       engineError2 = true;
-                                            //       //     });
-                                            //       //     return "Required";
-                                            //       //   } else {
-                                            //       //     setState(() {
-                                            //       //       engineError2 = false;
-                                            //       //     });
-                                            //       //   }
-                                            //       // },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(
-                                            //             maxHeight: 200),
-                                            //         showSearchBox: false,
-                                            //         showSelectedItems: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration:
-                                            //           dropdownDecorationSearch(
-                                            //               engine1.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: _engineList1,
-                                            //       selectedItem: engine1,
-                                            //       onChanged: engineDisplay1,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            // const SizedBox(width: 20,),
-                                            // Container(
-                                            //   color: Colors.white,
-                                            //   width: 140,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: engineError3 ? 50 : 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       // validator: (value) {
-                                            //       //   if (value == null ||
-                                            //       //       value.isEmpty) {
-                                            //       //     setState(() {
-                                            //       //       engineError3 = true;
-                                            //       //     });
-                                            //       //     return "Required";
-                                            //       //   } else {
-                                            //       //     setState(() {
-                                            //       //       engineError3 = false;
-                                            //       //     });
-                                            //       //   }
-                                            //       // },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(
-                                            //             maxHeight: 200),
-                                            //         showSearchBox: false,
-                                            //         showSelectedItems: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration:
-                                            //           dropdownDecorationSearch(
-                                            //               engine2.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: _engineList2,
-                                            //       selectedItem: engine2,
-                                            //       onChanged: engineDisplay2,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            // const SizedBox(width: 20,),
-                                            // Container(
-                                            //   color: Colors.white,
-                                            //   width: 140,
-                                            //   child: AnimatedContainer(
-                                            //     duration: const Duration(seconds: 0),
-                                            //     height: engineError4 ? 50 : 30,
-                                            //     child: DropdownSearch<String>(
-                                            //       // validator: (value) {
-                                            //       //   if (value == null ||
-                                            //       //       value.isEmpty) {
-                                            //       //     setState(() {
-                                            //       //       engineError4 = true;
-                                            //       //     });
-                                            //       //     return "Required";
-                                            //       //   } else {
-                                            //       //     setState(() {
-                                            //       //       engineError4 = false;
-                                            //       //     });
-                                            //       //   }
-                                            //       // },
-                                            //       popupProps: PopupProps.menu(
-                                            //         constraints: const BoxConstraints(
-                                            //             maxHeight: 200),
-                                            //         showSearchBox: false,
-                                            //         showSelectedItems: true,
-                                            //         searchFieldProps: TextFieldProps(
-                                            //           decoration:
-                                            //           dropdownDecorationSearch(
-                                            //               engine3.isNotEmpty),
-                                            //           cursorColor: Colors.grey,
-                                            //           style: const TextStyle(
-                                            //             fontSize: 14,
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       items: _engineList3,
-                                            //       selectedItem: engine3,
-                                            //       onChanged: engineDisplay3,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Row(
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Transmission'),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              color: Colors.white,
-                                              width: 140,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(seconds: 0),
-                                                height: transmissionError1 ? 50 : 30,
-                                                child: DropdownButtonFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.toString().isEmpty) {
-                                                      setState(() {
-                                                        transmissionError1 = true;
-                                                      });
-                                                      return "Required";
-                                                    } else {
-                                                      setState(() {
-                                                        transmissionError1 = false;
-                                                      });
-                                                    }
-                                                    return null;
-                                                  },
-                                                  hint: const Text('--Select--'),
-                                                  decoration: dropdownDecorationSearch(trans0.toString().isNotEmpty),
-                                                  items: _transList0.map((Transmission value){
-                                                    return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text("${value.value}, ${value.key}"),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (value) => setState(() {
-                                                    trans0 = value as Transmission?;
-                                                  }),
-                                                  selectedItemBuilder: (context) {
-                                                    return _transList0.map((e) {
-                                                      return Text(e.key);
-                                                    }).toList();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 20,),
-                                            Container(
-                                              color: Colors.white,
-                                              width: 140,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(seconds: 0),
-                                                height: transmissionError2 ? 50 : 30,
-                                                child: DropdownButtonFormField(
-                                                  hint: const Text('--Select--'),
-                                                  decoration: dropdownDecorationSearch(trans.toString().isNotEmpty),
-                                                  items: _transList.map((Transmission value){
-                                                    return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text("${value.value}, ${value.key}"),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (value) => setState(() {
-                                                    trans = value as Transmission?;
-                                                  }),
-                                                  selectedItemBuilder: (context) {
-                                                    return _transList.map((e) {
-                                                      return Text(e.key);
-                                                    }).toList();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 20,),
-                                            Container(
-                                              color: Colors.white,
-                                              width: 140,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(seconds: 0),
-                                                height: transmissionError3 ? 50 : 30,
-                                                child: DropdownButtonFormField(
-                                                  hint: const Text('--Select--'),
-                                                  decoration: dropdownDecorationSearch(trans1.toString().isNotEmpty),
-                                                  items: _transList1.map((Transmission value){
-                                                    return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text("${value.value}, ${value.key}"),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (value) => setState(() {
-                                                    trans1 = value as Transmission?;
-                                                  }),
-                                                  selectedItemBuilder: (context) {
-                                                    return _transList1.map((e) {
-                                                      return Text(e.key);
-                                                    }).toList();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 20,),
-                                            Container(
-                                              color: Colors.white,
-                                              width: 140,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(seconds: 0),
-                                                height: transmissionError4 ? 50 : 30,
-                                                child: DropdownButtonFormField(
-                                                  hint: const Text('--Select--'),
-                                                  decoration: dropdownDecorationSearch(trans2.toString().isNotEmpty),
-                                                  items: _transList2.map((Transmission value){
-                                                    return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text("${value.value}, ${value.key}"),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (value) => setState(() {
-                                                    trans2 = value as Transmission?;
-                                                  }),
-                                                  selectedItemBuilder: (context) {
-                                                    return _transList2.map((e) {
-                                                      return Text(e.key);
-                                                    }).toList();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if(width<800)
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Brand'),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: brandError ? 55:30,
-                                            child: TextFormField(
-                                              validator: (value){
-                                                if(value == null || value.isEmpty){
-                                                  setState(() {
-                                                    brandError = true;
-                                                  });
-                                                  return 'Required';
-                                                }
-                                                else{
-                                                  setState(() {
-                                                    brandError = false;
-                                                  });
-                                                }
-                                                return null;
+                                              decoration: textFieldDecoration(hintText: "Name", error: nameError),
+                                              onChanged: (value) {
+                                                nameController.value = TextEditingValue(
+                                                  text: capitalizeFirstWord(value),
+                                                  selection: nameController.selection,
+                                                );
                                               },
-                                              style: const TextStyle(fontSize: 14),
-                                              controller: brandController,
-                                              decoration: decorationInput5('', brandController.text.isNotEmpty),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Name'),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: nameError ? 55:30,
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20,),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Color 1"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 150,
                                             child: TextFormField(
-                                              validator: (value){
-                                                if(value == null || value.isEmpty){
-                                                  setState(() {
-                                                    nameError = true;
-                                                  });
-                                                  return 'Required';
-                                                }
-                                                else{
-                                                  setState(() {
-                                                    nameError = false;
-                                                  });
-                                                }
-                                                return null;
-                                              },
-                                              style: const TextStyle(fontSize: 14),
-                                              controller: nameController,
-                                              decoration: decorationInput5('', nameController.text.isNotEmpty),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Color'),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: colorError1 ? 55:30,
-                                            child: TextFormField(
+                                              autofocus: true,
                                               validator: (value){
                                                 if(value == null || value.isEmpty){
                                                   setState(() {
@@ -872,430 +431,430 @@ class _AddVehiclesState extends State<AddNewVehicles> {
                                                 }
                                                 return null;
                                               },
-                                              style: const TextStyle(fontSize: 14),
                                               controller: colorController1,
-                                              decoration: decorationInput5('', colorController1.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Color 1", error: colorError1),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: colorError2 ? 55:30,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Color 2"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 150,
                                             child: TextFormField(
-                                              style: const TextStyle(fontSize: 14),
+                                              autofocus: true,
                                               controller: colorController2,
-                                              decoration: decorationInput5('', colorController2.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Color 2", error: colorError2),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: colorError3 ? 55:30,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Color 3"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 150,
                                             child: TextFormField(
-                                              style: const TextStyle(fontSize: 14),
+                                              autofocus: true,
                                               controller: colorController3,
-                                              decoration: decorationInput5('', colorController3.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Color 3", error: colorError3),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: colorError4 ? 55:30,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Color 4"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 150,
                                             child: TextFormField(
-                                              style: const TextStyle(fontSize: 14),
+                                              autofocus: true,
                                               controller: colorController4,
-                                              decoration: decorationInput5('', colorController4.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Color 4", error: colorError4),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        SizedBox(
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: colorError5 ? 55:30,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Color 5"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 150,
                                             child: TextFormField(
-                                              style: const TextStyle(fontSize: 14),
+                                              autofocus: true,
                                               controller: colorController5,
-                                              decoration: decorationInput5('', colorController5.text.isNotEmpty),
+                                              decoration: textFieldDecoration(hintText: "Color 5", error: colorError5),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20,),
+                                  const Text("Engine"),
+                                  const SizedBox(height: 6,),
+                                  SizedBox(
+                                    width: 300,
+                                    child: Focus(
+                                      onFocusChange: (value) {
+                                        setState(() {
+                                          isTypeFocused = value;
+                                        });
+                                      },
+                                      skipTraversal: true,
+                                      descendantsAreFocusable: true,
+                                      child: LayoutBuilder(
+                                          builder: (BuildContext context, BoxConstraints constraints) {
+                                            return CustomPopupMenuButton(elevation: 4,
+                                              validator: (value) {
+                                                if(value==null||value.isEmpty){
+                                                  setState(() {
+                                                    typeError=true;
+                                                  });
+                                                  return null;
+                                                }
+                                                return null;
+                                              },
+                                              decoration: customPopupDecoration(hintText: 'Select Engine Type',error: typeError,isFocused: isTypeFocused),
+                                              hintText: engineType,
+                                              textController: typeController,
+                                              childWidth: constraints.maxWidth,
+                                              shape:  RoundedRectangleBorder(
+                                                side: BorderSide(color:typeError? Colors.redAccent :mTextFieldBorder),
+                                                borderRadius: const BorderRadius.all(
+                                                  Radius.circular(5),
+                                                ),
+                                              ),
+                                              offset: const Offset(1, 40),
+                                              tooltip: '',
+                                              itemBuilder:  (BuildContext context) {
+                                                return engineList.map((value) {
+                                                  return CustomPopupMenuItem(
+                                                    value: value,
+                                                    text:value,
+                                                    child: Container(),
+                                                  );
+                                                }).toList();
+                                              },
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  typeController.text=value;
+                                                  engineType = value;
+                                                  typeError=false;
+                                                });
+                                              },
+                                              onCanceled: () {
+                                              },
+                                              child: Container(),
+                                            );
+                                          }
+                                      ),
                                     ),
-                                    const SizedBox(height: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children:  [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Engine'),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        // Container(
-                                        //   color: Colors.white,
-                                        //   width: 300,
-                                        //   child: AnimatedContainer(
-                                        //     duration: const Duration(seconds: 0),
-                                        //     height: engineError1 ? 50 : 30,
-                                        //     child: DropdownSearch<String>(
-                                        //       validator: (value) {
-                                        //         if (value == null ||
-                                        //             value.isEmpty) {
-                                        //           setState(() {
-                                        //             engineError1 = true;
-                                        //           });
-                                        //           return "Required";
-                                        //         } else {
-                                        //           setState(() {
-                                        //             engineError1 = false;
-                                        //           });
-                                        //         }
-                                        //       },
-                                        //       popupProps: PopupProps.menu(
-                                        //         constraints: const BoxConstraints(
-                                        //             maxHeight: 200),
-                                        //         showSearchBox: false,
-                                        //         searchFieldProps: TextFieldProps(
-                                        //           decoration:
-                                        //           dropdownDecorationSearch(
-                                        //               engine.isNotEmpty),
-                                        //           cursorColor: Colors.grey,
-                                        //           style: const TextStyle(
-                                        //             fontSize: 14,
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       items: _engineList,
-                                        //       selectedItem: engine,
-                                        //       onChanged: engineDisplay,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        const SizedBox(height: 10,),
-                                        // Container(
-                                        //   color: Colors.white,
-                                        //   width: 300,
-                                        //   child: AnimatedContainer(
-                                        //     duration: const Duration(seconds: 0),
-                                        //     height: engineError2 ? 50 : 30,
-                                        //     child: DropdownSearch<String>(
-                                        //       // validator: (value) {
-                                        //       //   if (value == null ||
-                                        //       //       value.isEmpty) {
-                                        //       //     setState(() {
-                                        //       //       engineError2 = true;
-                                        //       //     });
-                                        //       //     return "Required";
-                                        //       //   } else {
-                                        //       //     setState(() {
-                                        //       //       engineError2 = false;
-                                        //       //     });
-                                        //       //   }
-                                        //       // },
-                                        //       popupProps: PopupProps.menu(
-                                        //         constraints: const BoxConstraints(
-                                        //             maxHeight: 200),
-                                        //         showSearchBox: false,
-                                        //         searchFieldProps: TextFieldProps(
-                                        //           decoration:
-                                        //           dropdownDecorationSearch(
-                                        //               engine1.isNotEmpty),
-                                        //           cursorColor: Colors.grey,
-                                        //           style: const TextStyle(
-                                        //             fontSize: 14,
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       items: _engineList1,
-                                        //       selectedItem: engine1,
-                                        //       onChanged: engineDisplay1,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        const SizedBox(height: 10,),
-                                        // Container(
-                                        //   color: Colors.white,
-                                        //   width: 300,
-                                        //   child: AnimatedContainer(
-                                        //     duration: const Duration(seconds: 0),
-                                        //     height: engineError3 ? 50 : 30,
-                                        //     child: DropdownSearch<String>(
-                                        //       // validator: (value) {
-                                        //       //   if (value == null ||
-                                        //       //       value.isEmpty) {
-                                        //       //     setState(() {
-                                        //       //       engineError3 = true;
-                                        //       //     });
-                                        //       //     return "Required";
-                                        //       //   } else {
-                                        //       //     setState(() {
-                                        //       //       engineError3 = false;
-                                        //       //     });
-                                        //       //   }
-                                        //       // },
-                                        //       popupProps: PopupProps.menu(
-                                        //         constraints: const BoxConstraints(
-                                        //             maxHeight: 200),
-                                        //         showSearchBox: false,
-                                        //         searchFieldProps: TextFieldProps(
-                                        //           decoration:
-                                        //           dropdownDecorationSearch(
-                                        //               engine2.isNotEmpty),
-                                        //           cursorColor: Colors.grey,
-                                        //           style: const TextStyle(
-                                        //             fontSize: 14,
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       items: _engineList2,
-                                        //       selectedItem: engine2,
-                                        //       onChanged: engineDisplay2,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        const SizedBox(height: 10,),
-                                        // Container(
-                                        //   color: Colors.white,
-                                        //   width: 300,
-                                        //   child: AnimatedContainer(
-                                        //     duration: const Duration(seconds: 0),
-                                        //     height: engineError4 ? 50 : 30,
-                                        //     child: DropdownSearch<String>(
-                                        //       // validator: (value) {
-                                        //       //   if (value == null ||
-                                        //       //       value.isEmpty) {
-                                        //       //     setState(() {
-                                        //       //       engineError4 = true;
-                                        //       //     });
-                                        //       //     return "Required";
-                                        //       //   } else {
-                                        //       //     setState(() {
-                                        //       //       engineError4 = false;
-                                        //       //     });
-                                        //       //   }
-                                        //       // },
-                                        //       popupProps: PopupProps.menu(
-                                        //         constraints: const BoxConstraints(
-                                        //             maxHeight: 200),
-                                        //         showSearchBox: false,
-                                        //         searchFieldProps: TextFieldProps(
-                                        //           decoration:
-                                        //           dropdownDecorationSearch(
-                                        //               engine3.isNotEmpty),
-                                        //           cursorColor: Colors.grey,
-                                        //           style: const TextStyle(
-                                        //             fontSize: 14,
-                                        //           ),
-                                        //         ),
-                                        //       ),
-                                        //       items: _engineList3,
-                                        //       selectedItem: engine3,
-                                        //       onChanged: engineDisplay3,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
+                                  ),
+                                  if(typeError)
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(height: 6,),
+                                          Text("Required",style: TextStyle(color:mErrorColor,fontSize: 12)),
+                                          SizedBox(height: 6,),
+                                        ],
+                                      ),
                                     ),
-                                    const SizedBox(height: 20,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          width: 180,
-                                          child: Text('Transmission'),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          color: Colors.white,
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: transmissionError1 ? 50 : 30,
-                                            child: DropdownButtonFormField(
-                                              hint: const Text('--Select--'),
-                                              decoration: dropdownDecorationSearch(trans0.toString().isNotEmpty),
-                                              items: _transList0.map((Transmission value){
-                                                return DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text("${value.value}, ${value.key}"),
-                                                );
-                                              }).toList(),
-                                              onChanged: (value) => setState(() {
-                                                trans0 = value as Transmission?;
-                                              }),
-                                              selectedItemBuilder: (context) {
-                                                return _transList0.map((e) {
-                                                  return Text(e.key);
-                                                }).toList();
+                                  const SizedBox(height: 20,),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Transmission 1"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
+                                            child: Focus(
+                                              onFocusChange: (value) {
+                                                setState(() {
+                                                  isTransFocused = value;
+                                                });
                                               },
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          color: Colors.white,
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: transmissionError2 ? 50 : 30,
-                                            child: DropdownButtonFormField(
-                                              hint: const Text('--Select--'),
-                                              decoration: dropdownDecorationSearch(trans.toString().isNotEmpty),
-                                              items: _transList.map((Transmission value){
-                                                return DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text("${value.value}, ${value.key}"),
-                                                );
-                                              }).toList(),
-                                              onChanged: (value) => setState(() {
-                                                trans = value as Transmission?;
-                                              }),
-                                              selectedItemBuilder: (context) {
-                                                return _transList.map((e) {
-                                                  return Text(e.key);
-                                                }).toList();
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          color: Colors.white,
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: transmissionError3 ? 50 : 30,
-                                            child: DropdownButtonFormField(
-                                              hint: const Text('--Select--'),
-                                              decoration: dropdownDecorationSearch(trans1.toString().isNotEmpty),
-                                              items: _transList1.map((Transmission value){
-                                                return DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text("${value.value}, ${value.key}"),
-                                                );
-                                              }).toList(),
-                                              onChanged: (value) => setState(() {
-                                                trans1 = value as Transmission?;
-                                              }),
-                                              selectedItemBuilder: (context) {
-                                                return _transList1.map((e) {
-                                                  return Text(e.key);
-                                                }).toList();
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        Container(
-                                          color: Colors.white,
-                                          width: 300,
-                                          child: AnimatedContainer(
-                                            duration: const Duration(seconds: 0),
-                                            height: transmissionError4 ? 50 : 30,
-                                            child: DropdownButtonFormField(
-                                              hint: const Text('--Select--'),
-                                              decoration: dropdownDecorationSearch(trans2.toString().isNotEmpty),
-                                              items: _transList2.map((Transmission value){
-                                                return DropdownMenuItem(
-                                                  value: value,
-                                                  child: Text("${value.value}, ${value.key}"),
-                                                );
-                                              }).toList(),
-                                              onChanged: (value) => setState(() {
-                                                trans2 = value as Transmission?;
-                                              }),
-                                              selectedItemBuilder: (context) {
-                                                return _transList2.map((e) {
-                                                  return Text(e.key);
-                                                }).toList();
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20,),
+                                              skipTraversal: true,
+                                              descendantsAreFocusable: true,
+                                              child: LayoutBuilder(
+                                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                                    return CustomPopupMenuButton(
+                                                      elevation: 4,
+                                                      validator: (value) {
+                                                        if(value==null||value.isEmpty){
+                                                          setState(() {
+                                                            transmissionError1 = true;
+                                                          });
+                                                          return null;
+                                                        }
+                                                        return null;
+                                                      },
+                                                      decoration: customPopupDecoration(hintText: '--Select--',error: transmissionError1,isFocused: isTransFocused),
+                                                      hintText: engine,
+                                                      textController: transmissionController1,
+                                                      childWidth: constraints.maxWidth,
+                                                      shape:  RoundedRectangleBorder(
+                                                        side: BorderSide(color:transmissionError1 ? Colors.redAccent :mTextFieldBorder),
+                                                        borderRadius: const BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 40),
+                                                      tooltip: '',
+                                                      itemBuilder:  (BuildContext context) {
+                                                        return transType.map((value) {
+                                                          return CustomPopupMenuItem(
+                                                            value: value,
+                                                            text:value,
+                                                            child: Container(),
+                                                          );
+                                                        }).toList();
+                                                      },
 
-                                  ],
-                                ),
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          transmissionController1.text=value;
+                                                          engine = value;
+                                                          transmissionError1 = false;
+                                                        });
+
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    );
+                                                  }
+                                              ),
+                                            ),
+                                          ),
+                                          if(transmissionError1)
+                                            const Padding(
+                                              padding: EdgeInsets.only(left: 10),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(height: 6,),
+                                                  Text("Required",style: TextStyle(color:mErrorColor,fontSize: 12)),
+                                                  SizedBox(height: 6,),
+                                                ],
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Transmission 2"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
+                                            child: Focus(
+                                              onFocusChange: (value) {
+                                                setState(() {
+                                                  isTransFocused1 = value;
+                                                });
+                                              },
+                                              skipTraversal: true,
+                                              descendantsAreFocusable: true,
+                                              child: LayoutBuilder(
+                                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                                    return CustomPopupMenuButton(
+                                                      elevation: 4,
+                                                      decoration: customPopupDecoration(hintText: '--Select--',error: transmissionError2,isFocused: isTransFocused1),
+                                                      hintText: engine1,
+                                                      textController: transmissionController2,
+                                                      childWidth: constraints.maxWidth,
+                                                      shape:  RoundedRectangleBorder(
+                                                        side: BorderSide(color:transmissionError2 ? Colors.redAccent :mTextFieldBorder),
+                                                        borderRadius: const BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 40),
+                                                      tooltip: '',
+                                                      itemBuilder:  (BuildContext context) {
+                                                        return transType1.map((value) {
+                                                          return CustomPopupMenuItem(
+                                                            value: value,
+                                                            text:value,
+                                                            child: Container(),
+                                                          );
+                                                        }).toList();
+                                                      },
+
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          transmissionController2.text=value;
+                                                          engine1 = value;
+                                                          transmissionError2 = false;
+                                                        });
+
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    );
+                                                  }
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20,),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Transmission 3"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
+                                            child: Focus(
+                                              onFocusChange: (value) {
+                                                setState(() {
+                                                  isTransFocused2 = value;
+                                                });
+                                              },
+                                              skipTraversal: true,
+                                              descendantsAreFocusable: true,
+                                              child: LayoutBuilder(
+                                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                                    return CustomPopupMenuButton(
+                                                      elevation: 4,
+                                                      decoration: customPopupDecoration(hintText: '--Select--',error: transmissionError3,isFocused: isTransFocused2),
+                                                      hintText: engine2,
+                                                      textController: transmissionController3,
+                                                      childWidth: constraints.maxWidth,
+                                                      shape:  RoundedRectangleBorder(
+                                                        side: BorderSide(color:transmissionError2 ? Colors.redAccent :mTextFieldBorder),
+                                                        borderRadius: const BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 40),
+                                                      tooltip: '',
+                                                      itemBuilder:  (BuildContext context) {
+                                                        return transType2.map((value) {
+                                                          return CustomPopupMenuItem(
+                                                            value: value,
+                                                            text:value,
+                                                            child: Container(),
+                                                          );
+                                                        }).toList();
+                                                      },
+
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          transmissionController3.text=value;
+                                                          engine2 = value;
+                                                          transmissionError3 = false;
+                                                        });
+
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    );
+                                                  }
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Transmission 4"),
+                                          const SizedBox(height: 6,),
+                                          SizedBox(
+                                            width: 300,
+                                            child: Focus(
+                                              onFocusChange: (value) {
+                                                setState(() {
+                                                  isTransFocused3 = value;
+                                                });
+                                              },
+                                              skipTraversal: true,
+                                              descendantsAreFocusable: true,
+                                              child: LayoutBuilder(
+                                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                                    return CustomPopupMenuButton(
+                                                      elevation: 4,
+                                                      decoration: customPopupDecoration(hintText: '--Select--',error: transmissionError4,isFocused: isTransFocused3),
+                                                      hintText: engine3,
+                                                      textController: transmissionController4,
+                                                      childWidth: constraints.maxWidth,
+                                                      shape:  RoundedRectangleBorder(
+                                                        side: BorderSide(color:transmissionError4 ? Colors.redAccent :mTextFieldBorder),
+                                                        borderRadius: const BorderRadius.all(
+                                                          Radius.circular(5),
+                                                        ),
+                                                      ),
+                                                      offset: const Offset(1, 40),
+                                                      tooltip: '',
+                                                      itemBuilder:  (BuildContext context) {
+                                                        return transType3.map((value) {
+                                                          return CustomPopupMenuItem(
+                                                            value: value,
+                                                            text:value,
+                                                            child: Container(),
+                                                          );
+                                                        }).toList();
+                                                      },
+
+                                                      onSelected: (String value)  {
+                                                        setState(() {
+                                                          transmissionController4.text=value;
+                                                          engine3 = value;
+                                                          transmissionError4 = false;
+                                                        });
+
+                                                      },
+                                                      onCanceled: () {
+
+                                                      },
+                                                      child: Container(),
+                                                    );
+                                                  }
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              bottomNavigationBar: SizedBox(
-                height: 50,
-                child: Row(
-                  children:  [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20,top: 8,bottom: 8),
-                      child: MaterialButton(onPressed: () {
-
-                        if(_addVehiclesForm.currentState!.validate()){
-                          Map _addVehiclePage = {
-                            "brand": brandController.text,
-                            "name": nameController.text,
-                            "color1":colorController1.text,
-                            "color2":colorController2.text,
-                            "color3":colorController3.text,
-                            "color4":colorController4.text,
-                            "color5":colorController5.text,
-                            "engine_1":engine,
-                            "engine_2":engine1,
-                            "engine_3":engine2,
-                            "engine_4":engine3,
-                            "transmission_1":trans0!.value,
-                            "transmission_2":trans!.value,
-                            "transmission_3":trans1!.value,
-                            "transmission_4":trans2!.value,
-                          };
-                          print(_addVehiclePage);
-                          addNewVehicles(_addVehiclePage);
-                        }
-                      },
-                        color: Colors.blue,
-                        child: const Center(
-                          child: Text('Save',
-                            style: TextStyle(
-                              color: Colors.white,
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(width: 10,),
-                    SizedBox(
-                      width: 80,
-                      height: 30,
-                      child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              Navigator.of(context).pop();
-                            });
-                          },
-                          color: Colors.white,
-                          child: const Center(
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          )),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -1325,6 +884,22 @@ class _AddVehiclesState extends State<AddNewVehicles> {
           borderSide:
           BorderSide(color: error == true ? mErrorColor : Colors.blue)),
     );
+  }
+
+  String capitalizeFirstWord(String value){
+    if(value.isNotEmpty){
+      var result =value[0].toUpperCase();
+      for(int i=1;i<value.length;i++){
+        if(value[i-1]=='1'){
+          result=result+value[i].toUpperCase();
+        }
+        else{
+          result=result+value[i];
+        }
+      }
+      return result;
+    }
+    return "";
   }
 
 

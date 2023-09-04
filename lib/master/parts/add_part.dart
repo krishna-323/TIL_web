@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -260,7 +261,19 @@ class _AddPartState extends State<AddPart> {
           ),
           Expanded(
             child: Scaffold(
-
+              backgroundColor: Colors.white,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(88.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: AppBar(
+                      elevation: 1,
+                      surfaceTintColor: Colors.white,
+                      shadowColor: Colors.black,
+                      title: const Text("Create Item"),
+                    ),
+                  )
+              ),
               body: CustomLoader(
                 inAsyncCall: loading,
                 child: SingleChildScrollView(
@@ -278,16 +291,16 @@ class _AddPartState extends State<AddPart> {
                             padding: const EdgeInsets.only(left:50,top:20),
                             child: Column(
                               children: [
-                                const Align(alignment:Alignment.topLeft,
-                                  child:  Text(
-                                    "Create Item",
-                                    style: TextStyle(
-                                        color: Colors.indigo,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ),
+                                // const Align(alignment:Alignment.topLeft,
+                                //   child:  Text(
+                                //     "Create Item",
+                                //     style: TextStyle(
+                                //         color: Colors.indigo,
+                                //         fontSize: 18,
+                                //         fontWeight: FontWeight.bold
+                                //     ),
+                                //   ),
+                                // ),
                                 //type Radio buttons
                                 Row(
                                   children:  [
@@ -2801,55 +2814,88 @@ class _AddPartState extends State<AddPart> {
                   padding: const EdgeInsets.only(left:50),
                   child: Row(
                     children: [
-                      MaterialButton(
-                        color:Colors.blue,
-                        textColor:Colors.white,
-                        onPressed: () {
-                          setState(() {
-                            if(addItemsForm.currentState!.validate()){
-                              Map requestBody={
-                                "description": description.text,
-                                "exemption_reason": _taskTax == 1 ?exRedropdownValue:"",
-                                'item_code':item.text,
-                                "name": nameController.text,
-                                "purchase_account": acc2dropdownValue,
-                                "purchase_price":double.parse(purchasePrice.text),
-                                "sac":_character==1?sacController.text:"",
-                                "selling_account": acc1dropdownValue,
-                                "selling_price": double.parse(sellingPrice.text),
-                                "tax_code": _character==0?hsnController.text:"",
-                                "tax_preference": _taskTax == 0 ?"Taxable":"NonTaxable",
-                                "type": _character==1 ? "Sevices" : "Goods",
-                                "unit": unitdropdownValue,
-                              };
-                              print(requestBody);
-                              saveData(requestBody);
-                            }
-
-                          }
-                          );
-                        },
-                        child: const Text('Save'),),
-                      const SizedBox(width:30),
                       SizedBox(
-                        width: 80,
+                        width: 100,
                         height: 30,
-                        child: MaterialButton(
-                            onPressed: (){
-                              setState(() {
-                                Navigator.of(context).pop();
+                        child: OutlinedMButton(
+                          text: 'Save',
+                          textColor: mSaveButton,
+                          borderColor: mSaveButton,
+                          onTap: () {
+                            setState(() {
+                              if(addItemsForm.currentState!.validate()){
+                                Map requestBody={
+                                  "description": description.text,
+                                  "exemption_reason": _taskTax == 1 ?exRedropdownValue:"",
+                                  'item_code':item.text,
+                                  "name": nameController.text,
+                                  "purchase_account": acc2dropdownValue,
+                                  "purchase_price":double.parse(purchasePrice.text),
+                                  "sac":_character==1?sacController.text:"",
+                                  "selling_account": acc1dropdownValue,
+                                  "selling_price": double.parse(sellingPrice.text),
+                                  "tax_code": _character==0?hsnController.text:"",
+                                  "tax_preference": _taskTax == 0 ?"Taxable":"NonTaxable",
+                                  "type": _character==1 ? "Sevices" : "Goods",
+                                  "unit": unitdropdownValue,
+                                };
+                                print(requestBody);
+                                saveData(requestBody);
+                              }
 
-                              });
-                            },
-                            color: Colors.white,
-                            child: const Center(
-                              child: Text('Cancel',
-                                style: TextStyle(
-                                    color: Colors.black
-                                ),
-                              ),
-                            )),
+                            });
+                          },
+                        ),
                       ),
+                      // MaterialButton(
+                      //   color:Colors.blue,
+                      //   textColor:Colors.white,
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       if(addItemsForm.currentState!.validate()){
+                      //         Map requestBody={
+                      //           "description": description.text,
+                      //           "exemption_reason": _taskTax == 1 ?exRedropdownValue:"",
+                      //           'item_code':item.text,
+                      //           "name": nameController.text,
+                      //           "purchase_account": acc2dropdownValue,
+                      //           "purchase_price":double.parse(purchasePrice.text),
+                      //           "sac":_character==1?sacController.text:"",
+                      //           "selling_account": acc1dropdownValue,
+                      //           "selling_price": double.parse(sellingPrice.text),
+                      //           "tax_code": _character==0?hsnController.text:"",
+                      //           "tax_preference": _taskTax == 0 ?"Taxable":"NonTaxable",
+                      //           "type": _character==1 ? "Sevices" : "Goods",
+                      //           "unit": unitdropdownValue,
+                      //         };
+                      //         print(requestBody);
+                      //         saveData(requestBody);
+                      //       }
+                      //
+                      //     }
+                      //     );
+                      //   },
+                      //   child: const Text('Save'),),
+                      // const SizedBox(width:30),
+                      // SizedBox(
+                      //   width: 80,
+                      //   height: 30,
+                      //   child: MaterialButton(
+                      //       onPressed: (){
+                      //         setState(() {
+                      //           Navigator.of(context).pop();
+                      //
+                      //         });
+                      //       },
+                      //       color: Colors.white,
+                      //       child: const Center(
+                      //         child: Text('Cancel',
+                      //           style: TextStyle(
+                      //               color: Colors.black
+                      //           ),
+                      //         ),
+                      //       )),
+                      // ),
                     ],
                   ),
                 ),

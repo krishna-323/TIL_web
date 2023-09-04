@@ -357,6 +357,98 @@ class _DocketDetailsState extends State<DocketDetails>
           Expanded(
             child: Scaffold(
               backgroundColor: Colors.white,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(60.0),
+                  child: AppBar(
+                    title: const Text("Docket Details"),
+                    elevation: 1,
+                    surfaceTintColor: Colors.white,
+                    shadowColor: Colors.black,
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10, top: 8),
+                        child: SizedBox(
+                          height: 30,
+                          width: 120,
+                          child: OutlinedMButton(
+                            text: "Summary",
+                            borderColor: mSaveButton,
+                            textColor: mSaveButton,
+                            onTap: () {
+                              Map summaryBody = {
+                                "make": widget
+                                    .docketData['make'],
+                                "model": widget
+                                    .docketData['model'],
+                                "variant": widget
+                                    .docketData['variant'],
+                                "color": widget
+                                    .docketData['color'],
+                                "exchange": widget
+                                    .docketData['exchange'],
+                                "car_model": widget
+                                    .docketData['car_model'],
+                                "evaluation_date": widget
+                                    .docketData['evaluation_date'],
+                                "car_finance": widget
+                                    .docketData['car_finance'],
+                                "finance_company": widget
+                                    .docketData['finance_company'],
+                                "finance_amount": widget
+                                    .docketData['finance_amount'],
+                                "customer_name": widget
+                                    .docketData['customer_name'],
+                                "mobile": widget
+                                    .docketData['mobile'],
+                                "email_id": widget
+                                    .docketData['email_id'],
+                                "type": widget
+                                    .docketData['type'],
+                                "pan_number": widget
+                                    .docketData['pan_number'],
+                                "street_address": widget
+                                    .docketData['street_address'],
+                                "pin_code": widget
+                                    .docketData['pin_code'],
+                                "city": widget
+                                    .docketData['city'],
+                                "location": widget
+                                    .docketData['location'],
+                                "labour_type": widget
+                                    .docketData['labour_type'],
+                                "model_code": widget
+                                    .docketData['model_code'],
+                                "vehicle_category_code": widget
+                                    .docketData['vehicle_category_code'],
+                                "ex_showroom_price": widget
+                                    .docketData['ex_showroom_price'],
+                                "onroad_price": widget
+                                    .docketData['onroad_price'],
+                                "transmission": widget
+                                    .docketData['transmission'],
+                              };
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SummaryReceipt(
+                                          summaryDetails: summaryBody,
+                                          drawerWidth: widget
+                                              .drawerWidth,
+                                          selectedDestination: widget
+                                              .selectedDestination,
+                                          date: bookingDate
+                                              .text,
+                                        ),
+                                  )
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
               body: CustomLoader(
                 inAsyncCall: loading,
                 child: SingleChildScrollView(
@@ -370,45 +462,45 @@ class _DocketDetailsState extends State<DocketDetails>
                           mainAxisAlignment: MainAxisAlignment
                               .spaceBetween,
                           children: [
-                            Flexible(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  border: Border.all(
-                                      color: Colors.blueAccent),
-                                ),
-                                // width: 80,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: SizedBox(
-                                      width: 80,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.arrow_back_sharp,
-                                              color: Colors.blue,
-                                              size: 20),
-                                          Expanded(child: Text("Go Back",
-                                            style: TextStyle(
-                                                color: Colors.blue,
-                                                fontWeight: FontWeight
-                                                    .bold,
-                                                fontSize: 12),
-                                            maxLines: 1,
-                                            overflow: TextOverflow
-                                                .ellipsis,)),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Flexible(
+                            //   child: Container(
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: const BorderRadius.all(
+                            //         Radius.circular(10),
+                            //       ),
+                            //       border: Border.all(
+                            //           color: Colors.blueAccent),
+                            //     ),
+                            //     // width: 80,
+                            //     child: InkWell(
+                            //       onTap: () {
+                            //         Navigator.of(context).pop();
+                            //       },
+                            //       child: const Padding(
+                            //         padding: EdgeInsets.all(4.0),
+                            //         child: SizedBox(
+                            //           width: 80,
+                            //           child: Row(
+                            //             children: [
+                            //               Icon(Icons.arrow_back_sharp,
+                            //                   color: Colors.blue,
+                            //                   size: 20),
+                            //               Expanded(child: Text("Go Back",
+                            //                 style: TextStyle(
+                            //                     color: Colors.blue,
+                            //                     fontWeight: FontWeight
+                            //                         .bold,
+                            //                     fontSize: 12),
+                            //                 maxLines: 1,
+                            //                 overflow: TextOverflow
+                            //                     .ellipsis,)),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             Expanded(
                               flex: 2,
                               child: Container(),
@@ -417,90 +509,94 @@ class _DocketDetailsState extends State<DocketDetails>
                               flex: 2,
                               child: Row(
                                 children: [
+                                  // Expanded(
+                                  //     flex: 2,
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.only(
+                                  //           right: 10),
+                                  //       child: SizedBox(
+                                  //         width: 100,
+                                  //         height: 30,
+                                  //         child: OutlinedMButton(
+                                  //           text: "Summary",
+                                  //           borderColor: mSaveButton,
+                                  //           textColor: mSaveButton,
+                                  //           onTap: () {
+                                  //             Map summaryBody = {
+                                  //               "make": widget
+                                  //                   .docketData['make'],
+                                  //               "model": widget
+                                  //                   .docketData['model'],
+                                  //               "variant": widget
+                                  //                   .docketData['variant'],
+                                  //               "color": widget
+                                  //                   .docketData['color'],
+                                  //               "exchange": widget
+                                  //                   .docketData['exchange'],
+                                  //               "car_model": widget
+                                  //                   .docketData['car_model'],
+                                  //               "evaluation_date": widget
+                                  //                   .docketData['evaluation_date'],
+                                  //               "car_finance": widget
+                                  //                   .docketData['car_finance'],
+                                  //               "finance_company": widget
+                                  //                   .docketData['finance_company'],
+                                  //               "finance_amount": widget
+                                  //                   .docketData['finance_amount'],
+                                  //               "customer_name": widget
+                                  //                   .docketData['customer_name'],
+                                  //               "mobile": widget
+                                  //                   .docketData['mobile'],
+                                  //               "email_id": widget
+                                  //                   .docketData['email_id'],
+                                  //               "type": widget
+                                  //                   .docketData['type'],
+                                  //               "pan_number": widget
+                                  //                   .docketData['pan_number'],
+                                  //               "street_address": widget
+                                  //                   .docketData['street_address'],
+                                  //               "pin_code": widget
+                                  //                   .docketData['pin_code'],
+                                  //               "city": widget
+                                  //                   .docketData['city'],
+                                  //               "location": widget
+                                  //                   .docketData['location'],
+                                  //               "labour_type": widget
+                                  //                   .docketData['labour_type'],
+                                  //               "model_code": widget
+                                  //                   .docketData['model_code'],
+                                  //               "vehicle_category_code": widget
+                                  //                   .docketData['vehicle_category_code'],
+                                  //               "ex_showroom_price": widget
+                                  //                   .docketData['ex_showroom_price'],
+                                  //               "onroad_price": widget
+                                  //                   .docketData['onroad_price'],
+                                  //               "transmission": widget
+                                  //                   .docketData['transmission'],
+                                  //             };
+                                  //             Navigator.push(
+                                  //                 context,
+                                  //                 MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       SummaryReceipt(
+                                  //                         summaryDetails: summaryBody,
+                                  //                         drawerWidth: widget
+                                  //                             .drawerWidth,
+                                  //                         selectedDestination: widget
+                                  //                             .selectedDestination,
+                                  //                         date: bookingDate
+                                  //                             .text,
+                                  //                       ),
+                                  //                 )
+                                  //             );
+                                  //           },
+                                  //         ),
+                                  //       ),
+                                  //     )
+                                  // ),
                                   Expanded(
-                                      flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 10),
-                                        child: SizedBox(
-                                          width: 100,
-                                          height: 30,
-                                          child: OutlinedMButton(
-                                            text: "Summary",
-                                            borderColor: mSaveButton,
-                                            textColor: mSaveButton,
-                                            onTap: () {
-                                              Map summaryBody = {
-                                                "make": widget
-                                                    .docketData['make'],
-                                                "model": widget
-                                                    .docketData['model'],
-                                                "variant": widget
-                                                    .docketData['variant'],
-                                                "color": widget
-                                                    .docketData['color'],
-                                                "exchange": widget
-                                                    .docketData['exchange'],
-                                                "car_model": widget
-                                                    .docketData['car_model'],
-                                                "evaluation_date": widget
-                                                    .docketData['evaluation_date'],
-                                                "car_finance": widget
-                                                    .docketData['car_finance'],
-                                                "finance_company": widget
-                                                    .docketData['finance_company'],
-                                                "finance_amount": widget
-                                                    .docketData['finance_amount'],
-                                                "customer_name": widget
-                                                    .docketData['customer_name'],
-                                                "mobile": widget
-                                                    .docketData['mobile'],
-                                                "email_id": widget
-                                                    .docketData['email_id'],
-                                                "type": widget
-                                                    .docketData['type'],
-                                                "pan_number": widget
-                                                    .docketData['pan_number'],
-                                                "street_address": widget
-                                                    .docketData['street_address'],
-                                                "pin_code": widget
-                                                    .docketData['pin_code'],
-                                                "city": widget
-                                                    .docketData['city'],
-                                                "location": widget
-                                                    .docketData['location'],
-                                                "labour_type": widget
-                                                    .docketData['labour_type'],
-                                                "model_code": widget
-                                                    .docketData['model_code'],
-                                                "vehicle_category_code": widget
-                                                    .docketData['vehicle_category_code'],
-                                                "ex_showroom_price": widget
-                                                    .docketData['ex_showroom_price'],
-                                                "onroad_price": widget
-                                                    .docketData['onroad_price'],
-                                                "transmission": widget
-                                                    .docketData['transmission'],
-                                              };
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SummaryReceipt(
-                                                          summaryDetails: summaryBody,
-                                                          drawerWidth: widget
-                                                              .drawerWidth,
-                                                          selectedDestination: widget
-                                                              .selectedDestination,
-                                                          date: bookingDate
-                                                              .text,
-                                                        ),
-                                                  )
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      )
+                                    flex: 2,
+                                    child: Container(),
                                   ),
                                   const Expanded(
                                     flex: 2,

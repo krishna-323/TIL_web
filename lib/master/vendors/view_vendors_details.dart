@@ -7,6 +7,8 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 import 'add_new_vendor.dart';
 import 'bloc/vendors_details_bloc.dart';
 import 'edit_vendors.dart';
@@ -107,7 +109,7 @@ class _ViewVendorsState extends State<ViewVendors> with SingleTickerProviderStat
           ),
           Expanded(
               child: Scaffold(
-
+                backgroundColor: Colors.white,
                 body: CustomLoader(
                   inAsyncCall: loading,
                   child: Row(
@@ -117,54 +119,93 @@ class _ViewVendorsState extends State<ViewVendors> with SingleTickerProviderStat
                       SingleChildScrollView(
                         controller: ScrollController(),
                         child: SizedBox(
-                          width: 200,
+                          width: 300,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                color: Colors.grey[200],
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 10, bottom: 10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text("All Vendors"),
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                  width: 60,
-                                                  child: MaterialButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) => AddNewVendors(
-                                                                  drawerWidth: widget
-                                                                      .drawerWidth,
-                                                                  selectedDestination:
-                                                                  widget
-                                                                      .selectedDestination))).then(
-                                                              (value) =>
-                                                              fetchVendorsData());
-                                                    },
-                                                    color: Colors.blue,
-                                                    child: const Text("+ New",
-                                                        style: TextStyle(
-                                                            color: Colors.white)),
-                                                  ))
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                              SizedBox(
+                                width: 300,
+                                child: AppBar(
+                                  title: const Text("Customer",style: TextStyle(fontSize: 20)),
+                                  elevation: 1,
+                                  surfaceTintColor: Colors.white,
+                                  shadowColor: Colors.black,
+                                  backgroundColor: Colors.white,
+                                  actions: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                          width: 100,
+                                          height: 30,
+                                          decoration: BoxDecoration(border: Border.all(color:  Colors.blue),borderRadius: BorderRadius.circular(4)),
+                                          child: InkWell(
+                                            hoverColor: mHoverColor,
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => AddNewVendors(
+                                                          drawerWidth: widget
+                                                              .drawerWidth,
+                                                          selectedDestination:
+                                                          widget
+                                                              .selectedDestination))).then((value) => fetchVendorsData());
+                                            },
+                                            child: const Center(
+                                              child: Text("+ Customer",
+                                                  style: TextStyle(
+                                                      color: Colors.blue)),
+                                            ),
+                                          )),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              // Container(
+                              //   color: Colors.grey[200],
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.only(
+                              //         left: 10, right: 10, top: 10, bottom: 10),
+                              //     child: Column(
+                              //       children: [
+                              //         Row(
+                              //           mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //           children: [
+                              //             const Text("All Vendors"),
+                              //             Row(
+                              //               children: [
+                              //                 SizedBox(
+                              //                     width: 60,
+                              //                     child: MaterialButton(
+                              //                       onPressed: () {
+                              //                         Navigator.push(
+                              //                             context,
+                              //                             MaterialPageRoute(
+                              //                                 builder: (context) => AddNewVendors(
+                              //                                     drawerWidth: widget
+                              //                                         .drawerWidth,
+                              //                                     selectedDestination:
+                              //                                     widget
+                              //                                         .selectedDestination))).then(
+                              //                                 (value) =>
+                              //                                 fetchVendorsData());
+                              //                       },
+                              //                       color: Colors.blue,
+                              //                       child: const Text("+ New",
+                              //                           style: TextStyle(
+                              //                               color: Colors.white)),
+                              //                     ))
+                              //               ],
+                              //             )
+                              //           ],
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              const Divider(height: 1),
                               ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
@@ -246,7 +287,7 @@ class _ViewVendorsState extends State<ViewVendors> with SingleTickerProviderStat
                                                 Align(
                                                   alignment: Alignment.topLeft,
                                                   child: SizedBox(
-                                                    width: 500,
+                                                    // width: 500,
                                                     child: TabBar(
                                                       indicatorColor: Colors.blue,
                                                       labelColor: Colors.black,
@@ -1076,31 +1117,49 @@ class _ViewVendorsState extends State<ViewVendors> with SingleTickerProviderStat
                                             padding: const EdgeInsets.only(left: 30),
                                             child: Row(
                                               children: [
+                                                // SizedBox(
+                                                //   height: 30,
+                                                //   width: 80,
+                                                //   child: MaterialButton(
+                                                //     onPressed: () {
+                                                //       Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                //       EditVendors(selectedDestination: 3.3,
+                                                //         vendorData:snapshot.data!.vendorDocketData[0].vendorData,
+                                                //         drawerWidth: 190,),
+                                                //         transitionDuration: Duration.zero,
+                                                //         reverseTransitionDuration: Duration.zero
+                                                //      ));
+                                                //     },
+                                                //     color: Colors.blue,
+                                                //     child: const Row(
+                                                //       children: [
+                                                //         Icon(Icons.edit,color: Colors.white),
+                                                //         Text("Edit",
+                                                //             style: TextStyle(
+                                                //                 color: Colors.white)
+                                                //         ),
+                                                //       ],
+                                                //     ),
+                                                //   ),
+                                                // ),
                                                 SizedBox(
-                                                  height: 30,
                                                   width: 80,
-                                                  child: MaterialButton(
-                                                    onPressed: () {
+                                                  height: 30,
+                                                  child: OutlinedMButton(
+                                                    text :"Edit",
+                                                    borderColor: Colors.indigo,
+                                                    textColor:  Colors.indigo,
+                                                    onTap: () {
                                                       Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                      EditVendors(selectedDestination: 3.3,
-                                                        vendorData:snapshot.data!.vendorDocketData[0].vendorData,
-                                                        drawerWidth: 190,),
-                                                        transitionDuration: Duration.zero,
-                                                        reverseTransitionDuration: Duration.zero
-                                                     ));
+                                                          EditVendors(selectedDestination: 3.3,
+                                                            vendorData:snapshot.data!.vendorDocketData[0].vendorData,
+                                                            drawerWidth: 190,),
+                                                          transitionDuration: Duration.zero,
+                                                          reverseTransitionDuration: Duration.zero
+                                                      ));
                                                     },
-                                                    color: Colors.blue,
-                                                    child: const Row(
-                                                      children: [
-                                                        Icon(Icons.edit,color: Colors.white),
-                                                        Text("Edit",
-                                                            style: TextStyle(
-                                                                color: Colors.white)
-                                                        ),
-                                                      ],
-                                                    ),
                                                   ),
-                                                ),
+                                                )
                                               ],
                                             ),
                                           ),

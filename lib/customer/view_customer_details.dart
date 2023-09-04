@@ -150,8 +150,7 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
           Expanded(
               child: Scaffold(
                 backgroundColor: Colors.white,
-                body:
-                CustomLoader(
+                body: CustomLoader(
                   inAsyncCall: loading,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -164,50 +163,48 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 10, bottom: 12),
-                                  child: Row(  crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                      left: 0, right: 0, top: 0, bottom: 0),
+                                  child: Row(
+                                    // crossAxisAlignment: CrossAxisAlignment.end,
+                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-
-                                      const Column(
-                                        children: [
-                                          SizedBox(height: 10,),
-                                          Text("Customer",style: TextStyle(fontSize: 20)),
-                                        ],
+                                      SizedBox(
+                                        width: 300,
+                                        child: AppBar(
+                                          title: const Text("Customer",style: TextStyle(fontSize: 20)),
+                                          elevation: 1,
+                                          surfaceTintColor: Colors.white,
+                                          shadowColor: Colors.black,
+                                          backgroundColor: Colors.white,
+                                          actions: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                  width: 100,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(border: Border.all(color:  Colors.blue),borderRadius: BorderRadius.circular(4)),
+                                                  child: InkWell(
+                                                    hoverColor: mHoverColor,
+                                                    onTap: () {
+                                                      Navigator.of(context).push(PageRouteBuilder(
+                                                        pageBuilder: (context,animation1,animation2) => AddNewCustomer(
+                                                          drawerWidth:widget.drawerWidth ,
+                                                          selectedDestination: widget.selectedDestination, title: 1,
+                                                        ),
+                                                        transitionDuration: Duration.zero,
+                                                        reverseTransitionDuration: Duration.zero,
+                                                      )).then((value) => fetchCustomerListData());
+                                                    },
+                                                    child: const Center(
+                                                      child: Text("+ Customer",
+                                                          style: TextStyle(
+                                                              color: Colors.blue)),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 4),
-                                        child: Container(
-                                            width: 120,
-                                            height: 30,
-                                            decoration: BoxDecoration(border: Border.all(color:  Colors.blue),borderRadius: BorderRadius.circular(4)),
-                                            child: InkWell(
-                                              hoverColor: mHoverColor,
-                                              onTap: () {
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) => AddNewCustomer(drawerWidth: widget.drawerWidth,
-                                                //           selectedDestination: widget.selectedDestination,
-                                                //           title: 6,))).then((value) => fetchCustomerListData());
-                                                Navigator.of(context).push(PageRouteBuilder(
-                                                  pageBuilder: (context,animation1,animation2) => AddNewCustomer(
-                                                    drawerWidth:widget.drawerWidth ,
-                                                    selectedDestination: widget.selectedDestination, title: 1,
-                                                  ),
-                                                  transitionDuration: Duration.zero,
-                                                  reverseTransitionDuration: Duration.zero,
-                                                )).then((value) => fetchCustomerListData());
-                                              },
-                                              child: const Center(
-                                                child: Text("+ Customer",
-                                                    style: TextStyle(
-                                                        color: Colors.blue)),
-                                              ),
-                                            )),
-                                      )
                                     ],
                                   ),
                                 ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
 import 'package:new_project/master/parts/add_part.dart';
 import 'package:new_project/master/parts/part_details.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 
 
 
@@ -125,20 +126,24 @@ class _ListPartsState extends State<ListParts> {
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  MaterialButton(
-                                    onPressed: () {
-
-                                      Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                      const AddPart(drawerWidth: 190,
-                                        selectedDestination: 2.4,),
-                                          transitionDuration: Duration.zero,
-                                          reverseTransitionDuration: Duration.zero
-                                      )).then((value) => fetchItemData());
-                                    },
-                                    color: Colors.blue,
-                                    child: const Text("+ New",
-                                        style: TextStyle(color: Colors.white)),
-                                  )
+                                  SizedBox(
+                                    width: 80,
+                                    height: 30,
+                                    child: OutlinedMButton(
+                                      text: '+ New',
+                                      buttonColor:mSaveButton ,
+                                      textColor: Colors.white,
+                                      borderColor: mSaveButton,
+                                      onTap: () {
+                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                        const AddPart(drawerWidth: 190,
+                                          selectedDestination: 2.4,),
+                                            transitionDuration: Duration.zero,
+                                            reverseTransitionDuration: Duration.zero
+                                        )).then((value) => fetchItemData());
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

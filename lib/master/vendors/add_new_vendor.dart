@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
 //comment
 class AddNewVendors extends StatefulWidget {
@@ -224,25 +226,37 @@ class _AddNewVendorsState extends State<AddNewVendors>
           ),
           Expanded(
             child: Scaffold(
-
+              backgroundColor: Colors.white,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(88.8),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: AppBar(
+                      elevation: 1,
+                      surfaceTintColor: Colors.white,
+                      shadowColor: Colors.black,
+                      title: const Text("Customer"),
+                    ),
+                  ),
+              ),
               body: CustomLoader(
                 inAsyncCall: loading,
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       //---------top Container------
-                      Container(
-                        height: 60,
-                        color: Colors.white,
-                        child: const Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left:70,top:20.0,bottom:20),
-                              child: Text("New Vendors",style: TextStyle(color:Colors.indigo,fontSize: 18,fontWeight: FontWeight.bold),),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   height: 60,
+                      //   color: Colors.white,
+                      //   child: const Row(
+                      //     children: [
+                      //       Padding(
+                      //         padding: EdgeInsets.only(left:70,top:20.0,bottom:20),
+                      //         child: Text("New Vendors",style: TextStyle(color:Colors.indigo,fontSize: 18,fontWeight: FontWeight.bold),),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
 
                       if (width > 800)
                         Padding(
@@ -1424,105 +1438,172 @@ class _AddNewVendorsState extends State<AddNewVendors>
                   padding: const EdgeInsets.only(left: 20, top: 8, bottom: 8),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 8),
-                        child: SizedBox(
-                          height: 30,
-                          child: Row(
-                            children: [
-                              MaterialButton(
-                                  onPressed: () {
-                                    if (topDetailsForm.currentState!.validate()) {
-                                      if(_tabIndex == 0){
-                                        tabs = true;
-                                        _tabController.animateTo((_tabController.index + 1) % 2);
-                                      }
-                                      else if(_tabIndex == 1){
-                                        if(tabs == true){
-                                          mapPayTo = {
-                                            "company_name": companyName.text,
-                                            "vendor_display_name": vendor,
-                                            "vendor_email": email.text,
-                                            "vendor_mobile_phone": mobile.text,
-                                            "gst":gstController1.text,
-                                            "pan":panController1.text,
-                                            "contact_persons_name":
-                                            contactPersonName.text,
-                                            "contact_persons_email_id":
-                                            contactPersonEmail.text,
-                                            "contact_persons_mobile":
-                                            contactPersonPhone.text,
-                                            "vendor_address1":"",
-                                            "vendor_address2":"",
-                                            "vendor_state":"",
-                                            "vendor_zip":"",
-                                            "vendor_region":"",
-                                            "vendor_city":"",
-                                            "vendor_gst":"",
-                                            "vendor_pan":"",
-                                            "pay_to_name": payNameController.text,
-                                            "payto_address1":payAdd1.text,
-                                            "payto_address2":payAdd2.text,
-                                            "payto_state":payState.text,
-                                            "payto_zip":payZip.text,
-                                            "payto_region":payRegion.text,
-                                            "payto_city":payCity.text,
-                                            "payto_gst":payGst.text,
-                                            "payto_pan":payPan.text,
-                                            "ship_to_name":shipNameController.text,
-                                            "shipto_address1": shipAdd1.text,
-                                            "shipto_address2": shipAdd2.text,
-                                            "shipto_state": shipState.text,
-                                            "shipto_zip": shipZip.text,
-                                            "shipto_region": shipRegion.text,
-                                            "shipto_city": shipCity.text,
-                                            "shipto_gst": shipGst.text,
-                                            "shipto_pan": shipPan.text,
-                                            "vendor_type": vendorType,
-                                            "vendor_code": vendorCode.text,
-                                          };
-                                          saveVendor(mapPayTo);
-                                        }
-                                        if(tabs == false){
-                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please Enter Data')));
-                                        }
-                                      }
-                                    }
-                                  },
-                                  color: Colors.blue,
-                                  child: const Center(
-                                    child: Text(
-                                      'Save',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )
-                              ),
-                            ],
-                          ),
+                      SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: OutlinedMButton(
+                          text: 'Save',
+                          textColor: mSaveButton,
+                          borderColor: mSaveButton,
+                          onTap: () {
+                            if (topDetailsForm.currentState!.validate()) {
+                              if(_tabIndex == 0){
+                                tabs = true;
+                                _tabController.animateTo((_tabController.index + 1) % 2);
+                              }
+                              else if(_tabIndex == 1){
+                                if(tabs == true){
+                                  mapPayTo = {
+                                    "company_name": companyName.text,
+                                    "vendor_display_name": vendor,
+                                    "vendor_email": email.text,
+                                    "vendor_mobile_phone": mobile.text,
+                                    "gst":gstController1.text,
+                                    "pan":panController1.text,
+                                    "contact_persons_name":
+                                    contactPersonName.text,
+                                    "contact_persons_email_id":
+                                    contactPersonEmail.text,
+                                    "contact_persons_mobile":
+                                    contactPersonPhone.text,
+                                    "vendor_address1":"",
+                                    "vendor_address2":"",
+                                    "vendor_state":"",
+                                    "vendor_zip":"",
+                                    "vendor_region":"",
+                                    "vendor_city":"",
+                                    "vendor_gst":"",
+                                    "vendor_pan":"",
+                                    "pay_to_name": payNameController.text,
+                                    "payto_address1":payAdd1.text,
+                                    "payto_address2":payAdd2.text,
+                                    "payto_state":payState.text,
+                                    "payto_zip":payZip.text,
+                                    "payto_region":payRegion.text,
+                                    "payto_city":payCity.text,
+                                    "payto_gst":payGst.text,
+                                    "payto_pan":payPan.text,
+                                    "ship_to_name":shipNameController.text,
+                                    "shipto_address1": shipAdd1.text,
+                                    "shipto_address2": shipAdd2.text,
+                                    "shipto_state": shipState.text,
+                                    "shipto_zip": shipZip.text,
+                                    "shipto_region": shipRegion.text,
+                                    "shipto_city": shipCity.text,
+                                    "shipto_gst": shipGst.text,
+                                    "shipto_pan": shipPan.text,
+                                    "vendor_type": vendorType,
+                                    "vendor_code": vendorCode.text,
+                                  };
+                                  saveVendor(mapPayTo);
+                                }
+                                if(tabs == false){
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please Enter Data')));
+                                }
+                              }
+                            }
+                          },
                         ),
                       ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      //   child: SizedBox(
+                      //     height: 30,
+                      //     child: Row(
+                      //       children: [
+                      //         MaterialButton(
+                      //             onPressed: () {
+                      //               if (topDetailsForm.currentState!.validate()) {
+                      //                 if(_tabIndex == 0){
+                      //                   tabs = true;
+                      //                   _tabController.animateTo((_tabController.index + 1) % 2);
+                      //                 }
+                      //                 else if(_tabIndex == 1){
+                      //                   if(tabs == true){
+                      //                     mapPayTo = {
+                      //                       "company_name": companyName.text,
+                      //                       "vendor_display_name": vendor,
+                      //                       "vendor_email": email.text,
+                      //                       "vendor_mobile_phone": mobile.text,
+                      //                       "gst":gstController1.text,
+                      //                       "pan":panController1.text,
+                      //                       "contact_persons_name":
+                      //                       contactPersonName.text,
+                      //                       "contact_persons_email_id":
+                      //                       contactPersonEmail.text,
+                      //                       "contact_persons_mobile":
+                      //                       contactPersonPhone.text,
+                      //                       "vendor_address1":"",
+                      //                       "vendor_address2":"",
+                      //                       "vendor_state":"",
+                      //                       "vendor_zip":"",
+                      //                       "vendor_region":"",
+                      //                       "vendor_city":"",
+                      //                       "vendor_gst":"",
+                      //                       "vendor_pan":"",
+                      //                       "pay_to_name": payNameController.text,
+                      //                       "payto_address1":payAdd1.text,
+                      //                       "payto_address2":payAdd2.text,
+                      //                       "payto_state":payState.text,
+                      //                       "payto_zip":payZip.text,
+                      //                       "payto_region":payRegion.text,
+                      //                       "payto_city":payCity.text,
+                      //                       "payto_gst":payGst.text,
+                      //                       "payto_pan":payPan.text,
+                      //                       "ship_to_name":shipNameController.text,
+                      //                       "shipto_address1": shipAdd1.text,
+                      //                       "shipto_address2": shipAdd2.text,
+                      //                       "shipto_state": shipState.text,
+                      //                       "shipto_zip": shipZip.text,
+                      //                       "shipto_region": shipRegion.text,
+                      //                       "shipto_city": shipCity.text,
+                      //                       "shipto_gst": shipGst.text,
+                      //                       "shipto_pan": shipPan.text,
+                      //                       "vendor_type": vendorType,
+                      //                       "vendor_code": vendorCode.text,
+                      //                     };
+                      //                     saveVendor(mapPayTo);
+                      //                   }
+                      //                   if(tabs == false){
+                      //                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please Enter Data')));
+                      //                   }
+                      //                 }
+                      //               }
+                      //             },
+                      //             color: Colors.blue,
+                      //             child: const Center(
+                      //               child: Text(
+                      //                 'Save',
+                      //                 style: TextStyle(
+                      //                   color: Colors.white,
+                      //                 ),
+                      //               ),
+                      //             )
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         width: 10,
                       ),
-                      SizedBox(
-                        width: 80,
-                        height: 30,
-                        child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                            color: Colors.white,
-                            child: const Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            )),
-                      ),
+                      // SizedBox(
+                      //   width: 80,
+                      //   height: 30,
+                      //   child: MaterialButton(
+                      //       onPressed: () {
+                      //         setState(() {
+                      //           Navigator.of(context).pop();
+                      //         });
+                      //       },
+                      //       color: Colors.white,
+                      //       child: const Center(
+                      //         child: Text(
+                      //           'Cancel',
+                      //           style: TextStyle(color: Colors.black),
+                      //         ),
+                      //       )),
+                      // ),
                     ],
                   ),
                 ),
