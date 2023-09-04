@@ -26,37 +26,37 @@ class _TemplateScreenState extends State<TemplateScreen> {
   ];
 
   List templateData =[
-    [
-      {
-        "type": "textField",
-        "question": " Enter your Name",
-        "answer": "",
-        "isHover": false
-      },
-      {
-        "type": "textField",
-        "question": "Enter Age",
-        "answer": "",
-        "isHover": false
-      },
-      {
-        "type": "date",
-        "question": "Enter Date of birth",
-        "answer": "",
-        "isHover": false
-      },
-      {
-        "type": "test",
-        "question": "Select applicable choice",
-        "length": 2,
-        "answer": "",
-        "dropdownAnswer": [
-          "Choice 1",
-          "Choice 2"
-        ],
-        "isHover": false
-      }
-    ],
+    // [
+    //   {
+    //     "type": "textField",
+    //     "question": " Enter your Name",
+    //     "answer": "",
+    //     "isHover": false
+    //   },
+    //   {
+    //     "type": "textField",
+    //     "question": "Enter Age",
+    //     "answer": "",
+    //     "isHover": false
+    //   },
+    //   {
+    //     "type": "date",
+    //     "question": "Enter Date of birth",
+    //     "answer": "",
+    //     "isHover": false
+    //   },
+    //   {
+    //     "type": "test",
+    //     "question": "Select applicable choice",
+    //     "length": 2,
+    //     "answer": "",
+    //     "dropdownAnswer": [
+    //       "Choice 1",
+    //       "Choice 2"
+    //     ],
+    //     "isHover": false
+    //   }
+    // ],
   ];
 
 

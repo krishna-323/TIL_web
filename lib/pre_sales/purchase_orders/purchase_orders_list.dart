@@ -65,8 +65,6 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
           if(value!=null){
             response=value;
             estimateItems=response;
-            // print('---------response-------');
-            // print(estimateItems);
             if(displayListItems.isEmpty){
               if(estimateItems.length>15){
                 for(int i=startVal;i<startVal+15;i++){
@@ -85,7 +83,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
       });
     }
     catch(e){
-      // logOutApi(context: context,exception:e.toString() ,response: response);
+       logOutApi(context: context,exception:e.toString() ,response: response);
       setState(() {
         loading=false;
       });
@@ -355,8 +353,6 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
                                     MaterialButton(
                                       hoverColor: Colors.blue[50],
                                       onPressed: () {
-                                        // print("---------all data-----------");
-                                        // print(estimateItems[index]);
                                         Navigator.of(context).push(PageRouteBuilder(
                                           pageBuilder: (context, animation1, animation2) => ViewEstimateItem(
                                             drawerWidth: widget.args.drawerWidth,
@@ -558,10 +554,14 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   }
   // Fetch Functions.
   fetchSearchByDate(String date)async{
-    // print('-----inside get date api----');
-    // print(date);
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_serviceinvoicedate/$date";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_serviceinvoicedate/$date";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_date_search_by_user_id/$userId/$date";
+    }
     try {
       await getData(url:url ,context: context).then((date){
         setState(() {
@@ -590,10 +590,14 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
     }
   }
   fetchOrderIDItems(String orderID)async{
-    // print('--------orderID-----');
-    // print(orderID);
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_estvehicleid/$orderID";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_estvehicleid/$orderID";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_estveh_id_search_by_user_id/$userId/$orderID";
+    }
     try{
       await getData(context:context ,url: url).then((orderID){
         setState(() {
@@ -623,7 +627,13 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   }
   fetchByStatus(String status)async{
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_status/$status";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_status/$status";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_status_search_by_user_id/$userId/$status";
+    }
     try{
       await getData(url:url ,context: context).then((searchByStatus){
         setState(() {

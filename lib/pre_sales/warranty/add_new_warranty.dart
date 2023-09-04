@@ -1,6 +1,3 @@
-
-
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -104,14 +101,16 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
   List selectedVehicles=[];
 
   var units = <TextEditingController>[];
- // var discountRupees = <TextEditingController>[];
   var approvedPercentage = <TextEditingController>[];
   var tax = <TextEditingController>[];
   var lineAmount = <TextEditingController>[];
   var lineApprovedAmount = <TextEditingController>[];
   List items=[];
   Map postDetails={};
-
+  final validationForm=GlobalKey<FormState>();
+  List<String> generalId=[];
+  String storeId="";
+  bool matchingGeneralId=false;
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
@@ -140,25 +139,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                     shadowColor: Colors.black,
                     title: const Text("Create Warranty Purchase Order"),
                     actions: [
-                      const Row(
-                        children: [
-                          // SizedBox(
-                          //   width: 120,height: 28,
-                          //   child: OutlinedMButton(
-                          //     text: 'Save and New',
-                          //     textColor: mSaveButton,
-                          //     borderColor: mSaveButton,
-                          //     onTap: (){
-                          //
-                          //       setState(() {
-                          //
-                          //       });
-                          //     },
-                          //
-                          //   ),
-                          // ),
-                        ],
-                      ),
                       const SizedBox(width: 20),
                       Row(
                         children: [
@@ -170,87 +150,66 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
-                                setState(() {
-                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
-                                    setState(() {
-                                      searchVendor=true;
-                                      searchWarehouse=true;
-                                      notesError=true;
-                                      if(vendorSearchController.text.isNotEmpty){
-                                        searchVendor=false;
-                                      }
-                                      if(wareHouseController.text.isNotEmpty){
-                                        searchWarehouse=false;
-                                      }
-                                      if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
-                                        notesError=false;
-                                      }
-                                      if(indexNumber==0){
+                                checkLineItems();
+                                if(validationForm.currentState!.validate() && checkLineItems()){
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
+                                  }
+                                  catch(e){
+                                    tempTotal= double.parse(subAmountTotal.text);
+                                  }
+                                  postDetails= {
+                                    "additionalCharges": additionalCharges.text,
+                                    "address": "string",
+                                    "billAddressCity": vendorData['city']??"",
+                                    "billAddressName": vendorData['Name']??"",
+                                    "billAddressState": vendorData['state']??"",
+                                    "billAddressStreet": vendorData['street']??"",
+                                    "billAddressZipcode": vendorData['zipcode']??"",
+                                    "serviceDueDate": "string",
+                                    "serviceInvoice": salesInvoice.text,
+                                    "serviceInvoiceDate": salesInvoiceDate.text,
+                                    "shipAddressCity": wareHouse['city']??"",
+                                    "shipAddressName": wareHouse['Name']??"",
+                                    "shipAddressState": wareHouse['state']??"",
+                                    "shipAddressStreet": wareHouse['street']??"",
+                                    "shipAddressZipcode": wareHouse['zipcode']??"",
+                                    "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                    "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                    "termsConditions": termsAndConditions.text,
+                                    "total": tempTotal.toString(),
+                                    "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    'freight_amount':additionalCharges.text,
+                                    'status':"In-review",
+                                    "comment":"",
+                                    "manager_id": managerId,
+                                    "userid": userId,
+                                    "org_id": orgId,
+                                    "items": [
 
-                                        tableLineDataBool=true;
-                                      }
-                                    });
+                                    ]
+                                  };
+
+                                  for (int i = 0; i < selectedVehicles.length; i++) {
+                                    postDetails['items'].add(
+                                        {
+                                          "amount": lineAmount[i].text,
+                                          "discount": approvedPercentage[i].text,
+                                          "estVehicleId": "string",
+                                          "itemsService": "${selectedVehicles[i]['name']??""} - ${selectedVehicles[i]['description']??""}",
+                                          "priceItem": selectedVehicles[i]['selling_price'].toString(),
+                                          "quantity": units[i].text,
+                                          "tax": tax[i].text,
+                                          "newitem_id": selectedVehicles[i]['newitem_id']??"",
+                                        }
+                                    );
 
                                   }
-                                  else{
-                                    double tempTotal =0;
-                                    try{
-                                      tempTotal = (double.parse(subAmountTotal.text)+ double.parse(additionalCharges.text));
-                                    }
-                                    catch(e){
-                                      tempTotal= double.parse(subAmountTotal.text);
-                                    }
-                                    postDetails= {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName": vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet": vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "string",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                      "termsConditions": termsAndConditions.text,
-                                      "total": tempTotal.toString(),
-                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      'freight_amount':additionalCharges.text,
-                                      'status':"In-review",
-                                      "comment":"",
-                                      "manager_id": managerId,
-                                      "userid": userId,
-                                      "org_id": orgId,
-                                      "items": [
+                                  postEstimate(postDetails);
+                                }
 
-                                      ]
-                                    };
-
-                                    for (int i = 0; i < selectedVehicles.length; i++) {
-                                      postDetails['items'].add(
-                                          {
-                                            "amount": lineAmount[i].text,
-                                            "discount": approvedPercentage[i].text,
-                                            "estVehicleId": "string",
-                                            "itemsService": "${selectedVehicles[i]['name']??""} - ${selectedVehicles[i]['description']??""}",
-                                            "priceItem": selectedVehicles[i]['selling_price'].toString(),
-                                            "quantity": units[i].text,
-                                            "tax": tax[i].text,
-                                          }
-                                      );
-
-                                    }
-                                    postEstimate(postDetails);
-                                  }
-
-                                });
                               },
 
                             ),
@@ -267,13 +226,16 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
-                    child: Column(
-                      children: [
-                        buildHeaderCard(),
-                        const SizedBox(height: 10,),
-                        buildContentCard(),
+                    child: Form(
+                      key:validationForm,
+                      child: Column(
+                        children: [
+                          buildHeaderCard(),
+                          const SizedBox(height: 10,),
+                          buildContentCard(),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -283,6 +245,16 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
         ],
       ),
     );
+  }
+  bool checkLineItems(){
+    if(selectedVehicles.isEmpty){
+      setState(() {
+        tableLineDataBool=true;
+      });
+      return false;
+    }
+    return true;
+
   }
 
   Widget buildHeaderCard(){
@@ -396,7 +368,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                   setState(() {
                                     showVendorDetails=false;
                                     vendorSearchController.clear();
-                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -410,36 +381,40 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                       const SizedBox(height: 30,),
                     if(showVendorDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Vendor') ,
-                              controller: vendorSearchController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child:CustomTextFieldSearch(
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
                                 setState(() {
-                                  showVendorDetails=true;
-                                  vendorData ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                  searchVendor=false;
+                                  searchVendor=true;
                                 });
-                              },
-                            ),
+                                return "Search Vendor Address";
+                              }
+                              return null;
+
+                            },
+                            showAdd: false,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Vendor New',error:searchVendor) ,
+                            controller: vendorSearchController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showVendorDetails=true;
+                                vendorData ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchVendor=false;
+                              });
+                            },
                           ),
                         ),
                       ),
                     const SizedBox(height:5),
-                    if(searchVendor)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18),
-                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
-                      ),
                     if(showVendorDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -509,7 +484,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                   setState(() {
                                     showWareHouseDetails=false;
                                     wareHouseController.clear();
-                                    searchWarehouse=true;
                                   });
                                 },
                               ),
@@ -523,36 +497,40 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                       const SizedBox(height: 30,),
                     if(showWareHouseDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Warehouse'),
-                              controller: wareHouseController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
                                 setState(() {
-                                  showWareHouseDetails=true;
-                                  wareHouse ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                  searchWarehouse=false;
+                                  searchWarehouse=true;
                                 });
-                              },
-                            ),
+                                return "Search Warehouse Address";
+                              }
+                              return null;
+                            },
+                            showAdd: false,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Warehouse New',error:searchWarehouse) ,
+                            // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
+                            controller: wareHouseController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showWareHouseDetails=true;
+                                wareHouse ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchWarehouse=false;
+                              });
+                            },
                           ),
                         ),
                       ),
                     const SizedBox(height:5),
-                    if(searchWarehouse)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
-                      ),
                     if(showWareHouseDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -613,25 +591,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Column(
-                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                    //   children: [
-                                    //     const Padding(
-                                    //       padding: EdgeInsets.only(left:10.0),
-                                    //       child: Text('Sales Invoice #'),
-                                    //     ),
-                                    //     const SizedBox(height: 10,),
-                                    //     Container(
-                                    //       width: 120,
-                                    //       height: 32,
-                                    //       color: Colors.grey[200],
-                                    //       child: TextFormField(
-                                    //         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                    //         controller: salesInvoice,
-                                    //         decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                    //       ),
-                                    //     )
-                                    //   ],),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -666,22 +625,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                       ],)
                                   ]),
                               const SizedBox(height: 25,),
-                              // Align(alignment: Alignment.topLeft,
-                              //   child: SizedBox(
-                              //     width: 120,height: 28,
-                              //     child: OutlinedMButton(
-                              //       text: 'Add Due Date',
-                              //       textColor: mSaveButton,
-                              //       borderColor: mSaveButton,
-                              //       onTap: (){
-                              //         setState(() {
-                              //
-                              //         });
-                              //       },
-                              //
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
@@ -916,17 +859,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
                                   });
                                   if(v.isNotEmpty||v!=''){
-                                    //   double tempLineTotal =  double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text);
-                                    //   double tempVal =0;
-                                    //   double tempVal =0;
-                                    //   tempVal = (double.parse(v)/100) *  tempLineTotal;
-                                    //   lineAmount[index].text=(tempLineTotal-tempVal).toString();
-                                    //   setState(() {
-                                    //     subAmountTotal.text=(double.parse(subAmountTotal.text)-tempVal).toString();
-                                    //   });
-                                    // }
-                                    // else{
-                                    //   lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* double.parse(units[index].text)).toString();
                                   }
                                 },
                               ),
@@ -1012,7 +944,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                                borderColor:tableLineDataBool==true?const Color(0xffB2261E): mSaveButton,
                                 textColor: mSaveButton,
                                 onTap: () {
                                   if(displayList.isNotEmpty){
@@ -1028,18 +960,125 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                   ).then((value) {
                                     if(value!=null){
                                       setState(() {
-                                        isVehicleSelected=true;
-                                        units.add(TextEditingController(text: '1'));
-                                        approvedPercentage.add(TextEditingController(text: '0'));
-                                        tax.add(TextEditingController(text: '0'));
-                                        lineAmount.add(TextEditingController());
-                                        lineApprovedAmount.add(TextEditingController());
-                                        subAmountTotal.text='0';
-                                        selectedVehicles.add(value);
+                                        if(matchingGeneralId){
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              backgroundColor: Colors.transparent,
+                                              child: StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return SizedBox(
+                                                    width: 300,
+                                                    height: 220,
+                                                    child: Stack(children: [
+                                                      Container(
+                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                                        margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(15),
+                                                          child: Container(
+                                                            decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder,width: 1)),
+                                                            child: Column(
+                                                              children: [
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                const Icon(
+                                                                  Icons.warning_rounded,
+                                                                  color: Colors.red,
+                                                                  size: 50,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                const Column(
+                                                                  children:  [
+                                                                    Center(
+                                                                        child: Text(
+                                                                          'Warranty Details Already Added',
+                                                                          style: TextStyle(
+                                                                              color: Colors.indigo,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15),
+                                                                        )),
+                                                                    SizedBox(height:5),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment.center,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 60,
+                                                                      height: 30,
+                                                                      child: OutlinedMButton(
+                                                                        onTap: (){
+                                                                          Navigator.of(context).pop();
+                                                                          matchingGeneralId=false;
+                                                                        },
+                                                                        text: 'Ok',
+                                                                        borderColor: mSaveButton,
+                                                                        textColor:mSaveButton,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(right: 0.0,
+
+                                                        child: InkWell(
+                                                          child: Container(
+                                                              width: 30,
+                                                              height: 30,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(15),
+                                                                  border: Border.all(
+                                                                    color:
+                                                                    const Color.fromRGBO(204, 204, 204, 1),
+                                                                  ),
+                                                                  color: Colors.blue),
+                                                              child: const Icon(
+                                                                Icons.close_sharp,
+                                                                color: Colors.white,
+                                                              )),
+                                                          onTap: () {
+                                                            setState(() {
+                                                              Navigator.of(context).pop();
+                                                            });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        else{
+                                          isVehicleSelected=true;
+                                          units.add(TextEditingController(text: '1'));
+                                          approvedPercentage.add(TextEditingController(text: '0'));
+                                          tax.add(TextEditingController(text: '0'));
+                                          lineAmount.add(TextEditingController());
+                                          lineApprovedAmount.add(TextEditingController());
+                                          subAmountTotal.text='0';
+                                          selectedVehicles.add(value);
+                                        }
                                       });
                                     }
                                   });
-
+                                  for(int i=0;i<selectedVehicles.length;i++){
+                                    generalId.add(selectedVehicles[i]["newitem_id"]);
+                                  }
                                 },
                               ))),
                       const Expanded(flex: 5,child: Center(child: Text(""),))
@@ -1051,7 +1090,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
               if(tableLineDataBool==true)
                 const Padding(
                   padding: EdgeInsets.only(left:200),
-                  child: Text("Please Add  Warranty Line Data",style: TextStyle(color: Colors.red),),
+                  child: Text("Please Add  Warranty Line Data",style: TextStyle(color:  Color(0xffB2261E)),),
                 )
             ],
           ),
@@ -1228,6 +1267,12 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                                         hoverColor: mHoverColor,
                                         onTap: () {
                                           setState(() {
+                                            storeId=displayList[i]['newitem_id'];
+                                            for(var tempId in generalId){
+                                              if(tempId==storeId){
+                                                matchingGeneralId=true;
+                                              }
+                                            }
                                              Navigator.pop(context,displayList[i]);
                                           });
 
@@ -1319,40 +1364,40 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Notes From Dealer"),
-                const SizedBox(height: 10,),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                      height: 80,
-                      child: TextFormField(
-                        controller: termsAndConditions,
-                        style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration:  const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                        ),
-                      ),
-                    )
+                const Padding(
+                  padding: EdgeInsets.only(left:10.0),
+                  child: Text("Notes From Dealer"),
                 ),
                 const SizedBox(height: 5,),
-                notesError==true?const Text("Enter Notes",style:TextStyle(color: Colors.red)):const Text(""),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    validator: (value){
+                      if(value==null || value.trim().isEmpty){
+                        setState(() {
+                          notesError=true;
+                        });
+                        return "Enter Dealer Notes";
+                      }
+                      return null;
+                    },
+                    maxLines: 5,
+                    controller: termsAndConditions,
+                    decoration:textFieldDecoration(hintText: 'Enter Dealer Notes', error:notesError ) ,
+                  ),
+                ),
+                const SizedBox(height: 5,),
+
               ],
             ),
           ),
         ),
-        const CustomVDivider(height: 200, width: 1, color: mTextFieldBorder),
+        const CustomVDivider(height: 250, width: 1, color: mTextFieldBorder),
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -1431,17 +1476,28 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
     );
   }
 
-  textFieldDecoration({required String hintText, bool? error}) {
+  decorationVendorAndWarehouse({required String hintText, required bool error}) {
     return  InputDecoration(
       suffixIcon: const Icon(Icons.search,size: 18),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      constraints: BoxConstraints(maxHeight: error ? 60:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: searchVendor==true?Colors.red:mSaveButton)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: error?Colors.red:mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldDecoration({required String hintText, required bool error}) {
+    return  InputDecoration(
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1583,6 +1639,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
       });
     }
   }
+
   postEstimate(Map estimate)async{
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/add_parts_warranty';
 
@@ -1597,15 +1654,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
     });
 
   }
-  textFieldSalesInvoice({required String hintText, bool? error}) {
-    return  InputDecoration(border: InputBorder.none,
-      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
-      hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14),
-      counterText: '',
-      contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 15),
-    );
-  }
+
   textFieldSalesInvoiceDate({required String hintText, bool? error}) {
     return  InputDecoration(
       suffixIcon: const Icon(Icons.calendar_month_rounded,size: 12,color: Colors.grey,),
@@ -1617,7 +1666,6 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
       contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
-
 }
 
 class VendorModelAddress {

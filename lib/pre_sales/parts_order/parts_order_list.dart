@@ -237,7 +237,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
 
                                                     }
                                                   },
-                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDeoration(hintText: 'Search By Order #'),  ),),
+                                                  style: const TextStyle(fontSize: 14),  keyboardType: TextInputType.text,    decoration: searchOrderByIdDecoration(hintText: 'Search By Order #'),  ),),
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
@@ -599,7 +599,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
   // Search Async Functions.
   Future fetchInvoiceDate(String orderDate)async{
     dynamic response;
-    String url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_serviceinvoicedate/$orderDate";
+    String url="";
+    if(role==""){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_serviceinvoicedate/$orderDate";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_date_search_by_user_id/$userId/$orderDate";
+    }
     try{
       await getData(url:url ,context: context).then((value){
         setState(() {
@@ -612,8 +618,6 @@ class _PartsOrderListState extends State<PartsOrderList> {
                 for(int i=startVal;i<startVal +15;i++){
                   displayListItems.add(estimateItems[i]);
                 }
-                // print('------------check data------------');
-                // print(displayListItems);
               }
               else{
                 for(int i=0;i<estimateItems.length;i++){
@@ -631,10 +635,14 @@ class _PartsOrderListState extends State<PartsOrderList> {
     }
   }
   Future fetchByOrderId(String orderID)async{
-    // print('------fetchByOrderId-----');
-    // print(orderID);
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_estvehicleid/$orderID";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_estvehicleid/$orderID";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_estveh_id_search_by_user_id/$userId/$orderID";
+    }
     try{
       await getData(context:context ,url: url).then((value){
         setState(() {
@@ -664,7 +672,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
   }
   Future fetchByStatusItems(String status)async{
     dynamic response;
-    String url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_status/$status";
+    String url="";
+    if(role=="Manager"){
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_status/$status";
+    }
+    else{
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_status_search_by_user_id/USER_03268/$status";
+    }
     try{
      await getData(url:url ,context: context).then((statusItems){
        setState(() {
@@ -694,7 +708,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
     }
   }
 
-  searchInvoiceDate ({required String hintText, bool? error}){
+  searchInvoiceDate ({required String hintText,}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: salesInvoiceDataController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
@@ -713,11 +727,11 @@ class _PartsOrderListState extends State<PartsOrderList> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color:mSaveButton)),
     );
   }
-  searchOrderByIdDeoration ({required String hintText, bool? error}){
+  searchOrderByIdDecoration ({required String hintText, }){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: searchByOrderId.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
@@ -736,11 +750,11 @@ class _PartsOrderListState extends State<PartsOrderList> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color:mSaveButton)),
     );
   }
-  searchByStatusDecoration ({required String hintText, bool? error}){
+  searchByStatusDecoration ({required String hintText,}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: searchByStatusController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
@@ -761,8 +775,8 @@ class _PartsOrderListState extends State<PartsOrderList> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color:mSaveButton)),
     );
   }
 
