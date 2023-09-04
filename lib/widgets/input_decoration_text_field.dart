@@ -79,6 +79,19 @@ decorationInput4(String hintString, bool val, bool isDisabled,) {
   );
 }
 
+textFieldDecoration({required String hintText, bool? error}) {
+  return  InputDecoration(
+    border: const OutlineInputBorder(
+        borderSide: BorderSide(color:  Colors.blue)),
+    constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+    hintText: hintText,
+    hintStyle: const TextStyle(fontSize: 14),
+    counterText: '',
+    contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
+    enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+  );
+}
 decorationInput5(String hintString, bool val,) {
   return InputDecoration(
     filled: true,

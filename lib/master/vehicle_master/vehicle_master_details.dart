@@ -9,7 +9,10 @@ import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
+import 'add_new_vehicle.dart';
 import 'add_variant_model.dart';
 import 'bloc/vehicle_details_bloc.dart';
 import 'model/vehicle_details_model.dart';
@@ -79,7 +82,7 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
   int _tabIndex = 0;
   final List<Widget> myTabs = const [
     Tab(text: 'Overview',),
-    Tab(text: 'History'),
+    // Tab(text: 'History'),
   ];
   _handleTabSelection(){
     if(_tabController.indexIsChanging){
@@ -187,7 +190,7 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
           ),
           Expanded(
               child: Scaffold(
-
+                backgroundColor: Colors.white,
                 body: CustomLoader(
                   inAsyncCall: loading,
                   child: Row(
@@ -195,97 +198,193 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //--------- left side table----------
-                      Expanded(
-                          child: SingleChildScrollView(
-                            controller: ScrollController(),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(color: Colors.grey[200],
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text("All Vehicles"),
-                                            Row(
-                                              children: [
-                                                SizedBox(width: 60,child: MaterialButton(onPressed: (){
-                                                  // Navigator.push(context,
-                                                  //     MaterialPageRoute(
-                                                  //         builder: (context)=>AddNewVehicles(
-                                                  //           title: 1,
-                                                  //           drawerWidth: widget.drawerWidth,
-                                                  //           selectedDestination: widget.selectedDestination,
-                                                  //         )
-                                                  //     )
-                                                  // ).then((value) => fetchVehicleData());
-                                                },child: const Text("+ New",style: TextStyle(color: Colors.white)),color: Colors.blue,))
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: viewVehicleList.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          color:  selectedId == viewVehicleList[index]["new_vehicle_id"]? Colors.grey[100]:Colors.white,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              InkWell(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 8.0, top: 10, bottom: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Center(
-                                                        child: Text(
-                                                          viewVehicleList[index]['brand'],
-                                                          style: TextStyle(
-                                                              color: Colors.blue[800]
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                onTap: () {
-
-
-                                                  setState(() {
-                                                    selectedId = viewVehicleList[index]["new_vehicle_id"];
-                                                    fetchVariantData(selectedId);
-                                                    vehicleId =viewVehicleList[index]["new_vehicle_id"];
-                                                    selectedIndex = index;
-                                                    vehicleDetailsBloc.fetchVehicleNetwork(viewVehicleList[index]['new_vehicle_id']);
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                      SizedBox(
+                        width: 300,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: 300,
+                              child: AppBar(
+                                title: const Text("All Vehicles",style: TextStyle(fontSize: 20)),
+                                elevation: 1,
+                                surfaceTintColor: Colors.white,
+                                shadowColor: Colors.black,
+                                backgroundColor: Colors.white,
+                                actions: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                        width: 80,
+                                        height: 30,
+                                        decoration: BoxDecoration(border: Border.all(color:  Colors.blue),borderRadius: BorderRadius.circular(4)),
+                                        child: InkWell(
+                                          hoverColor: mHoverColor,
+                                          onTap: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context)=>AddNewVehicles(
+                                                      // title: 1,
+                                                      drawerWidth: widget.drawerWidth,
+                                                      selectedDestination: widget.selectedDestination,
+                                                    )
+                                                )
+                                            ).then((value) => fetchVehicleData());
+                                          },
+                                          child: const Center(
+                                            child: Text("+ New",
+                                                style: TextStyle(
+                                                    color: Colors.blue)),
                                           ),
-                                        ),
-                                        const Divider(height: 1),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ],
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ),
-                          )
+                            const Divider(height: 1),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: viewVehicleList.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      color:  selectedId == viewVehicleList[index]["new_vehicle_id"]? Colors.grey[100]:Colors.white,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0, top: 10, bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  Center(
+                                                    child: Text(
+                                                      viewVehicleList[index]['brand'],
+                                                      style: TextStyle(
+                                                          color: Colors.blue[800]
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            onTap: () {
+
+
+                                              setState(() {
+                                                selectedId = viewVehicleList[index]["new_vehicle_id"];
+                                                fetchVariantData(selectedId);
+                                                vehicleId =viewVehicleList[index]["new_vehicle_id"];
+                                                selectedIndex = index;
+                                                vehicleDetailsBloc.fetchVehicleNetwork(viewVehicleList[index]['new_vehicle_id']);
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(height: 1),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
+                      // Expanded(
+                      //     child: SingleChildScrollView(
+                      //       controller: ScrollController(),
+                      //       child: Column(
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           Container(color: Colors.grey[200],
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                      //               child: Column(
+                      //                 children: [
+                      //                   Row(
+                      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //                     children: [
+                      //                       const Text("All Vehicles"),
+                      //                       Row(
+                      //                         children: [
+                      //                           SizedBox(width: 60,child: MaterialButton(onPressed: (){
+                      //                             // Navigator.push(context,
+                      //                             //     MaterialPageRoute(
+                      //                             //         builder: (context)=>AddNewVehicles(
+                      //                             //           title: 1,
+                      //                             //           drawerWidth: widget.drawerWidth,
+                      //                             //           selectedDestination: widget.selectedDestination,
+                      //                             //         )
+                      //                             //     )
+                      //                             // ).then((value) => fetchVehicleData());
+                      //                           },child: const Text("+ New",style: TextStyle(color: Colors.white)),color: Colors.blue,))
+                      //                         ],
+                      //                       )
+                      //                     ],
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           ListView.builder(
+                      //             physics: const NeverScrollableScrollPhysics(),
+                      //             shrinkWrap: true,
+                      //             itemCount: viewVehicleList.length,
+                      //             itemBuilder: (context, index) {
+                      //               return Column(
+                      //                 crossAxisAlignment: CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   Container(
+                      //                     color:  selectedId == viewVehicleList[index]["new_vehicle_id"]? Colors.grey[100]:Colors.white,
+                      //                     child: Column(
+                      //                       crossAxisAlignment: CrossAxisAlignment.start,
+                      //                       children: [
+                      //                         InkWell(
+                      //                           child: Padding(
+                      //                             padding: const EdgeInsets.only(
+                      //                                 left: 8.0, top: 10, bottom: 10),
+                      //                             child: Row(
+                      //                               children: [
+                      //                                 Center(
+                      //                                   child: Text(
+                      //                                     viewVehicleList[index]['brand'],
+                      //                                     style: TextStyle(
+                      //                                         color: Colors.blue[800]
+                      //                                     ),
+                      //                                   ),
+                      //                                 ),
+                      //                               ],
+                      //                             ),
+                      //                           ),
+                      //                           onTap: () {
+                      //
+                      //
+                      //                             setState(() {
+                      //                               selectedId = viewVehicleList[index]["new_vehicle_id"];
+                      //                               fetchVariantData(selectedId);
+                      //                               vehicleId =viewVehicleList[index]["new_vehicle_id"];
+                      //                               selectedIndex = index;
+                      //                               vehicleDetailsBloc.fetchVehicleNetwork(viewVehicleList[index]['new_vehicle_id']);
+                      //                             });
+                      //                           },
+                      //                         ),
+                      //                       ],
+                      //                     ),
+                      //                   ),
+                      //                   const Divider(height: 1),
+                      //                 ],
+                      //               );
+                      //             },
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     )
+                      // ),
                       const VerticalDivider(width: 1),
                       // ----------tab bar----------
                       StreamBuilder(
@@ -354,7 +453,7 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                             return Expanded(
                                 flex: 2,
                                 child: DefaultTabController(
-                                    length: 2,
+                                    length: 1,
                                     child: Scaffold(
                                       body: RawScrollbar(
                                         thumbColor: Colors.black45,
@@ -370,7 +469,7 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                               Align(
                                                 alignment: Alignment.topLeft,
                                                 child: SizedBox(
-                                                  width: 400,
+                                                  // width: 400,
                                                   child: TabBar(
                                                     indicatorColor: Colors.blue,
                                                     labelColor: Colors.black,
@@ -511,9 +610,9 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                               padding: const EdgeInsets.all(20.0),
                                                               child: Column(
                                                                 children: [
-                                                                  Row(
+                                                                  const Row(
                                                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: const [
+                                                                    children: [
                                                                       Text('Vehicle Details',
                                                                         style: TextStyle(
                                                                           color: Colors.blue,
@@ -595,29 +694,30 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                     ],
                                                                   ),
                                                                   const SizedBox(height: 10,),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      MaterialButton(onPressed: () {
-                                                                        // Navigator.push(context,
-                                                                        //     MaterialPageRoute(
-                                                                        //       builder: (context) => EditVehicleMaster(drawerWidth: widget.drawerWidth,selectedDestination: widget.selectedDestination,vehicleData: snapshot.data!.vehicleDocketData[0].vehicleData),
-                                                                        //     )
-                                                                        // ).then((value){
-                                                                        //   vehicleDetailsBloc.fetchVehicleNetwork(selectedId);
-                                                                        //   fetchVehicleData();
-                                                                        // });
-                                                                      },
-                                                                        color: Colors.blue,
-                                                                        child: Row(
-                                                                          children: const [
-                                                                            Icon(Icons.edit,color: Colors.white,),
-                                                                            Text('Edit',style: TextStyle(color: Colors.white)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                  // Row(
+                                                                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  //   children: [
+                                                                  //     SizedBox(
+                                                                  //       width: 80,
+                                                                  //       height: 30,
+                                                                  //       child: OutlinedMButton(
+                                                                  //         text :"Edit",
+                                                                  //         borderColor: Colors.indigo,
+                                                                  //         textColor:  Colors.indigo,
+                                                                  //         onTap: () {
+                                                                  //             // Navigator.push(context,
+                                                                  //             //     MaterialPageRoute(
+                                                                  //             //       builder: (context) => EditVehicleMaster(drawerWidth: widget.drawerWidth,selectedDestination: widget.selectedDestination,vehicleData: snapshot.data!.vehicleDocketData[0].vehicleData),
+                                                                  //             //     )
+                                                                  //             // ).then((value){
+                                                                  //             //   vehicleDetailsBloc.fetchVehicleNetwork(selectedId);
+                                                                  //             //   fetchVehicleData();
+                                                                  //             // });
+                                                                  //         },
+                                                                  //       ),
+                                                                  //     ),
+                                                                  //   ],
+                                                                  // ),
                                                                 ],
                                                               ),
                                                             ),
@@ -638,20 +738,44 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                     'Vehicle Variant',
                                                                     style: TextStyle(fontSize: 16),
                                                                   ),
-                                                                  MaterialButton(onPressed: () {
-                                                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                                                    AddVariantModel(
-                                                                      drawerWidth: widget.drawerWidth,
-                                                                        selectedDestination: widget.selectedDestination,
-                                                                        id: snapshot.data!.vehicleDocketData[0].vehicleData['new_vehicle_id'],
-                                                                        color: _color,
-                                                                        make: brand,
-                                                                        transmissionList: transmissionList,),
-                                                                    ));
-                                                                  },
-                                                                    color: Colors.blue,
-                                                                    child: const Text('Add',style: TextStyle(color: Colors.white)),
-                                                                  )
+                                                                  SizedBox(
+                                                                    width: 80,
+                                                                    height: 30,
+                                                                    child: OutlinedMButton(
+                                                                      text: 'Add',
+                                                                      buttonColor:mSaveButton ,
+                                                                      textColor: Colors.white,
+                                                                      borderColor: mSaveButton,
+                                                                      onTap: () {
+                                                                        Navigator.of(context).push(
+                                                                            PageRouteBuilder(
+                                                                              pageBuilder: (context,animation1,animation2)=>
+                                                                            AddVariantModel(
+                                                                              drawerWidth: widget.drawerWidth,
+                                                                              selectedDestination: widget.selectedDestination,
+                                                                              id: snapshot.data!.vehicleDocketData[0].vehicleData['new_vehicle_id'],
+                                                                              color: _color,
+                                                                              make: brand,
+                                                                              transmissionList: transmissionList,),
+                                                                        )
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                  // MaterialButton(onPressed: () {
+                                                                  //   Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                                                  //   AddVariantModel(
+                                                                  //     drawerWidth: widget.drawerWidth,
+                                                                  //       selectedDestination: widget.selectedDestination,
+                                                                  //       id: snapshot.data!.vehicleDocketData[0].vehicleData['new_vehicle_id'],
+                                                                  //       color: _color,
+                                                                  //       make: brand,
+                                                                  //       transmissionList: transmissionList,),
+                                                                  //   ));
+                                                                  // },
+                                                                  //   color: Colors.blue,
+                                                                  //   child: const Text('Add',style: TextStyle(color: Colors.white)),
+                                                                  // )
                                                                 ],
                                                               ),
                                                             ),
@@ -1206,7 +1330,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("TYPE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['type'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['type'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16,
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -1215,7 +1349,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("MODEL CODE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['model_code'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['model_code'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -1224,7 +1368,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("LABOUR TYPE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['labour_type'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['labour_type'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -1233,7 +1387,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("VEHICLE CATEGORY CODE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['vehicle_category_code'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['vehicle_category_code'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -1242,7 +1406,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("MARKET SEGMENT CODE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['market_segment_code'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['market_segment_code'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -1251,7 +1425,17 @@ class _VehicleMasterDetailsState extends State<VehicleMasterDetails>with SingleT
                                                                           width: 200,
                                                                           child: Text("VEHICLE TYPE CODE",style: TextStyle(color: Colors.black,fontSize: 12)),
                                                                         ),
-                                                                        Text(variantList[i]['vehicle_type_code'],style: const TextStyle(color: Color.fromRGBO(119, 119, 119, 1),fontSize: 16)),
+                                                                        Expanded(
+                                                                          child: Text(
+                                                                              variantList[i]['vehicle_type_code'],
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 1,
+                                                                              style: const TextStyle(
+                                                                                  color: Color.fromRGBO(119, 119, 119, 1),
+                                                                                  fontSize: 16
+                                                                              )
+                                                                          ),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ],

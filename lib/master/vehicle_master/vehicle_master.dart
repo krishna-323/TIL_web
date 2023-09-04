@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
 import 'package:new_project/master/vehicle_master/vehicle_master_details.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
@@ -125,18 +126,35 @@ class _VehicleMasterState extends State<VehicleMaster> {
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
-                                        MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
-                                            const AddNewVehicles( drawerWidth: 190, selectedDestination: 3.1,),
-                                                transitionDuration: Duration.zero,
-                                                reverseTransitionDuration: Duration.zero
-                                            ));
-                                          },color: Colors.blue,
-                                          child: const Text(
-                                              "+ New",
-                                              style: TextStyle(color: Colors.white)),
-                                        )
+                                        SizedBox(
+                                          width: 80,
+                                          height: 30,
+                                          child: OutlinedMButton(
+                                            text: '+ New',
+                                            buttonColor:mSaveButton ,
+                                            textColor: Colors.white,
+                                            borderColor: mSaveButton,
+                                            onTap: () {
+                                              Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                              const AddNewVehicles( drawerWidth: 190, selectedDestination: 3.1,),
+                                                  transitionDuration: Duration.zero,
+                                                  reverseTransitionDuration: Duration.zero
+                                              ));
+                                            },
+                                          ),
+                                        ),
+                                        // MaterialButton(
+                                        //   onPressed: () {
+                                        //     Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                        //     const AddNewVehicles( drawerWidth: 190, selectedDestination: 3.1,),
+                                        //         transitionDuration: Duration.zero,
+                                        //         reverseTransitionDuration: Duration.zero
+                                        //     ));
+                                        //   },color: Colors.blue,
+                                        //   child: const Text(
+                                        //       "+ New",
+                                        //       style: TextStyle(color: Colors.white)),
+                                        // )
                                       ],
                                     ),
                                   ),

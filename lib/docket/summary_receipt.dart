@@ -98,6 +98,18 @@ class _SummaryReceiptState extends State<SummaryReceipt> {
           Expanded(
               child: Scaffold(
                 backgroundColor: Colors.white,
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(88.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: AppBar(
+                        elevation: 1,
+                        surfaceTintColor: Colors.white,
+                        shadowColor: Colors.black,
+                        title: const Text("Summary Details"),
+                      ),
+                    )
+                ),
                 body: CustomLoader(
                     inAsyncCall: loading,
                     child: SingleChildScrollView(

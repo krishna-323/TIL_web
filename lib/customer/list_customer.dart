@@ -9,6 +9,7 @@ import '../../utils/customDrawer.dart';
 import '../utils/api/get_api.dart';
 import '../utils/custom_loader.dart';
 import '../utils/static_data/motows_colors.dart';
+import '../widgets/motows_buttons/outlined_mbutton.dart';
 import 'add_new_customer.dart';
 
 class ViewCustomerList extends StatefulWidget {
@@ -468,24 +469,42 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
                                                 children: [
                                                   Padding(
                                                     padding: const EdgeInsets.all(8.0),
-                                                    child: MaterialButton(
-                                                      shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(4.0) ),
-                                                      onPressed: () {
-
-                                                        Navigator.of(context).push(PageRouteBuilder(
-                                                            pageBuilder: (context,animation1,animation2)=>AddNewCustomer(
-                                                            title: 1,
-                                                              drawerWidth: widget.arg.drawerWidth,
-                                                              selectedDestination: widget.arg.selectedDestination,),
-                                                        transitionDuration: Duration.zero,
-                                                          reverseTransitionDuration: Duration.zero
-                                                        )).then((value) => fetchListCustomerData());
-                                                      },color: Colors.blue,
-                                                      child:  const Padding(
-                                                        padding: EdgeInsets.only(left:10.0,right: 10.0),
-                                                        child: Text(
-                                                            "+ Customer",
-                                                            style: TextStyle(color: Colors.white)),
+                                                    child: SizedBox(
+                                                      width: 100,
+                                                      height: 30,
+                                                      child: OutlinedMButton(
+                                                        text: '+ Customer',
+                                                        buttonColor:mSaveButton ,
+                                                        textColor: Colors.white,
+                                                        borderColor: mSaveButton,
+                                                        onTap: () {
+                                                          Navigator.of(context).push(PageRouteBuilder(
+                                                              pageBuilder: (context,animation1,animation2)=>AddNewCustomer(
+                                                                title: 1,
+                                                                drawerWidth: widget.arg.drawerWidth,
+                                                                selectedDestination: widget.arg.selectedDestination,),
+                                                              transitionDuration: Duration.zero,
+                                                              reverseTransitionDuration: Duration.zero
+                                                          )).then((value) => fetchListCustomerData());
+                                                        },
+                                                        // shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(4.0) ),
+                                                        // onPressed: () {
+                                                        //
+                                                        //   Navigator.of(context).push(PageRouteBuilder(
+                                                        //       pageBuilder: (context,animation1,animation2)=>AddNewCustomer(
+                                                        //       title: 1,
+                                                        //         drawerWidth: widget.arg.drawerWidth,
+                                                        //         selectedDestination: widget.arg.selectedDestination,),
+                                                        //   transitionDuration: Duration.zero,
+                                                        //     reverseTransitionDuration: Duration.zero
+                                                        //   )).then((value) => fetchListCustomerData());
+                                                        // },color: Colors.blue,
+                                                        // child:  const Padding(
+                                                        //   padding: EdgeInsets.only(left:10.0,right: 10.0),
+                                                        //   child: Text(
+                                                        //       "+ Customer",
+                                                        //       style: TextStyle(color: Colors.white)),
+                                                        // ),
                                                       ),
                                                     ),
                                                   ),

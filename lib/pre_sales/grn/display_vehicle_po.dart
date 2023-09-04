@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:textfield_search/textfield_search.dart';
 
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
+import '../../utils/static_data/motows_colors.dart';
 import 'add_grn_from_po.dart';
 class ViewGrn extends StatefulWidget {
 
@@ -100,7 +102,19 @@ class _ViewGrnState extends State<ViewGrn> {
               thickness: 1,),
             Expanded(
               child: Scaffold(
-
+                backgroundColor: Colors.white,
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(88.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: AppBar(
+                        elevation: 1,
+                        surfaceTintColor: Colors.white,
+                        shadowColor: Colors.black,
+                        title: const Text("Search Purchase Order"),
+                      ),
+                    ),
+                ),
                 body:
                 CustomLoader(
                   inAsyncCall: loading,
@@ -108,29 +122,29 @@ class _ViewGrnState extends State<ViewGrn> {
                     height: MediaQuery.of(context).size.height,
                     child: SingleChildScrollView(
                       child: Column(children: [
-                        Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 0.1,
-                              )),
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 50, right: 50),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Search Purchase Order',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.indigo,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-
-                          ),
-                        ),
+                        // Container(
+                        //   height: 60,
+                        //   decoration: BoxDecoration(
+                        //       border: Border.all(
+                        //         width: 0.1,
+                        //       )),
+                        //   child: const Padding(
+                        //     padding: EdgeInsets.only(left: 50, right: 50),
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //       children: [
+                        //         Text(
+                        //           'Search Purchase Order',
+                        //           style: TextStyle(
+                        //               fontSize: 20,
+                        //               color: Colors.indigo,
+                        //               fontWeight: FontWeight.bold),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //
+                        //   ),
+                        // ),
                         // for(int i=0;i<grnList.length;i++)
                         Padding(
                           padding: const EdgeInsets.only(top: 20,bottom: 20),
@@ -342,26 +356,20 @@ class _ViewGrnState extends State<ViewGrn> {
                                         Expanded(
                                             child: Center(
                                                 child: Padding(
-                                                  padding: const EdgeInsets.only(top: 5.0),
+                                                  padding: const EdgeInsets.only(top: 8.0),
                                                   child: SizedBox(
                                                       height: 30,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Center(
-                                                          child: Text(displayList[i]['date']))),
+                                                      child: Text(displayList[i]['date'])),
                                                 ))),
                                         Expanded(
                                             child: Center(
                                                 child: Padding(
-                                                  padding: const EdgeInsets.only(top: 5.0),
+                                                  padding: const EdgeInsets.only(top: 8.0),
                                                   child: SizedBox(
                                                       height: 30,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(left: 50),
-                                                        child: Row(
-                                                          children: [Text(displayList[i]['expected_delivery_date'])],
-                                                        ),
-                                                      )),
+                                                      child: Text(displayList[i]['expected_delivery_date'])),
                                                 ))),
                                         Expanded(
                                             child: Center(
@@ -382,47 +390,39 @@ class _ViewGrnState extends State<ViewGrn> {
                                         Expanded(
                                             child: Center(
                                                 child: Padding(
-                                                  padding: const EdgeInsets.only(top:8.0),
+                                                  padding: const EdgeInsets.only(top:0.0),
                                                   child: SizedBox(
-                                                      height: 30,
-                                                      //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Center(
-
-                                                          child: Column(
-
-                                                            children:  [
-                                                              Center(
-                                                                child:
-                                                                MaterialButton(color: Colors.blue,
-                                                                    child: const Text('Generate GRN',style: TextStyle(color: Colors.white),),
-                                                                    onPressed: (){
-                                                                      // print(displayList[i]);
-                                                                      setState(() {
-                                                                        Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>UpdatedGrn(
-                                                                          drawerWidth:widget.drawerWidth ,
-                                                                                selectedDestination: widget.selectedDestination,
-                                                                                vendorName:displayList[i]['vendor_name'],
-                                                                                vendorId: displayList[i]['new_vendor_id'],
-                                                                                purchaseOrderNumber: displayList[i]['po_id'],
-                                                                                dateInput:displayList[i]['date'],
-                                                                                selectId:displayList[i]['new_pur_vehi_id'],
-                                                                                freightAmount:displayList[i]['freight_amount'].toString(),
-                                                                                termsCondition: displayList[i]['terms_conditions'],
-                                                                                customerNotes: displayList[i]['customer_notes'],
-                                                                                grandTotal: displayList[i]['grand_total'],
-                                                                                basePrice: displayList[i]['base_price'],
-                                                                                taxAmount:displayList[i]['tax'],
-                                                                        ),
-                                                                        transitionDuration: Duration.zero,
-                                                                          reverseTransitionDuration: Duration.zero
-                                                                        ));
-                                                                      });
-
-
-                                                                    }),
-                                                              ),
-                                                            ],
-                                                          ))),
+                                                      height: 28,
+                                                      width: 100,
+                                                    child: OutlinedMButton(
+                                                        text: "Generate GRN",
+                                                      buttonColor:mSaveButton ,
+                                                      textColor: Colors.white,
+                                                      borderColor: mSaveButton,
+                                                      onTap: () {
+                                                        setState(() {
+                                                          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>UpdatedGrn(
+                                                            drawerWidth:widget.drawerWidth ,
+                                                            selectedDestination: widget.selectedDestination,
+                                                            vendorName:displayList[i]['vendor_name'],
+                                                            vendorId: displayList[i]['new_vendor_id'],
+                                                            purchaseOrderNumber: displayList[i]['po_id'],
+                                                            dateInput:displayList[i]['date'],
+                                                            selectId:displayList[i]['new_pur_vehi_id'],
+                                                            freightAmount:displayList[i]['freight_amount'].toString(),
+                                                            termsCondition: displayList[i]['terms_conditions'],
+                                                            customerNotes: displayList[i]['customer_notes'],
+                                                            grandTotal: displayList[i]['grand_total'],
+                                                            basePrice: displayList[i]['base_price'],
+                                                            taxAmount:displayList[i]['tax'],
+                                                          ),
+                                                              transitionDuration: Duration.zero,
+                                                              reverseTransitionDuration: Duration.zero
+                                                          ));
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
                                                 ))),
                                       ],
                                     ),

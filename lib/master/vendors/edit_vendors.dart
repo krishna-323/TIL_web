@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
 import 'bloc/vendors_details_bloc.dart';
 
@@ -256,23 +258,35 @@ class _AddNewVendorsState extends State<EditVendors>
           ),
           Expanded(
             child: Scaffold(
-
+              backgroundColor: Colors.white,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(88.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: AppBar(
+                      elevation: 1,
+                      surfaceTintColor: Colors.white,
+                      shadowColor: Colors.black,
+                      title: const Text("Edit Vendors"),
+                    ),
+                  )
+              ),
               body: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
                     //top container.
-                    Container(
-                      height: 60,
-                      color: Colors.white,
-                      child: Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.only(top:20.0,bottom:20,left:70),
-                            child: Text("Edit Vendors",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:Colors.indigo),),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   height: 60,
+                    //   color: Colors.white,
+                    //   child: Row(
+                    //     children: const [
+                    //       Padding(
+                    //         padding: EdgeInsets.only(top:20.0,bottom:20,left:70),
+                    //         child: Text("Edit Vendors",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:Colors.indigo),),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
 
                     if (width > 800)
                       Padding(
@@ -821,7 +835,7 @@ class _AddNewVendorsState extends State<EditVendors>
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: SizedBox(
-                                      width: 400,
+                                      // width: 400,
                                       child: TabBar(
                                         indicatorColor: Colors.blue,
                                         labelColor: Colors.lightBlue,
@@ -1422,7 +1436,7 @@ class _AddNewVendorsState extends State<EditVendors>
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: SizedBox(
-                                      width: 400,
+                                      // width: 400,
                                       child: TabBar(
                                         indicatorColor: Colors.blue,
                                         labelColor: Colors.lightBlue,
@@ -1455,223 +1469,393 @@ class _AddNewVendorsState extends State<EditVendors>
                   padding: const EdgeInsets.only(left: 50),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 8),
-                        child: SizedBox(
-                          height: 30,
-                          child: MaterialButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (top_details.currentState!.validate()) {
-                                    if(_tabIndex == 0){
-                                      tabs = true;
-                                      _tabController.animateTo((_tabController.index + 1)%2);
-                                    }
-                                    else if(_tabIndex == 1){
-                                      if(tabs == true){
-                                        _vendrpage = {
-                                          "new_vendor_id": widget.vendorData["new_vendor_id"],
-                                          "company_name": companyname.text,
-                                          "vendor_display_name": vendor,
-                                          "vendor_email": email.text,
-                                          "vendor_mobile_phone": mobile.text,
-                                          "gst":gstController1.text,
-                                          "pan":panController1.text,
-                                          "contact_persons_name":
-                                          contact_person_name.text,
-                                          "contact_persons_email_id":
-                                          contact_person_email.text,
-                                          "contact_persons_mobile":
-                                          contact_person_phone.text,
-                                          "vendor_address1":"",
-                                          "vendor_address2":"",
-                                          "vendor_state":"",
-                                          "vendor_zip":"",
-                                          "vendor_region":"",
-                                          "vendor_city":"",
-                                          "vendor_gst":"",
-                                          "vendor_pan":"",
-                                          "pay_to_name":payNameController.text,
-                                          "payto_address1":payAdd1.text,
-                                          "payto_address2":payAdd2.text,
-                                          "payto_state":payState.text,
-                                          "payto_zip":payZip.text,
-                                          "payto_region":payRegion.text,
-                                          "payto_city":payCity.text,
-                                          "payto_gst":payGst.text,
-                                          "payto_pan":payPan.text,
-                                          "ship_to_name":shipNameController.text,
-                                          "shipto_address1": shipAdd1.text,
-                                          "shipto_address2": shipAdd2.text,
-                                          "shipto_state": shipState.text,
-                                          "shipto_zip": shipZip.text,
-                                          "shipto_region": shipRegion.text,
-                                          "shipto_city": shipCity.text,
-                                          "shipto_gst": shipGst.text,
-                                          "shipto_pan": shipPan.text,
-                                          "vendor_type": vendorType,
-                                          "vendor_code": vendorCode.text,
-                                        };
-                                        // print(_vendrpage);
-                                        editVendor(_vendrpage);
-                                      }
-                                      if(tabs == false){
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edited')));
-                                      }
-                                    }
+                      SizedBox(
+                        width: 120,
+                        height: 30,
+                        child: OutlinedMButton(
+                          text: 'Save',
+                          textColor: mSaveButton,
+                          borderColor: mSaveButton,
+                          onTap: () {
+                            setState(() {
+                              if (top_details.currentState!.validate()) {
+                                if(_tabIndex == 0){
+                                  tabs = true;
+                                  _tabController.animateTo((_tabController.index + 1)%2);
+                                }
+                                else if(_tabIndex == 1){
+                                  if(tabs == true){
+                                    _vendrpage = {
+                                      "new_vendor_id": widget.vendorData["new_vendor_id"],
+                                      "company_name": companyname.text,
+                                      "vendor_display_name": vendor,
+                                      "vendor_email": email.text,
+                                      "vendor_mobile_phone": mobile.text,
+                                      "gst":gstController1.text,
+                                      "pan":panController1.text,
+                                      "contact_persons_name":
+                                      contact_person_name.text,
+                                      "contact_persons_email_id":
+                                      contact_person_email.text,
+                                      "contact_persons_mobile":
+                                      contact_person_phone.text,
+                                      "vendor_address1":"",
+                                      "vendor_address2":"",
+                                      "vendor_state":"",
+                                      "vendor_zip":"",
+                                      "vendor_region":"",
+                                      "vendor_city":"",
+                                      "vendor_gst":"",
+                                      "vendor_pan":"",
+                                      "pay_to_name":payNameController.text,
+                                      "payto_address1":payAdd1.text,
+                                      "payto_address2":payAdd2.text,
+                                      "payto_state":payState.text,
+                                      "payto_zip":payZip.text,
+                                      "payto_region":payRegion.text,
+                                      "payto_city":payCity.text,
+                                      "payto_gst":payGst.text,
+                                      "payto_pan":payPan.text,
+                                      "ship_to_name":shipNameController.text,
+                                      "shipto_address1": shipAdd1.text,
+                                      "shipto_address2": shipAdd2.text,
+                                      "shipto_state": shipState.text,
+                                      "shipto_zip": shipZip.text,
+                                      "shipto_region": shipRegion.text,
+                                      "shipto_city": shipCity.text,
+                                      "shipto_gst": shipGst.text,
+                                      "shipto_pan": shipPan.text,
+                                      "vendor_type": vendorType,
+                                      "vendor_code": vendorCode.text,
+                                    };
+                                    // print(_vendrpage);
+                                    editVendor(_vendrpage);
                                   }
-                                });
-                              },
-                              color: Colors.blue,
-                              child: const Center(
-                                child: Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )),
+                                  if(tabs == false){
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edited')));
+                                  }
+                                }
+                              }
+                            });
+                          },
                         ),
                       ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      //   child: SizedBox(
+                      //     height: 30,
+                      //     child: MaterialButton(
+                      //         onPressed: () {
+                      //           setState(() {
+                      //             if (top_details.currentState!.validate()) {
+                      //               if(_tabIndex == 0){
+                      //                 tabs = true;
+                      //                 _tabController.animateTo((_tabController.index + 1)%2);
+                      //               }
+                      //               else if(_tabIndex == 1){
+                      //                 if(tabs == true){
+                      //                   _vendrpage = {
+                      //                     "new_vendor_id": widget.vendorData["new_vendor_id"],
+                      //                     "company_name": companyname.text,
+                      //                     "vendor_display_name": vendor,
+                      //                     "vendor_email": email.text,
+                      //                     "vendor_mobile_phone": mobile.text,
+                      //                     "gst":gstController1.text,
+                      //                     "pan":panController1.text,
+                      //                     "contact_persons_name":
+                      //                     contact_person_name.text,
+                      //                     "contact_persons_email_id":
+                      //                     contact_person_email.text,
+                      //                     "contact_persons_mobile":
+                      //                     contact_person_phone.text,
+                      //                     "vendor_address1":"",
+                      //                     "vendor_address2":"",
+                      //                     "vendor_state":"",
+                      //                     "vendor_zip":"",
+                      //                     "vendor_region":"",
+                      //                     "vendor_city":"",
+                      //                     "vendor_gst":"",
+                      //                     "vendor_pan":"",
+                      //                     "pay_to_name":payNameController.text,
+                      //                     "payto_address1":payAdd1.text,
+                      //                     "payto_address2":payAdd2.text,
+                      //                     "payto_state":payState.text,
+                      //                     "payto_zip":payZip.text,
+                      //                     "payto_region":payRegion.text,
+                      //                     "payto_city":payCity.text,
+                      //                     "payto_gst":payGst.text,
+                      //                     "payto_pan":payPan.text,
+                      //                     "ship_to_name":shipNameController.text,
+                      //                     "shipto_address1": shipAdd1.text,
+                      //                     "shipto_address2": shipAdd2.text,
+                      //                     "shipto_state": shipState.text,
+                      //                     "shipto_zip": shipZip.text,
+                      //                     "shipto_region": shipRegion.text,
+                      //                     "shipto_city": shipCity.text,
+                      //                     "shipto_gst": shipGst.text,
+                      //                     "shipto_pan": shipPan.text,
+                      //                     "vendor_type": vendorType,
+                      //                     "vendor_code": vendorCode.text,
+                      //                   };
+                      //                   // print(_vendrpage);
+                      //                   editVendor(_vendrpage);
+                      //                 }
+                      //                 if(tabs == false){
+                      //                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edited')));
+                      //                 }
+                      //               }
+                      //             }
+                      //           });
+                      //         },
+                      //         color: Colors.blue,
+                      //         child: const Center(
+                      //           child: Text(
+                      //             'Save',
+                      //             style: TextStyle(
+                      //               color: Colors.white,
+                      //             ),
+                      //           ),
+                      //         )),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
                       const SizedBox(
                         width: 10,
                       ),
                       SizedBox(
-                        width: 80,
+                        width: 100,
                         height: 30,
-                        child: MaterialButton(
-                            onPressed: () {
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                            color: Colors.white,
-                            child: const Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            )),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      MaterialButton(
-                        color:Colors.red,
-                        onPressed: (){
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors.transparent,
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return SizedBox(
-                                      height: 200,
-                                      width: 300,
-                                      child: Stack(children: [
-                                        Container(
-                                          decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                                          margin:const EdgeInsets.only(top: 13.0,right: 8.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 20.0,right: 25),
-                                            child: Column(
-                                              children: [
-                                                const SizedBox(
-                                                  height: 20,
-                                                ),
-                                                const Icon(
-                                                  Icons.warning_rounded,
-                                                  color: Colors.red,
-                                                  size: 50,
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                const Center(
-                                                    child: Text(
-                                                      'Are You Sure, You Want To Delete ?',
-                                                      style: TextStyle(
-                                                          color: Colors.indigo,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 15),
-                                                    )),
-                                                const SizedBox(
-                                                  height: 35,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    MaterialButton(
-                                                      color: Colors.red,
-                                                      onPressed: () {
-                                                        // print(userId);
-                                                        deleteVendor();
-                                                      },
-                                                      child: const Text(
-                                                        'Ok',
-                                                        style: TextStyle(color: Colors.white),
+                        child: OutlinedMButton(
+                          text :"Delete",
+                          borderColor: Colors.redAccent,
+                          textColor:  Colors.redAccent,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  child: StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return SizedBox(
+                                        height: 200,
+                                        width: 300,
+                                        child: Stack(children: [
+                                          Container(
+                                            decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                                            margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 20.0,right: 25),
+                                              child: Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  const Icon(
+                                                    Icons.warning_rounded,
+                                                    color: Colors.red,
+                                                    size: 50,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  const Center(
+                                                      child: Text(
+                                                        'Are You Sure, You Want To Delete ?',
+                                                        style: TextStyle(
+                                                            color: Colors.indigo,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15),
+                                                      )),
+                                                  const SizedBox(
+                                                    height: 35,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      MaterialButton(
+                                                        color: Colors.red,
+                                                        onPressed: () {
+                                                          // print(userId);
+                                                          deleteVendor();
+                                                        },
+                                                        child: const Text(
+                                                          'Ok',
+                                                          style: TextStyle(color: Colors.white),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    MaterialButton(
-                                                      color: Colors.blue,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          Navigator.of(context).pop();
-                                                        });
-                                                      },
-                                                      child: const Text(
-                                                        'Cancel',
-                                                        style: TextStyle(color: Colors.white),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
+                                                      MaterialButton(
+                                                        color: Colors.blue,
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            Navigator.of(context).pop();
+                                                          });
+                                                        },
+                                                        child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(color: Colors.white),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Positioned(right: 0.0,
+                                          Positioned(right: 0.0,
 
-                                          child: InkWell(
-                                            child: Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    border: Border.all(
-                                                      color:
-                                                      const Color.fromRGBO(204, 204, 204, 1),
-                                                    ),
-                                                    color: Colors.blue),
-                                                child: const Icon(
-                                                  Icons.close_sharp,
-                                                  color: Colors.white,
-                                                )),
-                                            onTap: () {
-                                              setState(() {
-                                                Navigator.of(context).pop();
-                                              });
-                                            },
+                                            child: InkWell(
+                                              child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      border: Border.all(
+                                                        color:
+                                                        const Color.fromRGBO(204, 204, 204, 1),
+                                                      ),
+                                                      color: Colors.blue),
+                                                  child: const Icon(
+                                                    Icons.close_sharp,
+                                                    color: Colors.white,
+                                                  )),
+                                              onTap: () {
+                                                setState(() {
+                                                  Navigator.of(context).pop();
+                                                });
+                                              },
+                                            ),
                                           ),
+                                        ],
                                         ),
-                                      ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: const Row(
-                            children: [
-                              Icon(Icons.delete,color: Colors.white,),
-                              Text('Delete',style: TextStyle(color:Colors.white),)
-                            ]
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
+                      // MaterialButton(
+                      //   color:Colors.red,
+                      //   onPressed: (){
+                      //     showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return Dialog(
+                      //           backgroundColor: Colors.transparent,
+                      //           child: StatefulBuilder(
+                      //             builder: (context, setState) {
+                      //               return SizedBox(
+                      //                 height: 200,
+                      //                 width: 300,
+                      //                 child: Stack(children: [
+                      //                   Container(
+                      //                     decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(20)),
+                      //                     margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                      //                     child: Padding(
+                      //                       padding: const EdgeInsets.only(left: 20.0,right: 25),
+                      //                       child: Column(
+                      //                         children: [
+                      //                           const SizedBox(
+                      //                             height: 20,
+                      //                           ),
+                      //                           const Icon(
+                      //                             Icons.warning_rounded,
+                      //                             color: Colors.red,
+                      //                             size: 50,
+                      //                           ),
+                      //                           const SizedBox(
+                      //                             height: 10,
+                      //                           ),
+                      //                           const Center(
+                      //                               child: Text(
+                      //                                 'Are You Sure, You Want To Delete ?',
+                      //                                 style: TextStyle(
+                      //                                     color: Colors.indigo,
+                      //                                     fontWeight: FontWeight.bold,
+                      //                                     fontSize: 15),
+                      //                               )),
+                      //                           const SizedBox(
+                      //                             height: 35,
+                      //                           ),
+                      //                           Row(
+                      //                             mainAxisAlignment:
+                      //                             MainAxisAlignment.spaceBetween,
+                      //                             children: [
+                      //                               MaterialButton(
+                      //                                 color: Colors.red,
+                      //                                 onPressed: () {
+                      //                                   // print(userId);
+                      //                                   deleteVendor();
+                      //                                 },
+                      //                                 child: const Text(
+                      //                                   'Ok',
+                      //                                   style: TextStyle(color: Colors.white),
+                      //                                 ),
+                      //                               ),
+                      //                               MaterialButton(
+                      //                                 color: Colors.blue,
+                      //                                 onPressed: () {
+                      //                                   setState(() {
+                      //                                     Navigator.of(context).pop();
+                      //                                   });
+                      //                                 },
+                      //                                 child: const Text(
+                      //                                   'Cancel',
+                      //                                   style: TextStyle(color: Colors.white),
+                      //                                 ),
+                      //                               )
+                      //                             ],
+                      //                           )
+                      //                         ],
+                      //                       ),
+                      //                     ),
+                      //                   ),
+                      //                   Positioned(right: 0.0,
+                      //
+                      //                     child: InkWell(
+                      //                       child: Container(
+                      //                           width: 30,
+                      //                           height: 30,
+                      //                           decoration: BoxDecoration(
+                      //                               borderRadius: BorderRadius.circular(15),
+                      //                               border: Border.all(
+                      //                                 color:
+                      //                                 const Color.fromRGBO(204, 204, 204, 1),
+                      //                               ),
+                      //                               color: Colors.blue),
+                      //                           child: const Icon(
+                      //                             Icons.close_sharp,
+                      //                             color: Colors.white,
+                      //                           )),
+                      //                       onTap: () {
+                      //                         setState(() {
+                      //                           Navigator.of(context).pop();
+                      //                         });
+                      //                       },
+                      //                     ),
+                      //                   ),
+                      //                 ],
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         );
+                      //       },
+                      //     );
+                      //   },
+                      //   child: const Row(
+                      //       children: [
+                      //         Icon(Icons.delete,color: Colors.white,),
+                      //         Text('Delete',style: TextStyle(color:Colors.white),)
+                      //       ]
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

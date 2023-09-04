@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:new_project/Master/vendors/view_vendors_details.dart';
 import 'package:new_project/classes/arguments_classes/arguments_classes.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
+import 'package:new_project/widgets/motows_buttons/outlined_mbutton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/api/get_api.dart';
@@ -129,23 +130,21 @@ class _ListVendorsState extends State<ListVendors> {
                                             fontWeight: FontWeight.bold
                                         ),
                                       ),
-                                      MaterialButton(
-                                        onPressed: () {
-                                          // Navigator.push(
-                                          //     context, MaterialPageRoute(builder: (context)=>AddNewVendors(
-                                          //   drawerWidth:widget.args.drawerWidth ,
-                                          //   selectedDestination: widget.args.selectedDestination,
-                                          // )
-                                          // )
-                                          // ).then((value) => fetchVendorsData());
-                                          Navigator.of(context).push(PageRouteBuilder(
-                                              pageBuilder: (context,animation1,animation2)=>const AddNewVendors(
-                                                selectedDestination: 3.3, drawerWidth: 190,)));
-                                        },color: Colors.blue,
-                                        child: const Text(
-                                            "+ New",
-                                            style: TextStyle(color: Colors.white)),
-                                      )
+                                      SizedBox(
+                                        width: 80,
+                                        height: 30,
+                                        child: OutlinedMButton(
+                                          text: '+ New',
+                                          buttonColor:mSaveButton ,
+                                          textColor: Colors.white,
+                                          borderColor: mSaveButton,
+                                          onTap: () {
+                                            Navigator.of(context).push(PageRouteBuilder(
+                                                pageBuilder: (context,animation1,animation2)=>const AddNewVendors(
+                                                  selectedDestination: 3.3, drawerWidth: 190,)));
+                                          },
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -11,7 +11,9 @@ import '../../utils/api/get_api.dart';
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
+import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/input_decoration_text_field.dart';
+import '../../widgets/motows_buttons/outlined_mbutton.dart';
 class UpdatedGrn extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
@@ -210,35 +212,47 @@ class _UpdatedGrnState extends State<UpdatedGrn> {
             ),
             Expanded(
               child: Scaffold(
-
+                backgroundColor: Colors.white,
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(88.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: AppBar(
+                        elevation: 1,
+                        surfaceTintColor: Colors.white,
+                        shadowColor: Colors.black,
+                        title: const Text("Generate GRN"),
+                      ),
+                    )
+                ),
                 body: Container(
                   color: Colors.white,
                   child: SingleChildScrollView(
                     child: Form(
                       key: mainForm,
                       child: Column(children: [
-                        Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 0.1,
-                              )),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 50, right: 50),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text(
-                                  'Generate GRN',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.indigo,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   height: 60,
+                        //   decoration: BoxDecoration(
+                        //       border: Border.all(
+                        //         width: 0.1,
+                        //       )),
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.only(left: 50, right: 50),
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //       children: const [
+                        //         Text(
+                        //           'Generate GRN',
+                        //           style: TextStyle(
+                        //               fontSize: 20,
+                        //               color: Colors.indigo,
+                        //               fontWeight: FontWeight.bold),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         //first Row
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -736,99 +750,187 @@ class _UpdatedGrnState extends State<UpdatedGrn> {
                                               padding: const EdgeInsets.all(8.0),
                                               child: SizedBox(
                                                 height: 30,
+                                                width: 60,
                                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                 child: Center(
                                                     child: Column(
                                                       children: [
                                                         Center(
-                                                          child:
-                                                          // Text('check'),
-                                                          MaterialButton(
-                                                              color: Colors.blue,
-                                                              child: const Text('Add',style: TextStyle(color: Colors.white),),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  //This If Condition Is For Displaying Error Message.
-                                                                  if(receivedQuantityList[i].text.isEmpty? receivedQtyError[i] = true : receivedQtyError[i] = false) {}
-                                                                  //This Else If Condition For Small Pop up Message Box.
-                                                                  else if ((updatedQty[i]+int.parse(receivedQuantityList[i].text.toString()))>int.parse(getVehicle[i]['quantity'].toString())){
-                                                                    showDialog(context: context,
-                                                                        builder: (BuildContext context){
-                                                                          return  AlertDialog(
-                                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-                                                                            content:  SizedBox(
-                                                                              height: 150,
-                                                                              width: 250,
-                                                                              child: Column(
-                                                                                children:  [
-                                                                                  const SizedBox(height: 25,),
-                                                                                  const Text('Updated Received Quantity',style: TextStyle(fontSize: 20)),
-                                                                                  const Text('Not Exceed Order Quantity',style: TextStyle(fontSize: 20),),
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.only(top: 15),
-                                                                                    child: Row(
-                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                      children: [
-                                                                                        InkWell(
-                                                                                          child: Container(width: 50,
-                                                                                            color: Colors.green,
-                                                                                            height:25,child: const Center(child: Text('OK',
-                                                                                              style: TextStyle(color: Colors.white),)),
-                                                                                          ),
-                                                                                          onTap: (){
-                                                                                            setState(() {
-                                                                                              Navigator.of(context).pop();
-                                                                                            });
-                                                                                          },
+                                                          child: OutlinedMButton(
+                                                            text: 'Add',
+                                                            buttonColor:mSaveButton ,
+                                                            textColor: Colors.white,
+                                                            borderColor: mSaveButton,
+                                                            onTap: () {
+                                                              setState(() {
+                                                                //This If Condition Is For Displaying Error Message.
+                                                                if(receivedQuantityList[i].text.isEmpty? receivedQtyError[i] = true : receivedQtyError[i] = false) {}
+                                                                //This Else If Condition For Small Pop up Message Box.
+                                                                else if ((updatedQty[i]+int.parse(receivedQuantityList[i].text.toString()))>int.parse(getVehicle[i]['quantity'].toString())){
+                                                                  showDialog(context: context,
+                                                                      builder: (BuildContext context){
+                                                                        return  AlertDialog(
+                                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                                                                          content:  SizedBox(
+                                                                            height: 150,
+                                                                            width: 250,
+                                                                            child: Column(
+                                                                              children:  [
+                                                                                const SizedBox(height: 25,),
+                                                                                const Text('Updated Received Quantity',style: TextStyle(fontSize: 20)),
+                                                                                const Text('Not Exceed Order Quantity',style: TextStyle(fontSize: 20),),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(top: 15),
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    children: [
+                                                                                      InkWell(
+                                                                                        child: Container(width: 50,
+                                                                                          color: Colors.green,
+                                                                                          height:25,child: const Center(child: Text('OK',
+                                                                                            style: TextStyle(color: Colors.white),)),
                                                                                         ),
-                                                                                      ],
-                                                                                    ),
+                                                                                        onTap: (){
+                                                                                          setState(() {
+                                                                                            Navigator.of(context).pop();
+                                                                                          });
+                                                                                        },
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
-                                                                                ],
-                                                                              ),
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                          );}
-                                                                    );
-                                                                  }
-                                                                  //This Else If Condition For Big formPop Message VinNumber and Notes Numbers.
-                                                                  else if(receivedQuantityList[i].text.isNotEmpty) {
-                                                                    updateValue=updatedQty[i];
-                                                                    shortQuantityValue=shortQty[i];
-                                                                    poLineId=selectedId;
-                                                                    lineAutoGenId=getVehicle[i]['new_purveh_line_id'];
-                                                                    receivedQtyValue=int.parse(receivedQuantityList[i].text);
-                                                                    model =getVehicle[i]['model'];
-                                                                    brand=getVehicle[i]['brand'];
-                                                                    variant=getVehicle[i]['varient'];
-                                                                    unitPrice=getVehicle[i]['unit_price'];
-                                                                    taxPercentage=getVehicle[i]['tax_code'];
+                                                                          ),
+                                                                        );}
+                                                                  );
+                                                                }
+                                                                //This Else If Condition For Big formPop Message VinNumber and Notes Numbers.
+                                                                else if(receivedQuantityList[i].text.isNotEmpty) {
+                                                                  updateValue=updatedQty[i];
+                                                                  shortQuantityValue=shortQty[i];
+                                                                  poLineId=selectedId;
+                                                                  lineAutoGenId=getVehicle[i]['new_purveh_line_id'];
+                                                                  receivedQtyValue=int.parse(receivedQuantityList[i].text);
+                                                                  model =getVehicle[i]['model'];
+                                                                  brand=getVehicle[i]['brand'];
+                                                                  variant=getVehicle[i]['varient'];
+                                                                  unitPrice=getVehicle[i]['unit_price'];
+                                                                  taxPercentage=getVehicle[i]['tax_code'];
 
-                                                                    print(model);
-                                                                    updateLineDetails={
-                                                                      'new_purveh_line_id':lineAutoGenId,
-                                                                      'brand':getVehicle[i]['brand'],
-                                                                      'model':getVehicle[i]['model'],
-                                                                      'varient':getVehicle[i]['varient'],
-                                                                      'color':getVehicle[i]['color'],
-                                                                      'unit_price':getVehicle[i]['unit_price'],
-                                                                      'discount':getVehicle[i]['discount'],
-                                                                      'quantity':getVehicle[i]['quantity'],
-                                                                      'amount':getVehicle[i]['amount'],
-                                                                      'tax_code':getVehicle[i]['tax_code'],
-                                                                      'tax_amount':getVehicle[i]['tax_amount'],
-                                                                      'new_pur_vehi_id':getVehicle[i]['new_pur_vehi_id'],
-                                                                      "recieved_quantity":receivedQtyValue!+updatedQty[i],
-                                                                      'short_quantity':shortQuantityValue,
-                                                                    };
-                                                                    //This IS a Method
-                                                                    showGrnListDetails(context, receivedQtyValue,lineAutoGenId,poLineId,shortQuantityValue,updateValue!,
+                                                                  print(model);
+                                                                  updateLineDetails={
+                                                                    'new_purveh_line_id':lineAutoGenId,
+                                                                    'brand':getVehicle[i]['brand'],
+                                                                    'model':getVehicle[i]['model'],
+                                                                    'varient':getVehicle[i]['varient'],
+                                                                    'color':getVehicle[i]['color'],
+                                                                    'unit_price':getVehicle[i]['unit_price'],
+                                                                    'discount':getVehicle[i]['discount'],
+                                                                    'quantity':getVehicle[i]['quantity'],
+                                                                    'amount':getVehicle[i]['amount'],
+                                                                    'tax_code':getVehicle[i]['tax_code'],
+                                                                    'tax_amount':getVehicle[i]['tax_amount'],
+                                                                    'new_pur_vehi_id':getVehicle[i]['new_pur_vehi_id'],
+                                                                    "recieved_quantity":receivedQtyValue!+updatedQty[i],
+                                                                    'short_quantity':shortQuantityValue,
+                                                                  };
+                                                                  //This IS a Method
+                                                                  showGrnListDetails(context, receivedQtyValue,lineAutoGenId,poLineId,shortQuantityValue,updateValue!,
 
-                                                                        updateLineDetails,authToken,model,brand,variant,unitPrice,taxPercentage);
-                                                                  }
+                                                                      updateLineDetails,authToken,model,brand,variant,unitPrice,taxPercentage);
+                                                                }
 
-                                                                });
-
-                                                              }),
+                                                              });
+                                                            },
+                                                          ),
+                                                          // Text('check'),
+                                                          // MaterialButton(
+                                                          //     color: Colors.blue,
+                                                          //     child: const Text('Add',style: TextStyle(color: Colors.white),),
+                                                          //     onPressed: () {
+                                                          //       setState(() {
+                                                          //         //This If Condition Is For Displaying Error Message.
+                                                          //         if(receivedQuantityList[i].text.isEmpty? receivedQtyError[i] = true : receivedQtyError[i] = false) {}
+                                                          //         //This Else If Condition For Small Pop up Message Box.
+                                                          //         else if ((updatedQty[i]+int.parse(receivedQuantityList[i].text.toString()))>int.parse(getVehicle[i]['quantity'].toString())){
+                                                          //           showDialog(context: context,
+                                                          //               builder: (BuildContext context){
+                                                          //                 return  AlertDialog(
+                                                          //                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+                                                          //                   content:  SizedBox(
+                                                          //                     height: 150,
+                                                          //                     width: 250,
+                                                          //                     child: Column(
+                                                          //                       children:  [
+                                                          //                         const SizedBox(height: 25,),
+                                                          //                         const Text('Updated Received Quantity',style: TextStyle(fontSize: 20)),
+                                                          //                         const Text('Not Exceed Order Quantity',style: TextStyle(fontSize: 20),),
+                                                          //                         Padding(
+                                                          //                           padding: const EdgeInsets.only(top: 15),
+                                                          //                           child: Row(
+                                                          //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          //                             children: [
+                                                          //                               InkWell(
+                                                          //                                 child: Container(width: 50,
+                                                          //                                   color: Colors.green,
+                                                          //                                   height:25,child: const Center(child: Text('OK',
+                                                          //                                     style: TextStyle(color: Colors.white),)),
+                                                          //                                 ),
+                                                          //                                 onTap: (){
+                                                          //                                   setState(() {
+                                                          //                                     Navigator.of(context).pop();
+                                                          //                                   });
+                                                          //                                 },
+                                                          //                               ),
+                                                          //                             ],
+                                                          //                           ),
+                                                          //                         ),
+                                                          //                       ],
+                                                          //                     ),
+                                                          //                   ),
+                                                          //                 );}
+                                                          //           );
+                                                          //         }
+                                                          //         //This Else If Condition For Big formPop Message VinNumber and Notes Numbers.
+                                                          //         else if(receivedQuantityList[i].text.isNotEmpty) {
+                                                          //           updateValue=updatedQty[i];
+                                                          //           shortQuantityValue=shortQty[i];
+                                                          //           poLineId=selectedId;
+                                                          //           lineAutoGenId=getVehicle[i]['new_purveh_line_id'];
+                                                          //           receivedQtyValue=int.parse(receivedQuantityList[i].text);
+                                                          //           model =getVehicle[i]['model'];
+                                                          //           brand=getVehicle[i]['brand'];
+                                                          //           variant=getVehicle[i]['varient'];
+                                                          //           unitPrice=getVehicle[i]['unit_price'];
+                                                          //           taxPercentage=getVehicle[i]['tax_code'];
+                                                          //
+                                                          //           print(model);
+                                                          //           updateLineDetails={
+                                                          //             'new_purveh_line_id':lineAutoGenId,
+                                                          //             'brand':getVehicle[i]['brand'],
+                                                          //             'model':getVehicle[i]['model'],
+                                                          //             'varient':getVehicle[i]['varient'],
+                                                          //             'color':getVehicle[i]['color'],
+                                                          //             'unit_price':getVehicle[i]['unit_price'],
+                                                          //             'discount':getVehicle[i]['discount'],
+                                                          //             'quantity':getVehicle[i]['quantity'],
+                                                          //             'amount':getVehicle[i]['amount'],
+                                                          //             'tax_code':getVehicle[i]['tax_code'],
+                                                          //             'tax_amount':getVehicle[i]['tax_amount'],
+                                                          //             'new_pur_vehi_id':getVehicle[i]['new_pur_vehi_id'],
+                                                          //             "recieved_quantity":receivedQtyValue!+updatedQty[i],
+                                                          //             'short_quantity':shortQuantityValue,
+                                                          //           };
+                                                          //           //This IS a Method
+                                                          //           showGrnListDetails(context, receivedQtyValue,lineAutoGenId,poLineId,shortQuantityValue,updateValue!,
+                                                          //
+                                                          //               updateLineDetails,authToken,model,brand,variant,unitPrice,taxPercentage);
+                                                          //         }
+                                                          //
+                                                          //       });
+                                                          //
+                                                          //     }),
                                                         ),
                                                       ],
                                                     )),
@@ -901,10 +1003,15 @@ class _UpdatedGrnState extends State<UpdatedGrn> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 50),
                     child: Row(children: [
-                      MaterialButton(
-                          color: Colors.lightBlue,
-                          child: const Text("Save",style: TextStyle(color: Colors.white),),
-                          onPressed: () {
+                      SizedBox(
+                        height: 30,
+                        width: 80,
+                        child: OutlinedMButton(
+                            text: "Save",
+                          buttonColor:mSaveButton ,
+                          textColor: Colors.white,
+                          borderColor: mSaveButton,
+                          onTap: () {
                             for (int i = 0; i < getVehicle.length; i++) {
                               // if(receivedQuantityList[i].text.isEmpty? receivedQtyError[i] = true : receivedQtyError[i] = false) {}
                               if(receivedQuantityList[i].text.isEmpty){
@@ -941,18 +1048,61 @@ class _UpdatedGrnState extends State<UpdatedGrn> {
                                 updateLineData(updateLineDetails);
                               }
                             }
-                          }),
+                          },
+                        ),
+                      ),
+                      // MaterialButton(
+                      //     color: Colors.lightBlue,
+                      //     child: const Text("Save",style: TextStyle(color: Colors.white),),
+                      //     onPressed: () {
+                      //       for (int i = 0; i < getVehicle.length; i++) {
+                      //         // if(receivedQuantityList[i].text.isEmpty? receivedQtyError[i] = true : receivedQtyError[i] = false) {}
+                      //         if(receivedQuantityList[i].text.isEmpty){
+                      //           receivedQtyError[i] = true;
+                      //           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Enter VIN Data")));
+                      //         }else{
+                      //           receivedQtyError[i] = false;
+                      //         }
+                      //         if(mainForm.currentState!.validate()){
+                      //           Map addGrnPO = {
+                      //             "amount": getVehicle[i]['unit_price'].toString(),
+                      //             "grn_date": grnDate.text,
+                      //             "grn_number": grnNumber.text,
+                      //             "grn_ref": grnNote.text,
+                      //             "ordered_quantity": getVehicle[i]['quantity'],
+                      //             "purchase_order_date": dateInput.text,
+                      //             "purchase_order_number": orderNumber.text,
+                      //             "recieved_quantity": receivedQuantityList[i].text,
+                      //             "short_quantity": shortQty[i].toString(),
+                      //             "tax_percent": getVehicle[i]['tax_code'],
+                      //             "updated_recieved_quantity": updatedQty[i].toString(),
+                      //             "varient_color": getVehicle[i]['color'],
+                      //             "vehicle_name": getVehicle[i]['brand'],
+                      //             "vendor_name": vendorName.text,
+                      //             "new_vendor_id":vendorID,
+                      //             "freight_amount": freightAmountController.text,
+                      //             "terms_conditions": termsConditionController.text,
+                      //             "customer_notes": customerNoteController.text,
+                      //             "status":"",
+                      //           };
+                      //           // print('----------addGrnPo--------');
+                      //           // print(addGrnPO);
+                      //           addGrn(addGrnPO);
+                      //           updateLineData(updateLineDetails);
+                      //         }
+                      //       }
+                      //     }),
                       const SizedBox(
                         width: 20,
                       ),
-                      MaterialButton(
-                          color: Colors.white,
-                          child: const Text("Cancel"),
-                          onPressed: () {
-                            setState(() {
-                              Navigator.of(context).pop();
-                            });
-                          })
+                      // MaterialButton(
+                      //     color: Colors.white,
+                      //     child: const Text("Cancel"),
+                      //     onPressed: () {
+                      //       setState(() {
+                      //         Navigator.of(context).pop();
+                      //       });
+                      //     })
                     ]),
                   ),
                 ),
