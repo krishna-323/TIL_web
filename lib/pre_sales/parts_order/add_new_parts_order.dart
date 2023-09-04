@@ -84,6 +84,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       });
     }
   }
+  final focusDealerNotes=FocusNode();
   @override
   void initState() {
     // TODO: implement initState
@@ -129,7 +130,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   List partsList = [];
   List displayList=[];
   int startVal=0;
-  List selectedPart=[];
+  List selectedVehicle=[];
 
   var units = <TextEditingController>[];
   var discountRupees = <TextEditingController>[];
@@ -143,6 +144,20 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   bool searchVendor=false;
   bool searchWarehouse=false;
   bool tableLineDataBool=false;
+  final formValidation=GlobalKey<FormState>();
+  List<String> generalId=[];
+  String storeId="";
+  bool matchVehicleId=false;
+
+  bool checkLineItems(){
+    if(selectedVehicle.isEmpty){
+      setState(() {
+        tableLineDataBool=true;
+      });
+      return false;
+    }
+    return true;
+  }
   @override
   Widget build(BuildContext context) {
     width =MediaQuery.of(context).size.width;
@@ -182,87 +197,66 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
-                                setState(() {
-                                  if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.isEmpty){
-                                    setState(() {
-                                      searchVendor=true;
-                                      searchWarehouse=true;
-                                      notesFromDealerError=true;
-                                      if(vendorSearchController.text.isNotEmpty){
-                                        searchVendor=false;
-                                      }
-                                      if(wareHouseController.text.isNotEmpty){
-                                        searchWarehouse=false;
-                                      }
-                                      if(termsAndConditions.text.isNotEmpty || termsAndConditions.text!=""){
-                                        notesFromDealerError=false;
-                                      }
-                                      if(indexNumber==0){
-                                        // print('-------if condition------');
-                                        // print(indexNumber);
-                                        tableLineDataBool=true;
-                                      }
-                                    });
+                                checkLineItems();
+                                focusDealerNotes.requestFocus();
+                                if(formValidation.currentState!.validate() && checkLineItems()){
+                                  double tempTotal =0;
+                                  try{
+                                    tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text) + double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
+                                  }
+                                  catch (e){
+                                    tempTotal = double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                  }
+
+                                  postDetails= {
+                                    "additionalCharges": additionalCharges.text,
+                                    "address": "string",
+                                    "billAddressCity": vendorData['city']??"",
+                                    "billAddressName": vendorData['Name']??"",
+                                    "billAddressState": vendorData['state']??"",
+                                    "billAddressStreet": vendorData['street']??"",
+                                    "billAddressZipcode": vendorData['zipcode']??"",
+                                    "serviceDueDate": "string",
+                                    "serviceInvoice": salesInvoice.text,
+                                    "serviceInvoiceDate": salesInvoiceDate.text,
+                                    "shipAddressCity": wareHouse['city']??"",
+                                    "shipAddressName": wareHouse['Name']??"",
+                                    "shipAddressState": wareHouse['state']??"",
+                                    "shipAddressStreet": wareHouse['street']??"",
+                                    "shipAddressZipcode": wareHouse['zipcode']??"",
+                                    "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                    "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                    "termsConditions": termsAndConditions.text,
+                                    "total": tempTotal.toString(),
+                                    "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                    "status": "In-review",
+                                    "comment": "",
+                                    "freight_amount":additionalCharges.text,
+                                    "manager_id": managerId,
+                                    "userid": userId,
+                                    "org_id": orgId,
+                                    "items": [
+
+                                    ]
+                                  };
+                                  for (int i = 0; i < selectedVehicle.length; i++) {
+                                    postDetails['items'].add(
+                                        {
+                                          "amount": lineAmount[i].text,
+                                          "discount": discountPercentage[i].text,
+                                          "itemsService": selectedVehicle[i]['name']+" "+selectedVehicle[i]['description'],
+                                          "priceItem": selectedVehicle[i]['selling_price']??"",
+                                          "quantity": units[i].text,
+                                          "tax": tax[i].text,
+                                          "newitem_id": selectedVehicle[i]['newitem_id']??"",
+                                        }
+                                    );
 
                                   }
-                                  else{
-                                    double tempTotal =0;
-                                    try{
-                                      tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text) + double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
-                                    }
-                                    catch (e){
-                                      tempTotal = double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
-                                    }
+                                  postEstimate(postDetails);
+                                }
 
-                                    postDetails= {
-                                      "additionalCharges": additionalCharges.text,
-                                      "address": "string",
-                                      "billAddressCity": vendorData['city']??"",
-                                      "billAddressName": vendorData['Name']??"",
-                                      "billAddressState": vendorData['state']??"",
-                                      "billAddressStreet": vendorData['street']??"",
-                                      "billAddressZipcode": vendorData['zipcode']??"",
-                                      "serviceDueDate": "string",
-                                      "serviceInvoice": salesInvoice.text,
-                                      "serviceInvoiceDate": salesInvoiceDate.text,
-                                      "shipAddressCity": wareHouse['city']??"",
-                                      "shipAddressName": wareHouse['Name']??"",
-                                      "shipAddressState": wareHouse['state']??"",
-                                      "shipAddressStreet": wareHouse['street']??"",
-                                      "shipAddressZipcode": wareHouse['zipcode']??"",
-                                      "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                      "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                      "termsConditions": termsAndConditions.text,
-                                      "total": tempTotal.toString(),
-                                      "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                      "status": "In-review",
-                                      "comment": "",
-                                      "freight_amount":additionalCharges.text,
-                                      "manager_id": managerId,
-                                      "userid": userId,
-                                      "org_id": orgId,
-                                      "items": [
-
-                                      ]
-                                    };
-                                    for (int i = 0; i < selectedPart.length; i++) {
-                                      postDetails['items'].add(
-                                          {
-                                            "amount": lineAmount[i].text,
-                                            "discount": discountPercentage[i].text,
-                                            "itemsService": selectedPart[i]['name']+" "+selectedPart[i]['description'],
-                                            "priceItem": selectedPart[i]['selling_price']??"",
-                                            "quantity": units[i].text,
-                                            "tax": tax[i].text,
-                                            "newitem_id": selectedPart[i]['newitem_id']??"",
-                                          }
-                                      );
-
-                                    }
-                                    postEstimate(postDetails);
-                                  }
-                                });
                               },
 
                             ),
@@ -279,13 +273,16 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
-                    child: Column(
-                      children: [
-                        buildHeaderCard(),
-                        const SizedBox(height: 10,),
-                        buildContentCard(),
+                    child: Form(
+                      key:formValidation,
+                      child: Column(
+                        children: [
+                          buildHeaderCard(),
+                          const SizedBox(height: 10,),
+                          buildContentCard(),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -296,6 +293,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       ),
     );
   }
+
 
   Widget buildHeaderCard(){
     return  Card(color: Colors.white,surfaceTintColor: Colors.white,
@@ -336,45 +334,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
     );
   }
 
-  fetchVendorsData() async {
-    dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
-    try {
-      await getData(context: context,url: url).then((value) {
-        setState(() {
-          if(value!=null){
-            response = value;
-            vendorList = value;
-          }
-          loading = false;
-        });
-      });
-    }
-    catch (e) {
-      logOutApi(context: context,exception: e.toString(),response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
 
-  fetchData() async {
-
-    List list = [];
-    // create a list of 3 objects from a fake json response
-    for(int i=0;i<vendorList.length;i++){
-      list.add( VendorModelAddress.fromJson({
-        "label":vendorList[i]['company_name'],
-        "value":vendorList[i]['company_name'],
-        "city":vendorList[i]['payto_city'],
-        "state":vendorList[i]['payto_state'],
-        "zipcode":vendorList[i]['payto_zip'],
-        "street":vendorList[i]['payto_address1']+", "+vendorList[i]['payto_address2'],
-      }));
-    }
-
-    return list;
-  }
 
 
   Widget buildContentCard(){
@@ -408,7 +368,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   setState(() {
                                     showVendorDetails=false;
                                     vendorSearchController.clear();
-                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -422,37 +381,40 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                       const SizedBox(height: 30,),
                     if(showVendorDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(
-                              showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Vendor') ,
-                              controller: vendorSearchController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
                                 setState(() {
-                                  showVendorDetails=true;
-                                  vendorData ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                  searchVendor=false;
+                                  searchVendor=true;
                                 });
-                              },
-                            ),
+                                return "Search Vendor Address";
+                              }
+                              return null;
+
+                            },
+                            showAdd: false,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Vendor', error: searchVendor) ,
+                            controller: vendorSearchController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showVendorDetails=true;
+                                vendorData ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchVendor=false;
+                              });
+                            },
                           ),
                         ),
                       ),
                     const SizedBox(height:5),
-                    if(searchVendor)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18),
-                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
-                      ),
                     if(showVendorDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -522,12 +484,10 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   setState(() {
                                     showWareHouseDetails=false;
                                     wareHouseController.clear();
-                                    searchWarehouse=true;
                                   });
                                 },
                               ),
                             )
-
                         ],
                       ),
                     ),
@@ -536,36 +496,39 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                       const SizedBox(height: 30,),
                     if(showWareHouseDetails==false)
                       Center(
-                        child: SizedBox(height: 32,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 18.0,right: 18),
-                            child: CustomTextFieldSearch(showAdd: false,
-                              decoration:textFieldDecoration(hintText: 'Search Warehouse'),
-                              controller: wareHouseController,
-                              future: fetchData,
-                              getSelectedValue: (VendorModelAddress value) {
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
                                 setState(() {
-                                  showWareHouseDetails=true;
-                                  wareHouse ={
-                                    'Name':value.label,
-                                    'city': value.city,
-                                    'state': value.state,
-                                    'street': value.street,
-                                    'zipcode': value.zipcode,
-                                  };
-                                  searchWarehouse=false;
+                                  searchWarehouse=true;
                                 });
-                              },
-                            ),
+                                return "Search Warehouse Address";
+                              }
+                              return null;
+                            },
+                            showAdd: false,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Warehouse', error: searchWarehouse),
+                            controller: wareHouseController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showWareHouseDetails=true;
+                                wareHouse ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                searchWarehouse=false;
+                              });
+                            },
                           ),
                         ),
                       ),
                     const SizedBox(height: 5,),
-                    if(searchWarehouse)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
-                      ),
                     if(showWareHouseDetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -626,24 +589,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Column(
-                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                    //   children: [
-                                    //     const Padding(
-                                    //       padding: EdgeInsets.only(left:10.0),
-                                    //       child: Text('Sales Invoice #'),
-                                    //     ),
-                                    //     const SizedBox(height: 10,),
-                                    //     Container(
-                                    //       width: 120,
-                                    //       height: 32,
-                                    //       color: Colors.grey[200],
-                                    //       child: TextFormField(
-                                    //         controller: salesInvoice,
-                                    //         decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                    //       ),
-                                    //     )
-                                    //   ],),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -686,9 +631,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                   ),
                 ),
               ),
-
-
-              //Customer TextFields
             ],
           ),
           const Divider(color: mTextFieldBorder,height: 1),
@@ -736,7 +678,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
               ),
             ),
           ),
-          if(selectedPart.isNotEmpty)
+          if(selectedVehicle.isNotEmpty)
             const Padding(
               padding: EdgeInsets.only(left: 18,right: 18),
               child: Divider(height: 1,color: mTextFieldBorder,),
@@ -745,7 +687,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: selectedPart.length,
+            itemCount: selectedVehicle.length,
             itemBuilder: (context, index) {
               //print('----inside list view builder--------');
               //print(selectedVehicles);
@@ -756,7 +698,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
               try{indexNumber = index+1;
 
-                lineAmount[index].text=(double.parse(selectedPart[index]['selling_price'].toString())* (double.parse(units[index].text))).toString();
+                lineAmount[index].text=(double.parse(selectedVehicle[index]['selling_price'].toString())* (double.parse(units[index].text))).toString();
                 if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
                 {
                   tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
@@ -793,7 +735,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text('${index+1}'))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedPart[index]['name']} - ${selectedPart[index]['description']} "))),
+                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicle[index]['name']} - ${selectedVehicle[index]['description']} "))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -823,7 +765,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                 )),
                           )),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text("${selectedPart[index]['selling_price']}"))),
+                          Expanded(child: Center(child: Text("${selectedVehicle[index]['selling_price']}"))),
                           const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child:  Padding(
                             padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
@@ -963,7 +905,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   });
                                 }
                               }
-                              selectedPart.removeAt(index);
+                              selectedVehicle.removeAt(index);
                               units.removeAt(index);
                               discountRupees.removeAt(index);
                               discountPercentage.removeAt(index);
@@ -1006,7 +948,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor:tableLineDataBool==true?Colors.red: mSaveButton,
+                                borderColor:tableLineDataBool?const Color(0xffB2261E): mSaveButton,
                                // borderColor: if(tableLineDataBool),
                                 textColor: mSaveButton,
                                 onTap: () {
@@ -1023,17 +965,128 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                   ).then((value) {
                                     if(value!=null){
                                       setState(() {
-                                        isVehicleSelected=true;
-                                        units.add(TextEditingController(text: '1'));
-                                        discountRupees.add(TextEditingController(text: '0'));
-                                        discountPercentage.add(TextEditingController(text: '0'));
-                                        tax.add(TextEditingController(text: '0'));
-                                        lineAmount.add(TextEditingController());
-                                        subAmountTotal.text='0';
-                                        selectedPart.add(value);
+                                        if(matchVehicleId){
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              backgroundColor: Colors.transparent,
+                                              child: StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return SizedBox(
+                                                    width: 300,
+                                                    height: 220,
+                                                    child: Stack(children: [
+                                                      Container(
+                                                        decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                                        margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(15),
+                                                          child: Container(
+                                                            decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder,width: 1)),
+                                                            child: Column(
+                                                              children: [
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                const Icon(
+                                                                  Icons.warning_rounded,
+                                                                  color: Colors.red,
+                                                                  size: 50,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                const Column(
+                                                                  children:  [
+                                                                    Center(
+                                                                        child: Text(
+                                                                          'Part Already Added',
+                                                                          style: TextStyle(
+                                                                              color: Colors.indigo,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15),
+                                                                        )),
+                                                                    SizedBox(height:5),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment.center,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 60,
+                                                                      height: 30,
+                                                                      child: OutlinedMButton(
+                                                                        onTap: (){
+                                                                          Navigator.of(context).pop();
+                                                                          matchVehicleId=false;
+                                                                        },
+                                                                        text: 'Ok',
+                                                                        borderColor: mSaveButton,
+                                                                        textColor:mSaveButton,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(right: 0.0,
+
+                                                        child: InkWell(
+                                                          child: Container(
+                                                              width: 30,
+                                                              height: 30,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(15),
+                                                                  border: Border.all(
+                                                                    color:
+                                                                    const Color.fromRGBO(204, 204, 204, 1),
+                                                                  ),
+                                                                  color: Colors.blue),
+                                                              child: const Icon(
+                                                                Icons.close_sharp,
+                                                                color: Colors.white,
+                                                              )),
+                                                          onTap: () {
+                                                            setState(() {
+                                                              Navigator.of(context).pop();
+                                                            });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        else{
+                                          isVehicleSelected=true;
+                                          units.add(TextEditingController(text: '1'));
+                                          discountRupees.add(TextEditingController(text: '0'));
+                                          discountPercentage.add(TextEditingController(text: '0'));
+                                          tax.add(TextEditingController(text: '0'));
+                                          lineAmount.add(TextEditingController());
+                                          subAmountTotal.text='0';
+                                          selectedVehicle.add(value);
+                                        }
                                       });
                                     }
                                   });
+
+
+                                    for(int i=0;i<selectedVehicle.length;i++){
+                                      generalId.add(selectedVehicle[i]["newitem_id"]);
+                                    }
+
 
                                 },
                               ))),
@@ -1046,7 +1099,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
               if(tableLineDataBool==true)
                 const Padding(
                   padding: EdgeInsets.only(left:200.0),
-                  child: Text('Please Add Part Line Item',style: TextStyle(color: Colors.red),),
+                  child: Text('Please Add Part Line Item',style: TextStyle(color:Color(0xffB2261E)),),
                 ),
             ],
           ),
@@ -1224,6 +1277,12 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                         hoverColor: mHoverColor,
                                         onPressed: () {
                                           setState(() {
+                                            storeId=displayList[i]["newitem_id"];
+                                            for(var tempId in generalId){
+                                              if(tempId == storeId){
+                                                matchVehicleId=true;
+                                              }
+                                            }
                                             Navigator.pop(context,displayList[i]);
                                           });
 
@@ -1347,61 +1406,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     ],);
                                   }
                                 }),
-                                // Column(
-                                //   children: [
-                                //     for (int i = 0; i < displayList.length; i++)
-                                //       InkWell(
-                                //         hoverColor: mHoverColor,
-                                //         onTap: () {
-                                //           setState(() {
-                                //             Navigator.pop(context,displayList[i]);
-                                //           });
-                                //
-                                //         },
-                                //         child: Padding(
-                                //           padding: const EdgeInsets.only(left: 18.0),
-                                //           child: SizedBox(height: 30,
-                                //             child: Row(
-                                //               children: [
-                                //                 Expanded(
-                                //                   child: SizedBox(
-                                //                     height: 20,
-                                //                     child: Text(displayList[i]['name']),
-                                //                   ),
-                                //                 ),
-                                //                 Expanded(
-                                //                   child: SizedBox(
-                                //                     height: 20,
-                                //                     child: Text(
-                                //                         displayList[i]['description']),
-                                //                   ),
-                                //                 ),
-                                //                 Expanded(
-                                //                   child: SizedBox(
-                                //                     height: 20,
-                                //                     child: Text(displayList[i]['unit']),
-                                //                   ),
-                                //                 ),
-                                //                 Expanded(
-                                //                   child: SizedBox(
-                                //                     height: 20,
-                                //                     child: Text(displayList[i]['selling_price'].toString()),
-                                //                   ),
-                                //                 ),
-                                //                 Expanded(
-                                //                   child: SizedBox(
-                                //                     height: 20,
-                                //                     child: Text(displayList[i]['type']),
-                                //                   ),
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //       ),
-                                //
-                                //   ],
-                                // ),
                               ),
                             )
                           ],
@@ -1445,40 +1449,40 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+            padding: const EdgeInsets.all(18.0),
+            child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Notes From Dealer"),
-                const SizedBox(height: 10,),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(5),border: Border.all(color: Colors.grey)),
-                      height: 80,
-                      child: TextFormField(
-                        controller: termsAndConditions,
-                        style: const TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration:  const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:EdgeInsets.only(left: 15, bottom: 10, top: 18, right: 15),
-                        ),
-                      ),
-                    )
+                const Padding(
+                  padding: EdgeInsets.only(left:10.0),
+                  child: Text("Notes From Dealer"),
                 ),
                 const SizedBox(height: 5,),
-                notesFromDealerError==true?const Text("Enter Notes",style:TextStyle(color: Colors.red)):const Text(""),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: TextFormField(focusNode: focusDealerNotes,
+                    validator: (value){
+                      if(value==null || value.trim().isEmpty){
+                        setState(() {
+                          notesFromDealerError=true;
+                        });
+                        return "Enter Dealer Notes";
+                      }
+                      return null;
+                    },
+                    maxLines: 5,
+                    controller: termsAndConditions,
+                    decoration:textFieldDecoration(hintText: 'Enter Dealer Notes', error:notesFromDealerError ) ,
+                  ),
+                ),
+                const SizedBox(height: 5,),
+
               ],
             ),
           ),
         ),
-        const CustomVDivider(height: 200, width: 1, color: mTextFieldBorder),
+        const CustomVDivider(height: 250, width: 1, color: mTextFieldBorder),
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -1558,7 +1562,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
     );
   }
 
-  textFieldDecoration({required String hintText, bool? error}) {
+  decorationVendorAndWarehouse({required String hintText, required bool error}) {
     return  InputDecoration(
       suffixIcon: const Icon(Icons.search,size: 18),
       border: const OutlineInputBorder(
@@ -1568,7 +1572,18 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true? Colors.red: mSaveButton)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error? Colors.red: mTextFieldBorder)),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+    );
+  }
+  textFieldDecoration({required String hintText, required bool error}) {
+    return  InputDecoration(
+      border: const OutlineInputBorder(
+          borderSide: BorderSide(color:  Colors.blue)),
+      hintText: hintText,
+      hintStyle: const TextStyle(fontSize: 14),
+      counterText: '',
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1661,8 +1676,6 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
           if(value!=null){
             response=value;
             displayList=response;
-            print('----------Check here-----------');
-            print(displayList);
           }
         });
       });
@@ -1737,22 +1750,10 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
           Navigator.of(context).pushNamed(MotowsRoutes.partsOrderListRoutes);
-          //Navigator.of(context).pop();
-          // print('------------------inside api()------------');
-          // print(estimate);
         }
       });
     });
 
-  }
-  textFieldSalesInvoice({required String hintText, bool? error}) {
-    return  InputDecoration(border: InputBorder.none,
-      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
-      hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14),
-      counterText: '',
-      contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 15),
-    );
   }
   textFieldSalesInvoiceDate({required String hintText, bool? error}) {
     return  InputDecoration(
@@ -1765,7 +1766,45 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
       contentPadding: const EdgeInsets.fromLTRB(10, 00, 0, 0),
     );
   }
+  fetchVendorsData() async {
+    dynamic response;
+    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    try {
+      await getData(context: context,url: url).then((value) {
+        setState(() {
+          if(value!=null){
+            response = value;
+            vendorList = value;
+          }
+          loading = false;
+        });
+      });
+    }
+    catch (e) {
+      logOutApi(context: context,exception: e.toString(),response: response);
+      setState(() {
+        loading = false;
+      });
+    }
+  }
 
+  fetchData() async {
+
+    List list = [];
+    // create a list of 3 objects from a fake json response
+    for(int i=0;i<vendorList.length;i++){
+      list.add( VendorModelAddress.fromJson({
+        "label":vendorList[i]['company_name'],
+        "value":vendorList[i]['company_name'],
+        "city":vendorList[i]['payto_city'],
+        "state":vendorList[i]['payto_state'],
+        "zipcode":vendorList[i]['payto_zip'],
+        "street":vendorList[i]['payto_address1']+", "+vendorList[i]['payto_address2'],
+      }));
+    }
+
+    return list;
+  }
 }
 
 class VendorModelAddress {

@@ -144,6 +144,11 @@ class _EstimateState extends State<Estimate> {
       });
     }
   }
+  final validationKey=GlobalKey<FormState>();
+  final focusToController=FocusNode();
+  List<String> generalIdMatch = [];
+  String storeGeneralId="";
+  bool checkBool=false;
 
   @override
   Widget build(BuildContext context) {
@@ -184,84 +189,61 @@ class _EstimateState extends State<Estimate> {
                               textColor: Colors.white,
                               borderColor: mSaveButton,
                               onTap: (){
+                                 funBool();
+                                 focusToController.requestFocus();
+                                 if(validationKey.currentState!.validate() &&  funBool()){
+                                     double tempTotal =0;
+                                     try{
+                                       tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
+                                     }
+                                     catch(e){
+                                       tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                     }
+                                     postDetails= {
+                                       "additionalCharges": additionalCharges.text,
+                                       "address": "string",
+                                       "billAddressCity": vendorData['city']??"",
+                                       "billAddressName": vendorData['Name']??"",
+                                       "billAddressState": vendorData['state']??"",
+                                       "billAddressStreet": vendorData['street']??"",
+                                       "billAddressZipcode": vendorData['zipcode']??"",
+                                       "serviceDueDate": "string",
+                                       "serviceInvoice": salesInvoice.text,
+                                       "serviceInvoiceDate": salesInvoiceDate.text,
+                                       "shipAddressCity": wareHouse['city']??"",
+                                       "shipAddressName": wareHouse['Name']??"",
+                                       "shipAddressState": wareHouse['state']??"",
+                                       "shipAddressStreet": wareHouse['street']??"",
+                                       "shipAddressZipcode": wareHouse['zipcode']??"",
+                                       "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                       "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
+                                       "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
+                                       "termsConditions": termsAndConditions.text,
+                                       "status":"In-review",
+                                       "comment":"",
+                                       "total": tempTotal.toString(),
+                                       "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
+                                       "manager_id": managerId,
+                                       "userid": userId,
+                                       "org_id": orgId,
+                                       "items": [
 
-                                 if((vendorSearchController.text.isEmpty && wareHouseController.text.isEmpty) || indexNumber==0 || termsAndConditions.text.trim().isEmpty){
-                                  setState(() {
-                                    searchVendor=true;
-                                    searchWarehouse=true;
-                                    termsAndConditionError=true;
-                                    if(vendorSearchController.text.isNotEmpty){
-                                      searchVendor=false;
-                                    }
-                                    if(wareHouseController.text.isNotEmpty){
-                                      searchWarehouse=false;
-                                    }
-                                    if(indexNumber==0){
-                                      // print('-------if condition------');
-                                      // print(indexNumber);
-                                      tableLineDataBool=true;
-                                    }
-                                  });
-                                }
-
-                                else{
-                                 setState(() {
-                                   termsAndConditionError=false;
-                                 });
-                                  double tempTotal =0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
-                                  }
-                                  catch(e){
-                                    tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
-                                  }
-                                  postDetails= {
-                                    "additionalCharges": additionalCharges.text,
-                                    "address": "string",
-                                    "billAddressCity": vendorData['city']??"",
-                                    "billAddressName": vendorData['Name']??"",
-                                    "billAddressState": vendorData['state']??"",
-                                    "billAddressStreet": vendorData['street']??"",
-                                    "billAddressZipcode": vendorData['zipcode']??"",
-                                    "serviceDueDate": "string",
-                                    "serviceInvoice": salesInvoice.text,
-                                    "serviceInvoiceDate": salesInvoiceDate.text,
-                                    "shipAddressCity": wareHouse['city']??"",
-                                    "shipAddressName": wareHouse['Name']??"",
-                                    "shipAddressState": wareHouse['state']??"",
-                                    "shipAddressStreet": wareHouse['street']??"",
-                                    "shipAddressZipcode": wareHouse['zipcode']??"",
-                                    "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                    "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                    "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                    "termsConditions": termsAndConditions.text,
-                                    "status":"In-review",
-                                    "comment":"",
-                                    "total": tempTotal.toString(),
-                                    "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                    "manager_id": managerId,
-                                    "userid": userId,
-                                    "org_id": orgId,
-                                    "items": [
-
-                                    ]
-                                  };
-                                  for (int i = 0; i < selectedVehicles.length; i++) {
-                                    postDetails['items'].add({
-                                      "amount": lineAmount[i].text,
-                                      "discount": discountPercentage[i].text,
-                                      "estVehicleId": "string",
-                                      "itemsService": selectedVehicles[i]['model_name']??"",
-                                      "priceItem": selectedVehicles[i]['onroad_price']??"",
-                                      "quantity": units[i].text,
-                                      "tax": tax[i].text,
-                                    }
-                                    );
-                                  }
-                                  // print('-------postDetails--------');
-                                  // print(postDetails);
-                                  postEstimate(postDetails);
-                                }
+                                       ]
+                                     };
+                                     for (int i = 0; i < selectedVehicles.length; i++) {
+                                       postDetails['items'].add({
+                                         "amount": lineAmount[i].text,
+                                         "discount": discountPercentage[i].text,
+                                         "estVehicleId": selectedVehicles[i]["new_vehicle_id"]??"",
+                                         "itemsService": selectedVehicles[i]['model_name']??"",
+                                         "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                         "quantity": units[i].text,
+                                         "tax": tax[i].text,
+                                       }
+                                       );
+                                     }
+                                     postEstimate(postDetails);
+                                   }
                               },
 
                             ),
@@ -278,13 +260,16 @@ class _EstimateState extends State<Estimate> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
-                    child: Column(
-                      children: [
-                        buildHeaderCard(),
-                        const SizedBox(height: 10,),
-                        buildContentCard(),
+                    child: Form(
+                      key:validationKey,
+                      child: Column(
+                        children: [
+                          buildHeaderCard(),
+                          const SizedBox(height: 10,),
+                          buildContentCard(),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -294,6 +279,17 @@ class _EstimateState extends State<Estimate> {
         ],
       ),
     );
+  }
+
+
+  bool funBool() {
+    if(selectedVehicles.isEmpty){
+      setState(() {
+        tableLineDataBool=true;
+      });
+      return false;
+    }
+    return true;
   }
 
   Widget buildHeaderCard(){
@@ -360,7 +356,7 @@ class _EstimateState extends State<Estimate> {
   fetchData() async {
 
     List list = [];
-    // create a list of 3 objects from a fake json response
+    // create a list of 3 objects from a fake json responsef
     for(int i=0;i<vendorList.length;i++){
       list.add( VendorModelAddress.fromJson({
         "label":vendorList[i]['company_name'],
@@ -407,7 +403,6 @@ class _EstimateState extends State<Estimate> {
                                   setState(() {
                                     showVendorDetails=false;
                                     vendorSearchController.clear();
-                                    searchVendor=true;
                                   });
                                 },
                               ),
@@ -420,36 +415,40 @@ class _EstimateState extends State<Estimate> {
                     if(showVendorDetails==false)
                       const SizedBox(height: 30,),
                     if(showVendorDetails==false)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 18.0,right: 18),
-                          child: CustomTextFieldSearch(
-                            showAdd: false,
-                            decoration:textFieldVendorDecoration(hintText: 'Search Vendor',) ,
-                            controller: vendorSearchController,
-                            future: fetchData,
-                            getSelectedValue: (VendorModelAddress value) {
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 18.0,right: 18),
+                        child: CustomTextFieldSearch(
+                          validator: (value){
+                            if(value==null || value.trim().isEmpty){
                               setState(() {
-                                showVendorDetails=true;
-                                vendorData ={
-                                  'Name':value.label,
-                                  'city': value.city,
-                                  'state': value.state,
-                                  'street': value.street,
-                                  'zipcode': value.zipcode,
-                                };
-                                searchVendor=false;
+                                searchVendor=true;
                               });
-                            },
-                          ),
+                              return "Search Vendor Address";
+                            }
+                            return null;
+
+                          },
+                          showAdd: false,
+                          decoration:textFieldVendorAndWarehouse(hintText: 'Search Vendor New',error:searchVendor) ,
+                          controller: vendorSearchController,
+                          future: fetchData,
+                          getSelectedValue: (VendorModelAddress value) {
+                            setState(() {
+                              showVendorDetails=true;
+                              vendorData ={
+                                'Name':value.label,
+                                'city': value.city,
+                                'state': value.state,
+                                'street': value.street,
+                                'zipcode': value.zipcode,
+                              };
+                              searchVendor=false;
+                            });
+                          },
                         ),
                       ),
-                    const SizedBox(height: 5,),
-                    if(searchVendor)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18),
-                        child: Text("Search Vendor Address",style: TextStyle(color: Colors.red),),
-                      ),
+                    ),
 
                     if(showVendorDetails)
                       Padding(
@@ -520,7 +519,6 @@ class _EstimateState extends State<Estimate> {
                                   setState(() {
                                     showWareHouseDetails=false;
                                     wareHouseController.clear();
-                                    searchWarehouse=true;
                                   });
                                 },
                               ),
@@ -537,14 +535,23 @@ class _EstimateState extends State<Estimate> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 18.0,right: 18),
                           child: CustomTextFieldSearch(
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
+                                setState(() {
+                                  searchWarehouse=true;
+                                });
+                                return "Search Warehouse Address";
+                              }
+                              return null;
+                            },
                             showAdd: false,
-                            decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',),
+                            decoration:textFieldVendorAndWarehouse(hintText: 'Search Warehouse New',error:searchWarehouse) ,
+                           // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
                             controller: wareHouseController,
                             future: fetchData,
                             getSelectedValue: (VendorModelAddress value) {
                               setState(() {
                                 showWareHouseDetails=true;
-                                searchWarehouse=false;
                                 wareHouse ={
                                   'Name':value.label,
                                   'city': value.city,
@@ -557,12 +564,6 @@ class _EstimateState extends State<Estimate> {
                             },
                           ),
                         ),
-                      ),
-                    const SizedBox(height: 5,),
-                    if(searchWarehouse)
-                      const Padding(
-                        padding: EdgeInsets.only(left:18.0),
-                        child: Text("Search Warehouse Address",style: TextStyle(color: Colors.red),),
                       ),
                     if(showWareHouseDetails)
                       Padding(
@@ -624,24 +625,6 @@ class _EstimateState extends State<Estimate> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Column(
-                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                    //   children: [
-                                    //     const Padding(
-                                    //       padding: EdgeInsets.only(left:10.0),
-                                    //       child: Text('Sales Invoice #'),
-                                    //     ),
-                                    //     const SizedBox(height: 10,),
-                                    //     Container(
-                                    //       width: 120,
-                                    //       height: 32,
-                                    //       color: Colors.grey[200],
-                                    //       child: TextFormField(
-                                    //         controller: salesInvoice,
-                                    //         decoration:textFieldSalesInvoice(hintText: 'Sales Invoice') ,
-                                    //       ),
-                                    //     )
-                                    //   ],),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -676,23 +659,6 @@ class _EstimateState extends State<Estimate> {
                                       ],)
                                   ]),
                               const SizedBox(height: 25,),
-                              // Due Date.
-                              // Align(alignment: Alignment.topLeft,
-                              //   child: SizedBox(
-                              //     width: 120,height: 28,
-                              //     child: OutlinedMButton(
-                              //       text: 'Add Due Date',
-                              //       textColor: mSaveButton,
-                              //       borderColor: mSaveButton,
-                              //       onTap: (){
-                              //         setState(() {
-                              //
-                              //         });
-                              //       },
-                              //
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
@@ -714,7 +680,7 @@ class _EstimateState extends State<Estimate> {
     );
   }
 
-  Widget buildLineCard(){
+  Widget buildLineCard() {
     return SizedBox(
 
       child: Column(
@@ -722,19 +688,20 @@ class _EstimateState extends State<Estimate> {
 
           ///-----------------------------Table Starts-------------------------
           const Padding(
-            padding: EdgeInsets.only(left: 18,right: 18),
-            child: Divider(height: 1,color: mTextFieldBorder,),
+            padding: EdgeInsets.only(left: 18, right: 18),
+            child: Divider(height: 1, color: mTextFieldBorder,),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 18,right: 18),
+            padding: const EdgeInsets.only(left: 18, right: 18),
             child: Container(color: const Color(0xffF3F3F3),
               height: 34,
               child: const Row(
-                children:  [
+                children: [
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text('SL No'))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
-                  Expanded(flex: 4,child: Center(child: Text("Items/Service"))),
+                  Expanded(
+                      flex: 4, child: Center(child: Text("Items/Service"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Qty"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
@@ -745,7 +712,7 @@ class _EstimateState extends State<Estimate> {
                   Expanded(child: Center(child: Text("Tax %"))),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Text("Amount"))),
-                  SizedBox(width: 30,height: 30,),
+                  SizedBox(width: 30, height: 30,),
                   CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                 ],
               ),
@@ -753,8 +720,8 @@ class _EstimateState extends State<Estimate> {
           ),
           if(selectedVehicles.isNotEmpty)
             const Padding(
-              padding: EdgeInsets.only(left: 18,right: 18),
-              child: Divider(height: 1,color: mTextFieldBorder,),
+              padding: EdgeInsets.only(left: 18, right: 18),
+              child: Divider(height: 1, color: mTextFieldBorder,),
             ),
 
           ListView.builder(
@@ -762,87 +729,126 @@ class _EstimateState extends State<Estimate> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: selectedVehicles.length,
             itemBuilder: (context, index) {
-              //print('----inside list view builder--------');
-              //print(selectedVehicles);
-              double tempTax =0;
-              double tempLineData=0;
-              double tempDiscount=0;
+              double tempTax = 0;
+              double tempLineData = 0;
+              double tempDiscount = 0;
 
-              try{indexNumber = index+1;
+              try {
+                indexNumber = index + 1;
 
-                lineAmount[index].text=(double.parse(selectedVehicles[index]['onroad_price'])* (double.parse(units[index].text))).toString();
-                if(discountPercentage[index].text!='0'||discountPercentage[index].text!=''||discountPercentage[index].text.isNotEmpty)
-                {
-                  tempDiscount = ((double.parse(discountPercentage[index].text)/100) *  double.parse( lineAmount[index].text));
-                  tempLineData =(double.parse(lineAmount[index].text)-tempDiscount);
+                lineAmount[index].text =
+                    (double.parse(selectedVehicles[index]['onroad_price']) *
+                        (double.parse(units[index].text))).toString();
+                if (discountPercentage[index].text != '0' ||
+                    discountPercentage[index].text != '' ||
+                    discountPercentage[index].text.isNotEmpty) {
+                  tempDiscount =
+                  ((double.parse(discountPercentage[index].text) / 100) *
+                      double.parse(lineAmount[index].text));
+                  tempLineData =
+                  (double.parse(lineAmount[index].text) - tempDiscount);
 
-                  tempTax = ((double.parse(tax[index].text)/100) *  double.parse( lineAmount[index].text));
-                  lineAmount[index].text =(tempLineData+tempTax).toStringAsFixed(1);
+                  tempTax = ((double.parse(tax[index].text) / 100) *
+                      double.parse(lineAmount[index].text));
+                  lineAmount[index].text =
+                      (tempLineData + tempTax).toStringAsFixed(1);
                 }
               }
-              catch (e){
+              catch (e) {
                 log(e.toString());
               }
-              if(index==0){
-                subAmountTotal.text='0';
-                subTaxTotal.text='0';
-                subDiscountTotal.text='0';
-                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
-                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
-              }else {
-                subDiscountTotal.text= (double.parse(subDiscountTotal.text.toString())+ tempDiscount).toStringAsFixed(1);
-                subTaxTotal.text= (double.parse(subTaxTotal.text.toString())+ tempTax).toStringAsFixed(1);
-                subAmountTotal.text = (double.parse(subAmountTotal.text.toString())+ double.parse( lineAmount[index].text)).toStringAsFixed(1);
+              if (index == 0) {
+                subAmountTotal.text = '0';
+                subTaxTotal.text = '0';
+                subDiscountTotal.text = '0';
+                subTaxTotal.text =
+                    (double.parse(subTaxTotal.text.toString()) + tempTax)
+                        .toStringAsFixed(1);
+                subDiscountTotal.text =
+                    (double.parse(subDiscountTotal.text.toString()) +
+                        tempDiscount).toStringAsFixed(1);
+                subAmountTotal.text =
+                    (double.parse(subAmountTotal.text.toString()) +
+                        double.parse(lineAmount[index].text)).toStringAsFixed(
+                        1);
+              } else {
+                subDiscountTotal.text =
+                    (double.parse(subDiscountTotal.text.toString()) +
+                        tempDiscount).toStringAsFixed(1);
+                subTaxTotal.text =
+                    (double.parse(subTaxTotal.text.toString()) + tempTax)
+                        .toStringAsFixed(1);
+                subAmountTotal.text =
+                    (double.parse(subAmountTotal.text.toString()) +
+                        double.parse(lineAmount[index].text)).toStringAsFixed(
+                        1);
               }
 
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 18,right: 18),
+                    padding: const EdgeInsets.only(left: 18, right: 18),
                     child: SizedBox(
                       height: 50,
                       child: Row(
-                        children:  [
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text('${index+1}'))),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(flex: 4,child: Center(child: Text("${selectedVehicles[index]['model_name']}"))),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                        children: [
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Text('${index + 1}'))),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(flex: 4, child: Center(child: Text(
+                              "${selectedVehicles[index]['model_name']}"))),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
-                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            padding: const EdgeInsets.only(
+                                left: 12, top: 4, right: 12, bottom: 4),
                             child: Container(
-                                decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                                decoration: BoxDecoration(
+                                    color: const Color(0xffF3F3F3),
+                                    borderRadius: BorderRadius.circular(4)),
                                 height: 32,
                                 child: TextField(
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   controller: units[index],
                                   textAlign: TextAlign.right,
                                   style: const TextStyle(fontSize: 14),
                                   decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                      contentPadding: EdgeInsets.only(
+                                          bottom: 12, right: 8, top: 2),
                                       border: InputBorder.none,
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.blue)),
+                                          borderSide: BorderSide(
+                                              color: Colors.blue)),
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.transparent))
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent))
                                   ),
 
                                   onChanged: (v) {
                                     setState(() {
-                                      subAmountTotal.text=subAmountTotal.text;
-                                      discountPercentage[index].text='0';
+                                      subAmountTotal.text = subAmountTotal.text;
+                                      discountPercentage[index].text = '0';
                                     });
                                   },
                                 )),
                           )),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child: Center(child: Text("${selectedVehicles[index]['onroad_price']}"))),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
-                          Expanded(child:  Padding(
-                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Center(child: Text(
+                              "${selectedVehicles[index]['onroad_price']}"))),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
+                          Expanded(child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 12, top: 4, right: 12, bottom: 4),
                             child: Container(
-                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffF3F3F3),
+                                  borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: TextField(
                                 controller: discountPercentage[index],
@@ -850,26 +856,29 @@ class _EstimateState extends State<Estimate> {
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
                                     hintText: "%",
-                                    contentPadding: EdgeInsets.only(bottom: 12,right: 8,top: 2),
+                                    contentPadding: EdgeInsets.only(
+                                        bottom: 12, right: 8, top: 2),
                                     border: InputBorder.none,
                                     focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.blue)),
+                                        borderSide: BorderSide(
+                                            color: Colors.blue)),
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.transparent))
+                                        borderSide: BorderSide(
+                                            color: Colors.transparent))
                                 ),
                                 onChanged: (v) {
-                                  double tempValue=0.0;
+                                  double tempValue = 0.0;
                                   setState(() {
 
                                   });
-                                  if(v.isNotEmpty || v!=""){
-                                    try{
-                                      tempValue=double.parse(v.toString());
-                                      if(tempValue>100){
+                                  if (v.isNotEmpty || v != "") {
+                                    try {
+                                      tempValue = double.parse(v.toString());
+                                      if (tempValue > 100) {
                                         discountPercentage[index].clear();
                                       }
                                     }
-                                    catch(e){
+                                    catch (e) {
                                       discountPercentage[index].clear();
                                     }
                                   }
@@ -877,27 +886,39 @@ class _EstimateState extends State<Estimate> {
                               ),
                             ),
                           ),),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
-                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            padding: const EdgeInsets.only(
+                                left: 12, top: 4, right: 12, bottom: 4),
                             child:
                             Container(
-                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffF3F3F3),
+                                  borderRadius: BorderRadius.circular(4)),
                               height: 32,
-                              child:LayoutBuilder(
-                                builder: (BuildContext context, BoxConstraints constraints) {
+                              child: LayoutBuilder(
+                                builder: (BuildContext context,
+                                    BoxConstraints constraints) {
                                   return CustomPopupMenuButton(childHeight: 200,
                                     elevation: 4,
                                     decoration: InputDecoration(
-                                      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
-                                      hintText: tax[index].text.isEmpty || tax[index].text == '' ? "Tax" : tax[index].text,
-                                      contentPadding: const EdgeInsets.only(bottom: 15, right: 8),
+                                      hintStyle: const TextStyle(
+                                          fontSize: 14, color: Colors.black),
+                                      hintText: tax[index].text.isEmpty ||
+                                          tax[index].text == ''
+                                          ? "Tax"
+                                          : tax[index].text,
+                                      contentPadding: const EdgeInsets.only(
+                                          bottom: 15, right: 8),
                                       border: InputBorder.none,
                                       focusedBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.blue),
+                                        borderSide: BorderSide(
+                                            color: Colors.blue),
                                       ),
                                       enabledBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.transparent),
+                                        borderSide: BorderSide(
+                                            color: Colors.transparent),
                                       ),
                                     ),
                                     hintText: '',
@@ -913,10 +934,9 @@ class _EstimateState extends State<Estimate> {
                                     tooltip: '',
                                     itemBuilder: (BuildContext context) {
                                       return taxPercentage.map((value) {
-                                        // print('-----values -----');
-                                        // print(value);
                                         return CustomPopupMenuItem(
-                                          textStyle: const TextStyle(color: Colors.black),
+                                          textStyle: const TextStyle(
+                                              color: Colors.black),
                                           textAlign: MainAxisAlignment.end,
                                           value: value.toString(),
                                           text: value.toString(),
@@ -925,15 +945,14 @@ class _EstimateState extends State<Estimate> {
                                       }).toList();
                                     },
                                     onSelected: (String value) {
-                                      // print('--------what it is getting ------------');
-                                      // print(value);
-                                      if(discountPercentage[index].text.isEmpty || discountPercentage[index].text==""){
-                                        discountPercentage[index].text="0";
+                                      if (discountPercentage[index].text
+                                          .isEmpty ||
+                                          discountPercentage[index].text ==
+                                              "") {
+                                        discountPercentage[index].text = "0";
                                       }
                                       setState(() {
                                         tax[index].text = value;
-                                        // print('-----assigned Value-----');
-                                        // print(tax[index].text);
                                       });
                                     },
                                     onCanceled: () {},
@@ -943,11 +962,15 @@ class _EstimateState extends State<Estimate> {
                               ),
                             ),
                           )),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Padding(
-                            padding: const EdgeInsets.only(left: 12,top: 4,right: 12,bottom: 4),
+                            padding: const EdgeInsets.only(
+                                left: 12, top: 4, right: 12, bottom: 4),
                             child: Container(
-                              decoration: BoxDecoration(color:  const Color(0xffF3F3F3),borderRadius: BorderRadius.circular(4)),
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffF3F3F3),
+                                  borderRadius: BorderRadius.circular(4)),
                               height: 32,
                               child: TextField(
                                 controller: lineAmount[index],
@@ -955,28 +978,31 @@ class _EstimateState extends State<Estimate> {
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
                                     hintText: 'Total amount',
-                                    contentPadding: EdgeInsets.only(bottom: 12,top: 2),
+                                    contentPadding: EdgeInsets.only(
+                                        bottom: 12, top: 2),
                                     border: InputBorder.none,
                                     focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.blue)),
+                                        borderSide: BorderSide(
+                                            color: Colors.blue)),
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.transparent))
+                                        borderSide: BorderSide(
+                                            color: Colors.transparent))
                                 ),
                                 onChanged: (v) {},
                               ),
                             ),
                           ),)),
-                          InkWell(onTap: (){
+                          InkWell(onTap: () {
                             setState(() {
-                              for(int i=0;i<indexNumber.bitLength;i++){
-                                if(i==0){
+                              for (int i = 0; i < indexNumber.bitLength; i++) {
+                                if (i == 0) {
                                   setState(() {
-                                    tableLineDataBool=true;
+                                    tableLineDataBool = true;
                                   });
                                 }
-                                else{
+                                else {
                                   setState(() {
-                                    tableLineDataBool=false;
+                                    tableLineDataBool = false;
                                   });
                                 }
                               }
@@ -986,26 +1012,28 @@ class _EstimateState extends State<Estimate> {
                               discountPercentage.removeAt(index);
                               tax.removeAt(index);
                               lineAmount.removeAt(index);
-
                             });
-                          },hoverColor: mHoverColor,child: const SizedBox(width: 30,height: 30,child: Center(child: Icon(Icons.delete,color: Colors.red,size: 18,)))),
-                          const CustomVDivider(height: 80, width: 1, color: mTextFieldBorder),
+                          }, hoverColor: mHoverColor, child: const SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Center(child: Icon(
+                                Icons.delete, color: Colors.red, size: 18,)))),
+                          const CustomVDivider(
+                              height: 80, width: 1, color: mTextFieldBorder),
                         ],
                       ),
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(left: 18,right: 18),
-                    child: Divider(height: 1,color: mTextFieldBorder,),
+                    padding: EdgeInsets.only(left: 18, right: 18),
+                    child: Divider(height: 1, color: mTextFieldBorder,),
                   )
                 ],
               );
-
-
             },),
           const Padding(
-            padding: EdgeInsets.only(left: 18,right: 18),
-            child: Divider(height: 1,color: mTextFieldBorder,),
+            padding: EdgeInsets.only(left: 18, right: 18),
+            child: Divider(height: 1, color: mTextFieldBorder,),
           ),
 
           const SizedBox(height: 40,),
@@ -1016,107 +1044,231 @@ class _EstimateState extends State<Estimate> {
                 child: SizedBox(
                   height: 38,
                   child: Row(
-                    children:  [
-                      const Expanded(child: Center(child:Text(""))),
+                    children: [
+                      const Expanded(child: Center(child: Text(""))),
                       Expanded(
                           flex: 4,
                           child: Center(
                               child: OutlinedMButton(
                                 text: "+ Add Item/ Service",
-                                borderColor:tableLineDataBool==true?Colors.redAccent: mSaveButton,
+                                borderColor: tableLineDataBool ? const Color(
+                                    0xffB2261E) : mTextFieldBorder,
                                 textColor: mSaveButton,
 
-                                onTap: ()async {
-                                  if(displayList.isNotEmpty){
-                                    tableLineDataBool=false;
+                                onTap: () async {
+
+                                  if (displayList.isNotEmpty) {
+                                    tableLineDataBool = false;
                                     brandNameController.clear();
                                     modelNameController.clear();
                                     variantController.clear();
-                                    await getAllVehicleVariant().whenComplete(() => setState((){
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => showDialogBox(),
-                                      ).then((value) {
-                                        if(value!=null){
-                                          setState(() {
-                                            isVehicleSelected=true;
-                                            units.add(TextEditingController(text: '1'));
-                                            discountRupees.add(TextEditingController(text: '0'));
-                                            discountPercentage.add(TextEditingController(text: '0'));
-                                            tax.add(TextEditingController(text: '0'));
-                                            lineAmount.add(TextEditingController());
-                                            subAmountTotal.text='0';
-                                            selectedVehicles.add(value);
-                                          });
-                                        }
-                                      });
-                                    }));
-                                  }
+                                    await getAllVehicleVariant().whenComplete(() =>
+                                        setState(() {
 
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => showDialogBox( ),).then((value) {
+                                              if (value != null) {
+                                                setState(() {
+                                                  if(checkBool){
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) => Dialog(
+                                                        backgroundColor: Colors.transparent,
+                                                        child: StatefulBuilder(
+                                                          builder: (context, setState) {
+                                                            return SizedBox(
+                                                              width: 300,
+                                                              height: 220,
+                                                              child: Stack(children: [
+                                                                Container(
+                                                                  decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                                                  margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(15),
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder,width: 1)),
+                                                                      child: Column(
+                                                                        children: [
+                                                                          const SizedBox(
+                                                                            height: 20,
+                                                                          ),
+                                                                          const Icon(
+                                                                            Icons.warning_rounded,
+                                                                            color: Colors.red,
+                                                                            size: 50,
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            height: 10,
+                                                                          ),
+                                                                          const Column(
+                                                                            children:  [
+                                                                              Center(
+                                                                                  child: Text(
+                                                                                    'Vehicle Already Added',
+                                                                                    style: TextStyle(
+                                                                                        color: Colors.indigo,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 15),
+                                                                                  )),
+                                                                              SizedBox(height:5),
+                                                                            ],
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            height: 20,
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                width: 60,
+                                                                                height: 30,
+                                                                                child: OutlinedMButton(
+                                                                                  onTap: (){
+                                                                                    Navigator.of(context).pop();
+                                                                                    checkBool=false;
+                                                                                  },
+                                                                                  text: 'Ok',
+                                                                                  borderColor: mSaveButton,
+                                                                                  textColor:mSaveButton,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Positioned(right: 0.0,
+
+                                                                  child: InkWell(
+                                                                    child: Container(
+                                                                        width: 30,
+                                                                        height: 30,
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(15),
+                                                                            border: Border.all(
+                                                                              color:
+                                                                              const Color.fromRGBO(204, 204, 204, 1),
+                                                                            ),
+                                                                            color: Colors.blue),
+                                                                        child: const Icon(
+                                                                          Icons.close_sharp,
+                                                                          color: Colors.white,
+                                                                        )),
+                                                                    onTap: () {
+                                                                      setState(() {
+                                                                        Navigator.of(context).pop();
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                  else{
+                                                    isVehicleSelected = true;
+                                                    units.add(TextEditingController(text: '1'));
+                                                    discountRupees.add(TextEditingController(text: '0'));
+                                                    discountPercentage.add(TextEditingController(text: '0'));
+                                                    tax.add(TextEditingController(text: '0'));
+                                                    lineAmount.add(TextEditingController());
+                                                    subAmountTotal.text = '0';
+                                                    selectedVehicles.add(value);
+                                                  }
+                                            });
+                                              }
+                                            });
+
+
+                                        }));
+                                  }
+                                  for (int i = 0; i < selectedVehicles.length; i++) {
+                                    generalIdMatch.add(selectedVehicles[i]["general_id"]);
+                                  }
                                 },
                               )
                           )),
-                      const Expanded(flex: 5,child: Center(child: Text(""),))
+                      const Expanded(flex: 5, child: Center(child: Text(""),))
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 5,),
-              if(tableLineDataBool==true)
+              Container(color: Colors.red,),
+              if(tableLineDataBool == true)
                 const Padding(
-                  padding: EdgeInsets.only(left:200),
-                  child: Text('Please Add Vehicle Line Data',style: TextStyle(color: Colors.red),),
+                  padding: EdgeInsets.only(left: 200),
+                  child: Text('Please Add Vehicle',
+                    style: TextStyle(color: Color(0xffB2261E)),),
                 )
             ],
           ),
           const SizedBox(height: 40,),
+
           ///-----------------------------Table Ends-------------------------
 
           ///SUB TOTAL
-          const Divider(height: 1,color: mTextFieldBorder),
+          const Divider(height: 1, color: mTextFieldBorder),
           Container(
             color: const Color(0xffF3F3F3),
             height: 34,
             child: Padding(
-              padding: const EdgeInsets.only(left: 18,right: 18),
+              padding: const EdgeInsets.only(left: 18, right: 18),
               child: Row(
-                children:   [
+                children: [
                   const Expanded(child: Center(child: Text(''))),
-                  const Expanded(flex: 4,child: Center(child: Text(""))),
+                  const Expanded(flex: 4, child: Center(child: Text(""))),
                   const Expanded(child: Center(child: Text(""))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  const CustomVDivider(
+                      height: 34, width: 1, color: mTextFieldBorder),
                   const Expanded(child: Center(child: Text("Sub Total"))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  const CustomVDivider(
+                      height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
-                        return Text("₹ ${subDiscountTotal.text.isEmpty?0:subDiscountTotal.text}");
+                        return Text("₹ ${subDiscountTotal.text.isEmpty
+                            ? 0
+                            : subDiscountTotal.text}");
                       }
                   ))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  const CustomVDivider(
+                      height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
-                        return Text("₹ ${subTaxTotal.text.isEmpty?0:subTaxTotal.text}");
+                        return Text(
+                            "₹ ${subTaxTotal.text.isEmpty ? 0 : subTaxTotal
+                                .text}");
                       }
                   ))),
-                  const CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                  const CustomVDivider(
+                      height: 34, width: 1, color: mTextFieldBorder),
                   Expanded(child: Center(child: Builder(
                       builder: (context) {
-                        return Text("₹ ${subAmountTotal.text.isEmpty?0 :subAmountTotal.text}");
+                        return Text("₹ ${subAmountTotal.text.isEmpty
+                            ? 0
+                            : subAmountTotal.text}");
                       }
                   ))),
-                  const SizedBox(width: 30,height: 30,),
+                  const SizedBox(width: 30, height: 30,),
 
                 ],
               ),
             ),
           ),
-          const Divider(height: 1,color: mTextFieldBorder,),
-
+          const Divider(height: 1, color: mTextFieldBorder,),
 
 
           ///------Foooter----------
           buildFooter(),
-          const Divider(height: 1,color: mTextFieldBorder,),
+          const Divider(height: 1, color: mTextFieldBorder,),
 
         ],
       ),
@@ -1243,6 +1395,14 @@ class _EstimateState extends State<Estimate> {
                                             onPressed: () {
                                               setState(() {
                                                 Navigator.pop(context,displayList[i]);
+                                                storeGeneralId=displayList[i]["general_id"];
+                                                for(var tempValue in generalIdMatch){
+                                                  if(tempValue == storeGeneralId){
+                                                    setState((){
+                                                      checkBool=true;
+                                                    });
+                                                  }
+                                                }
                                               });
 
                                             },
@@ -1408,33 +1568,41 @@ class _EstimateState extends State<Estimate> {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10,),
-                const Text("Notes From Dealer"),
-                const SizedBox(height: 10,),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child:    Container(
-                      height: 80,
-                      decoration: BoxDecoration(border: Border.all(color: termsAndConditionError?Colors.red:mTextFieldBorder,width: 1,),borderRadius: BorderRadius.circular(5)),
-                      child: TextFormField(
-                        maxLength: null,
-                        maxLines: null,
-                        controller: termsAndConditions,
-                        decoration: const InputDecoration(
-                            border: InputBorder.none,contentPadding: EdgeInsets.all(10)),
-                      ),
-                    ),
+                const Padding(
+                  padding: EdgeInsets.only(left:10.0),
+                  child: Text("Notes From Dealer"),
                 ),
                 const SizedBox(height: 5,),
-                termsAndConditionError?const Text("Enter Dealer Notes",style: TextStyle(color: Colors.red),):const Text(""),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    focusNode: focusToController,
+                    validator: (value){
+                      if(value==null || value.trim().isEmpty){
+                        setState(() {
+                          termsAndConditionError=true;
+                        });
+                        return "Enter Dealer Notes";
+                      }
+                      return null;
+                    },
+                    maxLines: 5,
+                    controller: termsAndConditions,
+                    decoration:textFieldDecoration(hintText: 'Enter Dealer Notes', error:termsAndConditionError ) ,
+                  ),
+                ),
+                const SizedBox(height: 5,),
+
               ],
             ),
           ),
         ),
-        const CustomVDivider(height: 200, width: 1, color: mTextFieldBorder),
+        const CustomVDivider(height: 250, width: 1, color: mTextFieldBorder),
         Expanded(child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -1512,32 +1680,28 @@ class _EstimateState extends State<Estimate> {
       ],
     );
   }
-
-  textFieldVendorDecoration({required String hintText, bool? error}) {
+  textFieldDecoration({required String hintText, required bool error}) {
     return  InputDecoration(
-      suffixIcon: const Icon(Icons.search,size: 18),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
-      contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color:searchVendor==true? Colors.red:mTextFieldBorder)),
-      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      enabledBorder:const OutlineInputBorder(borderSide: BorderSide(color: mTextFieldBorder)),
+     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
-  textFieldWarehouseDecoration({required String hintText, bool? error}) {
+  textFieldVendorAndWarehouse({required String hintText, required bool error}) {
     return  InputDecoration(
       suffixIcon: const Icon(Icons.search,size: 18),
       border: const OutlineInputBorder(
           borderSide: BorderSide(color:  Colors.blue)),
-      constraints: BoxConstraints(maxHeight: error==true ? 60:35),
+      constraints: BoxConstraints(maxHeight: error ? 60:35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color:searchWarehouse == true? Colors.red: mTextFieldBorder)),
+      enabledBorder:  OutlineInputBorder(borderSide: BorderSide(color:error? Colors.red:mTextFieldBorder)),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
     );
   }
@@ -1751,7 +1915,7 @@ class _EstimateState extends State<Estimate> {
       });
     }
   }
-  postEstimate(estimate)async{
+  postEstimate(estimate)async {
     String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
     postData(context: context,requestBody:estimate ,url:url ).then((value) {
       setState(() {
@@ -1759,9 +1923,6 @@ class _EstimateState extends State<Estimate> {
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
           Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
-          //Navigator.of(context).pop();
-          // print('------------------inside api()------------');
-          // print(estimate);
         }
       });
     });

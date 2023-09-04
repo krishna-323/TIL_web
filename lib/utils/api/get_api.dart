@@ -51,7 +51,7 @@ import '../../main.dart';
 
 logOutApi({dynamic response, context, exception}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-   if(response==null){
+   if(response.toString()=="null"){
      prefs.setString('authToken', "");
      prefs.setString('company_name', "");
      prefs.setString('role', "");

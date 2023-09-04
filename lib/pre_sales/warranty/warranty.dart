@@ -225,14 +225,9 @@ class _WarrantyState extends State<Warranty> {
                                                       searchByDateController.clear();
                                                     }
                                                     else{
-                                                      try{
                                                         startVal=0;
                                                         displayListItems=[];
                                                         fetchByStatus(searchByStatus.text);
-                                                      }
-                                                      catch(e){
-                                                        log(e.toString());
-                                                      }
                                                     }
                                                   },
                                                   style: const TextStyle(fontSize: 14),
@@ -572,7 +567,7 @@ class _WarrantyState extends State<Warranty> {
     dynamic response;
     String url="";
     if(role=="Manager"){
-      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$searchByDate";
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_serviceinvoicedate/$userId/$searchByDate";
     }
     else{
       url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$userId/$searchByDate";
@@ -608,7 +603,7 @@ class _WarrantyState extends State<Warranty> {
     dynamic response;
     String url="";
     if(role=="Manager"){
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
+      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_estvehicleid/$userId/$orderID";
     }
     else{
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$userId/$orderID";
@@ -643,7 +638,7 @@ class _WarrantyState extends State<Warranty> {
     dynamic response;
     String url='';
     if(role=="Manager"){
-      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$status";
+      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_status/$userId/$status";
     }
     else{
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$userId/$status";
@@ -653,7 +648,6 @@ class _WarrantyState extends State<Warranty> {
         setState(() {
           if(status!=null){
             response =status;
-            print(response);
             estimateItems=response;
             displayListItems=[];
             if(displayListItems.isEmpty){
@@ -677,7 +671,7 @@ class _WarrantyState extends State<Warranty> {
     }
   }
 
-  searchByDateDecoration ({required String hintText, bool? error}){
+  searchByDateDecoration ({required String hintText,}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: searchByDateController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
@@ -696,11 +690,11 @@ class _WarrantyState extends State<Warranty> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color:mSaveButton)),
     );
   }
-  searchByOrderIDDecoration ({required String hintText, bool? error}) {
+  searchByOrderIDDecoration ({required String hintText,}) {
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: searchByOrderID.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(
           onTap: (){
@@ -719,21 +713,19 @@ class _WarrantyState extends State<Warranty> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color: mSaveButton)),
     );
   }
-  searchByStatusDecoration ({required String hintText, bool? error}){
+  searchByStatusDecoration ({required String hintText,}){
     return InputDecoration(hoverColor: mHoverColor,
       suffixIcon: searchByStatus.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
             setState(() {
-              setState(() {
                 startVal=0;
                 displayListItems=[];
                 searchByStatus.clear();
                fetchWarrantyList();
-              });
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -744,8 +736,8 @@ class _WarrantyState extends State<Warranty> {
       hintStyle: const TextStyle(fontSize: 14),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
-      focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color:mTextFieldBorder)),
+      focusedBorder:  const OutlineInputBorder(borderSide: BorderSide(color:mSaveButton)),
     );
   }
 }

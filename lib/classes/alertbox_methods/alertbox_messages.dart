@@ -57,7 +57,7 @@ void showLoginUserErrorDialog(context) {
     return  AlertDialog(
       title:  const Column(
         children: <Widget>[
-          Text("Invalid UserName"),
+          Text("Invalid UserName\nOr  Password"),
           Icon(
             Icons.error,
             color: Colors.red,

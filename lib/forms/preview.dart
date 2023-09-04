@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:new_project/utils/customAppBar.dart';
 import 'package:new_project/utils/customDrawer.dart';
 
+import '../utils/static_data/motows_colors.dart';
+import '../widgets/motows_buttons/outlined_mbutton.dart';
+
 class PreviewScreen extends StatefulWidget {
   final double selectedDestination;
   final double drawerWidth;
@@ -67,16 +70,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text('Dynamic Form',),
-                                Padding(
-                                  padding:  const EdgeInsets.all(20.0),
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.blue)),
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {}
-                                    },
-                                    child: const Text('Save',style: TextStyle(color: Colors.white)),
+                                SizedBox(width: 100,
+                                  height: 30,
+                                  child: OutlinedMButton(text: 'Save',
+                                      borderColor: mSaveButton,
+                                      buttonColor: mSaveButton,
+                                      textColor: Colors.white,
+                                      onTap:(){
+                                        if (_formKey.currentState!.validate()) {}
+                                      }
                                   ),
-                                )
+                                ),
                               ],
                             ))),
                     Padding(
@@ -182,18 +186,21 @@ class _PreviewScreenState extends State<PreviewScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: ElevatedButton(
-          style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.blue)),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              print(fieldsList);
-              if(fieldsList.isNotEmpty) {
-                Navigator.pop(context);
-                // Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => PreviewScreen(fieldsList: fieldsList),));
+        child: SizedBox(width: 100,
+          height: 30,
+          child: OutlinedMButton(text: 'Cancel',
+              borderColor: mSaveButton,
+              buttonColor: mSaveButton,
+              textColor: Colors.white,
+              onTap:(){
+                if (_formKey.currentState!.validate()) {
+                  if(fieldsList.isNotEmpty) {
+                    Navigator.pop(context);
+                    // Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => PreviewScreen(fieldsList: fieldsList),));
+                  }
+                }
               }
-            }
-          },
-          child: const Text('Cancel',style: TextStyle(color: Colors.white)),
+          ),
         ),
       ),
 

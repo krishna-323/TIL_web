@@ -1797,7 +1797,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                      padding: const EdgeInsets.all(30),
                                      child: Column(children: [
                                        //Company Name.
-                                       Row(
+                                       Row(crossAxisAlignment: CrossAxisAlignment.start,
                                          children: [
                                            Expanded(
                                              child: Column(

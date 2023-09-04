@@ -633,7 +633,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                             children: [
                               AnimatedContainer(
                                 height:displayUserList[i]['isExpanded']?90:36,
-                                duration: const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 500),
                                 child: MaterialButton(
                                   hoverColor:Colors.blue[50] ,
                                   onPressed: () {
@@ -3347,7 +3347,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     );
   }
   Future _show() async {
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 500));
     return true;
   }
 }
