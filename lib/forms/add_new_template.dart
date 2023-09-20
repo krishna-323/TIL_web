@@ -9,6 +9,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/motows_buttons/outlined_mbutton.dart';
+
+
 class AddNewTemplate extends StatefulWidget {
   final double selectedDestination;
   final double drawerWidth;
@@ -25,6 +27,7 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
     OptionItem(id: "1", title: "Option 1"),
     OptionItem(id: "2", title: "Option 2")
   ]);
+
   late   AutoScrollController controller=AutoScrollController();
 
   final titleController = TextEditingController();
@@ -34,6 +37,7 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
   List myFocusNode = <FocusNode>[];
 
   bool isHover =false;
+  bool filePicker=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,9 +134,6 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
                             ),
                           ),
                         ),
-
-
-
                         ReorderableListView.builder(
                           shrinkWrap: true,
                           onReorder: (oldIndex,newIndex){
@@ -144,6 +145,9 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
                           itemCount: fieldsList.length,
                           padding: const EdgeInsets.only(right: 80,left: 80),
                           itemBuilder: (context, index) {
+                            if(fieldsList[index]['type']=="fileType"){
+                              filePicker=true;
+                            }
                             return  AutoScrollTag(
                               key: ValueKey(fieldsList[index]),
                               controller: controller,
@@ -294,7 +298,6 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
               },
             ),
 
-
             SpeedDialChild(
               label: 'Dropdown',
               onTap: () async {
@@ -306,7 +309,105 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
                 await controller.scrollToIndex(fieldsList.length-1,duration: const Duration(milliseconds: 500));
               },
             ),
+            SpeedDialChild(
+              label: 'fileType',
+              onTap: () async {
+                setState(() {
+                  if(filePicker){
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          child: StatefulBuilder(
+                            builder: (context, setState) {
+                              return SizedBox(
+                                height: 220,
+                                width: 300,
+                                child: Stack(children: [
+                                  Container(
+                                    decoration: BoxDecoration( color: Colors.white,borderRadius: BorderRadius.circular(5)),
+                                    margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                                    child: Padding(
+                                      padding:  const EdgeInsets.only(left: 20.0,right: 25),
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          const Icon(
+                                            Icons.warning_rounded,
+                                            color: Colors.red,
+                                            size: 50,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Center(
+                                              child: Text(
+                                                'Already File Picker TextField Is Add',
+                                                style: TextStyle(
+                                                    color: Colors.indigo,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              )),
+                                          const SizedBox(
+                                            height: 25,
+                                          ),
+                                          MaterialButton(
+                                              color: Colors.blue,
+                                              child: const Text("Ok",style: TextStyle(color: Colors.white),),
+                                              onPressed: (){
+                                                Navigator.of(context).pop();
+                                              }),
+                                          const SizedBox(height: 20,),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(right: 0.0,
 
+                                    child: InkWell(
+                                      child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              border: Border.all(
+                                                color:
+                                                const Color.fromRGBO(204, 204, 204, 1),
+                                              ),
+                                              color: Colors.blue),
+                                          child: const Icon(
+                                            Icons.close_sharp,
+                                            color: Colors.white,
+                                          )),
+                                      onTap: () {
+                                        setState(() {
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    fieldsList.add({"type":"fileType","question": "", "answer": "","isHover":false,});
+                    myFocusNode.add(FocusNode());
+                    myFocusNode[myFocusNode.length - 1].requestFocus();
+                  }
+
+                });
+                await controller.scrollToIndex(fieldsList.length-1,duration: const Duration(milliseconds: 500));
+              },
+            ),
           ],
           child: const Icon(Icons.add)
       ),
@@ -315,8 +416,12 @@ class _AddNewTemplateState extends State<AddNewTemplate> {
 
   Widget _textfieldBtn(int index) {
     return InkWell(
-      onTap: () => setState(() =>
-          fieldsList.removeAt(index),
+      onTap: () => setState(() {
+        if(filePicker){
+          filePicker=false;
+        }
+        fieldsList.removeAt(index);
+      },
       ),
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -367,6 +472,7 @@ class _DynamicFieldsState extends State<DynamicFields> {
       if(widget.initialValue['type']=='textField' ||widget.initialValue['type']=='date'||widget.initialValue['type']=='rating') {
         answerController.text = widget.initialValue['answer'].toString();
       }
+
       if(widget.initialValue['type']=='dropDown') {
         optionItemSelected = OptionItem(id: '', title: widget.initialValue['answer'].toString());
         answerController.text = widget.initialValue['answer'].toString();
@@ -648,7 +754,6 @@ class _DynamicFieldsState extends State<DynamicFields> {
                   color: Colors.amber,size: 10,
                 ),
                 onRatingUpdate: (rating) {
-                  print(rating);
                   answerController.text =rating.toString();
                   widget.callback({
                     'type':widget.initialValue['type'],
@@ -767,6 +872,52 @@ class _DynamicFieldsState extends State<DynamicFields> {
                 Text("Add Options",style: TextStyle(color: Colors.white),)
               ],
             )))
+          ],
+        );
+      case 'fileType':
+        return  Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              focusNode: myFocusNode,
+              controller: questionController,
+              onChanged:(value){
+                setState(() {
+                  widget.callback({
+                    'type':widget.initialValue['type'],
+                    "question":questionController.text,
+                    "answer":answerController.text
+                  });
+                });
+              },
+              decoration: const InputDecoration(hintText: "Files Types?"),
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) {
+                  myFocusNode.requestFocus();
+                  return 'Please enter something';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 50,),
+            TextFormField(
+              controller: answerController,
+              onChanged:  (value){
+                setState(() {
+                  widget.callback({
+                    'type': widget.initialValue['type'],
+                    "question": questionController.text,
+                    "answer": answerController.text
+                  });
+                });
+              },
+
+              decoration:  const InputDecoration(hintText: "Pick Files Here!",),
+              // validator: (v) {
+              //   if (v == null || v.trim().isEmpty) return 'Please enter something';
+              //   return null;
+              // },
+            ),
           ],
         );
     }
