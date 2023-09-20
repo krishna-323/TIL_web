@@ -1,4 +1,7 @@
 
+import 'dart:developer';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/master/parts/list_parts.dart';
 import 'package:new_project/pre_sales/grn/list_grn.dart';
@@ -21,12 +24,22 @@ import 'company_management/list_companies.dart';
 import 'customer/list_customer.dart';
 import 'dashboard/home_screen.dart';
 import 'docket/docket_list.dart';
+import 'firebase_options.dart';
 import 'forms/form_template.dart';
 import 'login_screen.dart';
 import 'pre_sales/invoice/invoice.dart';
 
  main() async {
   setPathUrlStrategy();
+  try{
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+  catch (e){
+    print(e.toString());
+    log(e.toString());
+  }
   runApp(const MyApp());
 }
 class MyApp extends StatefulWidget {
