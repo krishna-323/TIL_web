@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_project/company_management/list_dealers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
 import '../classes/motows_routes.dart';
@@ -41,6 +42,7 @@ class _CompanyManagementState extends State<CompanyManagement> {
 
   List listCompanies = [];
   List displayListCompanies=[];
+  List allCompanyIDs = [];
   var expandedId="";
   int startVal=0;
   bool color=false;
@@ -58,6 +60,9 @@ class _CompanyManagementState extends State<CompanyManagement> {
             listCompanies = response;
             // print('------listCompanies----');
             // print(listCompanies);
+            for(var company in listCompanies){
+              allCompanyIDs.add(company['company_id']);
+            }
            if(displayListCompanies.isEmpty){
              if(listCompanies.length>15){
                for(int i=startVal;i<startVal+15;i++){
@@ -322,7 +327,13 @@ class _CompanyManagementState extends State<CompanyManagement> {
                                     hoverColor: Colors.blue[50],
                                     onPressed: (){
                                       Navigator.of(context).push(PageRouteBuilder(
-                                        pageBuilder: (context,animation1,animation2) => CompanyDetails( companyName:listCompanies[i]['company_name'], selectedDestination: widget.args.selectedDestination, drawerWidth: widget.args.drawerWidth,),
+                                        pageBuilder: (context,animation1,animation2) => DealerList(
+                                          companyName:listCompanies[i]['company_name'],
+                                          companyID: listCompanies[i]['company_id'],
+                                          selectedDestination: widget.args.selectedDestination,
+                                          drawerWidth: widget.args.drawerWidth,
+                                          companyIDs: allCompanyIDs,
+                                        ),
                                         transitionDuration: Duration.zero,
                                         reverseTransitionDuration: Duration.zero,
                                       ));

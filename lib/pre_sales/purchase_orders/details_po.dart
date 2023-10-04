@@ -225,7 +225,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                     shadowColor: Colors.black,
                     title: const Text("Edit Vehicle Details"),
                     actions: [
-                      if(role=="Manager")...[
+                      if(role=="Approver")...[
                         if(estimateItems["status"]=="In-review")...[
                           Row(
                             children: [
@@ -2010,7 +2010,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                      padding: const EdgeInsets.all(10),
                      child: TextFormField(
                        // If User And Admin Login Editable.
-                       readOnly: role=="Manager"?true:false,
+                       readOnly: role=="Approver"?true:false,
                        validator: (value){
                          if(value==null || value.trim().isEmpty){
                            setState(() {
@@ -2109,7 +2109,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
                 ],
               ),
               const Divider(color: mTextFieldBorder),
-              if(role=="Manager")...[
+              if(role=="Approver")...[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:new_project/user_mangment/display_user_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
@@ -20,7 +21,16 @@ class CompanyDetails extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
   final String companyName;
-  const CompanyDetails(    {Key? key, required this.companyName,required this.selectedDestination, required this.drawerWidth}) : super(key: key);
+  final String dealerID;
+  final String companyID;
+  const CompanyDetails({
+    Key? key,
+      required this.companyName,
+      required this.selectedDestination,
+      required this.drawerWidth,
+    required this.companyID,
+    required this.dealerID
+  }) : super(key: key);
 
   @override
   State<CompanyDetails> createState() => _CompanyDetailsState();
@@ -28,36 +38,52 @@ class CompanyDetails extends StatefulWidget {
 
 class _CompanyDetailsState extends State<CompanyDetails> {
   String companyName = '';
+  String companyID = '';
+  String dealerID = '';
+  String selectedCompanyID = '';
+  String selectedDealerID = '';
   @override
 
 
   void initState() {
     // TODO: implement initState
     companyName = widget.companyName;
+    companyID = widget.companyID;
+    dealerID = widget.dealerID;
+    print('------- dealer ID ---------');
+    print(dealerID);
     getInitialData().whenComplete(() => {
       fetchSameCompanyCustomers(),
+        getDealerList(companyID),
       searchCompanyApi(),
+      searchDealerApi(),
+      getCompanyList(),
+
     });
     loading=true;
     super.initState();
   }
 
   String ?authToken;
+  String ?managerId;
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
+    managerId = prefs.getString("managerId");
   }
   List userList = [];
   List displayUserList=[];
+  List displayListCompanies=[];
+  List displayListDealers=[];
   var  expandedId="";
   int startVal=0;
   bool loading =false;
   bool companyUsers=false;
 
   Future fetchSameCompanyCustomers() async {
-    // print('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_company/$companyName');
+    print('https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_dealer_id/$dealerID');
     dynamic response;
-    String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_company/$companyName';
+    String url = 'https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_dealer_id/$dealerID';
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {
@@ -78,6 +104,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
               }
               else{
                 for(int i=0;i<userList.length;i++){
+                  companyUsers=false;
                   displayUserList.add(userList[i]);
                   displayUserList[i]["isExpanded"]=false;
                 }
@@ -89,10 +116,62 @@ class _CompanyDetailsState extends State<CompanyDetails> {
       });
     }
     catch (e) {
-      logOutApi(context: context, exception: e.toString(), response: response);
-      setState(() {
-        loading=false;
+      if(mounted){
+        logOutApi(context: context, exception: e.toString(), response: response);
+        setState(() {
+          loading=false;
+        });
+      }
+    }
+  }
+  Future getCompanyList() async{
+    dynamic response;
+    String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/company/get_all_company';
+    try{
+      await getData(url: url, context: context).then((value){
+        setState(() {
+          if(value != null){
+            response = value;
+            displayListCompanies = response;
+            // print('-------- display list company -------');
+            // print(displayListCompanies);
+          }
+          loading = false;
+        });
       });
+    }
+    catch(e){
+      if(mounted){
+        logOutApi(context: context, exception: e.toString(), response: response);
+        setState(() {
+          loading=false;
+        });
+      }
+    }
+  }
+  Future getDealerList(selectedCompanyID) async{
+    dynamic response;
+    String url = 'https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/get_company_dealer_by_company_id/$selectedCompanyID';
+    try{
+      await getData(url: url, context: context).then((value){
+        setState(() {
+          if(value != null){
+            response = value;
+            displayListDealers = response;
+            print('-------- display Dealer List -------');
+            print(displayListDealers);
+          }
+          loading = false;
+        });
+      });
+    }
+    catch(e){
+      if(mounted){
+        logOutApi(context: context, exception: e.toString(), response: response);
+        setState(() {
+          loading=false;
+        });
+      }
     }
   }
   // post api.
@@ -122,7 +201,13 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
               }
 
-              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CompanyDetails(
+                  companyName: companyName,
+                  selectedDestination: widget.selectedDestination,
+                  drawerWidth: widget.drawerWidth,
+                  companyID: companyID,
+                  dealerID: dealerID
+              ),));
 
               setState((){
                 showDialog(
@@ -244,7 +329,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
   final editCompanyName=TextEditingController();
   List nameList = [];
+  List dealerList = [];
   List companyNamesList=[];
+  List dealerNamesList=[];
   //Company Names.
   Future searchCompanyApi() async {
     dynamic response;
@@ -260,6 +347,28 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             // print(nameList);
             for(int i=0;i<nameList.length;i++){
               companyNamesList.add(nameList[i]['company_name']);
+            }
+          }
+        });
+      });
+    } catch (e) {
+      logOutApi(context: context, response: response, exception: e.toString());
+    }
+  }
+  Future searchDealerApi() async {
+    dynamic response;
+    String url =
+        'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/get_all_company_dealer';
+    try {
+      await getData(url: url, context: context).then((value) {
+        setState(() {
+          if (value != null) {
+            response = value;
+            dealerList = response;
+            // print('-------------get all company names-------------');
+            // print(nameList);
+            for(int i=0;i<dealerList.length;i++){
+              dealerNamesList.add(dealerList[i]['dealer_name']);
             }
           }
         });
@@ -459,12 +568,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
   String? assignUserId;
   //delete api.
-  Future deleteUserData() async {
-    // print('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$assignUserId');
+  Future deleteUserData(userID) async {
+    // print('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$userID');
     // print('-------------barer token-------------');
     // print(authToken);
     String url =
-        'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$assignUserId';
+        'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$userID';
     final response = await http.delete(Uri.parse(url), headers: {
       "Content-Type": "application/json",
       'Authorization': 'Bearer $authToken'
@@ -478,7 +587,13 @@ class _CompanyDetailsState extends State<CompanyDetails> {
         displayUserList=[];
         expandedId="";
         fetchSameCompanyCustomers();
-        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => CompanyDetails(
+            companyName: companyName,
+            selectedDestination: widget.selectedDestination,
+            drawerWidth: widget.drawerWidth,
+            companyID: companyID,
+            dealerID: dealerID
+        )));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User  Deleted')));
       });
 
@@ -1649,9 +1764,11 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                         bool editUserEmailError = false;
                                                                         final editEmail = TextEditingController();
                                                                         bool editFocusedCompany=false;
+                                                                        bool editFocusedDealer=false;
                                                                         bool editCompanyError=false;
+                                                                        bool editDealerError=false;
                                                                         final editCreateCompanyCon=TextEditingController();
-
+                                                                        final editDealerName=TextEditingController();
                                                                         bool editFocusedUser=false;
                                                                         bool editUserError=false;
                                                                         final editUserController=TextEditingController();
@@ -1661,8 +1778,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                         List <CustomPopupMenuEntry<String>> editTypesOfRole =<CustomPopupMenuEntry<String>>[
 
                                                                           const CustomPopupMenuItem(height: 40,
-                                                                            value: 'Admin',
-                                                                            child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+                                                                            value: 'Approver',
+                                                                            child: Center(child: SizedBox(width: 350,child: Text('Approver',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
                                                                           ),
                                                                           const CustomPopupMenuItem(height: 40,
@@ -1673,13 +1790,34 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
                                                                         ];
                                                                         String hintTextCompanyName="Selected Company Name";
+                                                                        String hintTextDealerName="Selected Dealer Name";
                                                                         String hintTextRole='Selected Role Type';
                                                                         editCreateCompanyCon.text=displayUserList[i]['company_name'];
+                                                                        editDealerName.text = displayListDealers[i]['dealer_name'];
                                                                         List<String> countryNames = [...companyNamesList];
+                                                                        List<String> dealerListNames = [...dealerNamesList];
                                                                         // Creating CustomPopupMenuEntry Empty List.
                                                                         List<CustomPopupMenuEntry<String>> companyNames = [];
+                                                                        List<CustomPopupMenuEntry<String>> dealerNames = [];
                                                                         //Assigning dynamic Country Names To CustomPopupMenuEntry Drop Down.
                                                                         companyNames = countryNames.map((value) {
+                                                                          return CustomPopupMenuItem(
+                                                                            height: 40,
+                                                                            value: value,
+                                                                            child: Center(
+                                                                              child: SizedBox(
+                                                                                width: 350,
+                                                                                child: Text(
+                                                                                  value,
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: const TextStyle(fontSize: 14),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          );
+                                                                        }).toList();
+                                                                        dealerNames = dealerListNames.map((value) {
                                                                           return CustomPopupMenuItem(
                                                                             height: 40,
                                                                             value: value,
@@ -1858,6 +1996,98 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                       setState(() {
                                                                                                                         editCreateCompanyCon.text=value;
                                                                                                                         editCompanyError=false;
+                                                                                                                        for(var company in displayListCompanies){
+                                                                                                                          if(company['company_name'] == value){
+                                                                                                                            print('------- edit company name ---------');
+                                                                                                                            selectedCompanyID = company['company_id'];
+                                                                                                                            print("Selected Company Name : ${editCreateCompanyCon.text}");
+                                                                                                                            print("Selected Company ID : $selectedCompanyID");
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      });
+
+                                                                                                                    },
+                                                                                                                    onCanceled: () {
+
+                                                                                                                    },
+                                                                                                                    child: Container(),
+                                                                                                                  );
+                                                                                                                }
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      height: 20,
+                                                                                                    ),
+                                                                                                    // Dealer Name
+                                                                                                    Row(
+                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                      children: [
+                                                                                                        const SizedBox(
+                                                                                                            width: 130,
+                                                                                                            child: Text('Dealer Name',)
+                                                                                                        ),
+                                                                                                        Expanded(
+                                                                                                          child: Focus(
+                                                                                                            onFocusChange: (value) {
+                                                                                                              setState(() {
+                                                                                                                editFocusedCompany = value;
+                                                                                                              });
+                                                                                                            },
+                                                                                                            skipTraversal: true,
+                                                                                                            descendantsAreFocusable: true,
+                                                                                                            child: LayoutBuilder(
+                                                                                                                builder: (BuildContext context, BoxConstraints constraints) {
+                                                                                                                  return CustomPopupMenuButton(childHeight: 200,
+                                                                                                                    elevation: 4,
+                                                                                                                    validator: (value) {
+                                                                                                                      if(value==null||value.isEmpty){
+                                                                                                                        setState(() {
+                                                                                                                          editDealerError =true;
+                                                                                                                        });
+                                                                                                                        return null;
+                                                                                                                      }
+                                                                                                                      return null;
+                                                                                                                    },
+                                                                                                                    decoration: customPopupDecoration(hintText:hintTextDealerName,error: editDealerError,isFocused: editFocusedDealer),
+                                                                                                                    hintText: '',
+                                                                                                                    textController: editDealerName,
+                                                                                                                    childWidth: constraints.maxWidth,
+                                                                                                                    shape:  RoundedRectangleBorder(
+                                                                                                                      side: BorderSide(color:editDealerError ? Colors.redAccent :mTextFieldBorder),
+                                                                                                                      borderRadius: const BorderRadius.all(
+                                                                                                                        Radius.circular(5),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    offset: const Offset(1, 40),
+                                                                                                                    tooltip: '',
+                                                                                                                    itemBuilder:  (BuildContext context) {
+                                                                                                                      return dealerNames;
+                                                                                                                    },
+
+                                                                                                                    onSelected: (String value)  {
+                                                                                                                      setState(() {
+                                                                                                                        editDealerName.text=value;
+                                                                                                                        editDealerError=false;
+                                                                                                                        print('------- edit Dealer name ---------');
+                                                                                                                        print(editDealerName.text);
+                                                                                                                        print(displayListDealers[i]['company_id']);
+                                                                                                                        // for(int i=0; i<displayListCompanies.length; i++){
+                                                                                                                        //   if(displayListCompanies[i]['company_name'] == value){
+                                                                                                                        //     for(var dealer in displayListDealers){
+                                                                                                                        //       print('------- edit Dealer name ---------');
+                                                                                                                        //       print(editDealerName.text);
+                                                                                                                        //       print(dealer['dealer_id']);
+                                                                                                                        //       print(editCreateCompanyCon.text);
+                                                                                                                        //       print(displayListDealers[i]['dealer_name']);
+                                                                                                                        //       if(dealer['dealer_name'] == value){
+                                                                                                                        //
+                                                                                                                        //       }
+                                                                                                                        //     }
+                                                                                                                        //   }
+                                                                                                                        // }
                                                                                                                       });
 
                                                                                                                     },
@@ -2018,6 +2248,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                 'token':'',
                                                                                                                 'token_creation_date':'',
                                                                                                                 'company_name':  editCreateCompanyCon.text,
+                                                                                                                "org_id": companyID,
+                                                                                                                "dealer_id":dealerID
                                                                                                                 //editCompanyName.text,
                                                                                                               };
                                                                                                               // print('-----change-----');
@@ -2137,7 +2369,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                   assignUserId = displayUserList[i]['userid'];
                                                                                                   // print('--------userid----');
                                                                                                   // print( assignUserId);
-                                                                                                  deleteUserData();
+                                                                                                  deleteUserData(assignUserId);
                                                                                                 },
                                                                                               ),
                                                                                             ),
@@ -2694,8 +2926,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           List <CustomPopupMenuEntry<String>> typesOfRoleCreate =<CustomPopupMenuEntry<String>>[
 
             const CustomPopupMenuItem(height: 40,
-              value: 'Admin',
-              child: Center(child: SizedBox(width: 350,child: Text('Admin',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+              value: 'Approver',
+              child: Center(child: SizedBox(width: 350,child: Text('Approver',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
             ),
             const CustomPopupMenuItem(height: 40,
@@ -3219,13 +3451,15 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                   "email": newUserEmail.text,
                                                   "password": newPassword.text,
                                                   "role": createUserRole,
-                                                  "username":newUserName.text ,
+                                                  "username":newUserName.text,
+                                                  "dealer_id": dealerID,
+                                                  "org_id": companyID,
+                                                  "manager_id":managerId
                                                 };
                                                 // print('---check----');
                                                 // print(userData);
                                                 userDetails(userData);
                                               }
-
                                             },
                                           ),
                                         ),

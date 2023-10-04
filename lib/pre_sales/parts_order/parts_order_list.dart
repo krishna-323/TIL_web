@@ -42,11 +42,13 @@ class _PartsOrderListState extends State<PartsOrderList> {
   }
   String role ='';
   String userId ='';
+  String orgId ='';
 
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
   bool loading=false;
   List estimateItems=[];
@@ -60,8 +62,8 @@ class _PartsOrderListState extends State<PartsOrderList> {
   Future fetchEstimate()async{
     dynamic response;
     String url='';
-    if(role=="Manager"){
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_uesr_or_manager/Manager/$userId";
+    if(role=="Approver"){
+      url="https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_by_company_id/$orgId";
     }
     else{
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/get_all_uesr_or_manager/User/$userId";
@@ -637,7 +639,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
   Future fetchByOrderId(String orderID)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_estvehicleid/$orderID";
     }
     else{
@@ -673,7 +675,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
   Future fetchByStatusItems(String status)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_status/$status";
     }
     else{

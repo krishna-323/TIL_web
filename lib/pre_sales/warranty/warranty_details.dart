@@ -198,7 +198,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                     shadowColor: Colors.black,
                     title: const Text("Warranty Details"),
                     actions: [
-                      if(role=="Manager")...[
+                      if(role=="Approver")...[
                         if(estimateItems["status"]=="In-review")...[
                           Row(
                             children: [
@@ -1976,7 +1976,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
-                        readOnly: role=="Manager"?true:false,
+                        readOnly: role=="Approver"?true:false,
                         validator: (value){
                           if(value==null || value.trim().isEmpty){
                             setState(() {
@@ -2073,7 +2073,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
                 ],
               ),
               const Divider(color: mTextFieldBorder),
-              if(role=="Manager")...[
+              if(role=="Approver")...[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

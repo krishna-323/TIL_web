@@ -42,18 +42,20 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
 
   String role ='';
   String userId ='';
+  String orgId ='';
 
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
+    orgId= prefs.getString("orgId")??"";
   }
 
   Future fetchEstimate()async{
     dynamic response;
     String url='';
-    if(role=='Manager'){
-      url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/Manager/$userId';
+    if(role=='Approver'){
+      url='https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_by_company_id/$orgId';
     }
     else{
       url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/User/$userId";

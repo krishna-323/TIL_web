@@ -229,7 +229,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                     shadowColor: Colors.black,
                     title: const Text("Edit Part Order"),
                     actions: [
-                      if(role=="Manager")...[
+                      if(role=="Approver")...[
                         if(estimateItems["status"]=="In-review")...[
                           Row(
                             children: [
@@ -2097,7 +2097,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
-                        readOnly: role=="Manager"?true:false,
+                        readOnly: role=="Approver"?true:false,
                         validator: (value){
                           if(value==null || value.trim().isEmpty){
                             setState(() {
@@ -2188,7 +2188,7 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                 ],
               ),
               const Divider(color: mTextFieldBorder),
-              if(role=="Manager")...[
+              if(role=="Approver")...[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
