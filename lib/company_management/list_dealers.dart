@@ -111,8 +111,6 @@ class _DealerListState extends State<DealerList> {
           if (value != null) {
             response = value;
             listCompanyDealer = response;
-            // print('------Dealer list----');
-            // print(listCompanyDealer);
             if(displayListCompanyDealers.isEmpty){
               if(listCompanyDealer.length>15){
                 for(int i=startVal;i<startVal+15;i++){
@@ -360,6 +358,7 @@ class _DealerListState extends State<DealerList> {
                                                   drawerWidth: widget.drawerWidth,
                                                   companyID: companyID,
                                                   dealerID: displayListCompanyDealers[i]['dealer_id'],
+                                                  dealerName: displayListCompanyDealers[i]['dealer_name'],
                                                 ),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero,

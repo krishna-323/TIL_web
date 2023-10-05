@@ -21,11 +21,13 @@ class CompanyDetails extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
   final String companyName;
+  final String dealerName;
   final String dealerID;
   final String companyID;
   const CompanyDetails({
     Key? key,
       required this.companyName,
+      required this.dealerName,
       required this.selectedDestination,
       required this.drawerWidth,
     required this.companyID,
@@ -38,10 +40,12 @@ class CompanyDetails extends StatefulWidget {
 
 class _CompanyDetailsState extends State<CompanyDetails> {
   String companyName = '';
+  String dealerName = '';
   String companyID = '';
   String dealerID = '';
   String selectedCompanyID = '';
   String selectedDealerID = '';
+  String selectedDealerCompanyID = '';
   String actualDealerName = '';
   @override
 
@@ -51,6 +55,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     companyName = widget.companyName;
     companyID = widget.companyID;
     dealerID = widget.dealerID;
+    dealerName = widget.dealerName;
     getInitialData().whenComplete(() => {
       fetchSameCompanyCustomers(),
       searchCompanyApi(),
@@ -73,15 +78,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   List displayUserList=[];
   List displayListCompanies=[];
   List displayListDealers=[];
-  List<String> items = [
-    "Dealer1",
-    "Dealer2",
-    "Dealer3",
-    "Dealer4",
-    "Dealer5",
-    "Dealer6",
-    "Dealer7",
-  ];
   var  expandedId="";
   int startVal=0;
   bool loading =false;
@@ -139,8 +135,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           if(value != null){
             response = value;
             displayListCompanies = response;
-            // print('-------- display list company -------');
-            // print(displayListCompanies);
           }
           loading = false;
         });
@@ -164,12 +158,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           if(value != null){
             response = value;
             displayListDealers = response;
-            dealerNamesList.clear();
-            if(displayListDealers.isNotEmpty){
-              for(var dealer in displayListDealers){
-                dealerNamesList.add(dealer['dealer_name']);
-              }
-            }
           }
           loading = false;
         });
@@ -216,7 +204,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                   selectedDestination: widget.selectedDestination,
                   drawerWidth: widget.drawerWidth,
                   companyID: companyID,
-                  dealerID: dealerID
+                  dealerID: dealerID,
+                dealerName: dealerName,
               ),));
 
               setState((){
@@ -597,7 +586,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             selectedDestination: widget.selectedDestination,
             drawerWidth: widget.drawerWidth,
             companyID: companyID,
-            dealerID: dealerID
+            dealerID: dealerID,
+            dealerName: dealerName,
         )));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User  Deleted')));
       });
@@ -1798,7 +1788,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                         String hintTextDealerName="Selected Dealer Name";
                                                                         String hintTextRole='Selected Role Type';
                                                                         editCreateCompanyCon.text=displayUserList[i]['company_name'];
-                                                                        editDealerName.text = displayListDealers[i]['dealer_name'];
+                                                                        editDealerName.text = dealerName;
                                                                         List<String> countryNames = [...companyNamesList];
                                                                         List<String> dealerListNames = [...dealerNamesList];
                                                                         // Creating CustomPopupMenuEntry Empty List.
@@ -1999,18 +1989,15 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
                                                                                                                     onSelected: (String value)  {
                                                                                                                         setState(() {
+                                                                                                                          editDealerName.clear();
                                                                                                                           editCreateCompanyCon.text = value;
                                                                                                                           editCompanyError = false;
-
-                                                                                                                          // Find and store the selected company ID
                                                                                                                           for (var company in displayListCompanies) {
-                                                                                                                            if (company['company_name'] == value) {
-                                                                                                                              selectedCompanyID = company['company_id'];
-                                                                                                                              break; // Exit the loop once you've found the company
-                                                                                                                            }
+                                                                                                                              if (company['company_name'] == value) {
+                                                                                                                                selectedCompanyID = company['company_id'];
+                                                                                                                                break;
+                                                                                                                              }
                                                                                                                           }
-
-                                                                                                                          // Fetch the dealer list based on the selected company ID
                                                                                                                           getDealerList(selectedCompanyID);
                                                                                                                         });
                                                                                                                       },
@@ -2083,6 +2070,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                       setState(() {
                                                                                                                         editDealerName.text = value.toString();
                                                                                                                         editCompanyError = false;
+                                                                                                                        for(var dealer in displayListDealers){
+                                                                                                                          if(dealer['dealer_name'] == value){
+                                                                                                                            selectedDealerID = dealer['dealer_id'];
+                                                                                                                            selectedDealerCompanyID = dealer['company_id'];
+                                                                                                                          }
+                                                                                                                        }
                                                                                                                       });
                                                                                                                     },
                                                                                                                     onCanceled: () {
@@ -2096,6 +2089,9 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                         ),
                                                                                                       ],
                                                                                                     ),
+                                                                                                    const SizedBox(height: 5,),
+                                                                                                    if(editDealerError)
+                                                                                                      const Text("Select Dealer",style: TextStyle(fontSize: 12,color: Color(0xffB52F27)),),
                                                                                                     const SizedBox(
                                                                                                       height: 20,
                                                                                                     ),
@@ -2232,22 +2228,37 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                           borderColor: mSaveButton,
                                                                                                           onTap:(){
                                                                                                             if (editDetails.currentState!.validate()) {
-                                                                                                              Map editUserManagement = {
-                                                                                                                "userid":displayUserList[i]['userid'],
-                                                                                                                'username': editUserName.text,
-                                                                                                                'password':displayUserList[i]['password'],
-                                                                                                                'active':true,
-                                                                                                                'role':  editUserController.text,
-                                                                                                                'email': editEmail.text,
-                                                                                                                'token':'',
-                                                                                                                'token_creation_date':'',
-                                                                                                                'company_name':  editCreateCompanyCon.text,
-                                                                                                                'dealer_name':  editDealerName.text,
-                                                                                                                "org_id": companyID,
-                                                                                                                "dealer_id":displayListDealers[i]['dealer_id']
-                                                                                                                //editCompanyName.text,
-                                                                                                              };
-                                                                                                              updateUserDetails(editUserManagement,);
+                                                                                                              if(editDealerName.text.isEmpty){
+                                                                                                                if(mounted){
+                                                                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Select a Dealer")));
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                bool isValidDealer = displayListDealers.any((element) =>
+                                                                                                                    element['dealer_name'] == editDealerName.text &&
+                                                                                                                        element['dealer_id'] == selectedDealerID &&
+                                                                                                                        element['company_id'] == selectedDealerCompanyID
+                                                                                                                );
+                                                                                                                if(!isValidDealer){
+                                                                                                                  print("Selected dealer does not belong to selected company");
+                                                                                                                } else{
+                                                                                                                  Map editUserManagement = {
+                                                                                                                    "userid":displayUserList[i]['userid'],
+                                                                                                                    'username': editUserName.text,
+                                                                                                                    'password':displayUserList[i]['password'],
+                                                                                                                    'active':true,
+                                                                                                                    'role':  editUserController.text,
+                                                                                                                    'email': editEmail.text,
+                                                                                                                    'token':'',
+                                                                                                                    'token_creation_date':'',
+                                                                                                                    'company_name':  editCreateCompanyCon.text,
+                                                                                                                    'dealer_name':  editDealerName.text,
+                                                                                                                    "org_id": companyID,
+                                                                                                                    "dealer_id":selectedDealerID
+                                                                                                                    //editCompanyName.text,
+                                                                                                                  };
+                                                                                                                  updateUserDetails(editUserManagement,);
+                                                                                                                }
+                                                                                                              }
                                                                                                             }
                                                                                                           },
                                                                                                         ),
