@@ -42,6 +42,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   String dealerID = '';
   String selectedCompanyID = '';
   String selectedDealerID = '';
+  String actualDealerName = '';
   @override
 
 
@@ -50,15 +51,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     companyName = widget.companyName;
     companyID = widget.companyID;
     dealerID = widget.dealerID;
-    print('------- dealer ID ---------');
-    print(dealerID);
     getInitialData().whenComplete(() => {
       fetchSameCompanyCustomers(),
-        getDealerList(companyID),
       searchCompanyApi(),
       searchDealerApi(),
       getCompanyList(),
-
+    getDealerList(companyID)
     });
     loading=true;
     super.initState();
@@ -75,13 +73,21 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   List displayUserList=[];
   List displayListCompanies=[];
   List displayListDealers=[];
+  List<String> items = [
+    "Dealer1",
+    "Dealer2",
+    "Dealer3",
+    "Dealer4",
+    "Dealer5",
+    "Dealer6",
+    "Dealer7",
+  ];
   var  expandedId="";
   int startVal=0;
   bool loading =false;
   bool companyUsers=false;
 
   Future fetchSameCompanyCustomers() async {
-    print('https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_dealer_id/$dealerID');
     dynamic response;
     String url = 'https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/get_all_users_by_dealer_id/$dealerID';
     try {
@@ -158,8 +164,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           if(value != null){
             response = value;
             displayListDealers = response;
-            print('-------- display Dealer List -------');
-            print(displayListDealers);
+            dealerNamesList.clear();
+            if(displayListDealers.isNotEmpty){
+              for(var dealer in displayListDealers){
+                dealerNamesList.add(dealer['dealer_name']);
+              }
+            }
           }
           loading = false;
         });
@@ -569,9 +579,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   String? assignUserId;
   //delete api.
   Future deleteUserData(userID) async {
-    // print('https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$userID');
-    // print('-------------barer token-------------');
-    // print(authToken);
     String url =
         'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/delete-user/$userID';
     final response = await http.delete(Uri.parse(url), headers: {
@@ -581,8 +588,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
     );
     if (response.statusCode == 200) {
-      // print('--------response--');
-      // print(response.body);
       setState(() {
         displayUserList=[];
         expandedId="";
@@ -1817,23 +1822,23 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                             ),
                                                                           );
                                                                         }).toList();
-                                                                        dealerNames = dealerListNames.map((value) {
-                                                                          return CustomPopupMenuItem(
-                                                                            height: 40,
-                                                                            value: value,
-                                                                            child: Center(
-                                                                              child: SizedBox(
-                                                                                width: 350,
-                                                                                child: Text(
-                                                                                  value,
-                                                                                  maxLines: 1,
-                                                                                  overflow: TextOverflow.ellipsis,
-                                                                                  style: const TextStyle(fontSize: 14),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        }).toList();
+                                                                        // dealerNames = dealerListNames.map((value) {
+                                                                        //   return CustomPopupMenuItem(
+                                                                        //     height: 40,
+                                                                        //     value: value,
+                                                                        //     child: Center(
+                                                                        //       child: SizedBox(
+                                                                        //         width: 350,
+                                                                        //         child: Text(
+                                                                        //           value,
+                                                                        //           maxLines: 1,
+                                                                        //           overflow: TextOverflow.ellipsis,
+                                                                        //           style: const TextStyle(fontSize: 14),
+                                                                        //         ),
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   );
+                                                                        // }).toList();
                                                                         final editDetails = GlobalKey<FormState>();
                                                                         String capitalizeFirstWord(String value){
                                                                           if(value.isNotEmpty){
@@ -1993,20 +1998,22 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                     },
 
                                                                                                                     onSelected: (String value)  {
-                                                                                                                      setState(() {
-                                                                                                                        editCreateCompanyCon.text=value;
-                                                                                                                        editCompanyError=false;
-                                                                                                                        for(var company in displayListCompanies){
-                                                                                                                          if(company['company_name'] == value){
-                                                                                                                            print('------- edit company name ---------');
-                                                                                                                            selectedCompanyID = company['company_id'];
-                                                                                                                            print("Selected Company Name : ${editCreateCompanyCon.text}");
-                                                                                                                            print("Selected Company ID : $selectedCompanyID");
-                                                                                                                          }
-                                                                                                                        }
-                                                                                                                      });
+                                                                                                                        setState(() {
+                                                                                                                          editCreateCompanyCon.text = value;
+                                                                                                                          editCompanyError = false;
 
-                                                                                                                    },
+                                                                                                                          // Find and store the selected company ID
+                                                                                                                          for (var company in displayListCompanies) {
+                                                                                                                            if (company['company_name'] == value) {
+                                                                                                                              selectedCompanyID = company['company_id'];
+                                                                                                                              break; // Exit the loop once you've found the company
+                                                                                                                            }
+                                                                                                                          }
+
+                                                                                                                          // Fetch the dealer list based on the selected company ID
+                                                                                                                          getDealerList(selectedCompanyID);
+                                                                                                                        });
+                                                                                                                      },
                                                                                                                     onCanceled: () {
 
                                                                                                                     },
@@ -2033,7 +2040,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                           child: Focus(
                                                                                                             onFocusChange: (value) {
                                                                                                               setState(() {
-                                                                                                                editFocusedCompany = value;
+                                                                                                                editFocusedDealer = value;
                                                                                                               });
                                                                                                             },
                                                                                                             skipTraversal: true,
@@ -2064,32 +2071,19 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                     offset: const Offset(1, 40),
                                                                                                                     tooltip: '',
                                                                                                                     itemBuilder:  (BuildContext context) {
-                                                                                                                      return dealerNames;
+                                                                                                                      return displayListDealers.map((value) {
+                                                                                                                        return CustomPopupMenuItem(
+                                                                                                                          value: value['dealer_name'],
+                                                                                                                            child: Text(value['dealer_name'])
+                                                                                                                        );
+                                                                                                                      }).toList();
                                                                                                                     },
 
-                                                                                                                    onSelected: (String value)  {
+                                                                                                                    onSelected: (value)  {
                                                                                                                       setState(() {
-                                                                                                                        editDealerName.text=value;
-                                                                                                                        editDealerError=false;
-                                                                                                                        print('------- edit Dealer name ---------');
-                                                                                                                        print(editDealerName.text);
-                                                                                                                        print(displayListDealers[i]['company_id']);
-                                                                                                                        // for(int i=0; i<displayListCompanies.length; i++){
-                                                                                                                        //   if(displayListCompanies[i]['company_name'] == value){
-                                                                                                                        //     for(var dealer in displayListDealers){
-                                                                                                                        //       print('------- edit Dealer name ---------');
-                                                                                                                        //       print(editDealerName.text);
-                                                                                                                        //       print(dealer['dealer_id']);
-                                                                                                                        //       print(editCreateCompanyCon.text);
-                                                                                                                        //       print(displayListDealers[i]['dealer_name']);
-                                                                                                                        //       if(dealer['dealer_name'] == value){
-                                                                                                                        //
-                                                                                                                        //       }
-                                                                                                                        //     }
-                                                                                                                        //   }
-                                                                                                                        // }
+                                                                                                                        editDealerName.text = value.toString();
+                                                                                                                        editCompanyError = false;
                                                                                                                       });
-
                                                                                                                     },
                                                                                                                     onCanceled: () {
 
@@ -2248,12 +2242,11 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                 'token':'',
                                                                                                                 'token_creation_date':'',
                                                                                                                 'company_name':  editCreateCompanyCon.text,
+                                                                                                                'dealer_name':  editDealerName.text,
                                                                                                                 "org_id": companyID,
-                                                                                                                "dealer_id":dealerID
+                                                                                                                "dealer_id":displayListDealers[i]['dealer_id']
                                                                                                                 //editCompanyName.text,
                                                                                                               };
-                                                                                                              // print('-----change-----');
-                                                                                                              // print(editUserManagement);
                                                                                                               updateUserDetails(editUserManagement,);
                                                                                                             }
                                                                                                           },
