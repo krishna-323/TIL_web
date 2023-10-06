@@ -1182,7 +1182,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                 SizedBox(width: 250,
                                   child: TextFormField(
                                     controller: brandNameController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Brand'),
+                                    decoration: textFieldBrandNameField(hintText: 'Search By Name'),
                                     onChanged: (value) {
                                       setState(() {
                                         if(value.isEmpty || value==""){
@@ -1199,51 +1199,51 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
                                     },
                                   ),
                                 ),
-                                const SizedBox(width: 10,),
-                                SizedBox(
-                                  width: 250,
-                                  child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
-                                    controller: modelNameController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=partsList;
-                                        }
-                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          brandNameController.clear();
-                                          variantController.clear();
-
-                                        }
-                                        else{
-                                          fetchModelName(modelNameController.text);
-                                        }
-
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                SizedBox(width: 250,
-                                  child: TextFormField(
-                                    controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=partsList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          brandNameController.clear();
-                                        }
-                                        else{
-                                          fetchVariantName(variantController.text);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
+                                // const SizedBox(width: 10,),
+                                // SizedBox(
+                                //   width: 250,
+                                //   child: TextFormField(
+                                //     decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                //     controller: modelNameController,
+                                //     onChanged: (value) {
+                                //       setState(() {
+                                //         if(value.isEmpty || value==""){
+                                //           displayList=partsList;
+                                //         }
+                                //         else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                //           brandNameController.clear();
+                                //           variantController.clear();
+                                //
+                                //         }
+                                //         else{
+                                //           fetchModelName(modelNameController.text);
+                                //         }
+                                //
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
+                                // const SizedBox(width: 10,),
+                                // SizedBox(width: 250,
+                                //   child: TextFormField(
+                                //     controller: variantController,
+                                //     decoration: textFieldVariantNameField(hintText: 'Search Variant'),
+                                //     onChanged: (value) {
+                                //       setState(() {
+                                //         if(value.isEmpty || value==""){
+                                //           displayList=partsList;
+                                //         }
+                                //         else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
+                                //           modelNameController.clear();
+                                //           brandNameController.clear();
+                                //         }
+                                //         else{
+                                //           fetchVariantName(variantController.text);
+                                //         }
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
                               ],
                             ),
                             const SizedBox(height: 20,),
@@ -1669,7 +1669,7 @@ class _CreatePartOrderState extends State<CreatePartOrder> {
   fetchBrandName(String brandName)async{
     dynamic response;
 
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
+    String url='https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/newitem/search_by_name/$brandName';
     try{
       await getData(context: context,url: url).then((value) {
         setState(() {

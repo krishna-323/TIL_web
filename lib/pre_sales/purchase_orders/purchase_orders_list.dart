@@ -558,7 +558,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   fetchSearchByDate(String date)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_serviceinvoicedate/$date";
     }
     else{
@@ -594,7 +594,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   fetchOrderIDItems(String orderID)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_estvehicleid/$orderID";
     }
     else{
@@ -630,7 +630,7 @@ class _DisplayEstimateItemsState extends State<DisplayEstimateItems> {
   fetchByStatus(String status)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_status/$status";
     }
     else{

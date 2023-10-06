@@ -47,11 +47,13 @@ class _WarrantyState extends State<Warranty> {
   final searchByOrderID = TextEditingController();
   String role ='';
   String userId ='';
+  String managerId ='';
   String orgId ='';
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     role= prefs.getString("role")??"";
     userId= prefs.getString("userId")??"";
+    managerId= prefs.getString("managerId")??"";
     orgId= prefs.getString("orgId")??"";
   }
   Future fetchWarrantyList()async{
@@ -568,8 +570,9 @@ class _WarrantyState extends State<Warranty> {
   Future fetchDate(String searchByDate)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
-      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_serviceinvoicedate/$userId/$searchByDate";
+    if(role=="Approver"){
+      url ="https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$searchByDate";
+      print(url);
     }
     else{
       url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_serviceinvoicedate/$userId/$searchByDate";
@@ -604,8 +607,8 @@ class _WarrantyState extends State<Warranty> {
   Future fetchByOrderID(String orderID)async{
     dynamic response;
     String url="";
-    if(role=="Manager"){
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_estvehicleid/$userId/$orderID";
+    if(role=="Approver"){
+      url="https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$orderID";
     }
     else{
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_estvehicleid/$userId/$orderID";
@@ -639,8 +642,8 @@ class _WarrantyState extends State<Warranty> {
   Future fetchByStatus(String status)async{
     dynamic response;
     String url='';
-    if(role=="Manager"){
-      url ="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_managerid_status/$userId/$status";
+    if(role=="Approver"){
+      url ="https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$status";
     }
     else{
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partswarranty/search_by_status/$userId/$status";

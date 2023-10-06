@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     onTap: (){
-                      Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: 190));
+                      Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 0,drawerWidth: 190));
                     },
                     child: const KpiCard(title: "Customers",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
 
@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 30),
                   Expanded(child: InkWell(
                     onTap:(){
-                      Navigator.pushReplacementNamed(context, MotowsRoutes.docketList,arguments: DocketListArgs(selectedDestination: 0,drawerWidth: 190));
+                      // Navigator.pushReplacementNamed(context, MotowsRoutes.docketList,arguments: DocketListArgs(selectedDestination: 0,drawerWidth: 190));
                    },
                     child: Card(
                         color: Colors.transparent,
@@ -373,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       onTap: (){
-                        Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: 190));
+                        // Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: 190));
                       },
                       child: const KpiCard(title: "Customers",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
 

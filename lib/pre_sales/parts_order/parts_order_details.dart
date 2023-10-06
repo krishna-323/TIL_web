@@ -1903,51 +1903,51 @@ class _PartOrderDetailsState extends State<PartOrderDetails> {
                                     },
                                   ),
                                 ),
-                                const SizedBox(width: 10,),
-                                SizedBox(
-                                  width: 250,
-                                  child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model'),
-                                    controller: modelNameController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=partsList;
-                                        }
-                                        else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
-                                          brandNameController.clear();
-                                          variantController.clear();
-
-                                        }
-                                        else{
-                                          fetchModelName(modelNameController.text);
-                                        }
-
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                SizedBox(width: 250,
-                                  child: TextFormField(
-                                    controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if(value.isEmpty || value==""){
-                                          displayList=partsList;
-                                        }
-                                        else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
-                                          modelNameController.clear();
-                                          brandNameController.clear();
-                                        }
-                                        else{
-                                          fetchVariantName(variantController.text);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
+                                // const SizedBox(width: 10,),
+                                // SizedBox(
+                                //   width: 250,
+                                //   child: TextFormField(
+                                //     decoration:  textFieldModelNameField(hintText: 'Search Model'),
+                                //     controller: modelNameController,
+                                //     onChanged: (value) {
+                                //       setState(() {
+                                //         if(value.isEmpty || value==""){
+                                //           displayList=partsList;
+                                //         }
+                                //         else if(brandNameController.text.isNotEmpty || variantController.text.isNotEmpty){
+                                //           brandNameController.clear();
+                                //           variantController.clear();
+                                //
+                                //         }
+                                //         else{
+                                //           fetchModelName(modelNameController.text);
+                                //         }
+                                //
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
+                                // const SizedBox(width: 10,),
+                                // SizedBox(width: 250,
+                                //   child: TextFormField(
+                                //     controller: variantController,
+                                //     decoration: textFieldVariantNameField(hintText: 'Search Variant'),
+                                //     onChanged: (value) {
+                                //       setState(() {
+                                //         if(value.isEmpty || value==""){
+                                //           displayList=partsList;
+                                //         }
+                                //         else if(modelNameController.text.isNotEmpty || brandNameController.text.isNotEmpty){
+                                //           modelNameController.clear();
+                                //           brandNameController.clear();
+                                //         }
+                                //         else{
+                                //           fetchVariantName(variantController.text);
+                                //         }
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
                               ],
                             ),
                             const SizedBox(height: 20,),

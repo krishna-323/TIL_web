@@ -602,7 +602,7 @@ class _PartsOrderListState extends State<PartsOrderList> {
   Future fetchInvoiceDate(String orderDate)async{
     dynamic response;
     String url="";
-    if(role==""){
+    if(role=="Approver"){
       url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/partspurchaseorder/search_by_serviceinvoicedate/$orderDate";
     }
     else{
