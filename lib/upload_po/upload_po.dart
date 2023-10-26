@@ -80,12 +80,12 @@ class _UploadPOState extends State<UploadPO> {
                                 SizedBox(  width: 190,height: 30, child: TextFormField(
                                   controller: selectedDateText,
                                   onTap: (){
-                                    _selectDate(context);
+                                   // _selectDate(context);
                                   },
-                                  readOnly: true,
+                                //  readOnly: true,
                                   style: const TextStyle(fontSize: 14),
                                   keyboardType: TextInputType.text,
-                                  decoration: customSearchDecoration(hintText: 'Search by date'),
+                                  decoration: customSearchDecoration(hintText: 'Search by Model '),
                                 ),
                                 ),
                                 Row(
@@ -223,23 +223,7 @@ class _UploadPOState extends State<UploadPO> {
                                             padding: EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
                                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child:Text('Date',maxLines: 1,overflow: TextOverflow.ellipsis,)
-                                            ),
-                                          )),
-                                      const Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 4.0),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                 child:Text('On-Road Price',maxLines: 1,overflow: TextOverflow.ellipsis,)
-                                            ),
-                                          )),
-                                      const Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 4.0),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child:Text('Color',maxLines: 1,overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
                                       const Expanded(
@@ -329,23 +313,7 @@ class _UploadPOState extends State<UploadPO> {
                                             padding: const EdgeInsets.only(top: 4.0),
                                             child: SizedBox(height: 25,
                                                 //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child:Text(displayList[i]['date'].toString(),overflow: TextOverflow.ellipsis,)
-                                            ),
-                                          )),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4.0),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
                                                 child:Text(displayList[i]['on_road_price'].toString(),overflow: TextOverflow.ellipsis,)
-                                            ),
-                                          )),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 4.0),
-                                            child: SizedBox(height: 25,
-                                                //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                child:Text(displayList[i]['color'].toString(),overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
                                       Expanded(
@@ -356,6 +324,7 @@ class _UploadPOState extends State<UploadPO> {
                                                 child:Text(displayList[i]['year_of_manufacture'].toString(),overflow: TextOverflow.ellipsis,)
                                             ),
                                           )),
+
 
                                     ],
                                   ),

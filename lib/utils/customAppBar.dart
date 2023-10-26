@@ -3,7 +3,12 @@ import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/bloc.dart';
+import '../classes/arguments_classes/arguments_classes.dart';
+import '../classes/motows_routes.dart';
 import '../main.dart';
+import '../pre_sales/parts_order/parts_order_list.dart';
+import '../pre_sales/purchase_orders/add_new_vehicles_order.dart';
+import '../pre_sales/warranty/warranty.dart';
 import 'custom_popup_dropdown/custom_popup_dropdown.dart';
 
 class CustomAppBar extends StatefulWidget {
@@ -35,19 +40,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
   final search=TextEditingController();
   List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
 
-    const CustomPopupMenuItem(height: 30,
-      value: 'Business Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Business Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+    const CustomPopupMenuItem(height: 40,
+      value: '1',
+      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     ),
-    const CustomPopupMenuItem(height: 30,
-      value: 'Individual Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Individual Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+    const CustomPopupMenuItem(height: 40,
+      value: '2',
+      child: Center(child: SizedBox(width: 350,child: Text('New Parts Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     ),
-    const CustomPopupMenuItem(height: 30,
-      value: 'Company Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Company Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+    const CustomPopupMenuItem(height: 40,
+      value: '3',
+      child: Center(child: SizedBox(width: 350,child: Text('New Warranty',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     )
   ];
@@ -107,12 +112,12 @@ String customerType='Select Customer Type';
       elevation: 2,
       bottomOpacity: 20,
       leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Image.asset('assets/logo/motows.png'),
+        padding: const EdgeInsets.all(12.0),
+        child: Image.asset('assets/logo/Ikyam_color_logo.png'),
       ),
       title: SizedBox(width: 385,height: 35,
         child: CustomPopupMenuButton<String>( childWidth: 385,position: CustomPopupMenuPosition.under,
-          decoration: customPopupDecoration(hintText: 'Create New Service'),
+          decoration: customPopupDecoration(hintText: 'Create New'),
           hintText: "",
           shape: const RoundedRectangleBorder(
             side: BorderSide(color:Color(0xFFE0E0E0)),
@@ -126,8 +131,30 @@ String customerType='Select Customer Type';
             return customerTypes;
           },
           onSelected: (String value)  {
+          print(value);
             setState(() {
               customerType= value;
+              if(value =="1"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.estimateRoutes,
+                  arguments: DisplayEstimateItemsArgs(selectedDestination: 1.1, drawerWidth: 190),
+                );
+              }
+              if(value == "2"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.partsOrderListRoutes,
+                  arguments: PartsOrderListArguments(selectedDestination: 1.2, drawerWidth: 190),
+                );
+              }
+              if(value == "3"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.warrantyRoutes,
+                  arguments: WarrantyArgs(selectedDestination: 1.3, drawerWidth: 190),
+                );
+              }
 
             });
           },
@@ -377,18 +404,18 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
   List <CustomPopupMenuEntry<String>> customerTypes =<CustomPopupMenuEntry<String>>[
 
     const CustomPopupMenuItem(height: 40,
-      value: 'Business Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Business Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+      value: '1',
+      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     ),
     const CustomPopupMenuItem(height: 40,
-      value: 'Individual Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Individual Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+      value: '2',
+      child: Center(child: SizedBox(width: 350,child: Text('New Parts Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     ),
     const CustomPopupMenuItem(height: 40,
-      value: 'Company Customer',
-      child: Center(child: SizedBox(width: 350,child: Text('Company Customer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+      value: '3',
+      child: Center(child: SizedBox(width: 350,child: Text('New Warranty',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
     )
   ];
@@ -425,12 +452,12 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
       elevation: 2,
       bottomOpacity: 20,
       leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Image.asset('assets/logo/motows.png'),
+        padding: const EdgeInsets.all(14.0),
+        child: Image.asset('assets/logo/Ikyam_color_logo.png'),
       ),
       title:SizedBox(width: 385,height: 35,
         child: CustomPopupMenuButton<String>( childWidth: 385,position: CustomPopupMenuPosition.under,
-          decoration: customPopupDecoration(hintText: 'Create New Service'),
+          decoration: customPopupDecoration(hintText: 'Create New'),
           hintText: "",
           shape: const RoundedRectangleBorder(
             side: BorderSide(color:Color(0xFFE0E0E0)),
@@ -444,8 +471,31 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
             return customerTypes;
           },
           onSelected: (String value)  {
+          print(value);
             setState(() {
               customerType= value;
+              if(value =="1"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.estimateRoutes,
+                  arguments: DisplayEstimateItemsArgs(selectedDestination: 1.1, drawerWidth: 190),
+                );
+              }
+              if(value == "2"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.partsOrderListRoutes,
+                  arguments: PartsOrderListArguments(selectedDestination: 1.2, drawerWidth: 190),
+                );
+              }
+              if(value == "3"){
+                Navigator.pushReplacementNamed(
+                  context,
+                  MotowsRoutes.warrantyRoutes,
+                  arguments: WarrantyArgs(selectedDestination: 1.3, drawerWidth: 190),
+                );
+              }
+
 
             });
           },

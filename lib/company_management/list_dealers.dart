@@ -1330,6 +1330,7 @@ class _DealerListState extends State<DealerList> {
                                                 };
                                                 // print('---check----');
                                                 // print(userData);
+                                                Navigator.pop(context);
                                                 postCompanyDealerDetails(userData);
                                               }
 

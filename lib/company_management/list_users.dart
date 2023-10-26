@@ -304,7 +304,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
             else{
               setState(() {
-                Navigator.of(context).pop();
+
                 if(value["status"]=="success"){
                setState(() {
 
@@ -814,7 +814,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                         padding: const EdgeInsets.only(top: 4),
                                                         child: SizedBox(height: 25,
                                                             //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                            child: Text(displayUserList[i]['role']??"")
+                                                            child: Text(displayUserList[i]['role']=="Approver"?"Dealer Manager":displayUserList[i]['role']=="User"?"Dealer":"")
                                                         ),
                                                       )),
 
@@ -1769,17 +1769,17 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                         final editUserController=TextEditingController();
                                                                         editUserName.text = displayUserList[i]['username'];
                                                                         editEmail.text = displayUserList[i]['email'];
-                                                                        editUserController.text=displayUserList[i]['role'];
+                                                                        editUserController.text=displayUserList[i]['role']=="Approver"? "Dealer Manager":"Dealer";
                                                                         List <CustomPopupMenuEntry<String>> editTypesOfRole =<CustomPopupMenuEntry<String>>[
 
                                                                           const CustomPopupMenuItem(height: 40,
                                                                             value: 'Approver',
-                                                                            child: Center(child: SizedBox(width: 350,child: Text('Approver',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+                                                                            child: Center(child: SizedBox(width: 350,child: Text('Dealer Manager',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
                                                                           ),
                                                                           const CustomPopupMenuItem(height: 40,
                                                                             value: 'User',
-                                                                            child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+                                                                            child: Center(child: SizedBox(width: 350,child: Text('Dealer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
                                                                           ),
 
@@ -2455,8 +2455,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                         String storeEmail = '';
                                                                         String storePassword = '';
                                                                         //regular expression to check if string.
-                                                                        RegExp passValid = RegExp(
-                                                                            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+                                                                        RegExp passValid = RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$");
                                                                         // a function that validate user enter password.
                                                                         bool validatePassword(String pass) {
                                                                           String password = pass.trim();
@@ -2597,8 +2596,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                                                                                   return 'Enter Password';
                                                                                                                 } else {
                                                                                                                   // call function to check password
-                                                                                                                  bool result =
-                                                                                                                  validatePassword(value);
+                                                                                                                  bool result = validatePassword(value);
                                                                                                                   if (result) {
                                                                                                                     setState(() {
                                                                                                                       editPasswordError = false;
@@ -2931,12 +2929,12 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
             const CustomPopupMenuItem(height: 40,
               value: 'Approver',
-              child: Center(child: SizedBox(width: 350,child: Text('Approver',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+              child: Center(child: SizedBox(width: 350,child: Text('Dealer Manager',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
             ),
             const CustomPopupMenuItem(height: 40,
               value: 'User',
-              child: Center(child: SizedBox(width: 350,child: Text('User',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+              child: Center(child: SizedBox(width: 350,child: Text('Dealer',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
 
             ),
 
@@ -2981,8 +2979,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
           createCompanyCon.text=companyName;
           final newUser = GlobalKey<FormState>();
           //regular expression to check if string.
-          RegExp passValid = RegExp(
-              r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+          RegExp passValid =RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$");
           // a function that validate user enter password.
           bool validatePassword(String pass) {
             String password = pass.trim();
@@ -3462,6 +3459,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                 };
                                                 // print('---check----');
                                                 // print(userData);
+                                                Navigator.of(context).pop();
                                                 userDetails(userData);
                                               }
                                             },

@@ -347,104 +347,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   ),
                                 ),
 
-
-                                // Previous Code.
-                                // Your list tiles here.
-
-                                // ListTile(
-                                //   hoverColor: mHoverColor,
-                                //   selectedTileColor: Colors.blue,
-                                //   selectedColor: Colors.white,
-                                //   title: Padding(
-                                //     padding: const EdgeInsets.only(left: 15.0),
-                                //     child: Text(drawerWidth == 60 ? '' : 'Docket', style: const TextStyle()),
-                                //   ),
-                                //   selected: _selectedDestination == 2.11,
-                                //   onTap: () {
-                                //     setState(() {
-                                //       _selectedDestination = 2.11;
-                                //
-                                //     });
-                                //     Navigator.pushReplacementNamed(
-                                //       context,
-                                //       MotowsRoutes.docketList,
-                                //       arguments: DocketListArgs(selectedDestination: 2.11, drawerWidth: widget.drawerWidth),
-                                //     );
-                                //   },
-                                // ),
-                                //
-                                // // ListTile(
-                                // //   hoverColor: mHoverColor,
-                                // //   selectedTileColor: Colors.blue,
-                                // //   selectedColor: Colors.white,
-                                // //   title: Padding(
-                                // //     padding: const EdgeInsets.only(left: 15.0),
-                                // //     child: Text(drawerWidth == 60 ? '' : 'Invoice', style: const TextStyle()),
-                                // //   ),
-                                // //   selected: _selectedDestination == 2.12,
-                                // //   onTap: () {
-                                // //     setState(() {
-                                // //       _selectedDestination = 2.12;
-                                // //
-                                // //     });
-                                // //     Navigator.pushReplacementNamed(
-                                // //       context,
-                                // //       MotowsRoutes.invoiceListRoute,
-                                // //       arguments: InvoiceArguments(selectedDestination: 2.12, drawerWidth: widget.drawerWidth),
-                                // //     );
-                                // //   },
-                                // // ),
-                                // ListTile(
-                                //   hoverColor: mHoverColor,
-                                //   selectedTileColor: Colors.blue,
-                                //   selectedColor: Colors.white,
-                                //   title: Center(
-                                //     child: Align(
-                                //       alignment: Alignment.topLeft,
-                                //       child: Padding(
-                                //         padding: const EdgeInsets.only(left: 15.0),
-                                //         child: Text(drawerWidth == 60 ? '' : 'Customer'),
-                                //       ),
-                                //     ),
-                                //   ),
-                                //   selected: _selectedDestination == 1.1,
-                                //   onTap: () {
-                                //     setState(() {
-                                //       _selectedDestination = 1.1;
-                                //     });
-                                //     Navigator.pushReplacementNamed(
-                                //       context,
-                                //       MotowsRoutes.customerListRoute,
-                                //       arguments: CustomerArguments(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
-                                //     );
-                                //   },
-                                // ),
-                                // ListTile(
-                                //   hoverColor: mHoverColor,
-                                //   selectedTileColor: Colors.blue,
-                                //   selectedColor: Colors.white,
-                                //   title: Center(
-                                //     child: Align(
-                                //       alignment: Alignment.topLeft,
-                                //       child: Padding(
-                                //         padding: const EdgeInsets.only(left: 15.0),
-                                //         child: Text(drawerWidth == 60 ? '' : 'Invoice'),
-                                //       ),
-                                //     ),
-                                //   ),
-                                //   selected: _selectedDestination == 1.21,
-                                //   onTap: () {
-                                //     setState(() {
-                                //       _selectedDestination = 1.21;
-                                //     });
-                                //     Navigator.pushReplacementNamed(
-                                //       context,
-                                //       MotowsRoutes.estimateRoutes,
-                                //       arguments: DisplayEstimateItemsArgs(selectedDestination: 1.21, drawerWidth: widget.drawerWidth),
-                                //     );
-                                //   },
-                                // ),
-
                               ],
                             ),
                           ),
@@ -603,173 +505,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ),
                     ),
                   ),
-                   //  // Master.
-                   //  drawerWidth ==60 ?InkWell(
-                   //   hoverColor: mHoverColor,
-                   //   onTap: (){
-                   //     setState(() {
-                   //       drawerWidth = 190;
-                   //     });
-                   //   },
-                   //   child: SizedBox(height: 40,
-                   //     child: Icon(Icons.person_search_sharp,
-                   //       color: _selectedDestination == 2.1
-                   //           ? Colors.blue: Colors.black54,),
-                   //   ),
-                   // ): MouseRegion(
-                   //   onHover: (event) {
-                   //     setState(() {
-                   //       if (masterExpanded == false) {
-                   //         masterHover = true;
-                   //       }
-                   //     });
-                   //   },
-                   //   onExit: (event) {
-                   //     setState(() {
-                   //       masterHover = false;
-                   //     });
-                   //   },
-                   //   child: Container(
-                   //     color: masterHover ? mHoverColor : Colors.transparent,
-                   //     child: ListTileTheme(
-                   //       contentPadding: const EdgeInsets.only(left: 10), // Remove default padding
-                   //       child: Theme(
-                   //         data: ThemeData().copyWith(dividerColor: Colors.transparent),
-                   //         child: ExpansionTile(
-                   //           onExpansionChanged: (value) {
-                   //             setState(() {
-                   //               if (value) {
-                   //                 masterExpanded = true;
-                   //                 masterHover = false;
-                   //               } else {
-                   //                 masterExpanded = false;
-                   //               }
-                   //             });
-                   //           },
-                   //           initiallyExpanded:_selectedDestination == 2.4 || _selectedDestination == 3.1 || _selectedDestination==3.2 || _selectedDestination==3.3 ||_selectedDestination==4.3,
-                   //           trailing: Padding(
-                   //             padding: const EdgeInsets.only(right: 10.0),
-                   //             child: Icon(
-                   //               Icons.keyboard_arrow_down,
-                   //               color: drawerWidth == 60 ? Colors.transparent : Colors.black87,
-                   //             ),
-                   //           ),
-                   //           title: Text(drawerWidth == 60 ? '' : "Master", style: const TextStyle(fontSize: 16)),
-                   //           leading: const SizedBox(
-                   //             width: 40, // Set a specific width here, adjust as needed
-                   //             child: Icon(Icons.person_search_sharp,),
-                   //           ),
-                   //           children: <Widget>[
-                   //             // Your list tiles here.
-                   //             ListTile(
-                   //               hoverColor: mHoverColor,
-                   //               selectedTileColor: Colors.blue,
-                   //               selectedColor: Colors.white,
-                   //               title: Center(
-                   //                 child: Align(
-                   //                   alignment: Alignment.topLeft,
-                   //                   child: Padding(
-                   //                     padding: const EdgeInsets.only(left: 15.0),
-                   //                     child: Text(drawerWidth == 60 ? '' : 'Vehicle Master'),
-                   //                   ),
-                   //                 ),
-                   //               ),
-                   //               selected: _selectedDestination == 3.1,
-                   //               onTap: () {
-                   //                 setState(() {
-                   //                   _selectedDestination = 3.1;
-                   //                 });
-                   //                 Navigator.pushReplacementNamed(
-                   //                   context,
-                   //                   MotowsRoutes.vehicleMaster,
-                   //                   arguments: VehicleMasterArguments(selectedDestination: 3.1, drawerWidth: widget.drawerWidth),
-                   //                 );
-                   //               },
-                   //             ),
-                   //             ListTile(
-                   //               hoverColor: mHoverColor,
-                   //               selectedTileColor: Colors.blue,
-                   //               selectedColor: Colors.white,
-                   //               title: Center(
-                   //                 child: Align(
-                   //                   alignment: Alignment.topLeft,
-                   //                   child: Padding(
-                   //                     padding: const EdgeInsets.only(left: 15.0),
-                   //                     child: Text(drawerWidth == 60 ? '' : 'Tax'),
-                   //                   ),
-                   //                 ),
-                   //               ),
-                   //               selected: _selectedDestination == 3.2,
-                   //               onTap: () {
-                   //                 setState(() {
-                   //                   _selectedDestination = 3.2;
-                   //                 });
-                   //                 Navigator.pushReplacementNamed(
-                   //                   context,
-                   //                   MotowsRoutes.listTaxDetailsRoutes,
-                   //                   arguments: ListTaxDetailsArgs(selectedDestination: 3.2, drawerWidth: widget.drawerWidth),
-                   //                 );
-                   //               },
-                   //             ),
-                   //             ListTile(
-                   //               hoverColor: mHoverColor,
-                   //               selectedTileColor: Colors.blue,
-                   //               selectedColor: Colors.white,
-                   //               title: Center(
-                   //                 child: Align(
-                   //                   alignment: Alignment.topLeft,
-                   //                   child: Padding(
-                   //                     padding: const EdgeInsets.only(left: 15.0),
-                   //                     child: Text(drawerWidth == 60 ? '' : 'Vendors'),
-                   //                   ),
-                   //                 ),
-                   //               ),
-                   //               selected: _selectedDestination == 3.3,
-                   //               onTap: () {
-                   //                 setState(() {
-                   //                   _selectedDestination = 3.3;
-                   //                 });
-                   //                 Navigator.pushReplacementNamed(
-                   //                   context,
-                   //                   MotowsRoutes.listVendorsRoutes,
-                   //                   arguments: ListVendorsArguments(selectedDestination: 3.3, drawerWidth: widget.drawerWidth),
-                   //                 );
-                   //               },
-                   //             ),
-                   //             ListTile(
-                   //               hoverColor: mHoverColor,
-                   //               selectedTileColor: Colors.blue,
-                   //               selectedColor: Colors.white,
-                   //               title: Center(
-                   //                 child: Align(
-                   //                   alignment: Alignment.topLeft,
-                   //                   child: Padding(
-                   //                     padding: const EdgeInsets.only(left: 15.0),
-                   //                     child: Text(drawerWidth == 60 ? '' : 'Parts'),
-                   //                   ),
-                   //                 ),
-                   //               ),
-                   //               selected: _selectedDestination == 2.4,
-                   //               onTap: () {
-                   //                 setState(() {
-                   //                   _selectedDestination = 2.4;
-                   //                 });
-                   //                 Navigator.pushReplacementNamed(
-                   //                   context,
-                   //                   MotowsRoutes.listParts,
-                   //                   arguments: ListAddItemsArguments(selectedDestination: 2.4, drawerWidth: widget.drawerWidth),
-                   //                 );
-                   //               },
-                   //             ),
-                   //
-                   //
-                   //           ],
-                   //         ),
-                   //       ),
-                   //     ),
-                   //   ),
-                   // ),
-                    //Settings.
+
                   if(snapshot.data['manager'])
                     drawerWidth==60?InkWell(  hoverColor: mHoverColor,
                       onTap: (){
@@ -855,63 +591,35 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                     }
                                 ),
                               ),
-                              // User Management.
+
                               // MouseRegion(
                               //   onEnter: (val){
-                              //    setState(() {
-                              //      userManagementColorB=true;
-                              //    });
+                              //     setState(() {
+                              //       formTemplateColor=true;
+                              //     });
                               //   },
                               //   onExit: (val){
                               //     setState(() {
-                              //       userManagementColorB=false;
+                              //       formTemplateColor=false;
                               //     });
                               //   },
                               //   child: ListTile(
-                              //       title: Center(child: Align(alignment: Alignment.topLeft,
-                              //           child: Text(drawerWidth == 60 ? "" : 'User Management',
-                              //           style: TextStyle(color: _selectedDestination==3.2?(userManagementColorB==true?Colors.black:Colors.white):Colors.black),
-                              //           ))),
-                              //       selected: _selectedDestination == 3.2,
-                              //       hoverColor:mHoverColor,
+                              //       hoverColor: mHoverColor,
                               //       selectedTileColor: Colors.blue,
                               //       selectedColor: Colors.white,
-                              //       onTap: () {
-                              //         setState(() {
-                              //           _selectedDestination=3.2;
-                              //         });
-                              //         Navigator.pushReplacementNamed(context, MotowsRoutes.userManagement,arguments: UserManagementArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.2));
+                              //       title: Align
+                              //         (alignment: Alignment.topLeft,
+                              //           child: Text(drawerWidth == 60 ? "" : 'Forms',
+                              //             style: TextStyle(color: _selectedDestination==3.3?(formTemplateColor==true?Colors.black:Colors.white):Colors.black),
+                              //           )),
+                              //       selected: _selectedDestination == 3.3,
+                              //       onTap: () { setState(() {
+                              //         _selectedDestination=3.3;
+                              //       });
+                              //       Navigator.pushReplacementNamed(context, MotowsRoutes.formTemplate,arguments: FormTemplatesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.3));
                               //       }
                               //   ),
                               // ),
-                              MouseRegion(
-                                onEnter: (val){
-                                  setState(() {
-                                    formTemplateColor=true;
-                                  });
-                                },
-                                onExit: (val){
-                                  setState(() {
-                                    formTemplateColor=false;
-                                  });
-                                },
-                                child: ListTile(
-                                    hoverColor: mHoverColor,
-                                    selectedTileColor: Colors.blue,
-                                    selectedColor: Colors.white,
-                                    title: Align
-                                      (alignment: Alignment.topLeft,
-                                        child: Text(drawerWidth == 60 ? "" : 'Forms',
-                                          style: TextStyle(color: _selectedDestination==3.3?(formTemplateColor==true?Colors.black:Colors.white):Colors.black),
-                                        )),
-                                    selected: _selectedDestination == 3.3,
-                                    onTap: () { setState(() {
-                                      _selectedDestination=3.3;
-                                    });
-                                    Navigator.pushReplacementNamed(context, MotowsRoutes.formTemplate,arguments: FormTemplatesArguments(drawerWidth: widget.drawerWidth, selectedDestination: 3.3));
-                                    }
-                                ),
-                              ),
 
                             ],
                           ),

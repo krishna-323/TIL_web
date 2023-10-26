@@ -395,7 +395,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
 
                             },
                             showAdd: false,
-                            decoration:decorationVendorAndWarehouse(hintText: 'Search Vendor New',error:searchVendor) ,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Vendor',error:searchVendor) ,
                             controller: vendorSearchController,
                             future: fetchData,
                             getSelectedValue: (VendorModelAddress value) {
@@ -510,7 +510,7 @@ class _AddNewWarrantyState extends State<AddNewWarranty> {
                               return null;
                             },
                             showAdd: false,
-                            decoration:decorationVendorAndWarehouse(hintText: 'Search Warehouse New',error:searchWarehouse) ,
+                            decoration:decorationVendorAndWarehouse(hintText: 'Search Warehouse',error:searchWarehouse) ,
                             // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
                             controller: wareHouseController,
                             future: fetchData,

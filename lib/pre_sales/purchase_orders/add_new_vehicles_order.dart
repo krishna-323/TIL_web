@@ -235,8 +235,8 @@ class _EstimateState extends State<Estimate> {
                                          "amount": lineAmount[i].text,
                                          "discount": discountPercentage[i].text,
                                          "estVehicleId": selectedVehicles[i]["new_vehicle_id"]??"",
-                                         "itemsService": selectedVehicles[i]['model_name']??"",
-                                         "priceItem": selectedVehicles[i]['onroad_price']??"",
+                                         "itemsService": selectedVehicles[i]['model']??"",
+                                         "priceItem": selectedVehicles[i]['on_road_price']??"",
                                          "quantity": units[i].text,
                                          "tax": tax[i].text,
                                        }
@@ -430,7 +430,7 @@ class _EstimateState extends State<Estimate> {
 
                           },
                           showAdd: false,
-                          decoration:textFieldVendorAndWarehouse(hintText: 'Search Vendor New',error:searchVendor) ,
+                          decoration:textFieldVendorAndWarehouse(hintText: 'Search Vendor',error:searchVendor) ,
                           controller: vendorSearchController,
                           future: fetchData,
                           getSelectedValue: (VendorModelAddress value) {
@@ -545,7 +545,7 @@ class _EstimateState extends State<Estimate> {
                               return null;
                             },
                             showAdd: false,
-                            decoration:textFieldVendorAndWarehouse(hintText: 'Search Warehouse New',error:searchWarehouse) ,
+                            decoration:textFieldVendorAndWarehouse(hintText: 'Search Warehouse',error:searchWarehouse) ,
                            // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
                             controller: wareHouseController,
                             future: fetchData,
@@ -737,7 +737,7 @@ class _EstimateState extends State<Estimate> {
                 indexNumber = index + 1;
 
                 lineAmount[index].text =
-                    (double.parse(selectedVehicles[index]['onroad_price']) *
+                    (double.parse(selectedVehicles[index]['on_road_price'].toString()) *
                         (double.parse(units[index].text))).toString();
                 if (discountPercentage[index].text != '0' ||
                     discountPercentage[index].text != '' ||
@@ -753,24 +753,37 @@ class _EstimateState extends State<Estimate> {
                   lineAmount[index].text =
                       (tempLineData + tempTax).toStringAsFixed(1);
                 }
+                else{
+                  lineAmount[index].text =
+                      (double.parse(selectedVehicles[index]['on_road_price'].toString()) *
+                          (double.parse(units[index].text))).toString();
+                }
               }
               catch (e) {
                 log(e.toString());
+                print("+++++++++++++++++++++++++++++++");
+                print(e);
+                print(lineAmount[index].text);
+                print("+++++++++++++++++++++++++++++++");
               }
               if (index == 0) {
-                subAmountTotal.text = '0';
-                subTaxTotal.text = '0';
-                subDiscountTotal.text = '0';
-                subTaxTotal.text =
-                    (double.parse(subTaxTotal.text.toString()) + tempTax)
-                        .toStringAsFixed(1);
-                subDiscountTotal.text =
-                    (double.parse(subDiscountTotal.text.toString()) +
-                        tempDiscount).toStringAsFixed(1);
-                subAmountTotal.text =
-                    (double.parse(subAmountTotal.text.toString()) +
-                        double.parse(lineAmount[index].text)).toStringAsFixed(
-                        1);
+                try{
+                  subAmountTotal.text = '0';
+                  subTaxTotal.text = '0';
+                  subDiscountTotal.text = '0';
+                  subTaxTotal.text =
+                      (double.parse(subTaxTotal.text.toString()) + tempTax)
+                          .toStringAsFixed(1);
+                  subDiscountTotal.text =
+                      (double.parse(subDiscountTotal.text.toString()) +
+                          tempDiscount).toStringAsFixed(1);
+                  subAmountTotal.text =
+                      (double.parse(subAmountTotal.text.toString()) + double.parse(lineAmount[index].text.toString())).toStringAsFixed(1);
+                }
+                catch(e){
+                  print("____________________");
+                  print(e);
+                }
               } else {
                 subDiscountTotal.text =
                     (double.parse(subDiscountTotal.text.toString()) +
@@ -798,7 +811,7 @@ class _EstimateState extends State<Estimate> {
                           const CustomVDivider(
                               height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(flex: 4, child: Center(child: Text(
-                              "${selectedVehicles[index]['model_name']}"))),
+                              "${selectedVehicles[index]['model']}"))),
                           const CustomVDivider(
                               height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
@@ -839,7 +852,7 @@ class _EstimateState extends State<Estimate> {
                           const CustomVDivider(
                               height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Center(child: Text(
-                              "${selectedVehicles[index]['onroad_price']}"))),
+                              "${selectedVehicles[index]['on_road_price']}"))),
                           const CustomVDivider(
                               height: 80, width: 1, color: mTextFieldBorder),
                           Expanded(child: Padding(
@@ -1179,7 +1192,7 @@ class _EstimateState extends State<Estimate> {
                                                     discountRupees.add(TextEditingController(text: '0'));
                                                     discountPercentage.add(TextEditingController(text: '0'));
                                                     tax.add(TextEditingController(text: '0'));
-                                                    lineAmount.add(TextEditingController());
+                                                    lineAmount.add(TextEditingController(text: "0"));
                                                     subAmountTotal.text = '0';
                                                     selectedVehicles.add(value);
                                                   }
@@ -1375,7 +1388,7 @@ class _EstimateState extends State<Estimate> {
                                     Expanded(child: Text("Model")),
                                     Expanded(child: Text("Variant")),
                                     Expanded(child: Text("On road price")),
-                                    Expanded(child: Text("Color")),
+                                    Expanded(child: Text("Year of Manufacture")),
                                   ],
                                 ),
                               ),
@@ -1395,7 +1408,7 @@ class _EstimateState extends State<Estimate> {
                                             onPressed: () {
                                               setState(() {
                                                 Navigator.pop(context,displayList[i]);
-                                                storeGeneralId=displayList[i]["general_id"];
+                                                storeGeneralId=displayList[i]["excel_id"];
                                                 for(var tempValue in generalIdMatch){
                                                   if(tempValue == storeGeneralId){
                                                     setState((){
@@ -1421,25 +1434,25 @@ class _EstimateState extends State<Estimate> {
                                                       child: SizedBox(
                                                         height: 20,
                                                         child: Text(
-                                                            displayList[i]['model_name']??""),
+                                                            displayList[i]['model']??""),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: SizedBox(
                                                         height: 20,
-                                                        child: Text(displayList[i]['varient_name']??''),
+                                                        child: Text(displayList[i]['varient']??''),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: SizedBox(
                                                         height: 20,
-                                                        child: Text(displayList[i]['onroad_price'].toString()),
+                                                        child: Text(displayList[i]['on_road_price'].toString()),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       child: SizedBox(
                                                         height: 20,
-                                                        child: Text(displayList[i]['varient_color1']??""),
+                                                        child: Text(displayList[i]['year_of_manufacture']??""),
                                                       ),
                                                     ),
                                                   ],
@@ -1883,7 +1896,7 @@ class _EstimateState extends State<Estimate> {
 
   Future getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
+    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {
