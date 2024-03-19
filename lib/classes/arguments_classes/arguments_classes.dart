@@ -72,3 +72,9 @@ class DisplayEstimateItemsArgs{
   final double selectedDestination;
   DisplayEstimateItemsArgs({required this.drawerWidth,required this.selectedDestination});
 }
+
+class ListRFQArgs{
+  final double drawerWidth;
+  final double selectedDestination;
+  ListRFQArgs({required this.drawerWidth,required this.selectedDestination});
+}

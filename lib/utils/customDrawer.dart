@@ -226,8 +226,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                         alignment: Alignment.topLeft,
                                         child: Padding(
                                           padding: const EdgeInsets.only(left: 15.0),
-                                          child: Text(drawerWidth == 60 ? '' : 'Vehicle Orders',
-                                            style: TextStyle(color:_selectedDestination==1.1?(vehicleOrdersColorB==true? Colors.black:Colors.white):Colors.black),),
+                                          child: Tooltip(message: 'Request for quotation',
+                                            child: Text(drawerWidth == 60 ? '' : 'Vehicle RFQ',
+                                              style: TextStyle(color:_selectedDestination==1.1?(vehicleOrdersColorB==true? Colors.black:Colors.white):Colors.black),),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -238,8 +240,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                       });
                                       Navigator.pushReplacementNamed(
                                         context,
-                                        MotowsRoutes.estimateRoutes,
-                                        arguments: DisplayEstimateItemsArgs(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
+                                        MotowsRoutes.listFRQ,
+                                        arguments: ListRFQArgs(selectedDestination: 1.1, drawerWidth: widget.drawerWidth),
                                       );
                                     },
                                   ),

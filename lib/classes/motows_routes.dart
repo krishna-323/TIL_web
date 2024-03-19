@@ -33,5 +33,6 @@ abstract class MotowsRoutes{
   static const String docketList="/docketList";
   static const String listTaxDetailsRoutes = "/tax";
   static const String listVendorsRoutes = "/vendors";
+  static const String listFRQ = "/listFRQ";
 }
 

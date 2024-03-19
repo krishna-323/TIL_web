@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: CustomAppBar2()),
       body: Row(
         children: [
-          SelectionArea(child: CustomDrawer(drawerWidth,0)),
+          CustomDrawer(drawerWidth,0),
           const VerticalDivider(
             width: 1,
             thickness: 1,

@@ -20,6 +20,8 @@ class CustomTextFieldSearch extends StatefulWidget {
   /// Used for customizing the display of the TextField
   final InputDecoration? decoration;
 
+  final GestureTapCallback? onTapAdd;
+
   /// Used for customizing the style of the text within the TextField
   final TextStyle? textStyle;
 
@@ -47,8 +49,10 @@ class CustomTextFieldSearch extends StatefulWidget {
         this.scrollbarDecoration,
         this.itemsInView = 3,
         this.minStringLength = 0,
-        this.validator})
+        this.validator, this.onTapAdd})
       : super(key: key);
+
+
 
 
 
@@ -233,9 +237,30 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
               // remove the focus node so we aren't editing the text
               FocusScope.of(context).unfocus();
             },
-            child: const ListTile(
-              title: Text('No matching items.'),
-              trailing: Icon(Icons.cancel,size: 14),
+            child: Column(
+              children: [
+                InkWell(hoverColor: mHoverColor,onTap: (){
+                  widget.onTapAdd!();
+                  setState(() {
+                    itemsFound = false;
+                  });
+                  // reset the list so it's empty and not visible
+                  resetList();
+                  // remove the focus node so we aren't editing the text
+                  FocusScope.of(context).unfocus();
+                },child:  const SizedBox(height: 40,child: Padding(
+                  padding: EdgeInsets.only(left: 16.0,top: 8,bottom: 2),
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("+ Add"),
+                    ],
+                  ),
+                ))),
+                const ListTile(
+                  title: Text('No matching items.'),
+                  trailing: Icon(Icons.cancel,size: 14),
+                ),
+              ],
             ),
           ),
         ],
@@ -248,7 +273,7 @@ class _CustomTextFieldSearchState extends State<CustomTextFieldSearch> {
         return Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if(i==0 && widget.showAdd!=false)
-              InkWell(hoverColor: mHoverColor,onTap: (){},child:  const SizedBox(height: 40,child: Padding(
+              InkWell(hoverColor: mHoverColor,onTap: widget.onTapAdd,child:  const SizedBox(height: 40,child: Padding(
                 padding: EdgeInsets.only(left: 16.0,top: 8,bottom: 2),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

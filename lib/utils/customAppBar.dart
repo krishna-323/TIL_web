@@ -42,7 +42,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     const CustomPopupMenuItem(height: 40,
       value: '1',
-      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 4)))),
 
     ),
     const CustomPopupMenuItem(height: 40,
@@ -405,7 +405,7 @@ class _CustomAppBar2State extends State<CustomAppBar2> {
 
     const CustomPopupMenuItem(height: 40,
       value: '1',
-      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 14)))),
+      child: Center(child: SizedBox(width: 350,child: Text('New Vehicle Order',maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 4)))),
 
     ),
     const CustomPopupMenuItem(height: 40,

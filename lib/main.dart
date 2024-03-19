@@ -13,6 +13,8 @@ import 'package:new_project/pre_sales/vehicle_orders/list_vechile_orders.dart';
 import 'package:new_project/pre_sales/warranty/warranty.dart';
 import 'package:new_project/upload_po/upload_po.dart';
 import 'package:new_project/user_mangment/display_user_list.dart';
+import 'package:new_project/vehicle_RFQ/create_RFQ.dart';
+import 'package:new_project/vehicle_RFQ/list_RFQ.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'Master/tax/list_tax_details.dart';
@@ -83,8 +85,7 @@ class _MyAppState extends State<MyApp> {
               newScreen = ListVehicleOrders(arg:listVehicleArguments);
             }
             break;
-            case
-            MotowsRoutes.estimateRoutes:{
+            case MotowsRoutes.estimateRoutes:{
               DisplayEstimateItemsArgs displayEstimateItemsArgs;
               if(settings.arguments!=null){
                 displayEstimateItemsArgs = settings.arguments as DisplayEstimateItemsArgs ;
@@ -94,6 +95,17 @@ class _MyAppState extends State<MyApp> {
                     drawerWidth: 190, selectedDestination: 1.1);
               }
               newScreen= DisplayEstimateItems(args: displayEstimateItemsArgs,);
+            }
+            break;
+            case MotowsRoutes.listFRQ:{
+              ListRFQArgs listFRQ;
+              if(settings.arguments!=null){
+                listFRQ = settings.arguments as ListRFQArgs ;
+              }
+              else {
+                listFRQ = ListRFQArgs(drawerWidth: 190, selectedDestination: 1.1);
+              }
+              newScreen= ListRFQ(args: listFRQ);
             }
             break;
             case MotowsRoutes.partsOrderListRoutes :
@@ -336,7 +348,7 @@ class _InitialScreenState extends State<InitialScreen> {
       isLoading
           ? const Center(child: SizedBox(width: 100,height: 100,child: CircularProgressIndicator()))
           : authToken == ""
-          ? const LoginPage(): const MyHomePage(),
+          ? const LoginPage():  CreateRFQ(selectedDestination: 1, drawerWidth: 190,),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
 
     );
