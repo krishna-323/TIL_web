@@ -348,7 +348,7 @@ class _InitialScreenState extends State<InitialScreen> {
       isLoading
           ? const Center(child: SizedBox(width: 100,height: 100,child: CircularProgressIndicator()))
           : authToken == ""
-          ? const LoginPage():  CreateRFQ(selectedDestination: 1, drawerWidth: 190,),
+          ? const LoginPage(): const MyHomePage(),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
 
     );
