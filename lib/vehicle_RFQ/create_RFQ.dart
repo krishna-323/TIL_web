@@ -87,9 +87,9 @@ class _CreateRFQState extends State<CreateRFQ> {
     super.initState();
     salesInvoiceDate.text=DateFormat('dd-MM-yyyy').format(DateTime.now());
     getInitialData().whenComplete(() {
-      getAllVehicleVariant();
+      // getAllVehicleVariant();
       fetchVendorsData();
-      fetchTaxData();
+      // fetchTaxData();
     });
   }
   @override
@@ -123,7 +123,198 @@ class _CreateRFQState extends State<CreateRFQ> {
 
   };
   int startVal=0;
-  List vehicleList = [];
+  List vehicleList = [
+    {
+      "excel_id": "EXC_20869",
+      "make": "CV-FML",
+      "model": "T1 AMB",
+      "varient": "T006860023434",
+      "date": "16-7-34",
+      "on_road_price": 7700000,
+      "color": "Grey",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20870",
+      "make": "CV-TDCV",
+      "model": "KC3C1",
+      "varient": "KC3C1",
+      "date": "16-7-35",
+      "on_road_price": 6800000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20871",
+      "make": "CV-TDCV",
+      "model": "F8C6F",
+      "varient": "F8C6F",
+      "date": "15-7-36",
+      "on_road_price": 8651500,
+      "color": "Black",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20872",
+      "make": "CV-TML",
+      "model": "LPO 1316",
+      "varient": "27500855000R",
+      "date": "16-8-6",
+      "on_road_price": 7100000,
+      "color": "White",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20873",
+      "make": "CV-FML",
+      "model": "T1 MB",
+      "varient": "T006860016733",
+      "date": "15-7-33",
+      "on_road_price": 4200000,
+      "color": "Grey",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20874",
+      "make": "CV-TML",
+      "model": "YODHA",
+      "varient": "28985631ABFR",
+      "date": "16-7-34",
+      "on_road_price": 2725000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20875",
+      "make": "CV-TML",
+      "model": "XENON DC",
+      "varient": "55025831ABFR",
+      "date": "16-7-35",
+      "on_road_price": 3800000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20876",
+      "make": "CV-TML",
+      "model": "INTRA V20",
+      "varient": "55461223AKOR",
+      "date": "15-7-36",
+      "on_road_price": 2325000,
+      "color": "Black",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20877",
+      "make": "CV-TDCV",
+      "model": "V3T6F",
+      "varient": "V3T6F",
+      "date": "16-8-6",
+      "on_road_price": 11537240,
+      "color": "White",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20878",
+      "make": "CV-TML",
+      "model": "LPK 2518",
+      "varient": "41061262000RZK22",
+      "date": "16-8-7",
+      "on_road_price": 8875000,
+      "color": "Grey",
+      "year_of_manufacture": "2023"
+    },
+    {
+      "excel_id": "EXC_20879",
+      "make": "CV-TML",
+      "model": "LPK 2516",
+      "varient": "21715238000RBP20",
+      "date": "15-7-32",
+      "on_road_price": 7875000,
+      "color": "Grey",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20880",
+      "make": "CV-TML",
+      "model": "SIGNA 1618",
+      "varient": "21827336000RBH31",
+      "date": "15-7-33",
+      "on_road_price": 6075000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20881",
+      "make": "CV-TML",
+      "model": "SIGNA 2823",
+      "varient": "50971038000R",
+      "date": "16-7-34",
+      "on_road_price": 10000000,
+      "color": "Black",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20882",
+      "make": "CV-TML",
+      "model": "LPT 810",
+      "varient": "26426438000R",
+      "date": "16-7-35",
+      "on_road_price": 3300000,
+      "color": "White",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20883",
+      "make": "CV-TML",
+      "model": "SFC 407",
+      "varient": "26522731000R",
+      "date": "15-7-36",
+      "on_road_price": 2750000,
+      "color": "Grey",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20884",
+      "make": "CV-TML",
+      "model": "SIGNA 2518",
+      "varient": "50302148000R",
+      "date": "16-8-6",
+      "on_road_price": 6580000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20885",
+      "make": "CV-TML",
+      "model": "LPT 809",
+      "varient": "KB080938KENR",
+      "date": "16-8-7",
+      "on_road_price": 3225000,
+      "color": "Red",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20886",
+      "make": "CV-TML",
+      "model": "LPT 1216",
+      "varient": "KY111648KENR",
+      "date": "15-7-36",
+      "on_road_price": 4000000,
+      "color": "Black",
+      "year_of_manufacture": "2022"
+    },
+    {
+      "excel_id": "EXC_20887",
+      "make": "CV-TML",
+      "model": "ULTRA T9",
+      "varient": "55069139000R",
+      "date": "16-8-6",
+      "on_road_price": 3875000,
+      "color": "White",
+      "year_of_manufacture": "2022"
+    }
+  ];
   List displayList=[];
   List selectedVehicles=[];
   List selectedVehiclesList = [];
@@ -140,34 +331,34 @@ class _CreateRFQState extends State<CreateRFQ> {
   String orgId ='';
   List taxCodes=[];
   List taxPercentage =[];
-  Future fetchTaxData() async {
-    dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
-    try{
-      await getData(context: context,url: url).then((value) {
-        setState(() {
-          if(value!=null){
-            response = value;
-            taxCodes = response;
-            if(taxCodes.isNotEmpty){
-              for(int i=0;i<taxCodes.length;i++){
-                taxPercentage.add(taxCodes[i]['tax_total']);
-              }
-              // print('------taxCodes----');
-              // print(taxPercentage);
-            }
-          }
-          loading = false;
-        });
-      });
-    }
-    catch(e){
-      logOutApi(context: context,response: response,exception: e.toString());
-      setState(() {
-        loading = false;
-      });
-    }
-  }
+  // Future fetchTaxData() async {
+  //   dynamic response;
+  //   String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
+  //   try{
+  //     await getData(context: context,url: url).then((value) {
+  //       setState(() {
+  //         if(value!=null){
+  //           response = value;
+  //           taxCodes = response;
+  //           if(taxCodes.isNotEmpty){
+  //             for(int i=0;i<taxCodes.length;i++){
+  //               taxPercentage.add(taxCodes[i]['tax_total']);
+  //             }
+  //             // print('------taxCodes----');
+  //             // print(taxPercentage);
+  //           }
+  //         }
+  //         loading = false;
+  //       });
+  //     });
+  //   }
+  //   catch(e){
+  //     logOutApi(context: context,response: response,exception: e.toString());
+  //     setState(() {
+  //       loading = false;
+  //     });
+  //   }
+  // }
   final validationKey=GlobalKey<FormState>();
   final focusToController=FocusNode();
   List<String> generalIdMatch = [];
@@ -266,7 +457,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                     }
                                     );
                                   }
-                                  postEstimate(postDetails);
+                                  // postEstimate(postDetails);
                                 }
                               },
 
@@ -390,9 +581,13 @@ class _CreateRFQState extends State<CreateRFQ> {
                         decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(4)),
                         child:   LayoutBuilder(
                             builder: (BuildContext context, BoxConstraints constraints) {
-
                               return CustomPopupMenuButton(
-                                decoration: customPopupDecoration(hintText:selectedType1),
+                                decoration: customPopupDecoration(hintText:selectedType1,onTap: () {
+                                  setState(() {
+                                    selectedType1 = "Select Type";
+                                    selectType2List =[];
+                                  });
+                                },),
                                 // hintText: "ss",
                                 //textController: customerTypeController,
                                 childWidth: constraints.maxWidth,
@@ -401,6 +596,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 itemBuilder:  (BuildContext context) {
                                   return ['Customer', "Dealer"].map((value) {
                                     return CustomPopupMenuItem(
+
                                       value: value,
                                       text:value,
                                       child: Container(),
@@ -438,11 +634,13 @@ class _CreateRFQState extends State<CreateRFQ> {
                             builder: (BuildContext context, BoxConstraints constraints) {
 
                               return CustomPopupMenuButton(
-                                decoration: customPopupDecoration(hintText:selectedType2),
+                                decoration: customPopupDecoration(hintText:selectedType2,onTap: (){
+                                  selectedType2 = "Select Type";
+                                }),
                                 // hintText: "ss",
                                 //textController: customerTypeController,
                                 childWidth: constraints.maxWidth,
-                                offset: const Offset(1, 30),
+                                offset: const Offset(1, 40),
                                 tooltip: '',
                                 itemBuilder:  (BuildContext context) {
                                   return selectedType1 ==""?[]:selectType2List.map((value) {
@@ -471,7 +669,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                   ],
                 ),
               ),
-              const CustomVDivider(height: 180, width: 1, color: mTextFieldBorder),
+              const CustomVDivider(height: 190, width: 1, color: mTextFieldBorder),
 
               ///Bill to details
               Expanded(
@@ -482,8 +680,8 @@ class _CreateRFQState extends State<CreateRFQ> {
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:  [
                            Padding(
-                            padding: EdgeInsets.only(bottom: 2,top: 2),
-                            child: Text("Bill to Details $getBillTo",style: TextStyle(fontSize: 16)),
+                            padding: const EdgeInsets.only(bottom: 2,top: 2),
+                            child: Text("Bill to Details $getBillTo",style: const TextStyle(fontSize: 16)),
                           ),
                           if(showCustomerDetails==true)
                             SizedBox(
@@ -589,41 +787,120 @@ class _CreateRFQState extends State<CreateRFQ> {
                   ],
                 ),
               ),
-              const CustomVDivider(height: 180, width: 1, color: mTextFieldBorder),
+              const CustomVDivider(height: 190, width: 1, color: mTextFieldBorder),
 
               Expanded(
-                child: Column(
+                child: Column(crossAxisAlignment:  CrossAxisAlignment.start,
                   children:  [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 18.0,top: 8,right: 8,bottom: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18.0,top: 8,right: 8,bottom: 4),
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:  [
                           Padding(
-                            padding: EdgeInsets.only(bottom: 2,top: 2),
-                            child: Text("Finance Details",style: TextStyle(fontSize: 16)),
+                            padding: const EdgeInsets.only(bottom: 2,top: 2),
+                            child: Text("Ship to Details $getBillTo",style: const TextStyle(fontSize: 16)),
                           ),
+                          if(showCustomerDetails==true)
+                            SizedBox(
+                              height: 24,
+                              child:  OutlinedIconMButton(
+                                text: 'Change Details',
+                                textColor: mSaveButton,
+                                borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
+                                onTap: (){
+                                  setState(() {
+                                    showCustomerDetails=false;
+                                    wareHouseController.clear();
+                                  });
+                                },
+                              ),
+                            )
+
                         ],
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                    Container(
-                      height: 100,
-                      width: 400,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 18.0,left: 15,right: 15),
-                        child: Column(
+                    if(showCustomerDetails==false)
+                      const SizedBox(height: 30,),
+                    if(showCustomerDetails==false)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18.0,right: 18),
+                          child: CustomTextFieldSearch(
+                            onTapAdd: (){
+
+                            },
+                            validator: (value){
+                              if(value==null || value.trim().isEmpty){
+                                setState(() {
+                                  isBillToSelected=true;
+                                });
+                                return "Search $getBillTo Address";
+                              }
+                              return null;
+                            },
+                            showAdd: true,
+                            decoration:textFieldVendorAndWarehouse(hintText: 'Search $getBillTo Address',error:isBillToSelected) ,
+                            // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
+                            controller: wareHouseController,
+                            future: fetchData,
+                            getSelectedValue: (VendorModelAddress value) {
+                              setState(() {
+                                showCustomerDetails=true;
+                                wareHouse ={
+                                  'Name':value.label,
+                                  'city': value.city,
+                                  'state': value.state,
+                                  'street': value.street,
+                                  'zipcode': value.zipcode,
+                                };
+                                isBillToSelected=false;
+                              });
+                            },
+
+                          ),
+                        ),
+                      ),
+                    if(showCustomerDetails)
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder)),
-                                child: const TextField(decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 12),maxLines: 10,),
-                              ),
+                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child:  Text("Street")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("City")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("State")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+
+                            Row(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 70,child: Text("ZipCode :")),
+                                const Text(": "),
+                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -631,19 +908,19 @@ class _CreateRFQState extends State<CreateRFQ> {
           ),
           const Divider(color: mTextFieldBorder,height: 1),
           const Padding(
-            padding:  EdgeInsets.only(left: 18.0,top: 8),
+            padding:  EdgeInsets.only(left: 20.0,top: 8),
             child: Text("Notes",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
           ),
           Container(
             height: 100,
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.only(top: 4.0,left: 15,right: 15),
+              padding: const EdgeInsets.only(top: 4.0,left: 18,right: 18),
               child: Column(
                 children: [
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(color: const Color(0xd5f8f7f7),border: Border.all(color: mTextFieldBorder)),
+                      decoration: BoxDecoration(color: const Color(0xd5f8f7f7),border: Border.all(color: mTextFieldBorder),borderRadius:BorderRadius.circular(8) ),
                       child: const TextField(decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 12),maxLines: 10,),
                     ),
                   ),
@@ -670,7 +947,8 @@ class _CreateRFQState extends State<CreateRFQ> {
 
             ///-----------------------------Table Starts-------------------------
 
-            Container(color: const Color(0xffffffff),
+            Container(
+              color: const Color(0xffffffff),
               height: 65,
               child: const Row(
                 children: [
@@ -1010,7 +1288,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                 children: [
                   Expanded(
                     child: Container(
-                      decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),color: const Color(0xd5f8f7f7),),
+                      decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(8),color: const Color(0xd5f8f7f7),),
                       child: const TextField(decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 14),maxLines: 10,),
                     ),
                   ),
@@ -1056,17 +1334,17 @@ class _CreateRFQState extends State<CreateRFQ> {
                                     controller: brandNameController,
                                     decoration: textFieldBrandNameField(hintText: 'Search Brand',
                                         onTap:()async{
-                                          if(brandNameController.text.isEmpty || brandNameController.text==""){
-                                            await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                          }
+                                          // if(brandNameController.text.isEmpty || brandNameController.text==""){
+                                          //   await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                          // }
                                         }
                                     ),
                                     onChanged: (value) async{
                                       if(value.isNotEmpty || value!=""){
-                                        await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
+                                        // await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
                                       }
                                       else if(value.isEmpty || value==""){
-                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
                                       }
                                     },
                                   ),
@@ -1077,16 +1355,16 @@ class _CreateRFQState extends State<CreateRFQ> {
                                   child: TextFormField(
                                     decoration:  textFieldModelNameField(hintText: 'Search Model',onTap: ()async{
                                       if(modelNameController.text.isEmpty || modelNameController.text==""){
-                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
                                       }
                                     }),
                                     controller: modelNameController,
                                     onChanged: (value)async {
                                       if(value.isNotEmpty || value!=""){
-                                        await  fetchModelName(modelNameController.text).whenComplete(() =>setState((){}));
+                                        // await  fetchModelName(modelNameController.text).whenComplete(() =>setState((){}));
                                       }
                                       else if(value.isEmpty || value==""){
-                                        await getAllVehicleVariant().whenComplete(()=> setState((){}));
+                                        // await getAllVehicleVariant().whenComplete(()=> setState((){}));
                                       }
                                     },
                                   ),
@@ -1098,15 +1376,15 @@ class _CreateRFQState extends State<CreateRFQ> {
                                     controller: variantController,
                                     decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
                                       if(variantController.text.isEmpty || variantController.text==""){
-                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
                                       }
                                     }),
                                     onChanged: (value) async{
                                       if(value.isNotEmpty || value!=""){
-                                        await fetchVariantName(variantController.text).whenComplete(() => setState((){}));
+                                        // await fetchVariantName(variantController.text).whenComplete(() => setState((){}));
                                       }
                                       else if(value.isEmpty || value==""){
-                                        await getAllVehicleVariant().whenComplete(() => setState((){}));
+                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
                                       }
                                     },
                                   ),
@@ -1403,166 +1681,166 @@ class _CreateRFQState extends State<CreateRFQ> {
     );
   }
 
-  Future fetchModelName(String modelName)async{
-    dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
-    try{
-      await getData(url:url ,context:context ).then((value) {
-        setState(() {
-          if(value!=null){
-            response=value;
-            vehicleList=response;
-            displayList=[];
-            startVal=0;
-            try{
-              if(displayList.isEmpty){
-                if(vehicleList.length>15){
-                  for(int i=startVal;i<startVal+15;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-                else{
-                  for(int i=startVal;i<vehicleList.length;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-              }
-            }
-            catch(e){
-              log("Excepted Type $e");
-            }
-          }
-        });
-      }
-      );
-    }
-    catch(e){
-      logOutApi(context: context,response: response,exception: e.toString());
+  // Future fetchModelName(String modelName)async{
+  //   dynamic response;
+  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
+  //   try{
+  //     await getData(url:url ,context:context ).then((value) {
+  //       setState(() {
+  //         if(value!=null){
+  //           response=value;
+  //           vehicleList=response;
+  //           displayList=[];
+  //           startVal=0;
+  //           try{
+  //             if(displayList.isEmpty){
+  //               if(vehicleList.length>15){
+  //                 for(int i=startVal;i<startVal+15;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //               else{
+  //                 for(int i=startVal;i<vehicleList.length;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           catch(e){
+  //             log("Excepted Type $e");
+  //           }
+  //         }
+  //       });
+  //     }
+  //     );
+  //   }
+  //   catch(e){
+  //     logOutApi(context: context,response: response,exception: e.toString());
+  //
+  //   }
+  // }
+  //
+  // Future fetchBrandName(String brandName)async{
+  //   dynamic response;
+  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
+  //   try{
+  //     await getData(context: context,url: url).then((value) {
+  //       setState(() {
+  //         if(value!=null){
+  //           response=value;
+  //           vehicleList=response;
+  //           displayList=[];
+  //           startVal=0;
+  //           try{
+  //             if(displayList.isEmpty){
+  //               if(vehicleList.length>15){
+  //                 for(int i=startVal;i<startVal+15;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //               else{
+  //                 for(int i=startVal;i<vehicleList.length;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           catch(e){
+  //             log("Excepted Type $e");
+  //           }
+  //         }
+  //       });
+  //     });
+  //   }
+  //   catch(e){
+  //     logOutApi(context: context,exception: e.toString(),response: response);
+  //   }
+  // }
+  //
+  // Future fetchVariantName(String variantName)async{
+  //   dynamic response;
+  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
+  //   try{
+  //     await getData(context:context ,url: url).then((value) {
+  //       setState((){
+  //         if(value!=null){
+  //           response=value;
+  //           vehicleList=response;
+  //           displayList=[];
+  //           startVal=0;
+  //           try{
+  //             if(displayList.isEmpty){
+  //               if(vehicleList.length>15){
+  //                 for(int i=startVal;i<startVal+15;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //               else{
+  //                 for(int i=startVal;i<vehicleList.length;i++){
+  //                   displayList.add(vehicleList[i]);
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           catch(e){
+  //             log("Excepted Type $e");
+  //           }
+  //         }
+  //       });
+  //     });
+  //   }
+  //   catch(e){
+  //     logOutApi(context:context ,response: response,exception: e.toString());
+  //   }
+  // }
 
-    }
-  }
-
-  Future fetchBrandName(String brandName)async{
-    dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
-    try{
-      await getData(context: context,url: url).then((value) {
-        setState(() {
-          if(value!=null){
-            response=value;
-            vehicleList=response;
-            displayList=[];
-            startVal=0;
-            try{
-              if(displayList.isEmpty){
-                if(vehicleList.length>15){
-                  for(int i=startVal;i<startVal+15;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-                else{
-                  for(int i=startVal;i<vehicleList.length;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-              }
-            }
-            catch(e){
-              log("Excepted Type $e");
-            }
-          }
-        });
-      });
-    }
-    catch(e){
-      logOutApi(context: context,exception: e.toString(),response: response);
-    }
-  }
-
-  Future fetchVariantName(String variantName)async{
-    dynamic response;
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
-    try{
-      await getData(context:context ,url: url).then((value) {
-        setState((){
-          if(value!=null){
-            response=value;
-            vehicleList=response;
-            displayList=[];
-            startVal=0;
-            try{
-              if(displayList.isEmpty){
-                if(vehicleList.length>15){
-                  for(int i=startVal;i<startVal+15;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-                else{
-                  for(int i=startVal;i<vehicleList.length;i++){
-                    displayList.add(vehicleList[i]);
-                  }
-                }
-              }
-            }
-            catch(e){
-              log("Excepted Type $e");
-            }
-          }
-        });
-      });
-    }
-    catch(e){
-      logOutApi(context:context ,response: response,exception: e.toString());
-    }
-  }
-
-  Future getAllVehicleVariant() async {
-    dynamic response;
-    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
-    try {
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null) {
-            response = value;
-            vehicleList = response;
-            startVal=0;
-            displayList=[];
-            if(displayList.isEmpty){
-              if(vehicleList.length>15){
-                for(int i=startVal;i<startVal+15;i++){
-                  displayList.add(vehicleList[i]);
-                }
-              }
-              else{
-                for(int i=startVal;i<vehicleList.length;i++){
-                  displayList.add(vehicleList[i]);
-                }
-              }
-            }
-          }
-          loading = false;
-        });
-      });
-    } catch (e) {
-      logOutApi(context: context, exception: e.toString(), response: response);
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-  postEstimate(estimate)async {
-    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
-    postData(context: context,requestBody:estimate ,url:url ).then((value) {
-      setState(() {
-        if(value!=null){
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
-          Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
-        }
-      });
-    });
-
-  }
+  // Future getAllVehicleVariant() async {
+  //   dynamic response;
+  //   String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
+  //   try {
+  //     await getData(context: context, url: url).then((value) {
+  //       setState(() {
+  //         if (value != null) {
+  //           response = value;
+  //           vehicleList = response;
+  //           startVal=0;
+  //           displayList=[];
+  //           if(displayList.isEmpty){
+  //             if(vehicleList.length>15){
+  //               for(int i=startVal;i<startVal+15;i++){
+  //                 displayList.add(vehicleList[i]);
+  //               }
+  //             }
+  //             else{
+  //               for(int i=startVal;i<vehicleList.length;i++){
+  //                 displayList.add(vehicleList[i]);
+  //               }
+  //             }
+  //           }
+  //         }
+  //         loading = false;
+  //       });
+  //     });
+  //   } catch (e) {
+  //     logOutApi(context: context, exception: e.toString(), response: response);
+  //     setState(() {
+  //       loading = false;
+  //     });
+  //   }
+  // }
+  // postEstimate(estimate)async {
+  //   String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/add_estimate_vehicle';
+  //   postData(context: context,requestBody:estimate ,url:url ).then((value) {
+  //     setState(() {
+  //       if(value!=null){
+  //
+  //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data Saved')));
+  //         Navigator.of(context).pushNamed(MotowsRoutes.estimateRoutes);
+  //       }
+  //     });
+  //   });
+  //
+  // }
   textFieldSalesInvoice({required String hintText, bool? error}) {
     return  InputDecoration(border: InputBorder.none,
       constraints: BoxConstraints(maxHeight: error==true ? 60:35),
@@ -1615,13 +1893,15 @@ class _CreateRFQState extends State<CreateRFQ> {
     );
   }
 
-  customPopupDecoration({required String hintText}) {
+  customPopupDecoration({required String hintText , GestureTapCallback? onTap}) {
     return InputDecoration(
       hoverColor: mHoverColor,
-      suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
+      enabledBorder:  const OutlineInputBorder(borderSide: BorderSide.none),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+     suffixIcon: InkWell(onTap: onTap,child:  Icon(hintText=="Select Type" ? Icons.arrow_drop_down_circle_sharp : Icons.clear, color: mSaveButton, size: 14)),
       constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+      hintStyle: const TextStyle(fontSize: 14, color: Colors.black,),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 0, 0, 10),
 
@@ -1631,6 +1911,8 @@ class _CreateRFQState extends State<CreateRFQ> {
   lineCustomPopupDecoration({required String hintText}) {
     return InputDecoration(
       hoverColor: mHoverColor,
+      enabledBorder:  const OutlineInputBorder(borderSide: BorderSide.none),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 30),
       hintText: hintText,
@@ -1674,10 +1956,26 @@ class VendorModelAddress {
 
 
 
-class HeaderCard extends StatelessWidget {
+class HeaderCard extends StatefulWidget {
   final double width;
 
   const HeaderCard({Key? key, required this.width}) : super(key: key);
+
+  @override
+  State<HeaderCard> createState() => _HeaderCardState();
+}
+
+class _HeaderCardState extends State<HeaderCard> {
+
+  DateTime date = DateTime.now(); // Example: current date
+  String formattedDate = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    formattedDate = DateFormat('dd-MMM-yyyy').format(date);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -1691,12 +1989,12 @@ class HeaderCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.only(top: 8),
+                  padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Dealer Name",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
-                Container(color: Colors.grey[200],width: 250,height: 28,alignment: Alignment.centerLeft,
+                Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 250,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
-                    padding: EdgeInsets.only(left: 4.0),
+                    padding: EdgeInsets.only(left: 8.0),
                     child: Text("ACsd XYZ",),
                   ),
                 ),
@@ -1708,10 +2006,10 @@ class HeaderCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.only(top: 8),
+                  padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Dealer Code",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
-                Container(color: Colors.grey[200],width: 150,height: 28,alignment: Alignment.centerLeft,
+                Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 4.0),
                     child: Text("A13389",),
@@ -1725,10 +2023,10 @@ class HeaderCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.only(top: 8),
+                  padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Order Number",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
-                Container(color: Colors.grey[200],width: 150,height: 28,alignment: Alignment.centerLeft,
+                Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 4.0),
                     child: Text("ORD123F45678",),
@@ -1738,17 +2036,17 @@ class HeaderCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0,bottom: 8,right: 8),
+            padding: const EdgeInsets.only(left: 8.0,bottom: 8,right: 14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.only(top: 8),
+                  padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Order Date",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
-                Container(color: Colors.grey[200],width: 150,height: 28,alignment: Alignment.centerLeft,
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 4.0),
-                    child: Text("22-03-2024",),
+                Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
+                  child:  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(formattedDate),
                   ),
                 ),
               ],

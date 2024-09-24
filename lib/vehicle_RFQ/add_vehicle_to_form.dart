@@ -785,6 +785,8 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   customPopupDecoration({required String hintText}) {
     return InputDecoration(
       hoverColor: mHoverColor,
+      enabledBorder:  const OutlineInputBorder(borderSide: BorderSide.none),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
@@ -798,15 +800,15 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   lineCustomPopupDecoration({required String hintText}) {
     return InputDecoration(
       hoverColor: mHoverColor,
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+      focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 30),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
       counterText: '',
       contentPadding: const EdgeInsets.only(left: 8,top: 1,bottom: 16),
-
     );
-
   }
 
   Widget showDialogBox(){
