@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/utils/custom_loader.dart';
@@ -46,6 +47,10 @@ class _DealerListState extends State<DealerList> {
   List listCompanyDealer = [];
   var expandedId="";
   int startVal=0;
+
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
@@ -110,21 +115,7 @@ class _DealerListState extends State<DealerList> {
         setState(() {
           if (value != null) {
             response = value;
-            listCompanyDealer = response;
-            if(displayListCompanyDealers.isEmpty){
-              if(listCompanyDealer.length>15){
-                for(int i=startVal;i<startVal+15;i++){
-                  displayListCompanyDealers.add(listCompanyDealer[i]);
-                  displayListCompanyDealers[i]['isExpanded']=false;
-                }
-              }
-              else{
-                for(int i=0;i<listCompanyDealer.length;i++){
-                  displayListCompanyDealers.add(listCompanyDealer[i]);
-                  displayListCompanyDealers[i]['isExpanded']=false;
-                }
-              }
-            }
+
           }
           loading=false;
         });
@@ -164,6 +155,61 @@ class _DealerListState extends State<DealerList> {
       log(response.statusCode.toString());
     }
   }
+
+
+
+  Future<void> addDealer(String companyId, Map<String, dynamic> postJson) async {
+    DocumentReference companyRef = await firestore.collection('companies').doc(companyId).collection('dealers').add(postJson);
+    await companyRef.update({
+      'dealerId': companyRef.id,
+    });
+    Navigator.of(context).pop();
+
+  }
+
+  Future getDealersByCompanyId(String companyId) async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('companies')
+        .doc(companyId)
+        .collection('dealers')
+        .get();
+
+    // Convert querySnapshot to a list of dealer data
+    List dealers = querySnapshot.docs.map((doc) {
+      return {
+        'dealer_id': doc.id,                        // Document ID (dealerId)
+        'active': doc['active'],                   // Active status
+        'company_name': doc['company_name'],       // Company name
+        'company_id': doc['company_id'],           // Company ID
+        'dealer_address': doc['dealer_address'],   // Dealer address
+        'dealer_name': doc['dealer_name'],         // Dealer name
+        'dealer_phone_number': doc['dealer_phone_number'], // Dealer phone number
+      };
+    }).toList();
+
+    print(dealers);
+    listCompanyDealer = dealers;
+    if(displayListCompanyDealers.isEmpty){
+      setState(() {
+        if(listCompanyDealer.length>15){
+          for(int i=startVal;i<startVal+15;i++){
+            displayListCompanyDealers.add(listCompanyDealer[i]);
+            displayListCompanyDealers[i]['isExpanded']=false;
+          }
+        }
+        else{
+          for(int i=0;i<listCompanyDealer.length;i++){
+            displayListCompanyDealers.add(listCompanyDealer[i]);
+            displayListCompanyDealers[i]['isExpanded']=false;
+          }
+        }
+      });
+    }
+   // return dealers;
+  }
+
+
+
   @override
   void initState() {
     companyName = widget.companyName;
@@ -172,6 +218,7 @@ class _DealerListState extends State<DealerList> {
     // print('-------- company IDs --------');
     // print(companyIDs);
     getInitialData().whenComplete(()  {
+      getDealersByCompanyId(companyID);
       getCompanyDealerList(companyID);
     });
     super.initState();
@@ -1018,7 +1065,7 @@ class _DealerListState extends State<DealerList> {
           final createCompanyCon=TextEditingController();
           createCompanyCon.text=companyName;
           final newDealer = GlobalKey<FormState>();
-          Map userData = {};
+          Map<String, dynamic> userData = {};
           String capitalizeFirstWord(String value) {
             if(value.isNotEmpty){
               var result = value[0].toUpperCase();
@@ -1331,7 +1378,7 @@ class _DealerListState extends State<DealerList> {
                                                 // print('---check----');
                                                 // print(userData);
                                                 Navigator.pop(context);
-                                                postCompanyDealerDetails(userData);
+                                                addDealer(widget.companyID ,userData);
                                               }
 
                                             },

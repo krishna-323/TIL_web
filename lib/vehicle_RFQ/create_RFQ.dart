@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +17,9 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
+import '../classes/arguments_classes/arguments_classes.dart';
+import 'edit_vehicle_to_form.dart';
+import 'list_RFQ.dart';
 
 class CreateRFQ extends StatefulWidget {
   final double drawerWidth;
@@ -30,13 +34,15 @@ class _CreateRFQState extends State<CreateRFQ> {
 
   bool loading = false;
   bool showCustomerDetails = false;
+  bool showBillTODetails = false;
   bool isVehicleSelected = false;
 
   late double width ;
+  final GlobalKey<_HeaderCardState> _stringProviderKey = GlobalKey<_HeaderCardState>();
 
 
-
-  var wareHouseController=TextEditingController();
+  var shipToController=TextEditingController();
+  var billToAddressController=TextEditingController();
   var vendorSearchController = TextEditingController();
   final brandNameController=TextEditingController();
   var modelNameController = TextEditingController();
@@ -51,6 +57,8 @@ class _CreateRFQState extends State<CreateRFQ> {
   final salesInvoice=TextEditingController();
   final additionalCharges=TextEditingController();
   final grandTotalAmount =TextEditingController();
+  final invoicingNotesController =TextEditingController();
+  final dealerNotesController =TextEditingController();
   // Validation
   int indexNumber=0;
   bool searchVendor=false;
@@ -59,13 +67,13 @@ class _CreateRFQState extends State<CreateRFQ> {
   bool searchVendorError=false;
 
 
-  String selectedType1 ="Select Type";
+  String invoicingType1 ="Select Type";
   List selectType2List =[];
-  String selectedType2 = "Select Type";
+  String invoiceType2 = "Select Type";
 
   get getBillTo {
-    if(selectedType1 == "Dealer"){
-      if(selectedType2 =="Floor plan"){
+    if(invoicingType1 == "Dealer"){
+      if(invoiceType2 =="Floor plan"){
         return "(Bank)";
       }
     }
@@ -73,8 +81,8 @@ class _CreateRFQState extends State<CreateRFQ> {
   }
 
   get getDeliverTo {
-    if(selectedType1 == "Dealer"){
-      if(selectedType2 =="Floor plan"){
+    if(invoicingType1 == "Dealer"){
+      if(invoiceType2 =="Floor plan"){
         return "Dealer";
       }
     }
@@ -91,6 +99,7 @@ class _CreateRFQState extends State<CreateRFQ> {
       fetchVendorsData();
       // fetchTaxData();
     });
+
   }
   @override
   void dispose() {
@@ -105,7 +114,7 @@ class _CreateRFQState extends State<CreateRFQ> {
   }
   List vendorList = [];
 
-  Map vendorData ={
+  Map shipToData ={
     'Name':'',
     'city': '',
     'state': '',
@@ -114,7 +123,7 @@ class _CreateRFQState extends State<CreateRFQ> {
 
   };
 
-  Map wareHouse ={
+  Map billToData ={
     'Name':'',
     'city': '',
     'state': '',
@@ -331,34 +340,8 @@ class _CreateRFQState extends State<CreateRFQ> {
   String orgId ='';
   List taxCodes=[];
   List taxPercentage =[];
-  // Future fetchTaxData() async {
-  //   dynamic response;
-  //   String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/tax/get_all_tax';
-  //   try{
-  //     await getData(context: context,url: url).then((value) {
-  //       setState(() {
-  //         if(value!=null){
-  //           response = value;
-  //           taxCodes = response;
-  //           if(taxCodes.isNotEmpty){
-  //             for(int i=0;i<taxCodes.length;i++){
-  //               taxPercentage.add(taxCodes[i]['tax_total']);
-  //             }
-  //             // print('------taxCodes----');
-  //             // print(taxPercentage);
-  //           }
-  //         }
-  //         loading = false;
-  //       });
-  //     });
-  //   }
-  //   catch(e){
-  //     logOutApi(context: context,response: response,exception: e.toString());
-  //     setState(() {
-  //       loading = false;
-  //     });
-  //   }
-  // }
+  Color logYesTextColor = Colors.black;
+
   final validationKey=GlobalKey<FormState>();
   final focusToController=FocusNode();
   List<String> generalIdMatch = [];
@@ -403,62 +386,81 @@ class _CreateRFQState extends State<CreateRFQ> {
                               buttonColor:mSaveButton ,
                               textColor: Colors.white,
                               borderColor: mSaveButton,
-                              onTap: (){
+                              onTap: () async {
+                                setState(() {
+                                  loading= true;
+                                });
+                                _stringProviderKey.currentState?.getDate();
                                 funBool();
                                 focusToController.requestFocus();
-                                if(validationKey.currentState!.validate() &&  funBool()){
-                                  double tempTotal =0;
-                                  try{
-                                    tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
-                                  }
-                                  catch(e){
-                                    tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
-                                  }
-                                  postDetails= {
-                                    "additionalCharges": additionalCharges.text,
-                                    "address": "string",
-                                    "billAddressCity": vendorData['city']??"",
-                                    "billAddressName": vendorData['Name']??"",
-                                    "billAddressState": vendorData['state']??"",
-                                    "billAddressStreet": vendorData['street']??"",
-                                    "billAddressZipcode": vendorData['zipcode']??"",
-                                    "serviceDueDate": "string",
-                                    "serviceInvoice": salesInvoice.text,
-                                    "serviceInvoiceDate": salesInvoiceDate.text,
-                                    "shipAddressCity": wareHouse['city']??"",
-                                    "shipAddressName": wareHouse['Name']??"",
-                                    "shipAddressState": wareHouse['state']??"",
-                                    "shipAddressStreet": wareHouse['street']??"",
-                                    "shipAddressZipcode": wareHouse['zipcode']??"",
-                                    "subTotalAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                    "subTotalDiscount": subDiscountTotal.text.isEmpty?0:subDiscountTotal.text,
-                                    "subTotalTax": subTaxTotal.text.isEmpty?0:subTaxTotal.text,
-                                    "termsConditions": termsAndConditions.text,
-                                    "status":"In-review",
-                                    "comment":"",
-                                    "total": tempTotal.toString(),
-                                    "totalTaxableAmount": subAmountTotal.text.isEmpty?0 :subAmountTotal.text,
-                                    "manager_id": managerId,
-                                    "userid": userId,
-                                    "org_id": orgId,
-                                    "items": [
+                                if(validationKey.currentState!.validate()){
+                                  // double tempTotal =0;
+                                  // try{
+                                  //   tempTotal = (double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text)+ double.parse(additionalCharges.text.isEmpty?"":additionalCharges.text));
+                                  // }
+                                  // catch(e){
+                                  //   tempTotal= double.parse(subAmountTotal.text.isEmpty?"":subAmountTotal.text);
+                                  // }
 
-                                    ]
+
+                                  postDetails ={
+                                    "dealerCode": "string",
+                                    "dealerName": "string",
+                                    "dealerNotes":dealerNotesController.text,
+                                    "invNotes": invoicingNotesController.text,
+                                    "invType1": invoicingType1,
+                                    "invType2": invoiceType2,
+                                    "orderDate": _stringProviderKey.currentState?.getDate(),
+                                    "searchBIllToName":shipToData['Name']??"",
+                                    "searchDeliverToName": billToData['Name']??"",
+                                    "status":"In-Progress",
+                                    "billToStreet": billToData['street'],
+                                    "billTOCity": billToData['city'],
+                                    "billToState": billToData['state'],
+                                    "billToZipcode": int.parse(billToData['zipcode'] ?? "0"),
+                                    "shipToStreet":  shipToData['street'],
+                                    "shipToCity": shipToData['city'],
+                                    "shipToState": shipToData['state'],
+                                    "shipToZipCode": int.parse(shipToData['zipcode'] ?? "0"),
+                                    "vehiclelist": []
                                   };
-                                  for (int i = 0; i < selectedVehicles.length; i++) {
-                                    postDetails['items'].add({
-                                      "amount": lineAmount[i].text,
-                                      "discount": discountPercentage[i].text,
-                                      "estVehicleId": selectedVehicles[i]["new_vehicle_id"]??"",
-                                      "itemsService": selectedVehicles[i]['model']??"",
-                                      "priceItem": selectedVehicles[i]['on_road_price']??"",
-                                      "quantity": units[i].text,
-                                      "tax": tax[i].text,
+                                  for (int i = 0; i < selectedVehiclesList.length; i++) {
+
+                                    postDetails['vehiclelist'].add({
+                                      "chassisCab": selectedVehiclesList[i]['chassisCab']=="Yes"?true:false,
+                                      "loc1Address": selectedVehiclesList[i]['location1']['details'],
+                                      "loc1Name": selectedVehiclesList[i]['location1']['name'],
+                                      "loc1Type": selectedVehiclesList[i]['location1']['type'],
+                                      "loc2Address": selectedVehiclesList[i]['location2']['details'],
+                                      "loc2Name":  selectedVehiclesList[i]['location2']['name'],
+                                      "loc2Type": selectedVehiclesList[i]['location2']['type'],
+                                      "loc3Address":  selectedVehiclesList[i]['location3']['details'],
+                                      "loc3Name":  selectedVehiclesList[i]['location3']['name'],
+                                      "loc3Type": selectedVehiclesList[i]['location2']['type'],
+                                      "vehBodyBuilder": selectedVehiclesList[i]['bodybuilder']=="Yes" ?true:false,
+                                      "vehBodyType":  selectedVehiclesList[i]['bodyBuildType'],
+                                      "vehDeliveryLoc":  selectedVehiclesList[i]['noOfDeliveryLoc'],
+                                      "vehiclMasterID": selectedVehiclesList[i]['vehicleMasterId'],
+                                      "vehicleDescription": "string",
+                                      "vehicleModel": selectedVehiclesList[i]['model'],
+                                      "vehicleQty": selectedVehiclesList[i]['qty']
                                     }
                                     );
                                   }
+                                 var response =await postData(context: context,requestBody: postDetails,url: "https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/add_vehicleorder");
+                                 if(response!=null){
+                                   print(response.runtimeType);
+                                   print(response);
+                                   if(response.runtimeType.toString() == "_JsonMap"){
+                                     successMessage(response['id']);
+                                   }
+                                   // Navigator.push(context, PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => PreviewScreen(fieldsList: fieldsList),));
+                                   }
                                   // postEstimate(postDetails);
                                 }
+                                setState(() {
+                                  loading= false;
+                                });
                               },
 
                             ),
@@ -479,7 +481,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                       key:validationKey,
                       child: Column(
                         children: [
-                          HeaderCard(width: width,),
+                          HeaderCard(width: width,key: _stringProviderKey),
                           const SizedBox(height: 20,),
                           buildInvoiceCard(),
 
@@ -502,7 +504,121 @@ class _CreateRFQState extends State<CreateRFQ> {
       ),
     );
   }
+  void successMessage(responseId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return SizedBox(
+                height: 200,
+                width: 400,
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      margin:const EdgeInsets.only(top: 13.0,right: 8.0),
+                      child:  Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 25),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Icon(
+                              Icons.warning_rounded,
+                              color: Colors.orange,
+                              size: 50,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                             Center(
+                              child: Text(
+                                "Order Created with OrderID : $responseId",
+                                style: const TextStyle(
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.blue,
+                                          style: BorderStyle.solid
+                                      ),
+                                      borderRadius: BorderRadius.circular(4)
+                                  ),
+                                  child: MouseRegion(
+                                    onHover: (event) {
+                                      setState((){
+                                        logYesTextColor = Colors.white;
+                                      });
+                                    },
+                                    onExit: (event) {
+                                      setState((){
+                                        logYesTextColor = Colors.black;
+                                      });
+                                    },
+                                    child: MaterialButton(
+                                        hoverColor: Colors.lightBlueAccent,
+                                        onPressed: () async{
+                                          Navigator.pushReplacement(context,PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => ListRFQ(args: ListRFQArgs(drawerWidth: 190, selectedDestination: 1.1),),) );
 
+                                        }, child:  Text("OK",style: TextStyle(color: logYesTextColor),)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0.0,
+                      child: InkWell(
+                        child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: const Color.fromRGBO(204, 204, 204, 1),
+                                ),
+                                color: Colors.blue
+                            ),
+                            child: const Icon(
+                              Icons.close_sharp,
+                              color: Colors.white,
+                            )
+                        ),
+                        onTap: () {
+                          setState(() {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },),
+        );
+      },);
+  }
 
   bool funBool() {
     if(selectedVehicles.isEmpty){
@@ -518,7 +634,7 @@ class _CreateRFQState extends State<CreateRFQ> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = 'https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/shiptoaddress/get_all_shiptoaddress';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -544,12 +660,12 @@ class _CreateRFQState extends State<CreateRFQ> {
     // create a list of 3 objects from a fake json responsef
     for(int i=0;i<vendorList.length;i++){
       list.add( VendorModelAddress.fromJson({
-        "label":vendorList[i]['company_name'],
-        "value":vendorList[i]['company_name'],
-        "city":vendorList[i]['payto_city'],
-        "state":vendorList[i]['payto_state'],
-        "zipcode":vendorList[i]['payto_zip'],
-        "street":vendorList[i]['payto_address1']+", "+vendorList[i]['payto_address2'],
+        "label":vendorList[i]['customerName'],
+        "value":vendorList[i]['customerName'],
+        "city":vendorList[i]['city'],
+        "state":vendorList[i]['state'],
+        "zipcode":vendorList[i]['zipCode'],
+        "street":vendorList[i]['street'],
       }));
     }
 
@@ -582,9 +698,9 @@ class _CreateRFQState extends State<CreateRFQ> {
                         child:   LayoutBuilder(
                             builder: (BuildContext context, BoxConstraints constraints) {
                               return CustomPopupMenuButton(
-                                decoration: customPopupDecoration(hintText:selectedType1,onTap: () {
+                                decoration: customPopupDecoration(hintText:invoicingType1,onTap: () {
                                   setState(() {
-                                    selectedType1 = "Select Type";
+                                    invoicingType1 = "Select Type";
                                     selectType2List =[];
                                   });
                                 },),
@@ -605,8 +721,8 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 },
                                 onSelected: (v){
                                   setState(() {
-                                    selectedType2="Select Type";
-                                    selectedType1 = v.toString();
+                                    invoiceType2="Select Type";
+                                    invoicingType1 = v.toString();
                                     if(v=="Customer"){
                                       selectType2List =["Bank","Cash"];
                                     }
@@ -634,8 +750,8 @@ class _CreateRFQState extends State<CreateRFQ> {
                             builder: (BuildContext context, BoxConstraints constraints) {
 
                               return CustomPopupMenuButton(
-                                decoration: customPopupDecoration(hintText:selectedType2,onTap: (){
-                                  selectedType2 = "Select Type";
+                                decoration: customPopupDecoration(hintText:invoiceType2,onTap: (){
+                                  invoiceType2 = "Select Type";
                                 }),
                                 // hintText: "ss",
                                 //textController: customerTypeController,
@@ -643,7 +759,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 offset: const Offset(1, 40),
                                 tooltip: '',
                                 itemBuilder:  (BuildContext context) {
-                                  return selectedType1 ==""?[]:selectType2List.map((value) {
+                                  return invoicingType1 ==""?[]:selectType2List.map((value) {
                                     return CustomPopupMenuItem(
                                       value: value,
                                       text:value,
@@ -653,7 +769,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 },
                                 onSelected: (v){
                                   setState(() {
-                                    selectedType2 = v.toString();
+                                    invoiceType2 = v.toString();
                                   });
 
                                 },
@@ -683,7 +799,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                             padding: const EdgeInsets.only(bottom: 2,top: 2),
                             child: Text("Bill to Details $getBillTo",style: const TextStyle(fontSize: 16)),
                           ),
-                          if(showCustomerDetails==true)
+                          if(showBillTODetails==true)
                             SizedBox(
                               height: 24,
                               child:  OutlinedIconMButton(
@@ -692,8 +808,8 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 borderColor: Colors.transparent, icon: const Icon(Icons.change_circle_outlined,size: 14,color: Colors.blue),
                                 onTap: (){
                                   setState(() {
-                                    showCustomerDetails=false;
-                                    wareHouseController.clear();
+                                    showBillTODetails=false;
+                                    billToAddressController.clear();
                                   });
                                 },
                               ),
@@ -703,9 +819,9 @@ class _CreateRFQState extends State<CreateRFQ> {
                       ),
                     ),
                     const Divider(color: mTextFieldBorder,height: 1),
-                    if(showCustomerDetails==false)
+                    if(showBillTODetails==false)
                       const SizedBox(height: 30,),
-                    if(showCustomerDetails==false)
+                    if(showBillTODetails==false)
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 18.0,right: 18),
@@ -725,12 +841,12 @@ class _CreateRFQState extends State<CreateRFQ> {
                             showAdd: true,
                             decoration:textFieldVendorAndWarehouse(hintText: 'Search $getBillTo Address',error:isBillToSelected) ,
                             // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
-                            controller: wareHouseController,
+                            controller: billToAddressController,
                             future: fetchData,
                             getSelectedValue: (VendorModelAddress value) {
                               setState(() {
-                                showCustomerDetails=true;
-                                wareHouse ={
+                                showBillTODetails=true;
+                                billToData ={
                                   'Name':value.label,
                                   'city': value.city,
                                   'state': value.state,
@@ -744,17 +860,17 @@ class _CreateRFQState extends State<CreateRFQ> {
                           ),
                         ),
                       ),
-                    if(showCustomerDetails)
+                    if(showBillTODetails)
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(billToData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(width: 70,child:  Text("Street")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${billToData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -762,7 +878,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("City")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${billToData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -770,7 +886,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("State")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${billToData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -778,7 +894,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("ZipCode :")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${billToData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
                           ],
@@ -810,7 +926,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                 onTap: (){
                                   setState(() {
                                     showCustomerDetails=false;
-                                    wareHouseController.clear();
+                                    shipToController.clear();
                                   });
                                 },
                               ),
@@ -842,12 +958,12 @@ class _CreateRFQState extends State<CreateRFQ> {
                             showAdd: true,
                             decoration:textFieldVendorAndWarehouse(hintText: 'Search $getBillTo Address',error:isBillToSelected) ,
                             // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
-                            controller: wareHouseController,
+                            controller: shipToController,
                             future: fetchData,
                             getSelectedValue: (VendorModelAddress value) {
                               setState(() {
                                 showCustomerDetails=true;
-                                wareHouse ={
+                                shipToData ={
                                   'Name':value.label,
                                   'city': value.city,
                                   'state': value.state,
@@ -866,12 +982,12 @@ class _CreateRFQState extends State<CreateRFQ> {
                         padding: const EdgeInsets.all(18.0),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(wareHouse['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(shipToData['Name']??"",style: const TextStyle(fontWeight: FontWeight.bold)),
                             Row(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(width: 70,child:  Text("Street")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${shipToData['street']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -879,7 +995,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("City")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${shipToData['city']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -887,7 +1003,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("State")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${shipToData['state']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
 
@@ -895,7 +1011,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               children: [
                                 const SizedBox(width: 70,child: Text("ZipCode :")),
                                 const Text(": "),
-                                Expanded(child: Text("${wareHouse['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text("${shipToData['zipcode']??""}",maxLines: 2,overflow: TextOverflow.ellipsis)),
                               ],
                             ),
                           ],
@@ -921,7 +1037,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(color: const Color(0xd5f8f7f7),border: Border.all(color: mTextFieldBorder),borderRadius:BorderRadius.circular(8) ),
-                      child: const TextField(decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 12),maxLines: 10,),
+                      child: TextField(controller: invoicingNotesController,decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: const TextStyle(fontSize: 12),maxLines: 10,),
                     ),
                   ),
                 ],
@@ -948,62 +1064,62 @@ class _CreateRFQState extends State<CreateRFQ> {
             ///-----------------------------Table Starts-------------------------
 
             Container(
-              color: const Color(0xffffffff),
-              height: 65,
+              color:Colors.grey[100],
+              height: 90,
               child: const Row(
                 children: [
                   Expanded(
                     child: Column(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(height: 14,),
                         Text('Vehicle Details',style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Divider(color: mTextFieldBorder,height: 1),
                         Row(
                           children: [
                             CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
                             Expanded(child: Center(child: Text('SL No'))),
-                            CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                            CustomVDivider(height: 45, width: 1, color: mTextFieldBorder),
                             Expanded(flex: 4, child: Center(child: Text("Model"))),
-                            CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                            CustomVDivider(height: 45, width: 1, color: mTextFieldBorder),
                             Expanded(child: Center(child: Text("Qty"))),
                           ],
                         )
                       ],
                     ),
                   ),
-                  CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
+                  CustomVDivider(height: 90, width: 1, color: mTextFieldBorder),
                   Expanded(
                     child: Column(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(height: 14,),
                         Text('Vehicle required DSLB or Chassis Cab',style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Divider(color: mTextFieldBorder,height: 1),
                         Row(
                           children: [
                             Expanded(child: Center(child: Text("Chassis Cab"))),
-                            CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                            CustomVDivider(height: 45, width: 1, color: mTextFieldBorder),
                             Expanded(child: Center(child: Text("Body Build"))),
                           ],
                         )
                       ],
                     ),
                   ),
-                  CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
+                  CustomVDivider(height: 90, width: 1, color: mTextFieldBorder),
                   Expanded(
                     child: Column(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(height: 14,),
                         Text('Delivery',style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 10,),
                         Divider(color: mTextFieldBorder,height: 1),
                         Row(
                           children: [
                             Expanded(flex: 3,child: Center(child: Text('Delivery Location'))),
-                            CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                            CustomVDivider(height: 45, width: 1, color: mTextFieldBorder),
                             Expanded(flex: 3, child: Center(child: Text("Bodybuilder"))),
-                            CustomVDivider(height: 34, width: 1, color: mTextFieldBorder),
+                            CustomVDivider(height: 45, width: 1, color: mTextFieldBorder),
                             Expanded(child: Center(child: Text("Edit"))),
                           ],
                         )
@@ -1020,43 +1136,85 @@ class _CreateRFQState extends State<CreateRFQ> {
               itemCount: selectedVehiclesList.length,
               itemBuilder: (context, index) {
               return Container(color: Colors.white,
-                height: 45,
-                child: Row(
+                height: 71,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
                             children: [
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded(child: Center(child: Text('${index+1}'))),
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded(flex: 4, child: lineText(selectedVehiclesList[index]['model'])),
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded(child: Center(child: lineTextField(selectedVehiclesList[index]['qty'].toString(),index,
-                                onChanged: (v){
-                                setState(() {
-                                  selectedVehiclesList[index]['qty'] =v;
-                                });
-                                }
-                              ))),
+                              Row(
+                                children: [
+                                  const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                                  Expanded(child: Center(child: Text('${index+1}'))),
+                                  const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                                  Expanded(flex: 4, child: lineText(selectedVehiclesList[index]['model'])),
+                                  const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                                  Expanded(child: Center(child: lineTextField(selectedVehiclesList[index]['qty'].toString(),index,
+                                    onChanged: (v){
+                                    setState(() {
+                                      selectedVehiclesList[index]['qty'] =v;
+                                    });
+                                    }
+                                  ))),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
-                     Expanded(
-                      child: Column(
-                        children: [
-
-                          Row(
+                          ),
+                        ),
+                        const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                         Expanded(
+                          child: Column(
                             children: [
-                              Expanded( child:  Padding(
-                                padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
-                                child: Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(height: 24,width: 100,
+                              Row(
+                                children: [
+                                  Expanded( child:  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
+                                    child: Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Container(height: 24,width: 100,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: mTextFieldBorder),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: LayoutBuilder(
+                                              builder: (BuildContext context, BoxConstraints constraints) {
+                                                return CustomPopupMenuButton<String>(
+                                                  hintText: '',
+                                                  decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['chassisCab']),
+                                                  childWidth: constraints.maxWidth,
+                                                  offset: const Offset(1, 40),
+                                                  itemBuilder:  (BuildContext context) {
+                                                    return ['Yes','No'].map((String choice) {
+                                                      return CustomPopupMenuItem<String>(
+                                                          value: choice,
+                                                          text: choice,
+                                                          child: Container()
+                                                      );
+                                                    }).toList();
+                                                  },
+
+                                                  onSelected: (String value)  {
+                                                    setState(() {
+                                                      selectedVehiclesList[index]['chassisCab'] = value;
+                                                    });
+                                                  },
+                                                  onCanceled: () {
+
+                                                  },
+                                                  child: Container(),
+                                                );
+                                              }
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),),
+                                  const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                                  Expanded( child:  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
+                                    child: Container(height: 24,
                                       decoration: BoxDecoration(
                                         border: Border.all(color: mTextFieldBorder),
                                         borderRadius: BorderRadius.circular(4),
@@ -1065,11 +1223,11 @@ class _CreateRFQState extends State<CreateRFQ> {
                                           builder: (BuildContext context, BoxConstraints constraints) {
                                             return CustomPopupMenuButton<String>(
                                               hintText: '',
-                                              decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['chassisCab']),
+                                              decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['bodyBuildType']),
                                               childWidth: constraints.maxWidth,
                                               offset: const Offset(1, 40),
                                               itemBuilder:  (BuildContext context) {
-                                                return ['Yes','No'].map((String choice) {
+                                                return ["Dropside", "VAN body", "Tipper", "Tautliner", "Flat deck"].map((String choice) {
                                                   return CustomPopupMenuItem<String>(
                                                       value: choice,
                                                       text: choice,
@@ -1080,7 +1238,7 @@ class _CreateRFQState extends State<CreateRFQ> {
 
                                               onSelected: (String value)  {
                                                 setState(() {
-                                                  selectedVehiclesList[index]['chassisCab'] = value;
+                                                  selectedVehiclesList[index]['bodyBuildType'] = value;
                                                 });
                                               },
                                               onCanceled: () {
@@ -1091,136 +1249,98 @@ class _CreateRFQState extends State<CreateRFQ> {
                                           }
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),),
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded( child:  Padding(
-                                padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
-                                child: Container(height: 24,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: mTextFieldBorder),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: LayoutBuilder(
-                                      builder: (BuildContext context, BoxConstraints constraints) {
-                                        return CustomPopupMenuButton<String>(
-                                          hintText: '',
-                                          decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['bodyBuildType']),
-                                          childWidth: constraints.maxWidth,
-                                          offset: const Offset(1, 40),
-                                          itemBuilder:  (BuildContext context) {
-                                            return ["Dropside", "VAN body", "Tipper", "Tautliner", "Flat deck"].map((String choice) {
-                                              return CustomPopupMenuItem<String>(
-                                                  value: choice,
-                                                  text: choice,
-                                                  child: Container()
-                                              );
-                                            }).toList();
-                                          },
-
-                                          onSelected: (String value)  {
-                                            setState(() {
-                                              selectedVehiclesList[index]['bodyBuildType'] = value;
-                                            });
-                                          },
-                                          onCanceled: () {
-
-                                          },
-                                          child: Container(),
-                                        );
-                                      }
-                                  ),
-                                ),
-                              ),),
+                                  ),),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
-                     Expanded(
-                      child: Column(
-                        children: [
-                          Row(
+                          ),
+                        ),
+                        const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
+                         Expanded(
+                          child: Column(
                             children: [
-                              Expanded(flex: 3,child: Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
+                              Row(
                                 children: [
-                                  Center(child: SizedBox(width: 100,
-                                    child: lineTextField(selectedVehiclesList[index]['noOfDeliveryLoc'].toString(),index,
-                                        onChanged: (v){
-                                          setState(() {
-                                            selectedVehiclesList[index]['noOfDeliveryLoc'] =v;
-                                          });
-                                        }
+                                  Expanded(flex: 3,child: Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(child: SizedBox(width: 100,
+                                        child: lineTextField(selectedVehiclesList[index]['noOfDeliveryLoc'].toString(),index,
+                                            onChanged: (v){
+                                              setState(() {
+                                                selectedVehiclesList[index]['noOfDeliveryLoc'] =v;
+                                              });
+                                            }
+                                        ),
+                                      )),
+                                    ],
+                                  )),
+                                  const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
+                                  Expanded(flex: 3, child:  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
+                                    child: Container(height: 24,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: mTextFieldBorder),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: LayoutBuilder(
+                                          builder: (BuildContext context, BoxConstraints constraints) {
+                                            return CustomPopupMenuButton<String>(
+                                              hintText: '',
+                                              decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['bodybuilder']),
+                                              childWidth: constraints.maxWidth,
+                                              offset: const Offset(1, 40),
+                                              itemBuilder:  (BuildContext context) {
+                                                return ["Yes","No"].map((String choice) {
+                                                  return CustomPopupMenuItem<String>(
+                                                      value: choice,
+                                                      text: choice,
+                                                      child: Container()
+                                                  );
+                                                }).toList();
+                                              },
+
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  selectedVehiclesList[index]['bodybuilder'] = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            );
+                                          }
+                                      ),
                                     ),
+                                  ),),
+
+                                  const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
+                                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Center(child: InkWell(onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditVehicleToForm(drawerWidth: widget.drawerWidth,selectedDestination: widget.selectedDestination,selectedVehicle: selectedVehiclesList[index]),)).then((value) {
+                                          setState(() {
+                                            selectedVehiclesList[index]=value;
+                                          });
+                                        });
+                                      },child: const Icon(Icons.edit,color: Colors.blueAccent,size: 16,))),
+                                      Center(child: InkWell(onTap: (){
+
+                                        setState(() {
+                                          selectedVehiclesList.removeAt(index);
+                                        });
+
+                                      },child: const Icon(Icons.delete,color: Colors.red,size: 16))),
+                                    ],
                                   )),
                                 ],
-                              )),
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded(flex: 3, child:  Padding(
-                                padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
-                                child: Container(height: 24,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: mTextFieldBorder),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: LayoutBuilder(
-                                      builder: (BuildContext context, BoxConstraints constraints) {
-                                        return CustomPopupMenuButton<String>(
-                                          hintText: '',
-                                          decoration: lineCustomPopupDecoration(hintText:  selectedVehiclesList[index]['bodybuilder']),
-                                          childWidth: constraints.maxWidth,
-                                          offset: const Offset(1, 40),
-                                          itemBuilder:  (BuildContext context) {
-                                            return ["Yes","No"].map((String choice) {
-                                              return CustomPopupMenuItem<String>(
-                                                  value: choice,
-                                                  text: choice,
-                                                  child: Container()
-                                              );
-                                            }).toList();
-                                          },
-
-                                          onSelected: (String value)  {
-                                            setState(() {
-                                              selectedVehiclesList[index]['bodybuilder'] = value;
-                                            });
-                                          },
-                                          onCanceled: () {
-
-                                          },
-                                          child: Container(),
-                                        );
-                                      }
-                                  ),
-                                ),
-                              ),),
-
-                              const CustomVDivider(height: 44, width: 1, color: mTextFieldBorder),
-                              Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Center(child: InkWell(onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditVehicleToForm(drawerWidth: widget.drawerWidth,selectedDestination: widget.selectedDestination,selectedVehicle: selectedVehiclesList[index]),)).then((value) {
-                                      setState(() {
-                                        selectedVehiclesList[index]=value;
-                                      });
-                                    });
-                                  },child: const Icon(Icons.edit,color: Colors.blueAccent,size: 16,))),
-                                  Center(child: InkWell(onTap: (){
-
-                                    setState(() {
-                                      selectedVehiclesList.removeAt(index);
-                                    });
-
-                                  },child: const Icon(Icons.delete,color: Colors.red,size: 16))),
-                                ],
-                              )),
+                              )
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const Divider(color: mTextFieldBorder,height: 1),
                   ],
                 ),
               );
@@ -1245,10 +1365,26 @@ class _CreateRFQState extends State<CreateRFQ> {
                             MaterialPageRoute(
                               builder: (context) => AddVehicleToForm(selectedDestination: widget.selectedDestination, drawerWidth: widget.drawerWidth),
                             )).then((value) {
+                              bool isIdFound = false;
+
+
                               setState(() {
                                 if(value!=null) {
                                   if(value['model']!="") {
-                                    selectedVehiclesList.add(value);
+
+
+                                    for (var vehicle in selectedVehiclesList) {
+                                      if (vehicle.containsKey('vehicleMasterId') && vehicle['vehicleMasterId'] == value['vehicleMasterId']) {
+                                        isIdFound = true;
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vehicle Is Already Added')));
+                                        break;  // If you only want to find the first match
+                                      }
+                                    }
+
+                                    if (!isIdFound) {
+                                      selectedVehiclesList.add(value);
+                                    }
+                                    print(json.encode(selectedVehiclesList));
                                   }
                                 }
                               });
@@ -1266,6 +1402,8 @@ class _CreateRFQState extends State<CreateRFQ> {
       ),
     );
   }
+
+
 
   Widget buildDealerNotes(){
     return Card(color: Colors.white,surfaceTintColor: Colors.white,elevation: 8,
@@ -1289,7 +1427,9 @@ class _CreateRFQState extends State<CreateRFQ> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(8),color: const Color(0xd5f8f7f7),),
-                      child: const TextField(decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 14),maxLines: 10,),
+                      child:  TextField(
+                        controller: dealerNotesController,
+                        decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: const TextStyle(fontSize: 14),maxLines: 10,),
                     ),
                   ),
                 ],
@@ -1304,293 +1444,6 @@ class _CreateRFQState extends State<CreateRFQ> {
 
 
 
-  Widget showDialogBox(){
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child:StatefulBuilder(
-          builder: (context,  setState) {
-            return SizedBox(
-              // width: MediaQuery.of(context).size.width/1.5,
-              //height: MediaQuery.of(context).size.height/1.1,
-              child: Stack(
-                children: [
-                  Container(
-                    width: 950,
-                    decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                    margin: const EdgeInsets.only(top: 13.0, right: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:20.0,right:20,bottom: 10,top:10),
-                      child: Card(surfaceTintColor: Colors.white,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10,),
-                            ///search Fields
-                            Row(
-                              children: [
-                                const SizedBox(width: 10,),
-                                SizedBox(width: 250,height: 35,
-                                  child: TextFormField(
-                                    controller: brandNameController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Brand',
-                                        onTap:()async{
-                                          // if(brandNameController.text.isEmpty || brandNameController.text==""){
-                                          //   await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                          // }
-                                        }
-                                    ),
-                                    onChanged: (value) async{
-                                      if(value.isNotEmpty || value!=""){
-                                        // await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
-                                      }
-                                      else if(value.isEmpty || value==""){
-                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                SizedBox(
-                                  width: 250,
-                                  child: TextFormField(
-                                    decoration:  textFieldModelNameField(hintText: 'Search Model',onTap: ()async{
-                                      if(modelNameController.text.isEmpty || modelNameController.text==""){
-                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                      }
-                                    }),
-                                    controller: modelNameController,
-                                    onChanged: (value)async {
-                                      if(value.isNotEmpty || value!=""){
-                                        // await  fetchModelName(modelNameController.text).whenComplete(() =>setState((){}));
-                                      }
-                                      else if(value.isEmpty || value==""){
-                                        // await getAllVehicleVariant().whenComplete(()=> setState((){}));
-                                      }
-                                    },
-                                  ),
-                                ),
-
-                                const SizedBox(width: 10,),
-                                SizedBox(width: 250,
-                                  child: TextFormField(
-                                    controller: variantController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
-                                      if(variantController.text.isEmpty || variantController.text==""){
-                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                      }
-                                    }),
-                                    onChanged: (value) async{
-                                      if(value.isNotEmpty || value!=""){
-                                        // await fetchVariantName(variantController.text).whenComplete(() => setState((){}));
-                                      }
-                                      else if(value.isEmpty || value==""){
-                                        // await getAllVehicleVariant().whenComplete(() => setState((){}));
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20,),
-                            ///Table Header
-                            Container(
-                              height: 40,
-                              color: Colors.grey[200],
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 18.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Text("Brand")),
-                                    Expanded(child: Text("Model")),
-                                    Expanded(child: Text("Variant")),
-                                    Expanded(child: Text("On road price")),
-                                    Expanded(child: Text("Year of Manufacture")),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 4,),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: displayList.length+1,
-                                    itemBuilder: (context,int i){
-                                      if(i<displayList.length){
-                                        return   Column(
-                                          children: [
-                                            MaterialButton(
-                                              hoverColor: mHoverColor,
-                                              onPressed: () {
-                                                setState(() {
-                                                  Navigator.pop(context,displayList[i]);
-                                                  storeGeneralId=displayList[i]["excel_id"];
-                                                  for(var tempValue in generalIdMatch){
-                                                    if(tempValue == storeGeneralId){
-                                                      setState((){
-                                                        checkBool=true;
-                                                      });
-                                                    }
-                                                  }
-                                                });
-
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 18.0),
-                                                child: SizedBox(height: 30,
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 20,
-                                                          child: Text(displayList[i]['make']??""),
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 20,
-                                                          child: Text(
-                                                              displayList[i]['model']??""),
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 20,
-                                                          child: Text(displayList[i]['varient']??''),
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 20,
-                                                          child: Text(displayList[i]['on_road_price'].toString()),
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 20,
-                                                          child: Text(displayList[i]['year_of_manufacture']??""),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                          ],
-                                        );
-                                      }
-                                      else{
-                                        return Column(children: [
-                                          Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                          Row(mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Text("${startVal+15>vehicleList.length?vehicleList.length:startVal+1}-${startVal+15>vehicleList.length?vehicleList.length:startVal+15} of ${vehicleList.length}",style: const TextStyle(color: Colors.grey)),
-                                              const SizedBox(width: 10,),
-                                              Material(color: Colors.transparent,
-                                                child: InkWell(
-                                                  hoverColor: mHoverColor,
-                                                  child: const Padding(
-                                                    padding: EdgeInsets.all(18.0),
-                                                    child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                                  ),
-                                                  onTap: (){
-                                                    if(startVal>14){
-                                                      displayList=[];
-                                                      startVal = startVal-15;
-                                                      for(int i=startVal;i<startVal+15;i++){
-                                                        try{
-                                                          setState(() {
-                                                            displayList.add(vehicleList[i]);
-                                                          });
-                                                        }
-                                                        catch(e){
-                                                          log(e.toString());
-                                                        }
-                                                      }
-                                                    }
-                                                    else{
-                                                      log('else');
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10,),
-                                              Material(color: Colors.transparent,
-                                                child: InkWell(
-                                                  hoverColor: mHoverColor,
-                                                  child: const Padding(
-                                                    padding: EdgeInsets.all(18.0),
-                                                    child: Icon(Icons.arrow_forward_ios,size: 12),
-                                                  ),
-                                                  onTap: (){
-                                                    setState(() {
-                                                      if(vehicleList.length>startVal+15){
-                                                        displayList=[];
-                                                        startVal=startVal+15;
-                                                        for(int i=startVal;i<startVal+15;i++){
-                                                          try{
-                                                            setState(() {
-                                                              displayList.add(vehicleList[i]);
-                                                            });
-                                                          }
-                                                          catch(e){
-                                                            log("Expected Type Error $e ");
-                                                            log(e.toString());
-                                                          }
-
-                                                        }
-                                                      }
-                                                    });
-
-
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                            ],
-                                          ),
-                                          Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                        ],);
-                                      }
-                                    }),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0.0,
-                    child: InkWell(
-                      child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: const Color.fromRGBO(204, 204, 204, 1),
-                              ),
-                              color: Colors.blue),
-                          child: const Icon(
-                            Icons.close_sharp,
-                            color: Colors.white,
-                          )),
-                      onTap: () {
-                        setState(() {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-      ),
-    );
-  }
 
 
   textFieldDecoration({required String hintText, required bool error}) {
@@ -1863,9 +1716,21 @@ class _CreateRFQState extends State<CreateRFQ> {
   }
 
 
-
   Widget lineText(String text) {
-    return Container(margin: const EdgeInsets.all(10),decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(2)),child: Center(child: Text(text,maxLines: 1,overflow:TextOverflow.ellipsis ,)));
+    return Container(
+        margin: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+            border: Border.all(color: mTextFieldBorder),
+            borderRadius: BorderRadius.circular(4)),
+        child: Center(
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              child: Text(style: const TextStyle(fontSize: 12),
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )));
   }
 
   Widget lineTextField(text, int index, {required ValueChanged onChanged}) {
@@ -1916,9 +1781,9 @@ class _CreateRFQState extends State<CreateRFQ> {
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 30),
       hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+      hintStyle: const TextStyle(fontSize: 12, color: Colors.black),
       counterText: '',
-      contentPadding: const EdgeInsets.only(left: 8,top: 1,bottom: 16),
+      contentPadding: const EdgeInsets.only(left: 8,top: 0,bottom: 4),
 
     );
 
@@ -1948,7 +1813,7 @@ class VendorModelAddress {
       city: json['city'],
       state: json['state'],
       street: json['street'],
-      zipcode: json['zipcode'],
+      zipcode: json['zipcode'].toString(),
 
     );
   }
@@ -1969,13 +1834,19 @@ class _HeaderCardState extends State<HeaderCard> {
 
   DateTime date = DateTime.now(); // Example: current date
   String formattedDate = "";
+  String jsonDate = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     formattedDate = DateFormat('dd-MMM-yyyy').format(date);
+    jsonDate = DateFormat('dd-MM-yyyy').format(date);
 }
+
+  String getDate() {
+    return jsonDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1988,16 +1859,19 @@ class _HeaderCardState extends State<HeaderCard> {
             padding: const EdgeInsets.only(left: 18.0,bottom: 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 5,),
                 const Padding(
                   padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Dealer Name",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
+                const SizedBox(height: 5,),
                 Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 250,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text("ACsd XYZ",),
                   ),
                 ),
+                const SizedBox(height: 5,),
               ],
             ),
           ),
@@ -2005,16 +1879,19 @@ class _HeaderCardState extends State<HeaderCard> {
             padding: const EdgeInsets.only(left: 8.0,bottom: 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 5,),
                 const Padding(
                   padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Dealer Code",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
+                const SizedBox(height: 5,),
                 Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 4.0),
                     child: Text("A13389",),
                   ),
                 ),
+                const SizedBox(height: 5,),
               ],
             ),
           ),
@@ -2022,16 +1899,19 @@ class _HeaderCardState extends State<HeaderCard> {
             padding: const EdgeInsets.only(left: 8.0,bottom: 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 5,),
                 const Padding(
                   padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Order Number",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
+                const SizedBox(height: 5,),
                 Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 4.0),
                     child: Text("ORD123F45678",),
                   ),
                 ),
+                const SizedBox(height: 5,),
               ],
             ),
           ),
@@ -2039,16 +1919,19 @@ class _HeaderCardState extends State<HeaderCard> {
             padding: const EdgeInsets.only(left: 8.0,bottom: 8,right: 14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 5,),
                 const Padding(
                   padding:  EdgeInsets.only(top: 8,left: 6),
                   child: Text("Order Date",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                 ),
+                const SizedBox(height: 5,),
                 Container(decoration: BoxDecoration(color: Colors.grey[200],borderRadius: BorderRadius.circular(4)),width: 150,height: 28,alignment: Alignment.centerLeft,
                   child:  Padding(
                     padding: const EdgeInsets.only(left: 4.0),
                     child: Text(formattedDate),
                   ),
                 ),
+                const SizedBox(height: 5,),
               ],
             ),
           ),

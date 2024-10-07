@@ -290,10 +290,11 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/':(context)=> const InitialScreen(),
         },
-        theme: ThemeData(useMaterial3: true,
+        theme: ThemeData(
+            useMaterial3: true,
 
            // colorScheme: ColorScheme(background:primaryColor, brightness: Brightness.dark, primary: Colors.black, onPrimary: Colors.black, secondary: Colors.blue, onSecondary: Colors.black, error: primaryColor, onError: primaryColor, onBackground: Colors.black, surface: Colors.blue, onSurface: primaryColor),
-            fontFamily: 'TitilliumWeb'
+            //fontFamily: 'TitilliumWeb'
         ),
         debugShowCheckedModeBanner: false,
 
@@ -348,7 +349,7 @@ class _InitialScreenState extends State<InitialScreen> {
       isLoading
           ? const Center(child: SizedBox(width: 100,height: 100,child: CircularProgressIndicator()))
           : authToken == ""
-          ? const LoginPage(): const MyHomePage(),
+          ? const MyHomePage():  const MyHomePage(),
       //ListPurchaseOrder(drawerWidth: 190,selectedDestination: 4.2, title: 1,)
 
     );

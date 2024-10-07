@@ -53,13 +53,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB9vo8ZuOdw6XTdzHMRcPWlp4EuRFyg9nw',
-    appId: '1:588809660171:web:75d073fced66e8d9a8640e',
-    messagingSenderId: '588809660171',
-    projectId: 'vendormanagment',
-    authDomain: 'vendormanagment.firebaseapp.com',
-    databaseURL: 'https://vendormanagment-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'vendormanagment.appspot.com',
-    measurementId: 'G-F3TL3TTKW6',
+    apiKey: 'AIzaSyBrgLznzpTtu7O8mpeynHWVCyKDIKjUREQ',
+    appId: '1:319201509495:web:dee17b16cf99a74ece8672',
+    messagingSenderId: '319201509495',
+    projectId: 'tatadealerappliction',
+    authDomain: 'tatadealerappliction.firebaseapp.com',
+    storageBucket: 'tatadealerappliction.appspot.com',
+    measurementId: 'G-MH6H373EN8',
   );
+
 }

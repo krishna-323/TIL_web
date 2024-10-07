@@ -85,7 +85,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return InputDecoration(
       hoverColor: mHoverColor,
       suffixIcon: const Icon(Icons.account_circle, color:Colors.black),
-      border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+      border: const OutlineInputBorder(borderSide: BorderSide.none),
       constraints: const BoxConstraints(maxHeight: 35),
       hintText: hintText,
       hintStyle: const TextStyle(fontSize: 14, color: Color(0xB2000000)),

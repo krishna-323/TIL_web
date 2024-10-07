@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: (){
                       Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 0,drawerWidth: 190));
                     },
-                    child: const KpiCard(title: "Customers",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
+                    child: const KpiCard(title: "Vehicle Orders",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
 
                   )),
                   const SizedBox(width: 30),
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Expanded(
                                       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Flexible(child: Text(" Dockets",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                          Flexible(child: Text(" Part Orders",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
                                           Flexible(
                                             child: Row(
                                               children: [
@@ -319,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Expanded(
                                     child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Flexible(child: Text("Vehicles Sold",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                        Flexible(child: Text("Warranty Clim",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
                                         Flexible(
                                           child: Row(
                                             children: [
@@ -375,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: (){
                         // Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 1.1,drawerWidth: 190));
                       },
-                      child: const KpiCard(title: "Customers",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
+                      child: const KpiCard(title: "Part Return",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
 
                   )),
                 ],
@@ -448,359 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 30,),
-              Row(crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: const Color(0xFFE0E0E0),)
-                        ),
-                        child: Column(children: [
-                      const  Padding(
-                          padding:  EdgeInsets.all(15.0),
-                          child:   Align(alignment: Alignment.topLeft,child: Text("Customer List ", style: TextStyle(color: Colors.indigo, fontSize: 15, fontWeight: FontWeight.bold))),
-                        ),
-                          Container(
-                              height: 32,
-                             color: Colors.grey[100],
-                              child:
-                              IgnorePointer(ignoring: true,
-                                child: MaterialButton(
-                                  hoverColor:mHoverColor,
-                                  hoverElevation: 0,
-                                  onPressed: () {  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(left:15.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text("Name",style: TextStyle(color: Colors.black),)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text("Email",style: TextStyle(color: Colors.black),)
-                                              ),
-                                            )),
 
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                          ),
-                          const SizedBox(height: 4,),
-                          ListView.builder(
-                              shrinkWrap:true,
-                              itemCount: displayList.length+1,
-                              itemBuilder: (context,int i){
-                            if(i<displayList.length){
-                              return Column(children: [
-                                MaterialButton(
-                                  hoverColor: Colors.blue[50],
-                                  onPressed: () {  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:15.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayList[i]['customer_name'])
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayList[i]['email_id']??"")
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                              ],);
-                            }
-                            else{
-                              return Column(children: [
-                                Divider(height: 0.5,color: Colors.grey[300],thickness: 0.5,),
-                                Row(mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-
-                                    Text("${endVal+5>customersList.length?customersList.length:endVal+1}-${endVal+5>customersList.length?customersList.length:endVal+5} of ${customersList.length}",style: const TextStyle(color: Colors.grey)),
-                                    const SizedBox(width: 10,),
-                                    //First backward arrow.
-
-                                    Material(color: Colors.transparent,
-                                      child: InkWell(
-                                        hoverColor: mHoverColor,
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(18.0),
-                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                        ),
-                                        onTap: (){
-                                          if(endVal>4){
-                                            displayList=[];
-                                            endVal = endVal-5;
-                                            for(int i=endVal;i<endVal+5;i++){
-                                              try{
-                                                setState(() {
-                                                  displayList.add(customersList[i]);
-                                                });
-                                              }
-                                              catch(e){
-                                                log(e.toString());
-                                              }
-                                            }
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10,),
-                                    //second forward arrow
-                                    Material(color: Colors.transparent,
-                                      child: InkWell(
-                                        hoverColor: mHoverColor,
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(18.0),
-                                          child: Icon(Icons.arrow_forward_ios,size: 12),
-                                        ),
-                                        onTap: (){
-                                          if(endVal+1+5>customersList.length){
-                                            log("Block");
-                                          }
-                                          else  if(customersList.length>endVal+5){
-                                            displayList=[];
-                                            endVal=endVal+5;
-                                            for(int i=endVal;i<endVal+5;i++){
-                                              try{
-                                                setState(() {
-                                                  displayList.add(customersList[i]);
-                                                });
-                                              }
-                                              catch(e){
-                                                log(e.toString());
-                                              }
-                                            }
-                                          }
-
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20,)
-                                  ],
-                                ),
-                              ],);
-                            }
-                          })
-                        ]),
-                      )
-                    ]),
-                  ),
-                  const SizedBox(width: 50,),
-                  Expanded(
-                    child: Column(children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: const Color(0xFFE0E0E0),)
-                        ),
-                        child: Column(children: [
-                          const  Padding(
-                            padding:  EdgeInsets.all(15.0),
-                            child:   Align(alignment: Alignment.topLeft,child: Text("Po List", style: TextStyle(color: Colors.indigo, fontSize: 15, fontWeight: FontWeight.bold))),
-                          ),
-                          Container(
-                              height: 32,
-                              color: Colors.grey[100],
-                              child:
-                              IgnorePointer(ignoring: true,
-                                child: MaterialButton(
-                                  hoverColor:mHoverColor,
-                                  hoverElevation: 0,
-                                  onPressed: () {  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(left:15.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text("Make Name",style: TextStyle(color: Colors.black),)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text("Model Name",style: TextStyle(color: Colors.black),)
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text("On Road Price",style: TextStyle(color: Colors.black),)
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                          ),
-                          const SizedBox(height: 4,),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: displayPoList.length+1,
-                            itemBuilder: (BuildContext context, int i) {
-                            if(i<displayPoList.length){
-                              return Column(children: [
-                                MaterialButton(
-                                  hoverColor: Colors.blue[50],
-                                  onPressed: () {  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left:15.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child: Text(displayPoList[i]['make']??"")
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:  Text(displayPoList[i]['model']??"")
-                                              ),
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: SizedBox(height: 25,
-                                                  //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                  child:Text(displayPoList[i]['on_road_price'].toString())
-                                              ),
-                                            )),
-                                        // const Center(child: Padding(
-                                        //   padding: EdgeInsets.only(right: 8),
-                                        //   child: Icon(size: 18,
-                                        //     Icons.more_vert,
-                                        //     color: Colors.black,
-                                        //   ),
-                                        // ),)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                              ],);
-                            }
-                            else{
-                              return Column(children: [
-                                Divider(height: 0.5, color: Colors.grey[300], thickness: 0.5),
-                                Row(mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-
-                                    Text("${second+5>poList.length?poList.length:second+1}-${second+5>poList.length?poList.length:second+5} of ${poList.length}",style: const TextStyle(color: Colors.grey)),
-                                    const SizedBox(width: 10,),
-                                    Material(color: Colors.transparent,
-                                      child: InkWell(
-                                        hoverColor: mHoverColor,
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(18.0),
-                                          child: Icon(Icons.arrow_back_ios_sharp,size: 12),
-                                        ),
-                                        onTap: (){
-                                          if(second>4){
-                                            displayPoList=[];
-                                            second = second-5;
-                                            for(int i=second;i<second+5;i++){
-                                              setState(() {
-                                                displayPoList.add(poList[i]);
-                                              });
-                                            }
-                                          }
-                                          else{
-                                            log('else');
-                                          }
-
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10,),
-                                    Material(color: Colors.transparent,
-                                      child: InkWell(
-                                        hoverColor: mHoverColor,
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(18.0),
-                                          child: Icon(Icons.arrow_forward_ios,size: 12),
-                                        ),
-                                        onTap: (){
-                                          if(second+1+5>poList.length){
-                                            log("Block");
-                                          }
-                                          else
-                                          if(poList.length>second+5){
-                                            displayPoList=[];
-                                            second=second+5;
-                                            for(int i=second;i<second+5;i++){
-                                              setState(() {
-                                                try{
-                                                  displayPoList.add(poList[i]);
-                                                }
-                                                catch(e){
-                                                  log(e.toString());
-                                                }
-
-                                              });
-                                            }
-                                          }
-
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20,),
-                                  ],
-                                ),
-
-                              ],);
-                            }
-                          },)
-
-
-                        ]),
-                      )
-                    ]),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30,),
             ],
           ),
         ),

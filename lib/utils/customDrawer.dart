@@ -356,159 +356,159 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ),
                     ),
                     // Products.
-                    drawerWidth==60?InkWell(
-                    hoverColor: mHoverColor,
-                    onTap: (){
-                      setState(() {
-                        drawerWidth = 190;
-                      });
-                    },
-                    child: SizedBox(height: 40,
-                      child: Icon(Icons.money,
-                        color: _selectedDestination == 2.1
-                            ? Colors.blue: Colors.black54,),
-                    ),
-                  ): MouseRegion(
-                    onHover: (event) {
-                      setState(() {
-                        if (preSalesExpanded == false) {
-                          preSalesHover = true;
-                        }
-                      });
-                    },
-                    onExit: (event) {
-                      setState(() {
-                        preSalesHover = false;
-                      });
-                    },
-                    child: Container(
-                      color: preSalesHover ? mHoverColor : Colors.transparent,
-                      child: ListTileTheme(
-                        contentPadding: const EdgeInsets.only(left: 10), // Remove default padding
-                        child: Theme(
-                          data: ThemeData().copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                            onExpansionChanged: (value) {
-                              setState(() {
-                                if (value) {
-                                  preSalesExpanded = true;
-                                  preSalesHover = false;
-                                } else {
-                                  preSalesExpanded = false;
-                                }
-                              });
-                            },
-                            initiallyExpanded: _selectedDestination == 2.1 ,
-                            trailing: Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: drawerWidth == 60 ? Colors.transparent : Colors.black87,
-                              ),
-                            ),
-                            title: Text(drawerWidth == 60 ? '' : "Products", style: const TextStyle(fontSize: 16)),
-                            leading: const SizedBox(
-                              width: 40, // Set a specific width here, adjust as needed
-                              child: Icon(Icons.money,),
-                            ),
-                            children: <Widget>[
-                              // Vehicle List.
-                              MouseRegion(
-                                onEnter: (val){
-                                  setState(() {
-                                    vehicleListColorB=true;
-                                  });
-                                },
-                                onExit: (val){
-                                  setState(() {
-                                    vehicleListColorB=false;
-                                  });
-                                },
-                                child: ListTile(
-                                    title: Center(child: Align(alignment: Alignment.topLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 15.0),
-                                          child: Text(drawerWidth == 60 ? "" : 'Vehicle List',
-                                          style: TextStyle(color: _selectedDestination==2.1?(vehicleListColorB==true?Colors.black:Colors.white):Colors.black),
-                                          ),
-                                        ))),
-                                    selected: _selectedDestination == 2.1,
-                                    hoverColor:mHoverColor,
-                                    selectedTileColor: Colors.blue,
-                                    selectedColor: Colors.white,
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedDestination=2.1;
-                                      });
-                                      Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.1));
-                                      // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
-                                    }
-                                ),
-                              ),
+                  //   drawerWidth==60?InkWell(
+                  //   hoverColor: mHoverColor,
+                  //   onTap: (){
+                  //     setState(() {
+                  //       drawerWidth = 190;
+                  //     });
+                  //   },
+                  //   child: SizedBox(height: 40,
+                  //     child: Icon(Icons.money,
+                  //       color: _selectedDestination == 2.1
+                  //           ? Colors.blue: Colors.black54,),
+                  //   ),
+                  // ): MouseRegion(
+                  //   onHover: (event) {
+                  //     setState(() {
+                  //       if (preSalesExpanded == false) {
+                  //         preSalesHover = true;
+                  //       }
+                  //     });
+                  //   },
+                  //   onExit: (event) {
+                  //     setState(() {
+                  //       preSalesHover = false;
+                  //     });
+                  //   },
+                  //   child: Container(
+                  //     color: preSalesHover ? mHoverColor : Colors.transparent,
+                  //     child: ListTileTheme(
+                  //       contentPadding: const EdgeInsets.only(left: 10), // Remove default padding
+                  //       child: Theme(
+                  //         data: ThemeData().copyWith(dividerColor: Colors.transparent),
+                  //         child: ExpansionTile(
+                  //           onExpansionChanged: (value) {
+                  //             setState(() {
+                  //               if (value) {
+                  //                 preSalesExpanded = true;
+                  //                 preSalesHover = false;
+                  //               } else {
+                  //                 preSalesExpanded = false;
+                  //               }
+                  //             });
+                  //           },
+                  //           initiallyExpanded: _selectedDestination == 2.1 ,
+                  //           trailing: Padding(
+                  //             padding: const EdgeInsets.only(right: 10.0),
+                  //             child: Icon(
+                  //               Icons.keyboard_arrow_down,
+                  //               color: drawerWidth == 60 ? Colors.transparent : Colors.black87,
+                  //             ),
+                  //           ),
+                  //           title: Text(drawerWidth == 60 ? '' : "Products", style: const TextStyle(fontSize: 16)),
+                  //           leading: const SizedBox(
+                  //             width: 40, // Set a specific width here, adjust as needed
+                  //             child: Icon(Icons.money,),
+                  //           ),
+                  //           children: <Widget>[
+                  //             // Vehicle List.
+                  //             MouseRegion(
+                  //               onEnter: (val){
+                  //                 setState(() {
+                  //                   vehicleListColorB=true;
+                  //                 });
+                  //               },
+                  //               onExit: (val){
+                  //                 setState(() {
+                  //                   vehicleListColorB=false;
+                  //                 });
+                  //               },
+                  //               child: ListTile(
+                  //                   title: Center(child: Align(alignment: Alignment.topLeft,
+                  //                       child: Padding(
+                  //                         padding: const EdgeInsets.only(left: 15.0),
+                  //                         child: Text(drawerWidth == 60 ? "" : 'Vehicle List',
+                  //                         style: TextStyle(color: _selectedDestination==2.1?(vehicleListColorB==true?Colors.black:Colors.white):Colors.black),
+                  //                         ),
+                  //                       ))),
+                  //                   selected: _selectedDestination == 2.1,
+                  //                   hoverColor:mHoverColor,
+                  //                   selectedTileColor: Colors.blue,
+                  //                   selectedColor: Colors.white,
+                  //                   onTap: () {
+                  //                     setState(() {
+                  //                       _selectedDestination=2.1;
+                  //                     });
+                  //                     Navigator.pushReplacementNamed(context, MotowsRoutes.uploadData,arguments: UploadDataArguments(drawerWidth: widget.drawerWidth, selectedDestination: 2.1));
+                  //                     // Navigator.pushReplacementNamed(context, MotowsRoutes.listItemRoute,arguments: ListItemsArgs(title: 1, drawerWidth: widget.drawerWidth, selectedDestination: _selectedDestination));
+                  //                   }
+                  //               ),
+                  //             ),
+                  //
+                  //             // Your list tiles here,
+                  //
+                  //
+                  //             // ListTile(
+                  //             //   hoverColor: mHoverColor,
+                  //             //   selectedTileColor: Colors.blue,
+                  //             //   selectedColor: Colors.white,
+                  //             //   title: Center(
+                  //             //     child: Align(
+                  //             //       alignment: Alignment.topLeft,
+                  //             //       child: Padding(
+                  //             //         padding: const EdgeInsets.only(left: 15.0),
+                  //             //         child: Text(drawerWidth == 60 ? '' : 'GRN'),
+                  //             //       ),
+                  //             //     ),
+                  //             //   ),
+                  //             //   selected: _selectedDestination == 2.2,
+                  //             //   onTap: () {
+                  //             //     setState(() {
+                  //             //       _selectedDestination = 2.2;
+                  //             //     });
+                  //             //     Navigator.pushReplacementNamed(
+                  //             //       context,
+                  //             //       MotowsRoutes.listGrnItems,
+                  //             //       arguments: ListGrnArguments(selectedDestination: 2.2, drawerWidth: widget.drawerWidth),
+                  //             //     );
+                  //             //   },
+                  //             // ),
+                  //             // ListTile(
+                  //             //   hoverColor: mHoverColor,
+                  //             //   selectedTileColor: Colors.blue,
+                  //             //   selectedColor: Colors.white,
+                  //             //   title: Center(
+                  //             //     child: Align(
+                  //             //       alignment: Alignment.topLeft,
+                  //             //       child: Padding(
+                  //             //         padding: const EdgeInsets.only(left: 15.0),
+                  //             //         child: Text(drawerWidth == 60 ? '' : 'Vehicle Invoice'),
+                  //             //       ),
+                  //             //     ),
+                  //             //   ),
+                  //             //   selected: _selectedDestination == 2.3,
+                  //             //   onTap: () {
+                  //             //     setState(() {
+                  //             //       _selectedDestination = 2.3;
+                  //             //     });
+                  //             //     Navigator.pushReplacementNamed(
+                  //             //       context,
+                  //             //       MotowsRoutes.listVehicleInvoice,
+                  //             //       arguments: ListVehicleInvoiceArguments(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
+                  //             //     );
+                  //             //   },
+                  //             // ),
+                  //
+                  //
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
 
-                              // Your list tiles here,
-
-
-                              // ListTile(
-                              //   hoverColor: mHoverColor,
-                              //   selectedTileColor: Colors.blue,
-                              //   selectedColor: Colors.white,
-                              //   title: Center(
-                              //     child: Align(
-                              //       alignment: Alignment.topLeft,
-                              //       child: Padding(
-                              //         padding: const EdgeInsets.only(left: 15.0),
-                              //         child: Text(drawerWidth == 60 ? '' : 'GRN'),
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   selected: _selectedDestination == 2.2,
-                              //   onTap: () {
-                              //     setState(() {
-                              //       _selectedDestination = 2.2;
-                              //     });
-                              //     Navigator.pushReplacementNamed(
-                              //       context,
-                              //       MotowsRoutes.listGrnItems,
-                              //       arguments: ListGrnArguments(selectedDestination: 2.2, drawerWidth: widget.drawerWidth),
-                              //     );
-                              //   },
-                              // ),
-                              // ListTile(
-                              //   hoverColor: mHoverColor,
-                              //   selectedTileColor: Colors.blue,
-                              //   selectedColor: Colors.white,
-                              //   title: Center(
-                              //     child: Align(
-                              //       alignment: Alignment.topLeft,
-                              //       child: Padding(
-                              //         padding: const EdgeInsets.only(left: 15.0),
-                              //         child: Text(drawerWidth == 60 ? '' : 'Vehicle Invoice'),
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   selected: _selectedDestination == 2.3,
-                              //   onTap: () {
-                              //     setState(() {
-                              //       _selectedDestination = 2.3;
-                              //     });
-                              //     Navigator.pushReplacementNamed(
-                              //       context,
-                              //       MotowsRoutes.listVehicleInvoice,
-                              //       arguments: ListVehicleInvoiceArguments(selectedDestination: 2.3, drawerWidth: widget.drawerWidth),
-                              //     );
-                              //   },
-                              // ),
-
-
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  if(snapshot.data['manager'])
+                  if(true)
                     drawerWidth==60?InkWell(  hoverColor: mHoverColor,
                       onTap: (){
                         setState(() {

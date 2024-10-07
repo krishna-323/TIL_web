@@ -14,7 +14,7 @@ import '../../main.dart';
     Uri.parse(url),
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer $authToken"
+     // "Authorization": "Bearer $authToken"
     },
   );
   if (response.statusCode == 200) {

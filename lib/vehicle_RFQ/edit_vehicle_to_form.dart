@@ -13,34 +13,25 @@ import '../utils/customDrawer.dart';
 import '../utils/static_data/motows_colors.dart';
 import '../widgets/motows_buttons/outlined_mbutton.dart';
 
-class AddVehicleToForm extends StatefulWidget {
+class EditVehicleToForm extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
-  const AddVehicleToForm({Key? key,  required this.selectedDestination, required this.drawerWidth }) : super(key: key);
+  final Map selectedVehicle ;
+
+  const EditVehicleToForm({super.key, required this.drawerWidth, required this.selectedDestination, required this.selectedVehicle});
 
   @override
-  State<AddVehicleToForm> createState() => _AddVehicleToFormState();
+  State<EditVehicleToForm> createState() => _EditVehicleToFormState();
 }
 
-class _AddVehicleToFormState extends State<AddVehicleToForm> {
+class _EditVehicleToFormState extends State<EditVehicleToForm> {
 
   bool loading = false;
   bool checkBool=false;
-  bool selectModelError=false;
-  Map selectedVehicle ={
-    "model": "",
-    "qty": "",
-    "chassisCab": "",
-    "bodyBuildType": "",
-    "noOfDeliveryLoc": "",
-    "bodybuilder": "",
-    "location1": {"type": "", "name": "", "details": ""},
-    "location2": {"type": "", "name": "", "details": ""},
-    "location3": {"type": "", "name": "", "details": ""}
-  };
-  final searchCodeController=TextEditingController();
+  Map selectedVehicle ={};
+  final brandNameController=TextEditingController();
   var modelNameController = TextEditingController();
-  var searchTransmissionController=TextEditingController();
+  var variantController=TextEditingController();
   String storeGeneralId="";
   int startVal=0;
   List vehicleList = [];
@@ -55,11 +46,12 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    selectedVehicle = widget.selectedVehicle;
     getAllVehicleVariant();
 
   }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     return  Form(
       key: _formKey,
       child: WillPopScope(
@@ -105,16 +97,16 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                               SizedBox(
                                 width: 100,height: 28,
                                 child: OutlinedMButton(
-                                  text: 'Save',
-                                  buttonColor:mSaveButton ,
-                                  textColor: Colors.white,
-                                  borderColor: mSaveButton,
-                                  onTap: (){
-                                    if(_formKey.currentState!.validate()){
-                                      Navigator.pop(context,  selectedVehicle,);
-                                    }
+                                    text: 'Save',
+                                    buttonColor:mSaveButton ,
+                                    textColor: Colors.white,
+                                    borderColor: mSaveButton,
+                                    onTap: (){
+                                      if(_formKey.currentState!.validate()){
+                                        Navigator.pop(context,  selectedVehicle,);
+                                      }
 
-                                  }
+                                    }
 
                                 ),
                               ),
@@ -129,14 +121,14 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                     inAsyncCall: loading,
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
-                        child: Column(
-                          children: [
-                            buildLineCard(),
-                            const SizedBox(height: 20,),
-                            buildDeliveryInstructionCard(),
-                          ],
-                        )
+                          padding: const EdgeInsets.only(top: 10,left: 68,bottom: 30,right: 68),
+                          child: Column(
+                            children: [
+                              buildLineCard(),
+                              const SizedBox(height: 20,),
+                              buildDeliveryInstructionCard(),
+                            ],
+                          )
 
                       ),
                     ),
@@ -152,7 +144,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
   Widget buildLineCard() {
     return Card(
-      elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
           side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
       child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),color: Colors.white,),
@@ -183,7 +174,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                       ],
                     ),
                   ),
-                  CustomVDivider(height: 76, width: 1, color: mTextFieldBorder),
+                  CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
                   Expanded(
                     child: Column(
                       children: [
@@ -201,7 +192,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                       ],
                     ),
                   ),
-                  CustomVDivider(height: 76, width: 1, color: mTextFieldBorder),
+                  CustomVDivider(height: 68, width: 1, color: mTextFieldBorder),
                   Expanded(
                     child: Column(
                       children: [
@@ -235,43 +226,26 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                           children: [
                             Expanded(flex: 4, child: Padding(
                               padding: const EdgeInsets.only(left: 18.0,right: 18),
-                              child: SizedBox(height: selectModelError ?50:26,
-                                child: lineText(
-                                  selectedVehicle['model'],
-                                  validator: (value) {
-                                    if( selectedVehicle['model'] ==''){
-                                      setState(() {
-                                        selectModelError = true;
-                                      });
-                                      return "Select Model";
-                                    }
-                                    return null;
-                                  },
-                                  error: selectModelError,
-                                  onTap: (){
+                              child: SizedBox(height: 46,
+                                child: lineText(selectedVehicle['model'],onTap: (){
                                   showDialog(
-                                    context: context,
-                                    builder: (context) => showDialogBox()
+                                      context: context,
+                                      builder: (context) => showDialogBox()
                                   ).then((value) {
-                                    print(value);
                                     if(value != null && value.isNotEmpty) {
                                       setState(() {
                                         selectedVehicle['model'] = value['modelVCDescription1'];
                                         selectedVehicle['vehicleMasterId'] = value['modelVCCode'];
-                                        selectModelError= false;
                                         _formKey.currentState!.validate();
                                       });
                                     }
                                   });
-                                },
-                                ),
+
+                                }),
                               ),
                             )),
                             const CustomVDivider(height: 70, width: 1, color: mTextFieldBorder),
                             Expanded(child: Center(child: lineTextField(selectedVehicle['qty'].toString(),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(RegExp(r'^-?\d+$')),
-                                ],
                                 onChanged: (v){
                                   setState(() {
                                     selectedVehicle['qty'] =v;
@@ -386,9 +360,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                               children: [
                                 Center(child: SizedBox(width: 100,
                                   child: lineTextField(selectedVehicle['noOfDeliveryLoc'].toString(),
-                                      inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'^[1-3]$')),
-                                      ],
                                       onChanged: (v){
                                         setState(() {
                                           selectedVehicle['noOfDeliveryLoc'] =v;
@@ -458,7 +429,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
   Widget buildDeliveryInstructionCard() {
     return Card(
-      elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
           side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
       child: Container(color: Colors.white,
@@ -470,7 +440,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
               child: Text("Deliver Instructions",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
             ),
             const Divider(color: mTextFieldBorder,height: 1),
-
             Container(color: Colors.white,
               height: 330,
               child: Row(
@@ -566,186 +535,179 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
 
                   Expanded(
-                    child: Visibility(
-                      visible:  selectedVehicle['noOfDeliveryLoc'] =="3" ||selectedVehicle['noOfDeliveryLoc'] =="2",
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Location Two"),
-                          ),
-                          const Divider(color: mTextFieldBorder,height: 1),
-                          const SizedBox(height: 4,),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 18.0,left: 18,top: 8,bottom: 8),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded( child:  Padding(
-                                      padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
-                                      child: Container(height: 28,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: mTextFieldBorder),
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        child: LayoutBuilder(
-                                            builder: (BuildContext context, BoxConstraints constraints) {
-                                              return CustomPopupMenuButton<String>(
-                                                hintText: '',
-                                                decoration: customPopupDecoration(hintText:  selectedVehicle['location2']['type']),
-                                                childWidth: constraints.maxWidth,
-                                                offset: const Offset(1, 40),
-                                                itemBuilder:  (BuildContext context) {
-                                                  return ['Bodybuilder','Dealer',"Customer"].map((String choice) {
-                                                    return CustomPopupMenuItem<String>(
-                                                        value: choice,
-                                                        text: choice,
-                                                        child: Container()
-                                                    );
-                                                  }).toList();
-                                                },
-
-                                                onSelected: (String value)  {
-                                                  setState(() {
-                                                    selectedVehicle['location2']['type'] = value;
-                                                  });
-                                                },
-                                                onCanceled: () {
-
-                                                },
-                                                child: Container(),
-                                              );
-                                            }
-                                        ),
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Location Two"),
+                        ),
+                        const Divider(color: mTextFieldBorder,height: 1),
+                        const SizedBox(height: 4,),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 18.0,left: 18,top: 8,bottom: 8),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded( child:  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
+                                    child: Container(height: 28,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: mTextFieldBorder),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
-                                    ),),
+                                      child: LayoutBuilder(
+                                          builder: (BuildContext context, BoxConstraints constraints) {
+                                            return CustomPopupMenuButton<String>(
+                                              hintText: '',
+                                              decoration: customPopupDecoration(hintText:  selectedVehicle['location2']['type']),
+                                              childWidth: constraints.maxWidth,
+                                              offset: const Offset(1, 40),
+                                              itemBuilder:  (BuildContext context) {
+                                                return ['Bodybuilder','Dealer',"Customer"].map((String choice) {
+                                                  return CustomPopupMenuItem<String>(
+                                                      value: choice,
+                                                      text: choice,
+                                                      child: Container()
+                                                  );
+                                                }).toList();
+                                              },
 
-                                  ],
-                                ),
-                                const SizedBox(height: 4,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(height: 30,
-                                    child: addressTextField(selectedVehicle['location2']['name'].toString(),
-                                        maxLines: 1,
-                                        onChanged: (v){
-                                          selectedVehicle['location2']['name'] =v;
-                                        }
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  selectedVehicle['location2']['type'] = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            );
+                                          }
+                                      ),
                                     ),
+                                  ),),
+
+                                ],
+                              ),
+                              const SizedBox(height: 4,),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(height: 30,
+                                  child: addressTextField(selectedVehicle['location2']['name'].toString(),
+                                      maxLines: 1,
+                                      onChanged: (v){
+                                        selectedVehicle['location2']['name'] =v;
+                                      }
                                   ),
                                 ),
-                                const SizedBox(height: 4,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(height: 140,
-                                    child: addressTextField(selectedVehicle['location2']['details'].toString(),
-                                        maxLines: 7,
-                                        onChanged: (v){
-                                          selectedVehicle['location2']['details'] =v;
-                                        }
-                                    ),
+                              ),
+                              const SizedBox(height: 4,),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(height: 140,
+                                  child: addressTextField(selectedVehicle['location2']['details'].toString(),
+                                      maxLines: 7,
+                                      onChanged: (v){
+                                        selectedVehicle['location2']['details'] =v;
+                                      }
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  if(selectedVehicle['noOfDeliveryLoc'] =="3" ||selectedVehicle['noOfDeliveryLoc'] =="2")
                   const CustomVDivider(height: 330, width: 1, color: mTextFieldBorder),
 
 
 
                   Expanded(
-                    child: Visibility(
-                      visible:  selectedVehicle['noOfDeliveryLoc'] =="3",
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Location Three"),
-                          ),
-                          const Divider(color: mTextFieldBorder,height: 1),
-                          const SizedBox(height: 8,),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 18.0,left: 18,top: 8,bottom: 8),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded( child:  Padding(
-                                      padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
-                                      child: Container(height: 28,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: mTextFieldBorder),
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        child: LayoutBuilder(
-                                            builder: (BuildContext context, BoxConstraints constraints) {
-                                              return CustomPopupMenuButton<String>(
-                                                hintText: '',
-                                                decoration: customPopupDecoration(hintText:  selectedVehicle['location3']['type']),
-                                                childWidth: constraints.maxWidth,
-                                                offset: const Offset(1, 40),
-                                                itemBuilder:  (BuildContext context) {
-                                                  return ['Bodybuilder','Dealer',"Customer"].map((String choice) {
-                                                    return CustomPopupMenuItem<String>(
-                                                        value: choice,
-                                                        text: choice,
-                                                        child: Container()
-                                                    );
-                                                  }).toList();
-                                                },
-
-                                                onSelected: (String value)  {
-                                                  setState(() {
-                                                    selectedVehicle['location3']['type'] = value;
-                                                  });
-                                                },
-                                                onCanceled: () {
-
-                                                },
-                                                child: Container(),
-                                              );
-                                            }
-                                        ),
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Location Three"),
+                        ),
+                        const Divider(color: mTextFieldBorder,height: 1),
+                        const SizedBox(height: 8,),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 18.0,left: 18,top: 8,bottom: 8),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded( child:  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0,bottom: 8,left: 18,right: 18),
+                                    child: Container(height: 28,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: mTextFieldBorder),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
-                                    ),),
+                                      child: LayoutBuilder(
+                                          builder: (BuildContext context, BoxConstraints constraints) {
+                                            return CustomPopupMenuButton<String>(
+                                              hintText: '',
+                                              decoration: customPopupDecoration(hintText:  selectedVehicle['location3']['type']),
+                                              childWidth: constraints.maxWidth,
+                                              offset: const Offset(1, 40),
+                                              itemBuilder:  (BuildContext context) {
+                                                return ['Bodybuilder','Dealer',"Customer"].map((String choice) {
+                                                  return CustomPopupMenuItem<String>(
+                                                      value: choice,
+                                                      text: choice,
+                                                      child: Container()
+                                                  );
+                                                }).toList();
+                                              },
 
-                                  ],
-                                ),
-                                const SizedBox(height: 4,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(height: 30,
-                                    child: addressTextField(selectedVehicle['location3']['name'].toString(),
-                                        maxLines: 1,
-                                        onChanged: (v){
-                                          selectedVehicle['location3']['name'] =v;
-                                        }
+                                              onSelected: (String value)  {
+                                                setState(() {
+                                                  selectedVehicle['location3']['type'] = value;
+                                                });
+                                              },
+                                              onCanceled: () {
+
+                                              },
+                                              child: Container(),
+                                            );
+                                          }
+                                      ),
                                     ),
+                                  ),),
+
+                                ],
+                              ),
+                              const SizedBox(height: 4,),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(height: 30,
+                                  child: addressTextField(selectedVehicle['location3']['name'].toString(),
+                                      maxLines: 1,
+                                      onChanged: (v){
+                                        selectedVehicle['location3']['name'] =v;
+                                      }
                                   ),
                                 ),
-                                const SizedBox(height: 4,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(height: 140,
-                                    child: addressTextField(selectedVehicle['location3']['details'].toString(),
-                                        maxLines: 7,
-                                        onChanged: (v){
-                                          selectedVehicle['location3']['details'] =v;
-                                        }
-                                    ),
+                              ),
+                              const SizedBox(height: 4,),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(height: 140,
+                                  child: addressTextField(selectedVehicle['location3']['details'].toString(),
+                                      maxLines: 7,
+                                      onChanged: (v){
+                                        selectedVehicle['location3']['details'] =v;
+                                      }
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],
@@ -759,45 +721,24 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
     );
   }
 
-  Widget lineText(
-      String text, {
-        required bool error,
-        GestureTapCallback? onTap,
-        FormFieldValidator<String>? validator,
-
-      }) {
-    return TextFormField(
-      readOnly: true,
-      validator: validator,
-      textAlign: TextAlign.center,
-      controller: TextEditingController(text: text),
-      decoration:  const InputDecoration(
-       // constraints: BoxConstraints(maxHeight: error==true ? 55:26),
-        contentPadding: EdgeInsets.only(left: 2, top: 4, bottom: 8, right: 0),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: mTextFieldBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: mTextFieldBorder),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        errorStyle: TextStyle(
-          fontSize: 12, // Set smaller font size for the error text
-        ),
-        errorMaxLines: 2, // Control the maximum lines for error messages
-      ),
-      style: const TextStyle(fontSize: 13, overflow: TextOverflow.visible),
+  Widget lineText(String text,{GestureTapCallback? onTap}) {
+    return InkWell(
       onTap: onTap,
+      child: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              border: Border.all(color: mTextFieldBorder),
+              borderRadius: BorderRadius.circular(4)),
+          child: Center(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ))),
     );
   }
 
-
-  Widget lineTextField(text,{required ValueChanged onChanged ,List <TextInputFormatter>? inputFormatters}) {
+  Widget lineTextField(text,{required ValueChanged onChanged}) {
     var t1 = TextEditingController(text: '$text');
     t1.selection = TextSelection.fromPosition(TextPosition(offset: t1.text.length));
     return Container(
@@ -805,7 +746,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
       margin: const EdgeInsets.only(left: 10, right: 10),
       child:  Center(
         child: TextField(
-            inputFormatters:inputFormatters,
             textAlign: TextAlign.center,controller: t1,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.only(left: 2,top: 4,bottom: 8,right: 0),
@@ -849,7 +789,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   customPopupDecoration({required String hintText}) {
     return InputDecoration(
       hoverColor: mHoverColor,
-      enabledBorder:  const OutlineInputBorder(borderSide: BorderSide.none),
+      enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 35),
@@ -886,7 +826,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
               child: Stack(
                 children: [
                   Container(
-                    width: 1100,
+                    width: 950,
                     decoration: BoxDecoration(
                         color: Colors.white, borderRadius: BorderRadius.circular(8)),
                     margin: const EdgeInsets.only(top: 13.0, right: 8.0),
@@ -902,17 +842,17 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                 const SizedBox(width: 10,),
                                 SizedBox(width: 250,height: 35,
                                   child: TextFormField(
-                                    controller: searchCodeController,
-                                    decoration: textFieldBrandNameField(hintText: 'Search Code',
+                                    controller: brandNameController,
+                                    decoration: textFieldBrandNameField(hintText: 'Search Brand',
                                         onTap:()async{
-                                          if(searchCodeController.text.isEmpty || searchCodeController.text==""){
+                                          if(brandNameController.text.isEmpty || brandNameController.text==""){
                                             await getAllVehicleVariant().whenComplete(() => setState((){}));
                                           }
                                         }
                                     ),
                                     onChanged: (value) async{
                                       if(value.isNotEmpty || value!=""){
-                                        await searchCode(searchCodeController.text).whenComplete(()=>setState((){}));
+                                        await fetchBrandName(brandNameController.text).whenComplete(()=>setState((){}));
                                       }
                                       else if(value.isEmpty || value==""){
                                         await getAllVehicleVariant().whenComplete(() => setState((){}));
@@ -944,15 +884,15 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                 const SizedBox(width: 10,),
                                 SizedBox(width: 250,
                                   child: TextFormField(
-                                    controller: searchTransmissionController,
-                                    decoration: textFieldVariantNameField(hintText: 'Search Transmission',onTap:()async{
-                                      if(searchTransmissionController.text.isEmpty || searchTransmissionController.text==""){
+                                    controller: variantController,
+                                    decoration: textFieldVariantNameField(hintText: 'Search Variant',onTap:()async{
+                                      if(variantController.text.isEmpty || variantController.text==""){
                                         await getAllVehicleVariant().whenComplete(() => setState((){}));
                                       }
                                     }),
                                     onChanged: (value) async{
                                       if(value.isNotEmpty || value!=""){
-                                        await searchTransmission(searchTransmissionController.text).whenComplete(() => setState((){}));
+                                        await fetchVariantName(variantController.text).whenComplete(() => setState((){}));
                                       }
                                       else if(value.isEmpty || value==""){
                                         await getAllVehicleVariant().whenComplete(() => setState((){}));
@@ -964,24 +904,19 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                             ),
                             const SizedBox(height: 20,),
                             ///Table Header
-                            IgnorePointer(
-                              child: MaterialButton(
-                                onPressed: (){},
-                                child: Container(
-                                  height: 40,
-                                  color: Colors.grey[200],
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(left: 18.0),
-                                    child: Row(
-                                      children: [
-                                        Expanded(flex: 2,child: Text("Model VC Code")),
-                                        Expanded(flex: 2,child: Text("Model")),
-                                        Expanded(flex: 5,child: Text("Model Description")),
-                                        Expanded(child: Text("Color")),
-                                        Expanded(child: Text("Transmission")),
-                                      ],
-                                    ),
-                                  ),
+                            Container(
+                              height: 40,
+                              color: Colors.grey[200],
+                              child: const Padding(
+                                padding: EdgeInsets.only(left: 18.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(child: Text("Model VC Code")),
+                                    Expanded(child: Text("Model")),
+                                    Expanded(child: Text("Model Description")),
+                                    Expanded(child: Text("Color")),
+                                    Expanded(child: Text("Transmission")),
+                                  ],
                                 ),
                               ),
                             ),
@@ -995,53 +930,52 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                       if(i<displayList.length){
                                         return   Column(
                                           children: [
-                                            SizedBox(height: 50,
-                                              child: MaterialButton(
-                                                hoverColor: mHoverColor,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    Navigator.pop(context,displayList[i]);
-                                                  });
+                                            MaterialButton(
+                                              hoverColor: mHoverColor,
+                                              onPressed: () {
+                                                print(displayList[i]['modelVCCode']);
+                                                setState(() {
+                                                  Navigator.pop(context,displayList[i]);
+                                                });
 
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(left: 18.0),
-                                                  child: SizedBox(height: 30,
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(flex: 2,
-                                                          child: SizedBox(
-                                                            height: 20,
-                                                            child: Text(displayList[i]['modelVCCode']??""),
-                                                          ),
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 18.0),
+                                                child: SizedBox(height: 30,
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: SizedBox(
+                                                          height: 20,
+                                                          child: Text(displayList[i]['modelVCDescription']??""),
                                                         ),
-                                                        Expanded(flex: 2,
-                                                          child: SizedBox(
-                                                            height: 20,
-                                                            child: Text(displayList[i]['modelVCDescription']??"",maxLines: 2),
-                                                          ),
+                                                      ),
+                                                      Expanded(
+                                                        child: SizedBox(
+                                                          height: 20,
+                                                          child: Text(
+                                                              displayList[i]['modelVCDescription1']??""),
                                                         ),
-                                                        Expanded(flex: 5,
-                                                          child: SizedBox(
-                                                            height: 20,
-                                                            child: Text(
-                                                                displayList[i]['modelVCDescription1']??""),
-                                                          ),
+                                                      ),
+                                                      Expanded(
+                                                        child: SizedBox(
+                                                          height: 20,
+                                                          child: Text(displayList[i]['colourName']??''),
                                                         ),
-                                                        Expanded(
-                                                          child: SizedBox(
-                                                            height: 20,
-                                                            child: Text(displayList[i]['colourName']??''),
-                                                          ),
+                                                      ),
+                                                      Expanded(
+                                                        child: SizedBox(
+                                                          height: 20,
+                                                          child: Text(displayList[i]['transmissionTypeCode'].toString()),
                                                         ),
-                                                        Expanded(
-                                                          child: SizedBox(
-                                                            height: 20,
-                                                            child: Text(displayList[i]['transmissionTypeCode'].toString()),
-                                                          ),
+                                                      ),
+                                                      Expanded(
+                                                        child: SizedBox(
+                                                          height: 20,
+                                                          child: Text(displayList[i]['year_of_manufacture']??""),
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
@@ -1126,7 +1060,6 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                     }),
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -1190,9 +1123,9 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
   textFieldBrandNameField( {required String hintText, bool? error, Function? onTap}) {
     return  InputDecoration(
-      suffixIcon:  searchCodeController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
+      suffixIcon:  brandNameController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
         setState(() {
-          searchCodeController.clear();
+          brandNameController.clear();
           onTap!();
         });
       },
@@ -1233,8 +1166,8 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
   textFieldVariantNameField({required String hintText, bool? error,Function ? onTap}) {
     return  InputDecoration(
-      suffixIcon:  searchTransmissionController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
-        searchTransmissionController.clear();
+      suffixIcon:  variantController.text.isEmpty?const Icon(Icons.search,size: 18):InkWell(onTap:(){
+        variantController.clear();
         onTap!();
       },
           child: const Icon(Icons.close,size: 18,)
@@ -1254,32 +1187,66 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
   Future getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/get_all_vehiclemaster";
+    // String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
     try {
-
-      await getData(context: context, url: url).then((value) {
-        setState(() {
-          if (value != null)  {
-            response = value;
-            vehicleList = response;
-            startVal=0;
-            displayList=[];
-            if(displayList.isEmpty){
-              if(vehicleList.length>15){
-                for(int i=startVal;i<startVal+15;i++){
-                  displayList.add(vehicleList[i]);
-                }
-              }
-              else{
-                for(int i=startVal;i<vehicleList.length;i++){
-                  displayList.add(vehicleList[i]);
-                }
-              }
+      {
+        response = [
+          {
+            "modelVCCode": "SF081338SAFR",
+            "modelVCDescription": "LPT 813",
+            "modelVCDescription1": "LPT 813/38 E II PS HD 12 V SA",
+            "foreignName": "English",
+            "colourName": "White",
+            "tilSegment": "MCV",
+            "brand": "TML",
+            "uomGroup": "Sales",
+            "fuelType": "Diesel - Diesel",
+            "modelCode": "LPT 813",
+            "transmissionTypeCode": "Manual",
+            "leadTime": 90,
+            "fobPrice": 207823,
+            "fobCurrency": "ZAR"
+          },
+        ];
+        vehicleList = response;
+        startVal=0;
+        displayList=[];
+        if(displayList.isEmpty){
+          if(vehicleList.length>15){
+            for(int i=startVal;i<startVal+15;i++){
+              displayList.add(vehicleList[i]);
             }
           }
-          loading = false;
-        });
-      });
+          else{
+            for(int i=startVal;i<vehicleList.length;i++){
+              displayList.add(vehicleList[i]);
+            }
+          }
+        }
+      }
+      // await getData(context: context, url: url).then((value) {
+      //   setState(() {
+      //     if (value != null) {
+      //       response = value;
+      //       vehicleList = response;
+      //       startVal=0;
+      //       displayList=[];
+      //       if(displayList.isEmpty){
+      //         if(vehicleList.length>15){
+      //           for(int i=startVal;i<startVal+15;i++){
+      //             displayList.add(vehicleList[i]);
+      //           }
+      //         }
+      //         else{
+      //           for(int i=startVal;i<vehicleList.length;i++){
+      //             displayList.add(vehicleList[i]);
+      //           }
+      //         }
+      //       }
+      //     }
+      //     loading = false;
+      //   });
+      // });
     } catch (e) {
       logOutApi(context: context, exception: e.toString(), response: response);
       setState(() {
@@ -1289,7 +1256,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
   Future fetchModelName(String modelName)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_modelVCDescription/$modelName';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_model_name/$modelName';
     try{
       await getData(url:url ,context:context ).then((value) {
         setState(() {
@@ -1325,9 +1292,9 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
     }
   }
-  Future searchCode(String code)async{
+  Future fetchBrandName(String brandName)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_modelVCCode/$code';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_brand_name/$brandName';
     try{
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -1362,9 +1329,9 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
     }
   }
 
-  Future searchTransmission(String transmissionSearchValue)async{
+  Future fetchVariantName(String variantName)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_transmissionTypeCode/$transmissionSearchValue';
+    String url='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/search_by_variant_name/$variantName';
     try{
       await getData(context:context ,url: url).then((value) {
         setState((){
@@ -1388,7 +1355,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
               }
             }
             catch(e){
-              print("Excepted Type $e");
+              log("Excepted Type $e");
             }
           }
         });
@@ -1400,8 +1367,3 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
 
 }
-
-
-
-
-

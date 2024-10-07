@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/user_mangment/display_user_list.dart';
@@ -16,6 +17,7 @@ import 'package:http/http.dart' as http;
 
 import '../widgets/motows_buttons/outlined_border_with_icon.dart';
 import '../widgets/motows_buttons/outlined_mbutton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CompanyDetails extends StatefulWidget {
   final double drawerWidth;
@@ -82,6 +84,33 @@ class _CompanyDetailsState extends State<CompanyDetails> {
   int startVal=0;
   bool loading =false;
   bool companyUsers=false;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> addDealerUser({required String companyId, required String dealerId, required Map<String,dynamic> userData,}) async {
+    try{
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: userData['email'],
+        password: userData['password'],
+      );
+      User? user = userCredential.user;
+
+      print(userCredential);
+      print(user?.uid);
+
+      await firestore.collection('companies')
+          .doc(companyId)
+          .collection('dealers')
+          .doc(dealerId)
+          .collection('users')
+          .doc()
+          .set(userData);
+    }
+    catch(e){
+      print(e);
+    }
+  }
 
   Future fetchSameCompanyCustomers() async {
     dynamic response;
@@ -2990,7 +3019,7 @@ class _CompanyDetailsState extends State<CompanyDetails> {
             }
           }
 
-          Map userData = {};
+          Map<String, dynamic> userData = {};
           String capitalizeFirstWord(String value) {
             if(value.isNotEmpty){
               var result = value[0].toUpperCase();
@@ -3454,13 +3483,15 @@ class _CompanyDetailsState extends State<CompanyDetails> {
                                                   "role": createUserRole,
                                                   "username":newUserName.text,
                                                   "dealer_id": dealerID,
-                                                  "org_id": companyID,
+                                                  "company_Id": companyID,
                                                   "manager_id":managerId
                                                 };
                                                 // print('---check----');
                                                 // print(userData);
                                                 Navigator.of(context).pop();
-                                                userDetails(userData);
+                                                addDealerUser(userData: userData,dealerId:dealerID,companyId:companyID );
+
+                                                //userDetails(userData);
                                               }
                                             },
                                           ),

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_project/vehicle_RFQ/list_RFQ_by_status.dart';
+import 'package:new_project/vehicle_RFQ/view_order_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../classes/arguments_classes/arguments_classes.dart';
 import '../../utils/api/get_api.dart';
@@ -10,6 +12,7 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/static_data/motows_colors.dart';
 import '../../widgets/motows_buttons/outlined_mbutton.dart';
+import '../dashboard/kpi_card.dart';
 import 'create_RFQ.dart';
 
 
@@ -29,8 +32,9 @@ class _ListRFQState extends State<ListRFQ> {
   void  initState(){
     super.initState();
     getInitialData().whenComplete(() {
-      //print("User Role : $role");
-      fetchEstimate();
+
+      getOrderList();
+
     });
 
     loading=true;
@@ -38,6 +42,7 @@ class _ListRFQState extends State<ListRFQ> {
   bool loading=false;
   List estimateItems=[];
   List displayListItems=[];
+  Map kpiValues ={};
   int startVal=0;
 
   String role ='';
@@ -51,16 +56,11 @@ class _ListRFQState extends State<ListRFQ> {
     orgId= prefs.getString("orgId")??"";
   }
 
-  Future fetchEstimate()async{
+  Future getOrderList()async{
+    await getKPIValues();
     dynamic response;
-    String url='';
-    if(role=='Approver'){
-      url='https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_by_company_id/$orgId';
-    }
-    else{
-      url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_all_uesr_or_manager/User/$userId";
-    }
-    //print(url);
+    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/get_all_Vehicleorders';
+
     try{
       await getData(url:url ,context: context).then((value) {
         setState(() {
@@ -91,8 +91,104 @@ class _ListRFQState extends State<ListRFQ> {
       });
     }
   }
+
+  Future getKPIValues()async{
+    dynamic response;
+    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/get_status_counts';
+
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            response=value;
+            kpiValues = response;
+          }
+          print(response);
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
+  Future searchByOrderID({ required String orderId})async{
+    displayListItems =[];
+    dynamic response;
+    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_vehicleOrderId/$orderId';
+
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            response=value;
+            estimateItems=response;
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
+  Future searchByStatus({ required String status})async{
+    displayListItems =[];
+    dynamic response;
+    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_status/$status';
+
+    try{
+      await getData(url:url ,context: context).then((value) {
+        setState(() {
+          if(value!=null){
+            response=value;
+            estimateItems=response;
+            if(displayListItems.isEmpty){
+              if(estimateItems.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+              else{
+                for(int i=0;i<estimateItems.length;i++){
+                  displayListItems.add(estimateItems[i]);
+                }
+              }
+            }
+          }
+          loading=false;
+        });
+      });
+    }
+    catch(e){
+      logOutApi(context: context,exception:e.toString() ,response: response);
+      setState(() {
+        loading=false;
+      });
+    }
+  }
+
   // Search Controller Declaration.
-  final searchByStatus=TextEditingController();
+  final searchByStatusController=TextEditingController();
   final searchByDate=TextEditingController();
   final searchByOrder=TextEditingController();
   @override
@@ -124,6 +220,305 @@ class _ListRFQState extends State<ListRFQ> {
                       ),
                       child: Column(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Row(
+                              children:  [
+                                Expanded(child: InkWell(
+                                  onTap:(){
+                                    // Navigator.pushReplacementNamed(context, MotowsRoutes.docketList,arguments: DocketListArgs(selectedDestination: 0,drawerWidth: 190));
+                                  },
+                                  child: Card(
+                                      color: Colors.transparent,
+                                      elevation: 4,
+                                      child:  Container(
+                                        height: 130,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12),
+                                            topLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Expanded(child: Padding(
+                                              padding: const EdgeInsets.only(left: 20.0,top: 20),
+                                              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 55,
+                                                    padding: const EdgeInsets.all(10),
+                                                    decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                    child: const Icon(Icons.account_balance_wallet_outlined,color: Colors.white,size: 30),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Expanded(
+                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Flexible(child: Text("Total Orders",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Flexible(child: Text("${kpiValues.isEmpty ?"":kpiValues['Total']}",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+
+                                          ],
+                                        ),
+                                      )),
+                                )),
+                                const SizedBox(width: 30),
+                                Expanded(child: InkWell(
+                                  onTap:(){
+                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                        ListRFQByStatus(type: "In-Progress",selectedDestination: widget.args.selectedDestination,
+                                          drawerWidth: widget.args.drawerWidth,)
+                                    ));
+                                    // Navigator.pushReplacementNamed(context, MotowsRoutes.docketList,arguments: DocketListArgs(selectedDestination: 0,drawerWidth: 190));
+                                  },
+                                  child: Card(
+                                      color: Colors.transparent,
+                                      elevation: 4,
+                                      child:  Container(
+                                        height: 130,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12),
+                                            topLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Expanded(child: Padding(
+                                              padding: const EdgeInsets.only(left: 20.0,top: 20),
+                                              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 55,
+                                                    padding: const EdgeInsets.all(10),
+                                                    decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                    child: const Icon(Icons.account_balance_wallet_outlined,color: Colors.white,size: 30),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Expanded(
+                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Flexible(child: Text("In-progress",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Flexible(child: Text("${kpiValues.isEmpty ?"":kpiValues['In-Progress']}",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                            Container(
+                                              height: 40,decoration: BoxDecoration(
+                                              color: const Color(0xffF9FAFB),
+                                              borderRadius: const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                              ),
+                                              border: Border.all(
+                                                width: 3,
+                                                color: Colors.transparent,
+                                                style: BorderStyle.solid,
+                                              ),
+                                            ),
+                                              child:  const Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
+                                                    child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                )),
+                                const SizedBox(width: 30),
+                                Expanded(child: InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                        ListRFQByStatus(type: "Invoiced",selectedDestination: widget.args.selectedDestination,
+                                          drawerWidth: widget.args.drawerWidth,)
+                                    ));
+                                  },
+                                  child: Card(
+                                      color: Colors.transparent,
+                                      elevation: 4,
+                                      child:  Container(
+                                        height: 130,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12),
+                                            topLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Expanded(child: Padding(
+                                              padding: const EdgeInsets.only(left: 20.0,top: 20),
+                                              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 55,
+                                                    padding: const EdgeInsets.all(10),
+                                                    decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                    child: const Icon(IconData(0xef6f, fontFamily: 'MaterialIcons'),color: Colors.white,size: 30),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Expanded(
+                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Flexible(child: Text("Invoiced",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Flexible(child: Text("${kpiValues.isEmpty ?"":kpiValues['Invoiced']}",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                            Container(
+                                              height: 40,decoration: BoxDecoration(
+                                              color: const Color(0xffF9FAFB),
+                                              borderRadius: const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                              ),
+                                              border: Border.all(
+                                                width: 3,
+                                                color: Colors.transparent,
+                                                style: BorderStyle.solid,
+                                              ),
+                                            ),
+                                              child:  const Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
+                                                    child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                )),
+                                const SizedBox(width: 30),
+                                Expanded(child: InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
+                                        ListRFQByStatus(type: "GatePass",selectedDestination: widget.args.selectedDestination,
+                                          drawerWidth: widget.args.drawerWidth,)
+                                    ));
+                                  },
+                                  child: Card(
+                                      color: Colors.transparent,
+                                      elevation: 4,
+                                      child:  Container(
+                                        height: 130,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12),
+                                            topLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Expanded(child: Padding(
+                                              padding: const EdgeInsets.only(left: 20.0,top: 20),
+                                              child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 55,
+                                                    padding: const EdgeInsets.all(10),
+                                                    decoration: const BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                    child: const Icon(IconData(0xef6f, fontFamily: 'MaterialIcons'),color: Colors.white,size: 30),
+                                                  ),
+                                                  const SizedBox(width: 10,),
+                                                  Expanded(
+                                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Flexible(child: Text("Gate pass",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800]))),
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Flexible(child: Text("${kpiValues.isEmpty ?"":kpiValues['GatePass']}",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                            Container(
+                                              height: 40,decoration: BoxDecoration(
+                                              color: const Color(0xffF9FAFB),
+                                              borderRadius: const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight: Radius.circular(10),
+                                              ),
+                                              border: Border.all(
+                                                width: 3,
+                                                color: Colors.transparent,
+                                                style: BorderStyle.solid,
+                                              ),
+                                            ),
+                                              child:  const Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(left: 16,top: 8,bottom: 4),
+                                                    child: Text("View all",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(fontWeight: FontWeight.bold,)),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                )),
+                              ],
+                            ),
+                          ),
                           Container(
                             // height:100,
                             decoration: const BoxDecoration(
@@ -161,7 +556,7 @@ class _ListRFQState extends State<ListRFQ> {
 
                                                 );
                                                 if(pickedDate!=null){
-                                                  String formattedDate=DateFormat('dd-MM-yyyy').format(pickedDate);
+                                                  String formattedDate=DateFormat('yyyy-MM-dd').format(pickedDate);
                                                   setState(() {
                                                     searchByDate.text=formattedDate;
                                                     fetchSearchByDate( searchByDate.text);
@@ -183,19 +578,17 @@ class _ListRFQState extends State<ListRFQ> {
                                                     if(value.isEmpty || value==""){
                                                       startVal=0;
                                                       displayListItems =[];
-                                                      fetchEstimate();
+                                                      getOrderList();
                                                     }
-                                                    else if(searchByDate.text.isNotEmpty || searchByStatus.text.isNotEmpty){
-                                                      searchByStatus.clear();
+                                                    else if(searchByDate.text.isNotEmpty || searchByStatusController.text.isNotEmpty){
+                                                      searchByStatusController.clear();
                                                       searchByDate.clear();
                                                     }
                                                     else{
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      if(searchByOrder.text.length>6){
-                                                        // print('------ser-------');
-                                                        // print(searchByOrder.text.length);
-                                                        fetchOrderIDItems(searchByOrder.text);
+                                                      if(searchByOrder.text.isNotEmpty){
+                                                        searchByOrderID(orderId: searchByOrder.text);
                                                       }
                                                     }
                                                   },
@@ -203,12 +596,12 @@ class _ListRFQState extends State<ListRFQ> {
                                                 const SizedBox(width: 10,),
 
                                                 SizedBox(  width: 190,height: 30, child: TextFormField(
-                                                  controller:searchByStatus,
+                                                  controller:searchByStatusController,
                                                   onChanged: (value){
                                                     if(value.isEmpty || value==""){
                                                       startVal=0;
                                                       displayListItems=[];
-                                                      fetchEstimate();
+                                                      getOrderList();
                                                     }
                                                     else if(searchByDate.text.isNotEmpty || searchByOrder.text.isNotEmpty){
                                                       searchByDate.clear();
@@ -218,7 +611,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                       try{
                                                         startVal=0;
                                                         displayListItems=[];
-                                                        fetchByStatus(searchByStatus.text);
+                                                        searchByStatus(status: searchByStatusController.text);
                                                       }
                                                       catch(e){
                                                         log(e.toString());
@@ -254,7 +647,17 @@ class _ListRFQState extends State<ListRFQ> {
                                                           Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context,animation1,animation2)=>
                                                               CreateRFQ(selectedDestination: widget.args.selectedDestination,
                                                                 drawerWidth: widget.args.drawerWidth,)
-                                                          )).then((value) => fetchEstimate());
+                                                          )).then((value) async {
+
+                                                            setState(() {
+                                                              loading= true;
+                                                            });
+                                                            await getOrderList();
+                                                            setState(() {
+                                                              loading= false;
+                                                            });
+
+                                                          });
                                                         },
                                                       ),
                                                     )
@@ -295,7 +698,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                   padding: EdgeInsets.only(top: 4.0),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Vendor Name")
+                                                      child: Text("Bill to Name")
                                                   ),
                                                 )),
                                             Expanded(
@@ -323,7 +726,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                   padding: EdgeInsets.only(top: 4),
                                                   child: SizedBox(height: 25,
                                                       //   decoration: state.text.isNotEmpty ?BoxDecoration():BoxDecoration(boxShadow: [BoxShadow(color:Color(0xFFEEEEEE),blurRadius: 2)]),
-                                                      child: Text("Total Amount")
+                                                      child: Text("Type")
                                                   ),
                                                 )),
                                             Expanded(
@@ -355,6 +758,10 @@ class _ListRFQState extends State<ListRFQ> {
                                     MaterialButton(
                                       hoverColor: Colors.blue[50],
                                       onPressed: () {
+
+                                        Navigator.of(context).push(_createRoute(orderDetails :displayListItems[index],drawerWidth :widget.args.drawerWidth,orderList:displayListItems));
+                                        //Navigator.push(context, _createRoute());
+
                                         // Navigator.of(context).push(PageRouteBuilder(
                                         //   pageBuilder: (context, animation1, animation2) => ViewEstimateItem(
                                         //     drawerWidth: widget.args.drawerWidth,
@@ -374,7 +781,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child: Text(displayListItems[index]['estVehicleId'] ?? ''),
+                                                  child: Text(displayListItems[index]['orderId'] ?? ''),
                                                 ),
                                               ),
                                             ),
@@ -383,7 +790,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                 padding: const EdgeInsets.only(top: 4.0),
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child: Text(displayListItems[index]['billAddressName'] ?? ''),
+                                                  child: Text(displayListItems[index]['searchBIllToName'] ?? ''),
                                                 ),
                                               ),
                                             ),
@@ -392,7 +799,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child: Text(displayListItems[index]['shipAddressName'] ?? ''),
+                                                  child: Text(displayListItems[index]['searchDeliverToName'] ?? ''),
                                                 ),
                                               ),
                                             ),
@@ -401,7 +808,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child: Text(displayListItems[index]['serviceInvoiceDate'] ?? ''),
+                                                  child: Text(displayListItems[index]['orderDate'] ?? ''),
                                                 ),
                                               ),
                                             ),
@@ -410,7 +817,11 @@ class _ListRFQState extends State<ListRFQ> {
                                                 padding: const EdgeInsets.only(top: 4),
                                                 child: SizedBox(
                                                   height: 25,
-                                                  child: Text(double.parse(displayListItems[index]['total'].toString()).toStringAsFixed(2)),
+                                                  child: Text(
+                                                      (displayListItems[index]['invType1'] ?? '') +
+                                                          ((displayListItems[index]['invType1']?.isNotEmpty == true && displayListItems[index]['invType2']?.isNotEmpty == true) ? ', ' : '') +
+                                                          (displayListItems[index]['invType2'] ?? '')
+                                                  )
                                                 ),
                                               ),
                                             ),
@@ -430,7 +841,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                   ],
                                                 ),
                                               ),
-                                            if(displayListItems[index]['status']=="In-review")
+                                           // if(displayListItems[index]['status']=="In-review")
                                               Expanded(
                                                 child: Row(
                                                   children: [
@@ -438,7 +849,7 @@ class _ListRFQState extends State<ListRFQ> {
                                                       height: 25,
                                                       width: 100,
                                                       child: OutlinedMButton(
-                                                        text: displayListItems[index]['status'],
+                                                        text: displayListItems[index]['status']??"",
                                                         borderColor: Colors.blue,
                                                         textColor: Colors.blue,
                                                       ),
@@ -517,7 +928,7 @@ class _ListRFQState extends State<ListRFQ> {
                                             ),
                                             onTap: () {
                                               if (startVal + 1 + 5 > estimateItems.length) {
-                                                // print("Block");
+
                                               } else if (estimateItems.length > startVal + 15) {
                                                 displayListItems = [];
                                                 startVal = startVal + 15;
@@ -557,13 +968,7 @@ class _ListRFQState extends State<ListRFQ> {
   // Fetch Functions.
   fetchSearchByDate(String date)async{
     dynamic response;
-    String url="";
-    if(role=="Approver"){
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/search_by_serviceinvoicedate/$date";
-    }
-    else{
-      url="https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/estimatevehicle/get_date_search_by_user_id/$userId/$date";
-    }
+    String url="https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_orderDate/$date";
     try {
       await getData(url:url ,context: context).then((date){
         setState(() {
@@ -672,7 +1077,7 @@ class _ListRFQState extends State<ListRFQ> {
               startVal=0;
               displayListItems=[];
               searchByDate.clear();
-              fetchEstimate();
+              getOrderList();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -695,7 +1100,7 @@ class _ListRFQState extends State<ListRFQ> {
               startVal=0;
               displayListItems=[];
               searchByOrder.clear();
-              fetchEstimate();
+              getOrderList();
             });
           },
           child: const Icon(Icons.close,size: 14,)),
@@ -712,14 +1117,14 @@ class _ListRFQState extends State<ListRFQ> {
   }
   searchByStatusDecoration ({required String hintText, bool? error}){
     return InputDecoration(hoverColor: mHoverColor,
-      suffixIcon: searchByStatus.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
+      suffixIcon: searchByStatusController.text.isEmpty? const Icon(Icons.search,size: 18,):InkWell(
           onTap: (){
             setState(() {
               setState(() {
                 startVal=0;
                 displayListItems=[];
-                searchByStatus.clear();
-                fetchEstimate();
+                searchByStatusController.clear();
+                getOrderList();
               });
             });
           },
@@ -733,6 +1138,25 @@ class _ListRFQState extends State<ListRFQ> {
       contentPadding: const EdgeInsets.fromLTRB(12, 00, 0, 0),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :mTextFieldBorder)),
       focusedBorder:  OutlineInputBorder(borderSide: BorderSide(color:error==true? mErrorColor :Colors.blue)),
+    );
+  }
+
+
+  Route _createRoute({required orderDetails, required double drawerWidth, required List<dynamic> orderList}) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => ViewOrderDetails(selectedDestination: 1.1, drawerWidth: drawerWidth , orderDetails:orderDetails,orderList: orderList),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(2.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.bounceIn;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }

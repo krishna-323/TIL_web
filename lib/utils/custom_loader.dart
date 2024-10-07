@@ -19,7 +19,7 @@ class _CustomLoaderState extends State<CustomLoader> {
 
       color: Colors.white,
       dismissible: true,
-      progressIndicator: SpinKitThreeBounce(size: 58.0,
+      progressIndicator: SpinKitCircle(size: 98.0,
        itemBuilder: (context, index) => Container(
       decoration:  BoxDecoration(
         borderRadius: BorderRadius.circular(25),
