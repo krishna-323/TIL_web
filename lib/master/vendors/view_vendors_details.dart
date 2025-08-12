@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../classes/env.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -75,7 +76,7 @@ class _ViewVendorsState extends State<ViewVendors> with SingleTickerProviderStat
 
   Future fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = '${StaticData.url}new_vendor/get_all_new_vendor';
     try{
       await getData(context: context,url: url).then((value) {
         setState(() {

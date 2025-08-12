@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/utils/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../classes/env.dart';
 import '../classes/motows_routes.dart';
 import '../utils/api/get_api.dart';
 import '../utils/api/post_api.dart';
@@ -47,17 +47,13 @@ class _DealerListState extends State<DealerList> {
   List listCompanyDealer = [];
   var expandedId="";
   int startVal=0;
-
-
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   Future getInitialData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
   }
   Future postCompanyDealerDetails(companyDealerList) async {
     String url =
-        'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/add_company_dealer';
+        '${StaticData.url}dealer/add_dealer';
     postData(context: context, url: url, requestBody: companyDealerList)
         .then((value) {
       setState(() {
@@ -66,10 +62,10 @@ class _DealerListState extends State<DealerList> {
           setState(() {
             getCompanyDealerList(companyID);
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => DealerList(
-                companyName: companyName,
-                companyID: companyID,
-                drawerWidth: widget.drawerWidth,
-                selectedDestination: widget.selectedDestination,
+              companyName: companyName,
+              companyID: companyID,
+              drawerWidth: widget.drawerWidth,
+              selectedDestination: widget.selectedDestination,
               companyIDs: companyIDs,
             ),));
           });
@@ -77,9 +73,9 @@ class _DealerListState extends State<DealerList> {
       });
     });
   }
-  Future editCompanyDealer(requestBody) async {
-    String url ='https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/update_company_dealer';
-    final response = await http.put(
+  Future editCompanyDealer(requestBody, String dealerId) async {
+    String url ='${StaticData.url}dealer/patch_dealer/$dealerId';
+    final response = await http.patch(
       Uri.parse(url),
       headers: {
         "Content-Type": "application/json",
@@ -94,10 +90,10 @@ class _DealerListState extends State<DealerList> {
         setState(() {
           getCompanyDealerList(companyID);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => DealerList(
-              companyName: companyName,
-              companyID: companyID,
-              drawerWidth: widget.drawerWidth,
-              selectedDestination: widget.selectedDestination,
+            companyName: companyName,
+            companyID: companyID,
+            drawerWidth: widget.drawerWidth,
+            selectedDestination: widget.selectedDestination,
             companyIDs: companyIDs,
           ),));
         });
@@ -109,13 +105,27 @@ class _DealerListState extends State<DealerList> {
   Future getCompanyDealerList(companyId) async {
     dynamic response;
     String url =
-        'https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/get_company_dealer_by_company_id/$companyId';
+        '${StaticData.url}dealer/get_dealers_by_company_id/$companyId';
     try {
       await getData(url: url, context: context).then((value) {
         setState(() {
           if (value != null) {
             response = value;
-
+            listCompanyDealer = response;
+            if(displayListCompanyDealers.isEmpty){
+              if(listCompanyDealer.length>15){
+                for(int i=startVal;i<startVal+15;i++){
+                  displayListCompanyDealers.add(listCompanyDealer[i]);
+                  displayListCompanyDealers[i]['isExpanded']=false;
+                }
+              }
+              else{
+                for(int i=0;i<listCompanyDealer.length;i++){
+                  displayListCompanyDealers.add(listCompanyDealer[i]);
+                  displayListCompanyDealers[i]['isExpanded']=false;
+                }
+              }
+            }
           }
           loading=false;
         });
@@ -128,7 +138,7 @@ class _DealerListState extends State<DealerList> {
     }
   }
   Future deleteCompany(String dealerID)async{
-    String url= 'https://b3tipaz2h6.execute-api.ap-south-1.amazonaws.com/stage1/api/company_dealer/delete_company_dealer_by_id/$dealerID';
+    String url= '${StaticData.url}dealer/delete_dealer/$dealerID';
     final response=await http.delete(Uri.parse(url),
         //After login token will generate that token passing here.
         headers: {
@@ -142,10 +152,10 @@ class _DealerListState extends State<DealerList> {
         setState(() {
           getCompanyDealerList(companyID);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => DealerList(
-              companyName: companyName,
-              companyID: companyID,
-              drawerWidth: widget.drawerWidth,
-              selectedDestination: widget.selectedDestination,
+            companyName: companyName,
+            companyID: companyID,
+            drawerWidth: widget.drawerWidth,
+            selectedDestination: widget.selectedDestination,
             companyIDs: companyIDs,
           ),));
         });
@@ -155,70 +165,12 @@ class _DealerListState extends State<DealerList> {
       log(response.statusCode.toString());
     }
   }
-
-
-
-  Future<void> addDealer(String companyId, Map<String, dynamic> postJson) async {
-    DocumentReference companyRef = await firestore.collection('companies').doc(companyId).collection('dealers').add(postJson);
-    await companyRef.update({
-      'dealerId': companyRef.id,
-    });
-    Navigator.of(context).pop();
-
-  }
-
-  Future getDealersByCompanyId(String companyId) async {
-    QuerySnapshot querySnapshot = await firestore
-        .collection('companies')
-        .doc(companyId)
-        .collection('dealers')
-        .get();
-
-    // Convert querySnapshot to a list of dealer data
-    List dealers = querySnapshot.docs.map((doc) {
-      return {
-        'dealer_id': doc.id,                        // Document ID (dealerId)
-        'active': doc['active'],                   // Active status
-        'company_name': doc['company_name'],       // Company name
-        'company_id': doc['company_id'],           // Company ID
-        'dealer_address': doc['dealer_address'],   // Dealer address
-        'dealer_name': doc['dealer_name'],         // Dealer name
-        'dealer_phone_number': doc['dealer_phone_number'], // Dealer phone number
-      };
-    }).toList();
-
-    print(dealers);
-    listCompanyDealer = dealers;
-    if(displayListCompanyDealers.isEmpty){
-      setState(() {
-        if(listCompanyDealer.length>15){
-          for(int i=startVal;i<startVal+15;i++){
-            displayListCompanyDealers.add(listCompanyDealer[i]);
-            displayListCompanyDealers[i]['isExpanded']=false;
-          }
-        }
-        else{
-          for(int i=0;i<listCompanyDealer.length;i++){
-            displayListCompanyDealers.add(listCompanyDealer[i]);
-            displayListCompanyDealers[i]['isExpanded']=false;
-          }
-        }
-      });
-    }
-   // return dealers;
-  }
-
-
-
   @override
   void initState() {
     companyName = widget.companyName;
     companyID = widget.companyID;
     companyIDs = widget.companyIDs;
-    // print('-------- company IDs --------');
-    // print(companyIDs);
     getInitialData().whenComplete(()  {
-      getDealersByCompanyId(companyID);
       getCompanyDealerList(companyID);
     });
     super.initState();
@@ -280,7 +232,7 @@ class _DealerListState extends State<DealerList> {
                     color: Colors.grey[50],
                     child: SingleChildScrollView(
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 50,right: 50,top: 20),
+                        padding: const EdgeInsets.only(left: 50,right: 50,top: 20),
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -404,8 +356,8 @@ class _DealerListState extends State<DealerList> {
                                                   selectedDestination: widget.selectedDestination,
                                                   drawerWidth: widget.drawerWidth,
                                                   companyID: companyID,
-                                                  dealerID: displayListCompanyDealers[i]['dealer_id'],
-                                                  dealerName: displayListCompanyDealers[i]['dealer_name'],
+                                                  dealerID: displayListCompanyDealers[i]['dealerId'],
+                                                  dealerName: displayListCompanyDealers[i]['dealerName'],
                                                 ),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero,
@@ -425,7 +377,7 @@ class _DealerListState extends State<DealerList> {
                                                                 child: Padding(
                                                                   padding: const EdgeInsets.only(top: 4.0),
                                                                   child: SizedBox(height: 25,
-                                                                      child: Text(displayListCompanyDealers[i]['dealer_id']??"")
+                                                                      child: Text(displayListCompanyDealers[i]['dealerId']??"")
                                                                   ),
                                                                 )),
                                                             Expanded(
@@ -433,7 +385,7 @@ class _DealerListState extends State<DealerList> {
                                                                   padding: const EdgeInsets.only(top: 4),
                                                                   child: SizedBox(
                                                                       height: 25,
-                                                                      child: Text(displayListCompanyDealers[i]['dealer_name']??"")
+                                                                      child: Text(displayListCompanyDealers[i]['dealerName']??"")
                                                                   ),
                                                                 )
                                                             ),
@@ -441,14 +393,14 @@ class _DealerListState extends State<DealerList> {
                                                                 child: Padding(
                                                                   padding: const EdgeInsets.only(top: 4),
                                                                   child: SizedBox(height: 25,
-                                                                      child: Text(displayListCompanyDealers[i]['dealer_phone_number']??"")
+                                                                      child: Text(displayListCompanyDealers[i]['phoneNumber'].toString())
                                                                   ),
                                                                 )),
                                                             Expanded(
                                                                 child: Padding(
                                                                   padding: const EdgeInsets.only(top: 4),
                                                                   child: SizedBox(height: 25,
-                                                                      child: Text(displayListCompanyDealers[i]['dealer_address']??"")
+                                                                      child: Text(displayListCompanyDealers[i]['dealerAddress']??"")
                                                                   ),
                                                                 )),
                                                           ],
@@ -474,9 +426,7 @@ class _DealerListState extends State<DealerList> {
                                                                             List<String> dealerNamesByCompany = [];
                                                                             // for(var company in displayListCompanyDealers){
                                                                             //   List<Map<String, dynamic>> items = (company['items'] as List<dynamic>).cast<Map<String, dynamic>>();
-                                                                            //   List<String> dealerNames = items.map((e) => e['dealer_name'].toString()).toList();
-                                                                            //   print('-------- dealer name ---------');
-                                                                            //   print("These Dealers $dealerNames belongs to ${company['company_name']}");
+                                                                            //   List<String> dealerNames = items.map((e) => e['dealerName'].toString()).toList();
                                                                             // }
                                                                             setState(() {
                                                                               showDialog(
@@ -493,11 +443,11 @@ class _DealerListState extends State<DealerList> {
                                                                                   final editCompanyName = TextEditingController();
                                                                                   editCompanyName.text=companyName??"";
                                                                                   final editDealerName = TextEditingController();
-                                                                                  editDealerName.text=displayListCompanyDealers[i]['dealer_name']??"";
+                                                                                  editDealerName.text=displayListCompanyDealers[i]['dealerName']??"";
                                                                                   final editDealerPhone = TextEditingController();
-                                                                                  editDealerPhone.text=displayListCompanyDealers[i]['dealer_phone_number']??"";
+                                                                                  editDealerPhone.text=displayListCompanyDealers[i]['phoneNumber'].toString();
                                                                                   final editDealerAddress = TextEditingController();
-                                                                                  editDealerAddress.text=displayListCompanyDealers[i]['dealer_address']??"";
+                                                                                  editDealerAddress.text=displayListCompanyDealers[i]['dealerAddress']??"";
 
                                                                                   String capitalizeFirstWord(String value) {
                                                                                     if(value.isNotEmpty){
@@ -740,14 +690,11 @@ class _DealerListState extends State<DealerList> {
                                                                                                                 onTap:(){
                                                                                                                   if (editDealerKey.currentState!.validate()) {
                                                                                                                     companyDetails = {
-                                                                                                                      "company_id": companyID,
-                                                                                                                      'company_name':editCompanyName.text,
-                                                                                                                      'dealer_name':editDealerName.text,
-                                                                                                                      'dealer_phone_number':editDealerPhone.text,
+                                                                                                                      'dealerName':editDealerName.text,
+                                                                                                                      'phoneNumber':int.parse(editDealerPhone.text),
                                                                                                                       'dealer_address':editDealerAddress.text,
-                                                                                                                      "dealer_id": displayListCompanyDealers[i]['dealer_id'],
                                                                                                                     };
-                                                                                                                    editCompanyDealer(companyDetails);
+                                                                                                                    editCompanyDealer(companyDetails,displayListCompanyDealers[i]['dealerId']);
                                                                                                                   }
                                                                                                                 },
                                                                                                               ),
@@ -853,7 +800,7 @@ class _DealerListState extends State<DealerList> {
                                                                                                             textColor: Colors.white,
                                                                                                             borderColor: Colors.red,
                                                                                                             onTap:(){
-                                                                                                              deleteCompany(displayListCompanyDealers[i]['dealer_id']);
+                                                                                                              deleteCompany(displayListCompanyDealers[i]['dealerId']);
                                                                                                             },
                                                                                                           ),
                                                                                                         ),
@@ -930,11 +877,11 @@ class _DealerListState extends State<DealerList> {
                                                           setState(() {
                                                             if(expandedId==""){
                                                               setState(() {
-                                                                expandedId=displayListCompanyDealers[i]["company_id"];
+                                                                expandedId=displayListCompanyDealers[i]["companyId"]['companyId'];
                                                                 displayListCompanyDealers[i]["isExpanded"]=true;
                                                               });
                                                             }
-                                                            else if(expandedId==displayListCompanyDealers[i]["company_id"]){
+                                                            else if(expandedId==displayListCompanyDealers[i]["companyId"]['companyId']){
                                                               setState(() {
                                                                 displayListCompanyDealers[i]["isExpanded"]=false;
                                                                 expandedId="";
@@ -943,9 +890,9 @@ class _DealerListState extends State<DealerList> {
                                                             else if(expandedId.isNotEmpty || expandedId!=""){
                                                               setState(() {
                                                                 for(var companyId in displayListCompanyDealers){
-                                                                  if(companyId["company_id"]==expandedId){
+                                                                  if(companyId["companyId"]==expandedId){
                                                                     companyId["isExpanded"]=false;
-                                                                    expandedId=displayListCompanyDealers[i]["company_id"];
+                                                                    expandedId=displayListCompanyDealers[i]["companyId"]['companyId'];
                                                                     displayListCompanyDealers[i]["isExpanded"]=true;
                                                                   }
                                                                 }
@@ -1065,7 +1012,7 @@ class _DealerListState extends State<DealerList> {
           final createCompanyCon=TextEditingController();
           createCompanyCon.text=companyName;
           final newDealer = GlobalKey<FormState>();
-          Map<String, dynamic> userData = {};
+          Map userData = {};
           String capitalizeFirstWord(String value) {
             if(value.isNotEmpty){
               var result = value[0].toUpperCase();
@@ -1368,17 +1315,14 @@ class _DealerListState extends State<DealerList> {
                                             onTap:(){
                                               if (newDealer.currentState!.validate()) {
                                                 userData = {
-                                                  "active": true,
-                                                  "company_name": createCompanyCon.text,
-                                                  "company_id": companyID,
-                                                  "dealer_address": dealerAddress.text,
-                                                  "dealer_name": dealerName.text,
-                                                  "dealer_phone_number": dealerPhone.text
+                                                  "companyId": companyID,
+                                                  "dealerAddress": dealerAddress.text,
+                                                  "dealerName":  dealerName.text,
+                                                  "phoneNumber": int.parse(dealerPhone.text)
                                                 };
-                                                // print('---check----');
-                                                // print(userData);
+
                                                 Navigator.pop(context);
-                                                addDealer(widget.companyID ,userData);
+                                                postCompanyDealerDetails(userData);
                                               }
 
                                             },

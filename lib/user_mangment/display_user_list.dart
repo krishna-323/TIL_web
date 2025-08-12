@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:new_project/classes/env.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +53,7 @@ class _UserManagementState extends State<UserManagement> {
   Future searchCompanyApi() async {
     dynamic response;
     String url =
-        'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/company/get_all_company';
+        '${StaticData.url}company/get_all_company';
     try {
       await getData(url: url, context: context).then((value) {
         setState(() {
@@ -2650,7 +2650,7 @@ class _UserManagementState extends State<UserManagement> {
                                                                                                                Future changePasswordFunc(
                                                                                                                    String storeEmail,
                                                                                                                    String storePassword) async {
-                                                                                                                 String url = 'https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/change-password/$storeEmail/$storePassword';
+                                                                                                                 String url = '${StaticData.url}user_master/change-password/$storeEmail/$storePassword';
                                                                                                                  final response = await http.get(Uri.parse(url),
                                                                                                                      headers: {
                                                                                                                        "Content-Type": "application/json",

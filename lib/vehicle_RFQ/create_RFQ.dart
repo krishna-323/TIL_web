@@ -18,6 +18,7 @@ import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
+import '../classes/env.dart';
 import 'edit_vehicle_to_form.dart';
 import 'list_RFQ.dart';
 
@@ -447,7 +448,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                                     }
                                     );
                                   }
-                                 var response =await postData(context: context,requestBody: postDetails,url: "https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/add_vehicleorder");
+                                 var response =await postData(context: context,requestBody: postDetails,url: "${StaticData.url}vehicleorder/add_vehicleorder");
                                  if(response!=null){
                                    print(response.runtimeType);
                                    print(response);
@@ -634,7 +635,7 @@ class _CreateRFQState extends State<CreateRFQ> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/shiptoaddress/get_all_shiptoaddress';
+    String url = '${StaticData.url}shiptoaddress/get_all_shiptoaddress';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -838,7 +839,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               }
                               return null;
                             },
-                            showAdd: true,
+                            showAdd: false,
                             decoration:textFieldVendorAndWarehouse(hintText: 'Search $getBillTo Address',error:isBillToSelected) ,
                             // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
                             controller: billToAddressController,
@@ -914,7 +915,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                         children:  [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 2,top: 2),
-                            child: Text("Ship to Details $getBillTo",style: const TextStyle(fontSize: 16)),
+                            child: Text("Deliver to Details $getBillTo",style: const TextStyle(fontSize: 16)),
                           ),
                           if(showCustomerDetails==true)
                             SizedBox(
@@ -955,7 +956,7 @@ class _CreateRFQState extends State<CreateRFQ> {
                               }
                               return null;
                             },
-                            showAdd: true,
+                            showAdd: false,
                             decoration:textFieldVendorAndWarehouse(hintText: 'Search $getBillTo Address',error:isBillToSelected) ,
                             // decoration:textFieldWarehouseDecoration(hintText: 'Search Warehouse',error:searchWarehouse),
                             controller: shipToController,

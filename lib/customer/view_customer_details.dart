@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:new_project/classes/env.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -89,7 +89,7 @@ class _ViewCustomersState extends State<ViewCustomers>with SingleTickerProviderS
 
   Future fetchCustomerListData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/get_all_newcustomer';
+    String url = '${StaticData.url}newcustomer/get_all_newcustomer';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {

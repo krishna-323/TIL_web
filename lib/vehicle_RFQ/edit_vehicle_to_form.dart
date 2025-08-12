@@ -52,6 +52,7 @@ class _EditVehicleToFormState extends State<EditVehicleToForm> {
   }
   @override
   Widget build(BuildContext context)  {
+    print(selectedVehicle);
     return  Form(
       key: _formKey,
       child: WillPopScope(

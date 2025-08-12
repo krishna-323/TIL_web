@@ -33,9 +33,9 @@ class _WarrantyState extends State<Warranty> {
   void  initState(){
     super.initState();
     getInitialData().whenComplete(() {
-      fetchWarrantyList();
+
     });
-    loading=true;
+
   }
   bool loading=false;
   List estimateItems=[];
@@ -89,7 +89,7 @@ class _WarrantyState extends State<Warranty> {
       });
     }
     catch(e){
-      logOutApi(context: context,exception:e.toString() ,response: response);
+      // logOutApi(context: context,exception:e.toString() ,response: response);
       setState(() {
         loading=false;
       });

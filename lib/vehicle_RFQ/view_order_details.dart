@@ -1,7 +1,9 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:new_project/vehicle_RFQ/add_vehicle_to_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +19,9 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
+import '../classes/env.dart';
 import 'edit_vehicle_to_form.dart';
+import 'dart:html' as html;
 
 class ViewOrderDetails extends StatefulWidget {
   final double drawerWidth;
@@ -144,11 +148,12 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
   String role ='';
   String userId ='';
   String selectedID ="";
+  String status = "";
   String managerId ='';
   String orgId ='';
   List taxCodes=[];
   List taxPercentage =[];
-
+bool invoiced = false;
   List searchList =[];
 
   final validationKey=GlobalKey<FormState>();
@@ -305,6 +310,16 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                                     onTap: (){
                                       setState(() {
                                         selectedID=searchList[index]['orderId'];
+                                        if(searchList[index]['status'] =="Invoiced"){
+                                          setState(() {
+                                            invoiced = true;
+                                          });
+                                        }
+                                        else{
+                                          setState(() {
+                                            invoiced= false;
+                                          });
+                                        }
                                         mapData(searchList[index]);
                                       });
                                     }, borderColor: Colors.white, textColor: selectedID==searchList[index]['orderId']? Colors.white :Colors.black,
@@ -324,16 +339,21 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                       ],
                     ),
                     ),
+                    const VerticalDivider(
+                      width: 1,
+                      thickness: 1,
+                    ),
+                    if(!invoiced)
                     Expanded(flex: 5,
                       child: SingleChildScrollView(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 10,left: 48,bottom: 30,right: 68),
+                          padding: const EdgeInsets.only(top: 10,left: 12,bottom: 30,right: 68),
                           child: Form(
                             key:validationKey,
                             child: Column(
                               children: [
-                                SizedBox(height: 10,),
-                                HeaderCard(width: width,selectedID :selectedID,orderDate: widget.orderDetails['orderDate']),
+                                const SizedBox(height: 10,),
+                                HeaderCard(width: width,selectedID :selectedID,orderDate: orderDate),
                                 const SizedBox(height: 50,),
                                 buildInvoiceCard(),
 
@@ -353,6 +373,10 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                         ),
                       ),
                     ),
+                    if(invoiced)
+                      LayoutBuilder(builder: (context, constraints) {
+                        return buildMain(MediaQuery.of(context).size.width-440);
+                      })
                   ],
                 ),
               ),
@@ -378,7 +402,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = '${StaticData.url}new_vendor/get_all_new_vendor';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -541,7 +565,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                         children:  [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 2,top: 2),
-                            child: Text("Bill to Details $getBillTo",style: const TextStyle(fontSize: 16)),
+                            child: Text("Deliver to Details $getBillTo",style: const TextStyle(fontSize: 16)),
                           ),
                           if(showCustomerDetails==true)
                             SizedBox(
@@ -784,7 +808,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(color: const Color(0xd5f8f7f7),border: Border.all(color: mTextFieldBorder),borderRadius:BorderRadius.circular(8) ),
-                      child:  TextField(readOnly: true,controller: TextEditingController(text:widget.orderDetails['invNotes'] ),decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 12),maxLines: 10,),
+                      child:  TextField(readOnly: true,controller: TextEditingController(text:widget.orderDetails['invNotes'] ),decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: const TextStyle(fontSize: 12),maxLines: 10,),
                     ),
                   ),
                 ],
@@ -1104,7 +1128,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(border: Border.all(color: mTextFieldBorder),borderRadius: BorderRadius.circular(8),color: const Color(0xd5f8f7f7),),
-                      child:  TextField(readOnly: true,controller: TextEditingController(text: widget.orderDetails['dealerNotes']),decoration: InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: TextStyle(fontSize: 14),maxLines: 10,),
+                      child:  TextField(readOnly: true,controller: TextEditingController(text: widget.orderDetails['dealerNotes']),decoration: const InputDecoration(border: InputBorder.none,contentPadding: EdgeInsets.only(right: 5,top: 10,left: 5)),style: const TextStyle(fontSize: 14),maxLines: 10,),
                     ),
                   ),
                 ],
@@ -1407,7 +1431,9 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
     );
   }
 
-
+  TextStyle headerStyle =const TextStyle(fontWeight: FontWeight.bold,fontSize: 14);
+  TextStyle headerStyle2 =const TextStyle(fontWeight: FontWeight.bold,fontSize: 18);
+  TextStyle headerTextGrey =const TextStyle(color: Colors.grey);
   textFieldDecoration({required String hintText, required bool error}) {
     return  InputDecoration(
       border: const OutlineInputBorder(
@@ -1699,7 +1725,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                             child: Column(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const SizedBox(height: 5,),
-                                Text('PRIMA 4856$index',style: TextStyle(fontSize: 12)),
+                                Text('PRIMA 4856$index',style: const TextStyle(fontSize: 12)),
                                 const SizedBox(height: 5,),
                               ],
                             ),
@@ -1748,12 +1774,23 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
                             ),
                           ),
                           const CustomVDivider(height: 65, width: 1, color: mTextFieldBorder),
-                          const Expanded(
+                           Expanded(
                             child: Column(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(height: 5,),
-                                Icon(Icons.file_present,color: Colors.blue),
-                                SizedBox(height: 5,),
+                                const SizedBox(height: 5,),
+                                InkWell(onTap: () async {
+
+                                  final pdfBytes = await rootBundle.load('assets/Test_PDF.pdf');
+
+                                  // Create a Blob and trigger the download
+                                  final blob = html.Blob([pdfBytes.buffer.asUint8List()], 'application/pdf');
+                                  final url = html.Url.createObjectUrlFromBlob(blob);
+                                  final anchor = html.AnchorElement(href: url)
+                                    ..setAttribute('download', 'test.pdf')
+                                    ..click();
+                                  html.Url.revokeObjectUrl(url); // Clean up the URL object after download
+                                },child: const Icon(Icons.file_present,color: Colors.blue)),
+                                const SizedBox(height: 5,),
                               ],
                             ),
                           ),
@@ -1775,6 +1812,17 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
 
   void mapData(Map<dynamic, dynamic> orderDetails) {
     selectedVehiclesList =[];
+    if(orderDetails['status'] =="Invoiced"){
+      setState(() {
+        invoiced = true;
+      });
+    }
+    else{
+      setState(() {
+        invoiced= false;
+      });
+    }
+    orderDate = orderDetails['orderDate'];
     invoicingType1 =orderDetails['invType1'];
     invoiceType2 =orderDetails['invType2'];
     billToData['Name'] = orderDetails['searchBIllToName'];
@@ -1809,7 +1857,7 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
   Future getOrderList(String value)async{
 
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_vehicleOrderId/$value';
+    String url='${StaticData.url}vehicleorder/search_by_vehicleOrderId/$value';
 
     try{
       await getData(url:url ,context: context).then((value) {
@@ -1828,6 +1876,295 @@ class _ViewOrderDetailsState extends State<ViewOrderDetails> {
         loading=false;
       });
     }
+  }
+
+  Widget buildMain(double screenWidth){
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: screenWidth,
+        child: Column(
+          children: [
+            Card(
+              color: Colors.white,
+              surfaceTintColor: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50,top:10 ),
+                    child: SizedBox(
+                        height: 40,
+                        child: Row(children: [
+                          InkWell(
+                              onTap: (){
+                                Navigator.of(context).pop();
+                              },
+                              child:const Icon(Icons.arrow_back_outlined,)),
+                          const SizedBox(width: 15,),
+                          Text("Go Back",
+                            style: headerStyle,)
+                        ],)),
+                  ),
+                  const SizedBox(height: 11,),
+                  const Divider(height: 1,color: mTextFieldBorder,),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20,),
+            buildStatusCard(),
+            const SizedBox(height: 20,),
+            buildVehicleCard(),
+            const SizedBox(height: 20,),
+            buildInvoiceDetails(),
+            const SizedBox(height: 20,),
+            buildGatePassCard()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildStatusCard(){
+    return  Padding(
+      padding: const EdgeInsets.only(left: 50.0,right: 50),
+      child: Card(
+        color: Colors.white,surfaceTintColor: Colors.white,elevation:4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+            side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(flex:1,child: Container()),
+                // First step: Parts Order
+                const Column(
+                  children: [
+                    Icon(
+                      Icons.check_box,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      'Vehicle Order',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Expanded(flex:1,child: Container()),
+                const Column(
+                  children: [
+                    Icon(
+                      Icons.check_box,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      'Invoice',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Expanded(flex:1,child: Container()),
+                Column(
+                  children: [
+                    Icon(
+                      Icons.check_box,
+                      color: status == "Delivered"?Colors.green:Colors.grey,
+                    ),
+                    const Text(
+                      'GatePass',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Expanded(flex:1,child: Container()),
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildVehicleCard(){
+    return  Padding(
+      padding: const EdgeInsets.only(left: 50.0,right: 50),
+      child: Card(
+        color: Colors.white,surfaceTintColor: Colors.white,elevation:4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+            side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Vehicle Order",style: headerStyle2,),
+                    const Row(
+                      children: [
+                        Text("Available For Download"),
+                        SizedBox(width: 10,),
+                        Icon(Icons.download_for_offline,color: Colors.green,)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              // const SizedBox(height: 10,),
+              const Divider(height: 1,color: mTextFieldBorder,),
+              const SizedBox(height: 10,),
+              Row(children: [
+                Expanded(child: Column(children: [
+                  Text('Vehicle Order',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text(selectedID)
+                ],)),
+                Expanded(child: Column(children: [
+                  Text('Vehicle Order Date',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text(orderDate)
+                ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Amount',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Vehicle Model',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+              ],),
+              const SizedBox(height: 10,)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  String orderId = '';
+  String orderDate = '';
+  Widget buildInvoiceDetails(){
+    return  Padding(
+      padding: const EdgeInsets.only(left: 50.0,right: 50),
+      child: Card(
+        color: Colors.white,surfaceTintColor: Colors.white,elevation:4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+            side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Invoice",style: headerStyle2,),
+                    const Row(
+                      children: [
+                        Text("Available For Download"),
+                        SizedBox(width: 10,),
+                        Icon(Icons.download_for_offline,color: Colors.green,)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              // const SizedBox(height: 10,),
+              const Divider(height: 1,color: mTextFieldBorder,),
+              const SizedBox(height: 10,),
+              Row(children: [
+                Expanded(child: Column(children: [
+                  Text('INV Numberr',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text(orderId)
+                ],)),
+                Expanded(child: Column(children: [
+                  Text('Invoiced Date',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text(orderDate)
+                ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Amount',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Vehicle Model',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+              ],),
+              const SizedBox(height: 10,)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  Widget buildGatePassCard(){
+    return  Padding(
+      padding: const EdgeInsets.only(left: 50.0,right: 50),
+      child: Card(
+        color: Colors.white,surfaceTintColor: Colors.white,elevation:4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4),
+            side:  BorderSide(color: mTextFieldBorder.withOpacity(0.8), width: 1,)),
+
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Gate Pass",style: headerStyle2,),
+                    const Row(
+                      children: [
+                        Text("Not Available For Download"),
+                        SizedBox(width: 10,),
+                        Icon(Icons.download_for_offline,color: Colors.grey,)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              // const SizedBox(height: 10,),
+              const Divider(height: 1,color: mTextFieldBorder,),
+              const SizedBox(height: 10,),
+              Row(children: [
+                Expanded(child: Column(children: [
+                  Text('Order Number',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text(orderId)
+                ],)),
+                Expanded(child: Column(children: [
+                  Text('Date',style:headerTextGrey ,),
+                  const SizedBox(height: 5,),
+                  Text("")
+                ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Amount',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+                // Expanded(child: Column(children: [
+                //   Text('Vehicle Model',style:headerTextGrey ,),
+                //   const SizedBox(height: 5,),
+                //   const Text('data')
+                // ],)),
+              ],),
+              const SizedBox(height: 10,)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

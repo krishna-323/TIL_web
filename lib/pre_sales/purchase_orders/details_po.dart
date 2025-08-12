@@ -17,6 +17,7 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
+import 'package:new_project/classes/env.dart';
 class ViewEstimateItem extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
@@ -975,7 +976,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = '${StaticData.url}new_vendor/get_all_new_vendor';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -2387,7 +2388,7 @@ class _ViewEstimateItemState extends State<ViewEstimateItem> {
 
   Future getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/model_general/get_all_mod_general";
+    String url = "${StaticData.url}model_general/get_all_mod_general";
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {

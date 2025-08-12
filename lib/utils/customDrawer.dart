@@ -5,6 +5,7 @@ import '../bloc/bloc.dart';
 import '../classes/arguments_classes/arguments_classes.dart';
 import '../classes/motows_routes.dart';
 import '../pre_sales/warranty/warranty.dart';
+import '../vehicle_part_order/parts_order_list2.dart';
 
 
 
@@ -305,7 +306,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                       Navigator.pushReplacementNamed(
                                         context,
                                         MotowsRoutes.partsOrderListRoutes,
-                                        arguments: PartsOrderListArguments(selectedDestination: 1.2, drawerWidth: widget.drawerWidth),
+                                        arguments: PartsOrderListArguments2(selectedDestination: 1.2, drawerWidth: widget.drawerWidth),
                                       );
                                     },
                                   ),

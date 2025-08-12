@@ -9,6 +9,7 @@ import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
 import '../../../widgets/motows_buttons/outlined_icon_mbutton.dart';
 import '../../../widgets/motows_buttons/outlined_mbutton.dart';
+import '../../classes/env.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/api/post_api.dart';
 import '../../utils/customAppBar.dart';
@@ -16,7 +17,7 @@ import '../../utils/customDrawer.dart';
 import '../../utils/custom_loader.dart';
 import '../../utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import '../../utils/static_data/motows_colors.dart';
-
+import 'package:new_project/classes/env.dart';
 class Estimate extends StatefulWidget {
   final double drawerWidth;
   final double selectedDestination;
@@ -333,7 +334,7 @@ class _EstimateState extends State<Estimate> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = '${StaticData.url}new_vendor/get_all_new_vendor';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -1896,7 +1897,7 @@ class _EstimateState extends State<Estimate> {
 
   Future getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
+    String url = "${StaticData.url}excel/get_all_mod_general";
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {

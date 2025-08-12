@@ -10,6 +10,7 @@ import '../../../widgets/custom_dividers/custom_vertical_divider.dart';
 import '../../../widgets/custom_search_textfield/custom_search_field.dart';
 import '../../../widgets/motows_buttons/outlined_icon_mbutton.dart';
 import '../../../widgets/motows_buttons/outlined_mbutton.dart';
+import '../../classes/env.dart';
 import '../../utils/api/get_api.dart';
 import '../../utils/customAppBar.dart';
 import '../../utils/customDrawer.dart';
@@ -932,7 +933,7 @@ class _WarrantyDetailsState extends State<WarrantyDetails> {
 
   fetchVendorsData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/new_vendor/get_all_new_vendor';
+    String url = '${StaticData.url}new_vendor/get_all_new_vendor';
     try {
       await getData(context: context,url: url).then((value) {
         setState(() {

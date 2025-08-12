@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:new_project/classes/env.dart';
 import 'package:new_project/utils/customAppBar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List poList=[];
   Future fetchListCustomerData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/get_all_newcustomer';
+    String url = '${StaticData.url}newcustomer/get_all_newcustomer';
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {
@@ -133,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Future fetchPoData() async{
     dynamic response;
-    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
+    String url = "${StaticData.url}excel/get_all_mod_general";
     try {
       await getData(context: context, url: url).then((value) {
         // print("https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/docket_customer/get_docket_wrapper_by_id/${widget.docketDetails["general_id"]}");
@@ -200,9 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     onTap: (){
-                      Navigator.pushReplacementNamed(context, MotowsRoutes.customerListRoute,arguments: CustomerArguments(selectedDestination: 0,drawerWidth: 190));
+                      Navigator.pushReplacementNamed(
+                        context,
+                        MotowsRoutes.listFRQ,
+                        arguments: ListRFQArgs(selectedDestination: 1.1, drawerWidth: 190),
+                      );
                     },
-                    child: const KpiCard(title: "Vehicle Orders",subTitle:'300',subTitle2: "134",icon:Icons.account_balance_wallet_outlined)
+                    child: const KpiCard(title: "Vehicle RFQ",subTitle:'7',subTitle2: "",icon:Icons.account_balance_wallet_outlined)
 
                   )),
                   const SizedBox(width: 30),
@@ -244,12 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Flexible(
                                             child: Row(
                                               children: [
-                                                Flexible(child: Text("1,300",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
+                                                Flexible(child: Text("6",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.grey[800],fontSize: 20,fontWeight: FontWeight.bold))),
                                                  const Flexible(
                                                   child: Row(
                                                     children: [
                                                       Flexible(child: Icon(Icons.arrow_upward_sharp,color: Colors.green,size: 16)),
-                                                      Flexible(child: Text("134",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.green,fontSize: 12,))),
+                                                      Flexible(child: Text("",overflow:TextOverflow.ellipsis,maxLines: 1 ,style: TextStyle(color: Colors.green,fontSize: 12,))),
                                                     ],
                                                   ),
                                                 ),

@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:new_project/classes/env.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/customer/view_customer_details.dart';
@@ -38,7 +38,7 @@ class _ViewCustomerListState extends State<ViewCustomerList> {
 
   Future fetchListCustomerData() async {
     dynamic response;
-    String url = 'https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/newcustomer/get_all_newcustomer';
+    String url = '${StaticData.url}newcustomer/get_all_newcustomer';
     try {
       await getData(context: context, url: url).then((value) {
         setState(() {

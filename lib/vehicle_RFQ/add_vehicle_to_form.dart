@@ -7,6 +7,7 @@ import 'package:new_project/utils/custom_loader.dart';
 import 'package:new_project/utils/custom_popup_dropdown/custom_popup_dropdown.dart';
 import 'package:new_project/widgets/custom_dividers/custom_vertical_divider.dart';
 
+import '../classes/env.dart';
 import '../utils/api/get_api.dart';
 import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
@@ -500,7 +501,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                       child: LayoutBuilder(
                                           builder: (BuildContext context, BoxConstraints constraints) {
                                             return CustomPopupMenuButton<String>(
-                                              hintText: '',
+                                              hintText: 'Type',
                                               decoration: customPopupDecoration(hintText:  selectedVehicle['location1']['type']),
                                               childWidth: constraints.maxWidth,
                                               offset: const Offset(1, 40),
@@ -537,6 +538,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                 child: SizedBox(height: 30,
                                   child: addressTextField(selectedVehicle['location1']['name'].toString(),
                                       maxLines: 1,
+                                      hintText: "Name",
                                       onChanged: (v){
                                         selectedVehicle['location1']['name'] =v;
                                       }
@@ -549,6 +551,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
                                 child: SizedBox(height: 140,
                                   child: addressTextField(selectedVehicle['location1']['details'].toString(),
                                       maxLines: 7,
+                                      hintText: "Address",
                                       onChanged: (v){
                                         selectedVehicle['location1']['details'] =v;
                                       }
@@ -823,19 +826,20 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
     );
   }
 
-  Widget addressTextField(text,{required ValueChanged onChanged, required int maxLines}) {
+  Widget addressTextField(text,{required ValueChanged onChanged, required int maxLines, String? hintText}) {
     var t1 = TextEditingController(text: '$text');
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
       child:  Center(
         child: TextField(maxLines: maxLines,
             textAlign: TextAlign.left,controller: t1,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.only(left: 12,top: 6,bottom: 8,right: 0),
-              enabledBorder: OutlineInputBorder(
+            decoration:  InputDecoration(
+              hintText: hintText ??"",
+              contentPadding: const EdgeInsets.only(left: 12,top: 6,bottom: 8,right: 0),
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: mTextFieldBorder),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: mTextFieldBorder),
               ),
             ),
@@ -853,8 +857,8 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
       focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
       suffixIcon: const Icon(Icons.arrow_drop_down_circle_sharp, color: mSaveButton, size: 14),
       constraints: const BoxConstraints(maxHeight: 35),
-      hintText: hintText,
-      hintStyle: const TextStyle(fontSize: 14, color: Colors.black),
+      hintText: hintText==""? "Type":hintText,
+      hintStyle: TextStyle(fontSize:  hintText=="" ? 14:14, color: hintText==""? Colors.grey[700]:Colors.black),
       counterText: '',
       contentPadding: const EdgeInsets.fromLTRB(12, 0, 0, 18),
 
@@ -1254,7 +1258,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
   Future getAllVehicleVariant() async {
     dynamic response;
-    String url = "https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/get_all_vehiclemaster";
+    String url = "${StaticData.url}vehiclemaster/get_all_vehiclemaster";
     try {
 
       await getData(context: context, url: url).then((value) {
@@ -1289,7 +1293,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
   Future fetchModelName(String modelName)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_modelVCDescription/$modelName';
+    String url='${StaticData.url}vehiclemaster/search_by_modelVCDescription/$modelName';
     try{
       await getData(url:url ,context:context ).then((value) {
         setState(() {
@@ -1327,7 +1331,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
   }
   Future searchCode(String code)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_modelVCCode/$code';
+    String url='${StaticData.url}vehiclemaster/search_by_modelVCCode/$code';
     try{
       await getData(context: context,url: url).then((value) {
         setState(() {
@@ -1364,7 +1368,7 @@ class _AddVehicleToFormState extends State<AddVehicleToForm> {
 
   Future searchTransmission(String transmissionSearchValue)async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehiclemaster/search_by_transmissionTypeCode/$transmissionSearchValue';
+    String url='${StaticData.url}vehiclemaster/search_by_transmissionTypeCode/$transmissionSearchValue';
     try{
       await getData(context:context ,url: url).then((value) {
         setState((){

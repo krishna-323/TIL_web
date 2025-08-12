@@ -108,10 +108,10 @@ class _VehicleButtonState extends State<VehicleButton> {
                       const SizedBox(height: 4,),
                       Row(crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Bill To: ",
+                          Text("",
                               style: TextStyle(fontSize: 12,
                                   color:isHover? Colors.black: widget.textColor)),
-                          Text(widget.data['searchBIllToName'],
+                          Text(widget.data['status'],
                               style: TextStyle(fontSize: 12,
                                   color:isHover? Colors.black: widget.textColor)),
                         ],
@@ -126,6 +126,80 @@ class _VehicleButtonState extends State<VehicleButton> {
   }
 }
 
+
+class PartButton extends StatefulWidget {
+  final GestureTapCallback? onTap;
+  final Map data;
+  final Color borderColor;
+  final Color textColor;
+  final Color? buttonColor;
+  const PartButton({super.key,
+    this.onTap,
+    required this.data,
+    required this.borderColor,
+    required this.textColor,
+    this.buttonColor});
+
+  @override
+  State<PartButton> createState() => _PartButtonState();
+}
+
+class _PartButtonState extends State<PartButton> {
+  bool isHover= false;
+  @override
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+        decoration: BoxDecoration(color: widget.buttonColor ?? Colors.white,border: Border.all(color:  widget.borderColor),borderRadius: BorderRadius.circular(4)),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(highlightColor: Colors.lightBlueAccent[50],
+            onHover: (value) {
+              if(value){
+                setState(() {
+                  isHover=true;
+                });
+              }
+              else{
+                setState(() {
+                  isHover=false;
+                });
+              }
+            },
+            hoverColor: mHoverColor,
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            onTap: widget.onTap,
+            child:  Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.data['partsOrderId'],
+                          style: TextStyle(fontWeight: FontWeight.bold,
+                              color:isHover? Colors.black: widget.textColor)),
+                      const SizedBox(height: 4,),
+                      Row(crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Name: ",
+                              style: TextStyle(fontSize: 12,
+                                  color:isHover? Colors.black: widget.textColor)),
+                          Text(widget.data['invCustomerName'],
+                              style: TextStyle(fontSize: 12,
+                                  color:isHover? Colors.black: widget.textColor)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}
 
 
 

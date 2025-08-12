@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:new_project/classes/env.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_project/vehicle_RFQ/list_RFQ_by_status.dart';
@@ -59,7 +59,7 @@ class _ListRFQState extends State<ListRFQ> {
   Future getOrderList()async{
     await getKPIValues();
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/get_all_Vehicleorders';
+    String url='${StaticData.url}vehicleorder/get_all_Vehicleorders';
 
     try{
       await getData(url:url ,context: context).then((value) {
@@ -94,7 +94,7 @@ class _ListRFQState extends State<ListRFQ> {
 
   Future getKPIValues()async{
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/get_status_counts';
+    String url='${StaticData.url}vehicleorder/get_status_counts';
 
     try{
       await getData(url:url ,context: context).then((value) {
@@ -118,7 +118,7 @@ class _ListRFQState extends State<ListRFQ> {
   Future searchByOrderID({ required String orderId})async{
     displayListItems =[];
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_vehicleOrderId/$orderId';
+    String url='${StaticData.url}vehicleorder/search_by_vehicleOrderId/$orderId';
 
     try{
       await getData(url:url ,context: context).then((value) {
@@ -154,7 +154,7 @@ class _ListRFQState extends State<ListRFQ> {
   Future searchByStatus({ required String status})async{
     displayListItems =[];
     dynamic response;
-    String url='https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_status/$status';
+    String url='${StaticData.url}vehicleorder/search_by_status/$status';
 
     try{
       await getData(url:url ,context: context).then((value) {
@@ -968,7 +968,7 @@ class _ListRFQState extends State<ListRFQ> {
   // Fetch Functions.
   fetchSearchByDate(String date)async{
     dynamic response;
-    String url="https://hiqbfxz5ug.execute-api.ap-south-1.amazonaws.com/stage1/api/vehicleorder/search_by_orderDate/$date";
+    String url="${StaticData.url}vehicleorder/search_by_orderDate/$date";
     try {
       await getData(url:url ,context: context).then((date){
         setState(() {

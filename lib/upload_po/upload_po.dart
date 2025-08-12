@@ -14,7 +14,7 @@ import '../utils/customAppBar.dart';
 import '../utils/customDrawer.dart';
 import '../utils/custom_loader.dart';
 import '../utils/static_data/motows_colors.dart';
-
+import 'package:new_project/classes/env.dart';
 class UploadPO extends StatefulWidget {
   final UploadDataArguments args;
   const UploadPO({Key? key, required this.args}) : super(key: key);
@@ -653,7 +653,7 @@ class _UploadPOState extends State<UploadPO> {
 
   Future fetchPoData() async{
     dynamic response;
-    String url = "https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/excel/get_all_mod_general";
+    String url = "${StaticData.url}excel/get_all_mod_general";
     try {
       await getData(context: context, url: url).then((value) {
         // print("https://x23exo3n88.execute-api.ap-south-1.amazonaws.com/stage1/api/docket_customer/get_docket_wrapper_by_id/${widget.docketDetails["general_id"]}");

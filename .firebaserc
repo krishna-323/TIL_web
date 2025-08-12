@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "test": "tatadealer-503f1",
+    "staging": "tatadealerappliction"
+  },
+  "targets": {},
+  "etags": {}
+}

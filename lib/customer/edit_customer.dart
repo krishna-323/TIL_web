@@ -1481,8 +1481,7 @@ class SearchState {
   SearchState({required this.label, this.value});
 
   factory SearchState.fromJson(String  stateName) {
-    return SearchState(label: stateName,
-        value:stateName);
+    return SearchState(label: stateName, value:stateName);
   }
 }
 

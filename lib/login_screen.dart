@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:new_project/classes/env.dart';
 import 'package:new_project/utils/static_data/motows_colors.dart';
 import 'package:new_project/widgets/input_decoration_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -200,13 +201,13 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // orgId = prefs.get('orgId').toString();
 
-    final response = await http.post(Uri.parse("https://msq5vv563d.execute-api.ap-south-1.amazonaws.com/stage1/api/user_master/login-authenticate"),
+    final response = await http.post(Uri.parse("${StaticData.url}user_master/login-authenticate"),
         headers: {
           "Content-Type": "application/json",
         },
         body: json.encode({
           "password": password.text,
-          "username": userName.text
+          "userName": userName.text
         })
     );
     if (response.statusCode == 200) {
